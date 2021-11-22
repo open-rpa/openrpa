@@ -24,12 +24,14 @@ namespace OpenRPA.Forms.Activities
         [RequiredArgument]
         public InArgument<string> Form { get; set; }
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
+        public InArgument<bool> EnableSkin { get; set; }
         protected async override Task<FormResult> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var xmlString = Form.Get(context);
             FormResult result = null;
             string json = "";
-
+            var enableSkin = EnableSkin.Get(context);
+            // var enableSkin = false;
 
             var definition = FormBuilder.Default.GetDefinition(xmlString, freeze: false);
             List<string> fields = GenericTools.MainWindow.Dispatcher.Invoke<List<string>>(() =>
@@ -109,7 +111,7 @@ namespace OpenRPA.Forms.Activities
             Exception LastError = null;
             var res = GenericTools.MainWindow.Dispatcher.Invoke<FormResult>(() =>
             {
-                var f = new Form(xmlString);
+                var f = new Form(xmlString, enableSkin);
                 f.defaults = param;
                 f.Topmost = true;
                 f.Owner = GenericTools.MainWindow;

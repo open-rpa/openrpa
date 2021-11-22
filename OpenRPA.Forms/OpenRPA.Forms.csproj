@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <Description>A couple of activities to design and show forms, and notifications, created for OpenRPA robot</Description>
@@ -76,7 +76,7 @@
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Forge.Forms" Version="1.1.1" />
+    <PackageReference Include="Forge.Forms" Version="1.1.4" />
     <PackageReference Include="ToastNotifications" Version="2.5.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
   </ItemGroup>

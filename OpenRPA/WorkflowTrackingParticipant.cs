@@ -55,7 +55,6 @@ namespace OpenRPA
         }
         public static Dictionary<string, Dictionary<string, Stopwatch>> timers = new Dictionary<string, Dictionary<string, Stopwatch>>();
         public static object timerslock = new object();
-        private static string hostname = null;
         protected override void Track(TrackingRecord trackRecord, TimeSpan timeStamp)
         {
             try
@@ -149,112 +148,116 @@ namespace OpenRPA
                 {
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null || Instance.wfApp == null) return;
-                    var wfApp = Instance.wfApp;
-                    var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
-                    var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+                    lock (Instance)
+                    {
 
-                    string ActivityId = null;
-                    string ChildActivityId = null;
-                    if (activityStateRecord != null)
-                    {
-                        ActivityId = activityStateRecord.Activity.Id;
-                        State = activityStateRecord.State.ToLower();
-                    }
-                    if (activityScheduledRecord != null)
-                    {
-                        State = "Scheduled";
-                        if (activityScheduledRecord.Activity != null) ActivityId = activityScheduledRecord.Activity.Id;
-                        if (activityScheduledRecord.Child != null) ChildActivityId = activityScheduledRecord.Child.Id;
-                    }
-                    if (activityScheduledRecord.Activity == null && activityScheduledRecord.Child != null)
-                    {
-                        // this will make "1" be handles twice, but "1" is always sendt AFTER being scheduled, but we can catch it here ?
-                        ActivityId = activityScheduledRecord.Child.Id;
-                        ChildActivityId = activityScheduledRecord.Child.Id;
-                    }
-                    if (string.IsNullOrEmpty(ActivityId)) return;
+                        var wfApp = Instance.wfApp;
+                        var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
+                        var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
 
-                    if (activityScheduledRecord.Child.Id == "1.11")
-                    {
-                        // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
-                        // scheduler.GetType().GetMethod("ScheduleWork", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { false });
-                        //var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
-                        //firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
-                        //firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
-
-                        //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
-                    }
-
-                    if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
-                    if (activityStateRecord != null)
-                    {
-                        foreach (var v in Instance.Variables.ToList())
+                        string ActivityId = null;
+                        string ChildActivityId = null;
+                        if (activityStateRecord != null)
                         {
-                            if (!activityStateRecord.Variables.ContainsKey(v.Key)) Instance.Variables.Remove(v.Key);
+                            ActivityId = activityStateRecord.Activity.Id;
+                            State = activityStateRecord.State.ToLower();
                         }
-                        foreach (var v in activityStateRecord.Variables)
+                        if (activityScheduledRecord != null)
                         {
-                            if (Instance.Variables.ContainsKey(v.Key))
+                            State = "Scheduled";
+                            if (activityScheduledRecord.Activity != null) ActivityId = activityScheduledRecord.Activity.Id;
+                            if (activityScheduledRecord.Child != null) ChildActivityId = activityScheduledRecord.Child.Id;
+                        }
+                        if (activityScheduledRecord.Activity == null && activityScheduledRecord.Child != null)
+                        {
+                            // this will make "1" be handles twice, but "1" is always sendt AFTER being scheduled, but we can catch it here ?
+                            ActivityId = activityScheduledRecord.Child.Id;
+                            ChildActivityId = activityScheduledRecord.Child.Id;
+                        }
+                        if (string.IsNullOrEmpty(ActivityId)) return;
+
+                        if (activityScheduledRecord.Child.Id == "1.11")
+                        {
+                            // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
+                            // scheduler.GetType().GetMethod("ScheduleWork", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { false });
+                            //var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+                            //firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+                            //firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+
+                            //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+                        }
+
+                        if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
+                        if (activityStateRecord != null)
+                        {
+                            foreach (var v in Instance.Variables.ToList())
                             {
-                                Instance.Variables[v.Key].value = v.Value;
+                                if (!activityStateRecord.Variables.ContainsKey(v.Key)) Instance.Variables.Remove(v.Key);
                             }
-                        }
-                    }
-                    var instanceMapField = executor.GetType().GetField("instanceMap", BindingFlags.NonPublic | BindingFlags.Instance);
-
-                    // get SerializedProgramMapping to have InstanceMap get filled, needed by SerializedProgramMapping
-                    var SerializedProgramMapping = executor.GetType().GetProperty("SerializedProgramMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
-                    ActivityInstance activityInstance = executor.GetType().GetField("rootInstance", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor) as ActivityInstance;
-
-                    // Sometimes we can find the ActivityInstance in rootInstance
-                    ActivityInstance result = findActivityInstance(executor, activityInstance, ActivityId);
-
-                    // But more often, we find it in InstanceMapping
-                    var instanceMap = instanceMapField.GetValue(executor);
-                    if (instanceMap != null && result == null)
-                    {
-                        var _list = SerializedProgramMapping.GetType().GetProperty("InstanceMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(SerializedProgramMapping);
-                        foreach (System.Collections.DictionaryEntry kvp in (System.Collections.IDictionary)_list)
-                        {
-                            var a = kvp.Key as System.Activities.Activity;
-                            if (a == null) continue;
-                            if (result == null && a.Id == ActivityId)
+                            foreach (var v in activityStateRecord.Variables)
                             {
-                                result = findActivityInstance(kvp.Value, ActivityId);
-                            }
-                        }
-                    }
-                    if (result != null)
-                    {
-                        WorkflowDataContext context = null;
-                        var cs = typeof(WorkflowDataContext).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
-                        ConstructorInfo c = cs.First();
-
-                        try
-                        {
-                            object o = c.Invoke(new Object[] { executor, result, true });
-                            context = o as WorkflowDataContext;
-                            var vars = context.GetProperties();
-                            foreach (dynamic v in vars)
-                            {
-                                var value = v.GetValue(context);
-                                if (Instance.Variables.ContainsKey(v.DisplayName))
+                                if (Instance.Variables.ContainsKey(v.Key))
                                 {
-                                    Instance.Variables[v.DisplayName] = new WorkflowInstanceValueType(v.PropertyType, value);
-                                }
-                                else
-                                {
-                                    Instance.Variables.Add(v.DisplayName, new WorkflowInstanceValueType(v.PropertyType, value));
+                                    Instance.Variables[v.Key].value = v.Value;
                                 }
                             }
                         }
-                        catch (Exception ex)
+                        var instanceMapField = executor.GetType().GetField("instanceMap", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                        // get SerializedProgramMapping to have InstanceMap get filled, needed by SerializedProgramMapping
+                        var SerializedProgramMapping = executor.GetType().GetProperty("SerializedProgramMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+                        ActivityInstance activityInstance = executor.GetType().GetField("rootInstance", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor) as ActivityInstance;
+
+                        // Sometimes we can find the ActivityInstance in rootInstance
+                        ActivityInstance result = findActivityInstance(executor, activityInstance, ActivityId);
+
+                        // But more often, we find it in InstanceMapping
+                        var instanceMap = instanceMapField.GetValue(executor);
+                        if (instanceMap != null && result == null)
                         {
-                            Log.Debug(ex.Message);
+                            var _list = SerializedProgramMapping.GetType().GetProperty("InstanceMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(SerializedProgramMapping);
+                            foreach (System.Collections.DictionaryEntry kvp in (System.Collections.IDictionary)_list)
+                            {
+                                var a = kvp.Key as System.Activities.Activity;
+                                if (a == null) continue;
+                                if (result == null && a.Id == ActivityId)
+                                {
+                                    result = findActivityInstance(kvp.Value, ActivityId);
+                                }
+                            }
                         }
+                        if (result != null)
+                        {
+                            WorkflowDataContext context = null;
+                            var cs = typeof(WorkflowDataContext).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
+                            ConstructorInfo c = cs.First();
+
+                            try
+                            {
+                                object o = c.Invoke(new Object[] { executor, result, true });
+                                context = o as WorkflowDataContext;
+                                var vars = context.GetProperties();
+                                foreach (dynamic v in vars)
+                                {
+                                    var value = v.GetValue(context);
+                                    if (Instance.Variables.ContainsKey(v.DisplayName))
+                                    {
+                                        Instance.Variables[v.DisplayName] = new WorkflowInstanceValueType(v.PropertyType, value);
+                                    }
+                                    else
+                                    {
+                                        Instance.Variables.Add(v.DisplayName, new WorkflowInstanceValueType(v.PropertyType, value));
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Debug(ex.Message);
+                            }
+                        }
+                        OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                     }
 
-                    OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                 }
             }
             catch (Exception ex)

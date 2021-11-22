@@ -16,10 +16,10 @@ namespace OpenRPA
     {
         public bool VisualTracking { get; set; } = false;
         public bool SlowMotion { get; set; } = false;
-        public static AgentWindow instance { get; set; }
+        public static AgentWindow Instance { get; set; }
         public AgentWindow()
         {
-            instance = this;
+            Instance = this;
             if (!string.IsNullOrEmpty(Config.local.culture))
             {
                 try
@@ -69,10 +69,10 @@ namespace OpenRPA
             try
             {
                 OnOpen(null);
-                if (RobotInstance.instance.ProjectCount > 0)
-                {
-                    RobotInstance.instance.Projects.First().IsExpanded = true;
-                }
+                //if(RobotInstance.instance.ProjectCount>0)
+                //{
+                //    RobotInstance.instance.Projects.First().IsExpanded = true;
+                //}
                 if (string.IsNullOrEmpty(Config.local.wsurl))
                 {
                     try
@@ -92,6 +92,8 @@ namespace OpenRPA
                 throw;
             }
         }
+        private bool _IsLoading = false;
+        public bool IsLoading { get { return _IsLoading; } set { _IsLoading = value; NotifyPropertyChanged("IsLoading"); } }
         private bool first_connect = true;
         public IDesigner[] Designers
         {
@@ -123,7 +125,7 @@ namespace OpenRPA
         public void MainWindow_WebSocketClient_OnOpen()
         {
             Log.FunctionIndent("AgentWindow", "MainWindow_WebSocketClient_OnOpen");
-            if (RobotInstance.instance.Projects.Count == 0 && first_connect)
+            if (RobotInstance.instance.Projects.Count() == 0 && first_connect)
             {
             }
             if (first_connect)
@@ -211,6 +213,11 @@ namespace OpenRPA
         {
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.Dispose();
+            if (RobotInstance.instance.db != null)
+            {
+                RobotInstance.instance.db.Dispose();
+                RobotInstance.instance.db = null;
+            }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
         }
@@ -284,7 +291,7 @@ namespace OpenRPA
                     {
                         foreach (var b in wi.Bookmarks)
                         {
-                            var _id = (plugin.Entity as Interfaces.entity.Detector)._id;
+                            var _id = plugin.Entity._id;
                             Log.Debug(b.Key + " -> " + "detector_" + _id);
                             if (b.Key == "detector_" + _id)
                             {
@@ -297,7 +304,7 @@ namespace OpenRPA
                 Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
                 // detector.user = global.webSocketClient.user;
                 var data = JObject.FromObject(detector);
-                var Entity = (plugin.Entity as Interfaces.entity.Detector);
+                var Entity = plugin.Entity;
                 command.command = "detector";
                 command.detectorid = Entity._id;
                 if (string.IsNullOrEmpty(Entity._id)) return;
@@ -322,17 +329,8 @@ namespace OpenRPA
         }
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
-            GenericTools.RunUI(() =>
-            {
-                try
-                {
-                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
-            });
+            if (instance == null) return;
+            Log.FunctionIndent("MainWindow", "IdleOrComplete");
             try
             {
                 bool isRemote = false;
@@ -361,6 +359,15 @@ namespace OpenRPA
                     });
 
                 }
+
+                if (instance.state != "idle")
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        CommandManager.InvalidateRequerySuggested();
+                    });
+                }
+
                 if (instance.hasError || instance.isCompleted)
                 {
                     string message = "";
@@ -411,10 +418,14 @@ namespace OpenRPA
                         }
                     });
                 }
+                RobotInstance.instance.NotifyPropertyChanged("Projects");
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+            }
+            finally
+            {
             }
         }
         private void OnExitApp(object _item)
@@ -440,7 +451,6 @@ namespace OpenRPA
             try
             {
                 RobotInstance.instance.autoReconnect = true;
-                RobotInstance.instance.Projects.Clear();
                 var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                 foreach (var document in ld)
                 {
@@ -458,7 +468,7 @@ namespace OpenRPA
                 MessageBox.Show(ex.Message);
             }
         }
-        private void OnOpen(object _item)
+        public void OnOpen(object _item)
         {
             AutomationHelper.syncContext.Post(o =>
             {
@@ -467,9 +477,9 @@ namespace OpenRPA
                     var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                     foreach (var document in ld)
                     {
-                        if (document.Content is Views.AgentViewProjects op) { document.IsSelected = true; return; }
+                        if (document.Content is Views.OpenProject op) { document.IsSelected = true; return; }
                     }
-                    var view = new Views.AgentViewProjects(this);
+                    var view = new Views.OpenProject(this);
                     view.onOpenWorkflow += OnOpenWorkflow;
 
                     LayoutDocument layoutDocument = new LayoutDocument { Title = "Open project" };
@@ -479,6 +489,7 @@ namespace OpenRPA
                     MainTabControl.Children.Add(layoutDocument);
                     layoutDocument.IsSelected = true;
                     // layoutDocument.Closing += LayoutDocument_Closing;
+                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                 }
                 catch (Exception ex)
                 {
@@ -495,7 +506,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.AgentViewProjects view)
+                if (SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
@@ -526,7 +537,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.AgentViewProjects view)
+                if (SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return;
@@ -561,7 +572,7 @@ namespace OpenRPA
         {
             try
             {
-                if (SelectedContent is Views.AgentViewProjects view)
+                if (SelectedContent is Views.OpenProject view)
                 {
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
@@ -598,7 +609,7 @@ namespace OpenRPA
         {
             Workflow workflow = null;
             if (_item != null && _item is Workflow) workflow = _item as Workflow;
-            if (SelectedContent is Views.AgentViewProjects view)
+            if (SelectedContent is Views.OpenProject view)
             {
                 if (view != null)
                 {
@@ -616,7 +627,7 @@ namespace OpenRPA
                     GenericTools.Minimize();
                     IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
-                    instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null);
+                    instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null);
                     instance.Run();
                 }
                 catch (Exception ex)

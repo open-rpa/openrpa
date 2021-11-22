@@ -32,7 +32,7 @@ namespace OpenRPA.MSSpeech.Views
             DataContext = this;
         }
         private MSSpeechPlugin plugin;
-        public Detector Entity
+        public IDetector Entity
         {
             get
             {

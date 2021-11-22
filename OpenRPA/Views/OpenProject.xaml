@@ -12,8 +12,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding Projects}" x:Key="Projects">
-        </CollectionViewSource>
         <localroot:BindingProxy x:Key="proxy" Data="{Binding}" />
     </UserControl.Resources>
 
@@ -30,7 +28,7 @@
                                          Text="{Binding Path=FilterText,UpdateSourceTrigger=PropertyChanged}" 
                                          ></TextBox>-->
 
-        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding Source={StaticResource Projects}}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
+        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding FilteredProjects}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
                                        MouseDoubleClick="ListWorkflows_MouseDoubleClick" SelectedItemChanged="listWorkflows_SelectedItemChanged"
                     >
             <TreeView.ItemContainerStyle>
@@ -53,7 +51,7 @@
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}" ItemsSource="{Binding Workflows}">
+                <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}" ItemsSource="{Binding FilteredWorkflows}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding name}" />
                         <StackPanel.ContextMenu >
@@ -64,7 +62,7 @@
                         </StackPanel.ContextMenu>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding Workflows}">
+                <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding FilteredWorkflows}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding StateImage}" Width="16" Height="16" />
                         <TextBlock Text="{Binding name}" />
@@ -76,6 +74,7 @@
                                 <MenuItem Header="{x:Static or:strings.copyid}" Command="{Binding Data.CopyIDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.copyrelativefilename}" Command="{Binding Data.CopyRelativeFilenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.delete}" Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.menu_get_server_version}" Command="{Binding Data.GetServerVersionCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                             </ContextMenu>
                         </StackPanel.ContextMenu>
                     </StackPanel>
@@ -91,12 +90,12 @@
                     Command="{Binding Data.DisableCachingCommand, Source={StaticResource proxy}}" 
                     ></CheckBox>
             </StackPanel>
-            <StackPanel>
+            <StackPanel x:Name="EditXAMLPanel">
                 <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>
                 <Button Click="ButtonEditXAML" Margin="20,0,0,0" Content="{x:Static or:strings.open_edit_xaml}"
                         IsEnabled="{Binding IsWorkflowSelected,Mode=OneWay}" ></Button>
             </StackPanel>
-            <StackPanel>
+            <StackPanel x:Name="PackageManagerPanel">
                 <TextBlock Text="{x:Static or:strings.open_package_manager}" FontWeight="Bold"></TextBlock>
                 <Button Click="ButtonOpenPackageManager" Margin="20,0,0,0" Content="{x:Static or:strings.open_package_manager}"
                         IsEnabled="{Binding IsWorkflowOrProjectSelected,Mode=OneWay}"></Button>
@@ -104,6 +103,10 @@
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_name}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.name}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.open_filename}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.Filename}" ></TextBlock>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_state}" FontWeight="Bold"></TextBlock>

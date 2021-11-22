@@ -19,15 +19,15 @@
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,40,0,0" Text="{x:Static or:strings.plugin_record_with_get_element_help}" VerticalAlignment="Top" />
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,70,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,70,0,0" Text="" VerticalAlignment="Top" Width="109" x:Name="bridge_timeout_seconds" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,70,0,0" Text="" VerticalAlignment="Top" Width="109" x:Name="bridge_timeout_seconds" TextChanged="property_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="265,70,0,0" Text="{x:Static or:strings.plugin_bridge_timeout_seconds_help}" VerticalAlignment="Top" />
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,100,0,0" Text="{x:Static or:strings.plugin_recording_skip_methods}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,100,0,0" Text="" VerticalAlignment="Top" Width="197" x:Name="recording_skip_methods" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,100,0,0" Text="" VerticalAlignment="Top" Width="197" x:Name="recording_skip_methods" TextChanged="property_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="355,100,0,0" Text="{x:Static or:strings.plugin_recording_skip_methods_help}" VerticalAlignment="Top" />
 
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,130,0,0" Text="{x:Static or:strings.plugin_recording_skip_properties}" VerticalAlignment="Top" Width="110" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,130,0,0" Text="" VerticalAlignment="Top" Width="197" x:Name="recording_skip_properties" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="151,130,0,0" Text="" VerticalAlignment="Top" Width="197" x:Name="recording_skip_properties"  TextChanged="property_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="355,130,0,0" Text="{x:Static or:strings.plugin_recording_skip_properties_help}" VerticalAlignment="Top" />
        
 

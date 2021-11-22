@@ -5,27 +5,13 @@
     <TargetFramework>net462</TargetFramework>
     <ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
     <StartupObject />
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.2.76</Version>
-    <PackageReleaseNotes>1.2.76 Fix issue with multiple browsers open
-1.2.75 Fix ctrl+k variable creation in loops
-1.2.74 Fix critical string format error
-1.2.73 Fix OCR downloads
-1.2.72 Add ExecuteTransaction to sap
-1.2.71 Better handling of nested error messages
-1.2.70 Fix StopOpenRPA in offline mode
-1.2.69 Rework some network handling, to better handle disconnects
-1.2.68 Add variable mapper to invoke form, to support custom bindings
-1.2.67 Variouse UI and websocket fixes
-1.2.66 Add custom wait for tab timeout
-1.2.65 By popular demand, add kill workflows functions
-1.2.64 Faster nm.Open URL
-1.2.63 Lower time on closetab, force timeout on pipe messages
-1.2.62 test fix: json parser work around
+    <Version>1.3.32</Version>
+    <PackageReleaseNotes>1.2.62 test fix: json parser work around
 1.2.61 Yet another fix UI error after adding Index and Total variables on loops
 1.2.60 Fix UI error after adding Index and Total variables on loops
 1.2.59 Add Index and Total variables on loops
@@ -299,14 +285,14 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf" Version="86.0.241" />
+    <PackageReference Include="CefSharp.Wpf" Version="92.0.260" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NuGet.Common" Version="5.4.0" />
-    <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
-    <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
-    <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="NuGet.Common" Version="5.11.0" />
+    <PackageReference Include="NuGet.Packaging" Version="5.11.0" />
+    <PackageReference Include="NuGet.Protocol" Version="5.11.0" />
+    <PackageReference Include="NuGet.Resolver" Version="5.11.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\BreakableDoWhileDesigner.xaml" />
@@ -325,6 +311,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
     <None Remove="Activities\InvokeOpenRPADesigner.xaml" />
     <None Remove="Activities\InvokeRemoteOpenRPADesigner.xaml" />
+    <None Remove="Activities\MoveElementDesigner.xaml" />
     <None Remove="Activities\MoveMouseDesigner.xaml" />
     <None Remove="Activities\OpenApplicationDesigner.xaml" />
     <None Remove="Activities\ShowBalloonTipDesigner.xaml" />
@@ -423,6 +410,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\designer\log.png" />
     <None Remove="Resources\designer\messagebox.png" />
     <None Remove="Resources\designer\mouse.png" />
+    <None Remove="Resources\designer\moveelement.png" />
     <None Remove="Resources\designer\openurl.png" />
     <None Remove="Resources\designer\prompt.png" />
     <None Remove="Resources\designer\readexcel.png" />
@@ -440,6 +428,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\icons\flowchart.png" />
     <None Remove="Resources\icons\openin.png" />
     <None Remove="Resources\icons\property.png" />
+    <None Remove="Resources\icons\spinner2.png" />
     <None Remove="Resources\icons\variable.png" />
     <None Remove="Resources\open.png" />
     <None Remove="Resources\open_flow.ico" />
@@ -483,6 +472,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\state\Abort.png" />
     <None Remove="Resources\state\Completed.png" />
     <None Remove="Resources\state\failed.png" />
+    <None Remove="Resources\state\risk.png" />
     <None Remove="Resources\state\Running.png" />
     <None Remove="Resources\state\Running_green.png" />
     <None Remove="Resources\state\unloaded.png" />
@@ -526,6 +516,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\toolbox\log.png" />
     <None Remove="Resources\toolbox\messagebox.png" />
     <None Remove="Resources\toolbox\mouse.png" />
+    <None Remove="Resources\toolbox\moveelement.png" />
     <None Remove="Resources\toolbox\openurl.png" />
     <None Remove="Resources\toolbox\prompt.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
@@ -562,16 +553,24 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Views\WorkflowInstances.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Activities\BreakableDoWhileDesigner.xaml" />
-    <Page Include="Activities\BreakableWhileDesigner.xaml" />
-    <Page Include="Activities\BreakDesigner.xaml" />
+    <Page Include="Activities\BreakableDoWhileDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ContinueDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\BreakDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\MoveElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\FocusElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Activities\StopOpenRPADesigner.xaml">
+    <Page Include="Activities\BreakableWhileDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ShowBalloonTipDesigner.xaml">
@@ -614,6 +613,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenApplicationDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\StopOpenRPADesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\TypeTextDesigner.xaml">
@@ -682,12 +684,14 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\designer\break.png" />
     <Resource Include="Resources\designer\continue.png" />
     <Resource Include="Resources\designer\mouse.png" />
+    <Resource Include="Resources\designer\moveelement.png" />
     <Resource Include="Resources\gears-1236578_1920.jpg" />
     <Resource Include="Resources\icons\activity.png" />
     <Resource Include="Resources\icons\activity.svg" />
     <Resource Include="Resources\icons\flowchart.png" />
     <Resource Include="Resources\icons\openin.png" />
     <Resource Include="Resources\icons\property.png" />
+    <Resource Include="Resources\icons\spinner2.png" />
     <Resource Include="Resources\icons\variable.png" />
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\open_flow.ico" />
@@ -733,6 +737,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <EmbeddedResource Include="Resources\toolbox\killapp.png" />
     <EmbeddedResource Include="Resources\toolbox\log.png" />
     <EmbeddedResource Include="Resources\toolbox\messagebox.png" />
+    <EmbeddedResource Include="Resources\toolbox\moveelement.png" />
     <EmbeddedResource Include="Resources\toolbox\openurl.png" />
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
@@ -785,6 +790,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LiteDB\LiteDB\LiteDB.csproj" />
     <ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
       <IncludeAssets>all</IncludeAssets>
@@ -934,14 +940,18 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\state\Abort.png" />
     <Resource Include="Resources\state\Completed.png" />
     <Resource Include="Resources\state\failed.png" />
+    <Resource Include="Resources\state\Risk.png" />
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />
-    <EmbeddedResource Include="Resources\toolbox\break.png" />
     <EmbeddedResource Include="Resources\toolbox\continue.png" />
+    <EmbeddedResource Include="Resources\toolbox\break.png" />
     <EmbeddedResource Include="Resources\toolbox\mouse.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Activities\StopOpenRPADesigner.xaml.cs">
+      <Generator></Generator>
+    </Compile>
     <Compile Update="Resources\strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

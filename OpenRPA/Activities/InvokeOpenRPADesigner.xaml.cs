@@ -37,24 +37,36 @@ namespace OpenRPA.Activities
             {
                 if (RobotInstance.instance == null) throw new ArgumentException("RobotInstance.instance");
                 if (RobotInstance.instance.Projects == null) throw new ArgumentException("RobotInstance.instance.Projects");
-                if (RobotInstance.instance.Projects.Count == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
+                if (RobotInstance.instance.Projects.Count() == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
                 var result = new List<Workflow>();
-                foreach (var p in RobotInstance.instance.Projects)
+                var designer = RobotInstance.instance.Window.Designer;
+                foreach (var w in RobotInstance.instance.Workflows.FindAll())
                 {
-                    foreach (var w in p.Workflows)
+                    if (designer != null && designer.Workflow != null)
                     {
-                        if(RobotInstance.instance.Window.Designer!=null && RobotInstance.instance.Window.Designer.Workflow != null)
-                        {
-                            if (RobotInstance.instance.Window.Designer.Workflow._id != w._id || w._id == null) workflows.Add(w);
-                        } 
-                        else
-                        {
-                            workflows.Add(w);
-                        }
-                        
+                        if (designer.Workflow._id != w._id || w._id == null) result.Add(w);
+                    }
+                    else
+                    {
+                        result.Add(w);
                     }
                 }
-                result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+                var workflow = ModelItem.GetValue<string>("workflow");
+                if(!string.IsNullOrEmpty(workflow))
+                {
+                    var workflow2 = workflow.Replace("\\", "/");
+                    if (workflow != workflow2)
+                    {
+                        ModelItem.SetValueInArg("workflow", workflow2);
+                    }
+                }
+                // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+                result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
+                if (!string.IsNullOrEmpty(workflow))
+                {
+                    var exists = result.Where(x => x.RelativeFilename == workflow).ToList();
+                }
+
                 foreach (var w in result) workflows.Add(w);
             }
             catch (Exception ex)
@@ -84,26 +96,18 @@ namespace OpenRPA.Activities
             foreach (var p in workflow.Parameters)
             {
                 bool exists = false;
-                foreach(var key in dictionary.Keys)
+                foreach (var key in dictionary.Keys)
                 {
-                    if(key.ToString() == p.name) exists = true;
+                    if (key.ToString() == p.name) exists = true;
                     if (key.GetValue<string>("AnnotationText") == p.name) exists = true;
                     if (key.GetValue<string>("Name") == p.name) exists = true;
                 }
-                if(!exists)
+                if (!exists)
                 {
 
                     Type t = OpenRPA.Interfaces.Extensions.FindType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
                     if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
-
-                    //Type atype = typeof(VisualBasicValue<>);
-                    //Type constructed = atype.MakeGenericType(t);
-                    //object o = Activator.CreateInstance(constructed, p.name);
-
-                    //Log.Information("Checking for variable " + p.name + " of type " + p.type);
-                    //designer.GetVariable(p.name, t);
-
                     Argument a = null;
                     if (p.direction == workflowparameterdirection.@in) a = Argument.Create(t, ArgumentDirection.In);
                     if (p.direction == workflowparameterdirection.inout) a = Argument.Create(t, ArgumentDirection.InOut);
@@ -113,7 +117,7 @@ namespace OpenRPA.Activities
                     dictionary.Add(p.name, a);
                 }
             }
-            foreach(var a in dictionary.ToList())
+            foreach (var a in dictionary.ToList())
             {
                 bool exists = workflow.Parameters.Where(x => x.name == a.Key.ToString()).Count() > 0;
                 if (!exists) dictionary.Remove(a.Key);
@@ -148,7 +152,6 @@ namespace OpenRPA.Activities
                     Type t = Type.GetType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
                     if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
-                    Log.Information("Checking for variable " + p.name + " of type " + p.type);
                     designer.GetVariable(p.name, t);
                 }
 

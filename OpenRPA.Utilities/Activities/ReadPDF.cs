@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Activities;
-using OpenRPA.Interfaces;
-using System.Activities.Presentation.PropertyEditing;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using Newtonsoft.Json;
-using ExcelDataReader;
-using iTextSharp.text.pdf.parser;
 
 namespace OpenRPA.Utilities
 {
@@ -36,11 +27,11 @@ namespace OpenRPA.Utilities
         public static string GetTextFromAllPages(iTextSharp.text.pdf.PdfReader reader)
         {
             // ITextExtractionStrategy strategy = new LocationTextExtractionStrategy();
-            var strategy = new LocationTextExtractionStrategy();
+            var strategy = new iTextSharp.text.pdf.parser.LocationTextExtractionStrategy();
             var output = new System.IO.StringWriter();
             for (int i = 1; i <= reader.NumberOfPages; i++)
             {
-                var text = PdfTextExtractor.GetTextFromPage(reader, i, strategy);
+                var text = iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(reader, i, strategy);
                 text = Convert(text);
                 output.WriteLine(text);
             }

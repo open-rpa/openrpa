@@ -44,7 +44,7 @@
                 <ComboBox
                 ItemsSource="{Binding workflows}"
                 DisplayMemberPath="ProjectAndName"
-                SelectedValuePath="IDOrRelativeFilename"
+                SelectedValuePath="RelativeFilename"
                 SelectedValue="{Binding Path=ModelItem.workflow, Mode=TwoWay, Converter={StaticResource InArgumentStringConverter}}"
                 >
                 </ComboBox>

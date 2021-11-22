@@ -41,5 +41,15 @@
             Checked="enable_cache_Checked"  Unchecked="enable_cache_Checked" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,130,0,0" Text="{x:Static or:strings.enable_cache_help}" VerticalAlignment="Top" />
 
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,150,0,0" Text="{x:Static or:strings.plugin_create_short_selector}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,150,0,0" VerticalAlignment="Top" Width="222" x:Name="create_short_selector" 
+            Checked="allow_multiple_hits_mid_selector_IsEnabledChanged"  Unchecked="allow_multiple_hits_mid_selector_IsEnabledChanged" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,150,0,0" Text="{x:Static or:strings.plugin_create_short_selector_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,170,0,0" Text="{x:Static or:strings.plugin_mouse_over_search}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,170,0,0" VerticalAlignment="Top" Width="222" x:Name="mouse_over_search" 
+            Checked="allow_multiple_hits_mid_selector_IsEnabledChanged"  Unchecked="allow_multiple_hits_mid_selector_IsEnabledChanged" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,170,0,0" Text="{x:Static or:strings.plugin_mouse_over_search_help}" VerticalAlignment="Top" />
+
     </Grid>
 </UserControl>

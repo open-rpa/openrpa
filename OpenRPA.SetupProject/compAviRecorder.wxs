@@ -5,10 +5,11 @@
     <ComponentGroup Id="AviRecorderComponents">
       <Component Id='AviRecorderComponent' Guid='{C8B0EA69-9307-415B-B91C-A00063B10B70}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.AviRecorder.dll" Source="!(wix.AviRecorderSource)\OpenRPA.AviRecorder.dll" />
+        <File Id="OpenRPA.AviRecorder.pdb" Source="!(wix.AviRecorderSource)\OpenRPA.AviRecorder.pdb" />
         <File Id="SharpAvi.dll" Source="!(wix.AviRecorderSource)\SharpAvi.dll" />
         <File Id="NAudio.dll" Source="!(wix.AviRecorderSource)\NAudio.dll" />
       </Component>
-      
+
       <Component Id='AviRecorderComponentde' Win64='yes' Directory="AviRecorderde" Guid='{E5E526BD-2D95-47C8-BFD6-CE1158D14341}'>
         <File Id="OpenRPA.AviRecorder.resources.dll_de" Source="!(wix.AviRecorderSource)\de\OpenRPA.AviRecorder.resources.dll" />
       </Component>

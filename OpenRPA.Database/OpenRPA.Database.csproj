@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <Description>A collection of activities to work with a database using OleDB / ADO, specifically tested and created for OpenRPA robot</Description>

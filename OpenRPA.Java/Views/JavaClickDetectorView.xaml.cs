@@ -38,7 +38,7 @@ namespace OpenRPA.Java.Views
             DataContext = this;
         }
         private JavaClickDetectorPlugin plugin;
-        public Detector Entity
+        public IDetector Entity
         {
             get
             {

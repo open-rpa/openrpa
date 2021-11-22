@@ -14,7 +14,7 @@ namespace OpenRPA.NM
 {
     public class DownloadDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        public Detector Entity { get; set; }
+        public IDetector Entity { get; set; }
         public string Name
         {
             get
@@ -49,7 +49,7 @@ namespace OpenRPA.NM
         }
         FileSystemWatcher watcher = null;
         private IOpenRPAClient client = null;
-        public void Initialize(IOpenRPAClient client, Detector InEntity)
+        public void Initialize(IOpenRPAClient client, IDetector InEntity)
         {
             this.client = client;
             Entity = InEntity;

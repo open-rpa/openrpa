@@ -14,6 +14,7 @@ namespace OpenRPA.Interfaces
         string Status { get; }
         void Start();
         void Stop();
+        int Priority { get; }
         event Action<IRecordPlugin, IRecordEvent> OnUserAction;
         event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
         bool ParseUserAction(ref IRecordEvent e);

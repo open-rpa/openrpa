@@ -30,6 +30,9 @@ namespace OpenRPA.Activities
         public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_checkrunning", typeof(Resources.strings)), LocalizedDescription("activity_checkrunning_help", typeof(Resources.strings))]
         public InArgument<bool> CheckRunning { get; set; } = true;
+
+        [LocalizedDisplayName("activity_screen", typeof(Resources.strings)), LocalizedDescription("activity_screen_help", typeof(Resources.strings))]
+        public InArgument<int> Screen { get; set; }
         [LocalizedDisplayName("activity_x", typeof(Resources.strings)), LocalizedDescription("activity_x_help", typeof(Resources.strings))]
         public InArgument<int> X { get; set; }
         [LocalizedDisplayName("activity_y", typeof(Resources.strings)), LocalizedDescription("activity_y_help", typeof(Resources.strings))]
@@ -61,16 +64,31 @@ namespace OpenRPA.Activities
             if (element != null && element is UIElement ui && Body == null)
             {
                 //var window = ((UIElement)element).GetWindow();
+                var screen = Screen.Get(context);
                 var x = X.Get(context);
                 var y = Y.Get(context);
                 var width = Width.Get(context);
                 var height = Height.Get(context);
                 var animatemove = AnimateMove.Get(context);
-                if ((width == 0 && height == 0) || (x == 0 && y == 0))
+                // if ((width == 0 && height == 0) || (x == 0 && y == 0))
+                if (width <= 30 || height <= 10)
                 {
                 }
                 else
                 {
+                    var allScreens = System.Windows.Forms.Screen.AllScreens.ToList();
+                    if (screen < 0)
+                    {
+                        Log.Warning("screen cannot be below 0, using screen 0");
+                        screen = 0;
+                    }
+                    if (screen >= allScreens.Count)
+                    {
+                        Log.Warning("screen " + screen + " does not exists, using " + (allScreens.Count - 1) + " instead");
+                        screen = allScreens.Count - 1;
+                    }
+                    x += allScreens[screen].WorkingArea.X;
+                    y += allScreens[screen].WorkingArea.Y;
                     if (animatemove) ui.MoveWindowTo(x, y, width, height);
                     if (!animatemove)
                     {

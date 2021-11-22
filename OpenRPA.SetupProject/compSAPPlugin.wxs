@@ -7,10 +7,12 @@
         <File Id="Interop.SAPFEWSELib.dll" Source="!(wix.SAPSource)\Interop.SAPFEWSELib.dll" />
         <File Id="Interop.SapROTWr.dll" Source="!(wix.SAPSource)\Interop.SapROTWr.dll" />
         <File Id="OpenRPA.SAPBridge.exe" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.exe" />
+        <File Id="OpenRPA.SAPBridge.pdb" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.pdb" />
         <File Id="OpenRPA.SAPBridge.exe.config" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.exe.config" />
         <File Id="OpenRPA.SAP.dll" Source="!(wix.SAPSource)\OpenRPA.SAP.dll" />
+        <File Id="OpenRPA.SAP.pdb" Source="!(wix.SAPSource)\OpenRPA.SAP.pdb" />
       </Component>
-      
+
       <!--<Component Id='SAPComponentde' Win64='yes' Directory="SAPde" Guid='{37484DAA-A9A1-41E0-9C17-16BDC5E83A95}'>
         <File Id="OpenRPA.SAP.resources.dll_de" Source="!(wix.SAPSource)\de\OpenRPA.SAP.resources.dll" />
       </Component>

@@ -70,7 +70,7 @@ namespace OpenRPA.Views
                 }
                 if (cs == null || cs.Count == 0)
                 {
-                    Console.WriteLine("No snippets!");
+                    Log.Warning("No snippets!");
                 }
                 foreach (var c in cs)
                 {

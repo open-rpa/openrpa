@@ -122,7 +122,7 @@ namespace OpenRPA.Input
             if (_Instance.cancelDetector == null)
             {
                 _Instance.cancelDetector = new KeyboardDetectorPlugin();
-                _Instance.cancelDetector.Entity = new Interfaces.entity.Detector();
+                _Instance.cancelDetector.Entity = new Detector();
                 _Instance.cancelDetector.OnDetector += (IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e) =>
                 {
                     try

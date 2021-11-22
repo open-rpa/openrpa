@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +11,15 @@ namespace OpenRPA.Interfaces.entity
 
     public class apibase : ObservableObject, IBase
     {
+        [JsonIgnore]
+        // public bool isDirty { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool isDirty { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        [JsonIgnore]
+        public bool isLocalOnly { get; set; }
+        [JsonIgnore]
+        public bool isDeleted { get; set; }
         public string _id { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public string _type { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string _type { get { return GetProperty<string>(); } set { SetProperty(value);  } }
         public string name { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public DateTime _modified { get { return GetProperty<DateTime>(); } set { SetProperty(value); } }
         public string _modifiedby { get { return GetProperty<string>(); } set { SetProperty(value); } }

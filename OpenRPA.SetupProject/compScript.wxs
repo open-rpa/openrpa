@@ -5,6 +5,7 @@
     <ComponentGroup Id="ScriptComponents">
       <Component Id='ScriptComponent' Guid='{2F47EB82-7138-4EF1-8303-C3B80C373ED9}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.Script.dll" Source="!(wix.ScriptSource)\OpenRPA.Script.dll" />
+        <File Id="OpenRPA.Script.pdb" Source="!(wix.ScriptSource)\OpenRPA.Script.pdb" />
         <File Id="Python.Included.dll" Source="!(wix.ScriptSource)\Python.Included.dll" />
         <File Id="Python.Deployment.dll" Source="!(wix.ScriptSource)\Python.Deployment.dll" />
         <File Id="Python.Runtime.dll" Source="!(wix.ScriptSource)\Python.Runtime.dll" />

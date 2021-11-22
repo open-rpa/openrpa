@@ -10,6 +10,7 @@
         <File Id="Microsoft.Office.Interop.Word.dll" Source="!(wix.OfficeSource)\Microsoft.Office.Interop.Word.dll" />
         <File Id="Office.dll" Source="!(wix.OfficeSource)\Office.dll" />
         <File Id="OpenRPA.Office.dll" Source="!(wix.OfficeSource)\OpenRPA.Office.dll" />
+        <File Id="OpenRPA.Office.pdb" Source="!(wix.OfficeSource)\OpenRPA.Office.pdb" />
       </Component>
       <Component Id='OfficeComponentde' Win64='yes' Directory="officede" Guid="{B8D8CCD7-4C5E-4DFA-BC14-A052ADC5148B}">
         <File Id="OpenRPA.Office.resources.dll_de" Source="!(wix.OfficeSource)\de\OpenRPA.Office.resources.dll" />

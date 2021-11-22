@@ -20,7 +20,7 @@ namespace OpenRPA.NamedPipeWrapper
         /// </summary>
         /// <param name="pipeName">Name of the server's pipe</param>
         /// <param name="serverName">server name default is local.</param>
-        public NamedPipeClient(string pipeName,string serverName=".") : base(pipeName, serverName)
+        public NamedPipeClient(string pipeName, string serverName = ".") : base(pipeName, serverName)
         {
         }
     }
@@ -51,7 +51,7 @@ namespace OpenRPA.NamedPipeWrapper
         /// </summary>
         public event ConnectionEventHandler<TRead, TWrite> Disconnected;
         public event ConnectionEventHandler<TRead, TWrite> Connected;
-        
+
 
         /// <summary>
         /// Invoked whenever an exception is thrown during a read or write operation on the named pipe.
@@ -84,7 +84,7 @@ namespace OpenRPA.NamedPipeWrapper
         /// </summary>
         /// <param name="pipeName">Name of the server's pipe</param>
         /// <param name="serverName">the Name of the server, default is  local machine</param>
-        public NamedPipeClient(string pipeName,string serverName)
+        public NamedPipeClient(string pipeName, string serverName)
         {
             _pipeName = pipeName;
             _serverName = serverName;
@@ -167,7 +167,6 @@ namespace OpenRPA.NamedPipeWrapper
                 var handshake = PipeClientFactory.Connect<string, string>(_pipeName, _serverName);
                 var dataPipeName = handshake.ReadObject();
                 handshake.Close();
-
                 // Connect to the actual data pipe
                 var dataPipe = PipeClientFactory.CreateAndConnectPipe(dataPipeName, _serverName);
                 // Create a Connection object for the data pipe
@@ -225,11 +224,21 @@ namespace OpenRPA.NamedPipeWrapper
 
     static class PipeClientFactory
     {
-        public static PipeStreamWrapper<TRead, TWrite> Connect<TRead, TWrite>(string pipeName,string serverName)
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, SetLastError = true)]
+        private static extern bool WaitNamedPipe(string name, int timeout);
+
+        public static PipeStreamWrapper<TRead, TWrite> Connect<TRead, TWrite>(string pipeName, string serverName)
             where TRead : class
             where TWrite : class
         {
-            return new PipeStreamWrapper<TRead, TWrite>(CreateAndConnectPipe(pipeName,serverName));
+            while (true)
+            {
+                if (DoesNamedPipeExist(pipeName))
+                    break;
+                Thread.Sleep(1000);
+            }
+            return new PipeStreamWrapper<TRead, TWrite>(CreateAndConnectPipe(pipeName, serverName));
         }
 
         public static NamedPipeClientStream CreateAndConnectPipe(string pipeName, string serverName)
@@ -239,9 +248,23 @@ namespace OpenRPA.NamedPipeWrapper
             return pipe;
         }
 
-        private static NamedPipeClientStream CreatePipe(string pipeName,string serverName)
+        private static NamedPipeClientStream CreatePipe(string pipeName, string serverName)
         {
             return new NamedPipeClientStream(serverName, pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
+        }
+        /// <summary>
+        /// Method to test if Windows considers that a named pipe of a certain name exists or not.
+        /// </summary>
+        internal static bool DoesNamedPipeExist(string pipeFileName)
+        {
+            try
+            {
+                return WaitNamedPipe(@"\\.\pipe\" + pipeFileName, 0);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

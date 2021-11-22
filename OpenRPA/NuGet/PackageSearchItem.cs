@@ -31,11 +31,11 @@ namespace OpenRPA
             {
                 if (project.dependencies != null)
                 {
-                    foreach (JProperty jp in (JToken)project.dependencies)
+                    foreach (var jp in project.dependencies)
                     {
-                        if(jp.Name == Id)
+                        if(jp.Key== Id)
                         {
-                            InstalledVersion = (string)jp.Value;
+                            InstalledVersion = jp.Value;
                             CanInstall = true;
                         }
                     }
@@ -68,9 +68,9 @@ namespace OpenRPA
             {
                 if (project.dependencies != null)
                 {
-                    foreach (JProperty jp in (JToken)project.dependencies)
+                    foreach (var jp in project.dependencies)
                     {
-                        if (jp.Name == Id)
+                        if (jp.Key == Id)
                         {
                             InstalledVersion = (string)jp.Value;
                         }
@@ -93,9 +93,9 @@ namespace OpenRPA
         private bool isPackageIdInProjectDependencies(Project project, string package_id)
         {
             if (project.dependencies == null) return false;
-            foreach (JProperty jp in (JToken)project.dependencies)
+            foreach (var jp in project.dependencies)
             {
-                if (jp.Name.ToLower() == package_id.ToLower())
+                if (jp.Key.ToLower() == package_id.ToLower())
                 {
                     return true;
                 }

@@ -87,6 +87,7 @@ namespace OpenRPA.Windows
             return new WindowsSelector(windowsitem.RawElement, winanchor, PluginConfig.enum_selector_properties);
         }
         public string Name { get => "Windows"; }
+        public int Priority { get => 10; }
         public string Status => _status;
         private Views.RecordPluginView view;
         public System.Windows.Controls.UserControl editor
@@ -247,6 +248,7 @@ namespace OpenRPA.Windows
             _ = PluginConfig.get_elements_in_different_thread;
             _ = PluginConfig.search_timeout;
             _ = PluginConfig.traverse_selector_both_ways;
+            _ = PluginConfig.enable_windows_detector;
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {

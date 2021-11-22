@@ -23,6 +23,7 @@ namespace OpenRPA.Net
         public int websocket_package_size = 4096;
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
+        private static object _sendQueuelock = new object();
         private List<SocketMessage> _receiveQueue = new List<SocketMessage>();
         private List<SocketMessage> _sendQueue = new List<SocketMessage>();
         private List<QueuedMessage> _messageQueue = new List<QueuedMessage>();
@@ -30,6 +31,7 @@ namespace OpenRPA.Net
         public event Action<string> OnClose;
         public event QueueMessageDelegate OnQueueMessage;
         public event QueueClosedDelegate OnQueueClosed;
+        public int MessageQueueSize { get { return _messageQueue.Count; } }
         public TokenUser user { get; private set; }
         public string jwt { get; private set; }
         public bool isConnected
@@ -61,7 +63,13 @@ namespace OpenRPA.Net
                 //if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
                 if (ws != null && (ws.State != WebSocketState.Connecting))
                 {
-                    ws.Dispose();
+                    try
+                    {
+                        ws.Dispose();
+                    }
+                    catch (Exception)
+                    {
+                    }
                     ws = null;
                 }
                 if (ws == null)
@@ -85,17 +93,17 @@ namespace OpenRPA.Net
                     ws = null;
                     return;
                 }
-                Log.Information("Connecting to " + url);
+                Log.Network("Connecting to " + url);
                 await ws.ConnectAsync(new Uri(url), src.Token);
                 Log.Information("Connected to " + url);
                 tempbuffer = "";
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
                 Task pingTask = Task.Run(async () => await PingLoop(), src.Token);
+                user = null;
                 OnOpen?.Invoke();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
                 OnClose?.Invoke(ex.Message);
             }
         }
@@ -119,6 +127,8 @@ namespace OpenRPA.Net
                 }
                 //ws = null;
             }
+            user = null;
+            lock (_sendQueuelock) _sendQueue.Clear();
             src.Cancel();
         }
         string tempbuffer = null;
@@ -344,7 +354,7 @@ namespace OpenRPA.Net
             try
             {
                 List<SocketMessage> templist;
-                lock (_sendQueue)
+                lock (_sendQueuelock)
                 {
                     templist = _sendQueue.ToList();
                 }
@@ -352,11 +362,7 @@ namespace OpenRPA.Net
                 {
                     if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
                     {
-                        _sendQueue.Remove(msg);
-                    }
-                    else
-                    {
-                        var b = true;
+                        lock (_sendQueuelock) _sendQueue.Remove(msg);
                     }
                 }
             }
@@ -394,42 +400,40 @@ namespace OpenRPA.Net
         }
         public void PushMessage(SocketMessage msg)
         {
-            lock (_sendQueue)
+            lock (_sendQueuelock)
             {
-                var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index);
-                if (exists.Count() == 0)
+                var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index).Count();
+                if (exists == 0)
                 {
                     _sendQueue.Add(msg);
-                }
-                else
-                {
-                    var b = true;
                 }
             }
             _ = ProcessQueue();
         }
         private void Process(Message msg)
         {
+            //if (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("Not signed in, and missing jwt"))
+            //{
+            //    Log.Information("WebSocketClient.Process, data has Not signed in, and missing jwt, so closing connection " + msg.command);
+            //    global.webSocketClient.Close();
+
+            //    return;
+            //}
+            //if  (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("\"error\":\"jwt must be provided\""))
+            //{
+            //}
             if (!string.IsNullOrEmpty(msg.replyto))
             {
-                if (msg.command != "pong") { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+                if (msg.command != "pong") { Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RESC: " + msg.replyto + "/" + msg.id); }
                 // else { Log.Network(msg.command + " / replyto: " + msg.replyto);  }
-
                 foreach (var qm in _messageQueue.ToList())
                 {
                     if (qm != null && qm.msg.id == msg.replyto)
                     {
-                        try
-                        {
-                            qm.reply = msg;
-                            qm.autoReset.Set();
-                            _messageQueue.Remove(qm);
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex, "");
-                        }
+                        qm.reply = msg;
+                        qm.autoReset.Set();
+                        _messageQueue.Remove(qm);
+                        break;
                     }
                 }
             }
@@ -437,6 +441,7 @@ namespace OpenRPA.Net
             {
                 if (msg.command != "ping" && msg.command != "refreshtoken") { Log.Network(msg.command + " / " + msg.id); }
                 // else { Log.Network(msg.command + " / replyto: " + msg.replyto); }
+
                 switch (msg.command)
                 {
                     case "ping":
@@ -564,46 +569,87 @@ namespace OpenRPA.Net
             }
             try
             {
-
                 using (qm.autoReset = new AutoResetEvent(false))
                 {
                     while (qm.reply == null)
                     {
+                        if (ws.State != WebSocketState.Open)
+                        {
+                            System.Threading.Thread.Sleep(250);
+                            continue;
+                        }
+                        if (global.webSocketClient.user == null && msg.command != "signin")
+                        {
+                            System.Threading.Thread.Sleep(250);
+                            continue;
+                        }
                         if (retries > 0)
                         {
-                            lock (_messageQueue)
+                            if (msg.command == "signin") break;
+                            if (msg.command != "ping" && msg.command != "pong")
                             {
-                                _messageQueue.Remove(qm);
-                                _messageQueue.Add(qm);
+                                lock (_messageQueue)
+                                {
+                                    _messageQueue.Remove(qm);
+                                    _messageQueue.Add(qm);
+                                }
+                                if (user == null && msg.command == "signin")
+                                {
+                                    Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                    msg.SendMessage(this);
+                                }
+                                else if (user != null)
+                                {
+                                    Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                    msg.SendMessage(this);
+                                }
+                                else
+                                {
+                                    Log.Warning("Message NOOP " + qm.msg.id + " " + qm.msg.command);
+                                }
                             }
-
-                            // Log.Warning("Retrying " + qm.msg.id + " " + qm.msg.command);
-                            msg.SendMessage(this);
                         }
                         else
                         {
+                            Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
                             msg.SendMessage(this);
-
                         }
-                        await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout);
-                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"jwt must be provided\"")))
+                        bool wasraised = await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout, CancellationToken.None);
+                        // if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"Not signed in, and missing jwt\"")))
+                        if (qm.reply != null && !string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("Not signed in, and missing jwt"))
+                        {
+                            Log.Information("WebSocketClient.SendMessage.Reply.data has Not signed in, and missing jwt, so closing connection (" + msg.command + ")");
+                            // global.webSocketClient.Close();
+                            await Close();
+                        }
+                        if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("jwt must be provided")))
                         {
                             qm.autoReset.Reset();
+                            //qm.autoReset.Dispose();
+                            //qm.autoReset = null;
+                            //qm.autoReset = qm.autoReset = new AutoResetEvent(false);
                             retries++;
-                            qm.reply = null;
-
                             if (msg.command == "insertorupdateone")
                             {
                                 var data = JObject.Parse(msg.data);
                                 var _id = data["item"].Value<string>("_id");
                                 var state = data["item"].Value<string>("state");
-                                if (state == "running" || state == "idle") throw new Exception("Failed updating object");
+                                if (state == "running" || state == "idle" || retries > 50)
+                                {
+                                    retries = 0;
+                                    lock (_messageQueue)
+                                    {
+                                        _messageQueue.Remove(qm);
+                                    }
+                                    return null;
+                                }
                                 Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command + " id:" + _id + " state: " + state);
                             }
                             else
                             {
                                 Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command);
                             }
+                            qm.reply = null;
                         }
                         else
                         {
@@ -618,7 +664,15 @@ namespace OpenRPA.Net
             }
             if (retries > 0)
             {
-                Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                // Gave up on 56b5181f-c867-42f1-b250-411cee6f634a queuemessage
+                if (qm.msg.command == "queuemessage")
+                {
+                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                }
+                else
+                {
+                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                }
             }
             return qm.reply as Message;
         }
@@ -630,7 +684,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
-            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
             user = signin.user;
             jwt = signin.jwt;
             if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
@@ -656,7 +710,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
-            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
             user = signin.user;
             this.jwt = signin.jwt;
             if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
@@ -682,7 +736,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
-            if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
             user = signin.user;
             this.jwt = signin.jwt;
             if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
@@ -732,14 +786,24 @@ namespace OpenRPA.Net
         {
             RegisterUserMessage RegisterQueue = new RegisterUserMessage(name, username, password);
             RegisterQueue = await RegisterQueue.SendMessage<RegisterUserMessage>(this);
-            if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
+            if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new SocketException(RegisterQueue.error);
         }
         public async Task<string> RegisterQueue(string queuename)
         {
-            RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
-            RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
-            if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new Exception(RegisterQueue.error);
-            return RegisterQueue.queuename;
+            try
+            {
+                RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
+                RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
+                if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new SocketException(RegisterQueue.error);
+                return RegisterQueue.queuename;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+            }
         }
         public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration)
         {
@@ -748,34 +812,45 @@ namespace OpenRPA.Net
             qm.data = data; qm.replyto = replyto;
             qm.correlationId = correlationId;
             qm = await qm.SendMessage<QueueMessage>(this);
-            if (!string.IsNullOrEmpty(qm.error)) throw new Exception(qm.error);
+            if (!string.IsNullOrEmpty(qm.error)) throw new SocketException(qm.error);
             return qm.data;
         }
         private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {
-            var result = new List<T>();
-            bool cont = false;
-            int _top = top;
-            int _skip = skip;
-            if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
-            do
+            try
             {
-                cont = false;
-                QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
-                q.projection = projection; q.orderby = orderby; q.queryas = queryas;
-                q.collectionname = collectionname;
-                if (string.IsNullOrEmpty(query)) query = "{}";
-                q.query = JObject.Parse(query);
-                q = await q.SendMessage<QueryMessage<T>>(this);
-                if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
-                result.AddRange(q.result);
-                if (q.result.Count() == _top && result.Count < top)
+                var result = new List<T>();
+                bool cont = false;
+                int _top = top;
+                int _skip = skip;
+                if (_top > Config.local.querypagesize) _top = Config.local.querypagesize;
+                do
                 {
-                    cont = true;
-                    _skip += _top;
-                }
-            } while (cont);
-            return result.ToArray();
+                    cont = false;
+                    QueryMessage<T> q = new QueryMessage<T>(); q.top = _top; q.skip = _skip;
+                    q.projection = projection; q.orderby = orderby; q.queryas = queryas;
+                    q.collectionname = collectionname;
+                    if (string.IsNullOrEmpty(query)) query = "{}";
+                    q.query = JObject.Parse(query);
+                    q = await q.SendMessage<QueryMessage<T>>(this);
+                    if (q == null) throw new SocketException("Server returned an empty response");
+                    if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+                    result.AddRange(q.result);
+                    if (q.result.Count() == _top && result.Count < top)
+                    {
+                        cont = true;
+                        _skip += _top;
+                    }
+                } while (cont);
+                return result.ToArray();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+            }
         }
         public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
         {
@@ -787,7 +862,8 @@ namespace OpenRPA.Net
             q.w = w; q.j = j; q.uniqeness = uniqeness;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<InsertOrUpdateOneMessage<T>>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
         public async Task<T> InsertOne<T>(string collectionname, int w, bool j, T item)
@@ -796,7 +872,8 @@ namespace OpenRPA.Net
             q.w = w; q.j = j;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<InsertOneMessage<T>>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
         public async Task<T> UpdateOne<T>(string collectionname, int w, bool j, T item)
@@ -805,7 +882,8 @@ namespace OpenRPA.Net
             q.w = w; q.j = j;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<UpdateOneMessage<T>>(this);
-            if (q != null && !string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
         public async Task DeleteOne(string collectionname, string Id)
@@ -813,7 +891,26 @@ namespace OpenRPA.Net
             DeleteOneMessage q = new DeleteOneMessage();
             q.collectionname = collectionname; q._id = Id;
             q = await q.SendMessage<DeleteOneMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+        }
+        public async Task<int> DeleteMany(string collectionname, string[] Ids)
+        {
+            DeleteManyMessage q = new DeleteManyMessage();
+            q.collectionname = collectionname; q.ids = Ids;
+            q = await q.SendMessage<DeleteManyMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.affectedrows;
+        }
+        public async Task<int> DeleteMany(string collectionname, string query)
+        {
+            DeleteManyMessage q = new DeleteManyMessage();
+            q.collectionname = collectionname; q.query = query;
+            q = await q.SendMessage<DeleteManyMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.affectedrows;
         }
         public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
@@ -830,7 +927,8 @@ namespace OpenRPA.Net
             q.metadata.filename = q.filename;
             q.metadata.path = path;
             q = await q.SendMessage<SaveFileMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.id;
         }
         public async Task<GetFileMessage> DownloadFile(string filename, string id)
@@ -840,7 +938,8 @@ namespace OpenRPA.Net
             q.filename = filename;
             q.id = id;
             q = await q.SendMessage<GetFileMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q;
         }
         public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath)
@@ -873,7 +972,8 @@ namespace OpenRPA.Net
             q.targetid = targetid; q.workflowid = workflowid; q.resultqueue = resultqueue; q.initialrun = initialrun;
             q.correlationId = correlationId; q.parentid = parentid; q.jwt = jwt; q.payload = payload;
             q = await q.SendMessage<CreateWorkflowInstanceMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.newinstanceid;
         }
         public async Task EnsureNoderedInstance(string _id)
@@ -902,7 +1002,8 @@ namespace OpenRPA.Net
             var q = new ListCollectionsMessage();
             q.includehist = includehist; q.jwt = jwt;
             q = await q.SendMessage<ListCollectionsMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
         public async Task PushMetrics(string metrics)
@@ -910,7 +1011,8 @@ namespace OpenRPA.Net
             var q = new PushMetricsMessage();
             q.metrics = metrics; q.jwt = jwt;
             q = await q.SendMessage<PushMetricsMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
         private Dictionary<string, WatchEventDelegate> watches = new Dictionary<string, WatchEventDelegate>();
         public async Task<string> Watch(string collectionname, string aggregates, WatchEventDelegate onWatchEvent)
@@ -918,7 +1020,8 @@ namespace OpenRPA.Net
             WatchMessage q = new WatchMessage();
             q.collectionname = collectionname; q.aggregates = JArray.Parse(aggregates);
             q = await q.SendMessage<WatchMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             if (!watches.ContainsKey(q.id)) watches.Add(q.id, onWatchEvent);
             return q.id;
         }
@@ -927,7 +1030,8 @@ namespace OpenRPA.Net
             WatchMessage q = new WatchMessage(); q.msg.command = "unwatch";
             q.id = id;
             q = await q.SendMessage<WatchMessage>(this);
-            if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             if (watches.ContainsKey(id)) watches.Remove(id);
         }
     }

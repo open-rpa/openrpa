@@ -6,7 +6,7 @@
     <Description>A couple of activities to allow executing scripts and various different languages</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <!--<NuspecFile>nuget.nuspec</NuspecFile>-->
     <Version>1.0.30</Version>
     <PackageReleaseNotes>1.0.30 Expose instance as variable
@@ -90,10 +90,7 @@
     <EmbeddedResource Include="Resources\toolbox\prompt.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.0.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.4.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.4.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.4.0" />
+    <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
     <PackageReference Include="Python.Included" Version="3.7.3.13" />
     <PackageReference Include="sharpAHK" Version="1.0.0.5" />
     <PackageReference Include="System.Management.Automation.dll" Version="10.0.10586" />

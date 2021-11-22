@@ -5,8 +5,9 @@
     <ComponentGroup Id="ElisRossumComponents">
       <Component Id='ElisRossumComponent' Guid='{FA160AD8-9CB6-4B64-9FBE-C8B237B05ABC}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.Elis.Rossum.dll" Source="!(wix.ElisRossumSource)\OpenRPA.Elis.Rossum.dll" />
+        <File Id="OpenRPA.Elis.Rossum.pdb" Source="!(wix.ElisRossumSource)\OpenRPA.Elis.Rossum.pdb" />
       </Component>
-      
+
       <Component Id='ElisRossumComponentde' Win64='yes' Directory="ElisRossumde" Guid='{540094A3-FD81-4561-97F1-3A9BB25187D2}'>
         <File Id="OpenRPA.Elis.Rossum.resources.dll_de" Source="!(wix.ElisRossumSource)\de\OpenRPA.Elis.Rossum.resources.dll" />
       </Component>

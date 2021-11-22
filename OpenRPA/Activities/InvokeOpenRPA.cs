@@ -44,9 +44,8 @@ namespace OpenRPA.Activities
                         //_payload.Add(v.DisplayName, value);
                         try
                         {
-                            var test = new { value };
-                            if (value.GetType() == typeof(System.Data.DataView)) continue;
-                            if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                            //if (value.GetType() == typeof(System.Data.DataView)) continue;
+                            //if (value.GetType() == typeof(System.Data.DataRowView)) continue;
                             //if (value.GetType() == typeof(System.Data.DataTable))
                             //{
                             //    if (value != null) param[v.DisplayName] = ((System.Data.DataTable)value).ToJArray();
@@ -57,7 +56,8 @@ namespace OpenRPA.Activities
                             //    param[v.DisplayName] = value;
                             //}
                             //
-                            var asjson = JObject.FromObject(test);
+                            //var test = new { value };
+                            //var asjson = JObject.FromObject(test);
                             param[v.DisplayName] = value;
                         }
                         catch (Exception)
@@ -80,8 +80,8 @@ namespace OpenRPA.Activities
                     var value = a.Value;
                     if (value != null)
                     {
-                        if (value.GetType() == typeof(System.Data.DataView)) continue;
-                        if (value.GetType() == typeof(System.Data.DataRowView)) continue;
+                        //if (value.GetType() == typeof(System.Data.DataView)) continue;
+                        //if (value.GetType() == typeof(System.Data.DataRowView)) continue;
                         //if (value.GetType() == typeof(System.Data.DataTable))
                         //{
                         //    if (value != null) param[a.Key] = ((System.Data.DataTable)value).ToJArray();
@@ -98,7 +98,7 @@ namespace OpenRPA.Activities
                     }
                 }
             }
-
+            Exception error = null;
             try
             {
                 var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
@@ -118,7 +118,7 @@ namespace OpenRPA.Activities
                     }
                 IWorkflowInstance instance = null;
                 Views.WFDesigner designer = null;
-                Exception innerError = null;
+
                 GenericTools.RunUI(() =>
                 {
                     try
@@ -127,50 +127,40 @@ namespace OpenRPA.Activities
                         if (designer != null)
                         {
                             designer.BreakpointLocations = null;
-                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking, null, Instance.SpanId);
+                            instance = workflow.CreateInstance(param, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
                         }
                         else
                         {
-                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null, null, Instance.SpanId);
+                            instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null);
                         }
                         instance.caller = WorkflowInstanceId;
                     }
                     catch (Exception ex)
                     {
-                        innerError = ex;
-                        Log.Error(ex.ToString());
+                        error = ex;
                     }
                 });
-                if (innerError != null)
+                if (error != null) throw error;
+                if (instance != null)
                 {
-                    throw innerError;
-                }
-                Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
-                if (waitforcompleted)
-                {
-                    Log.Verbose("[workflow] Create bookmark '" + instance._id + "'");
-                    context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
-                    if (instance.Bookmarks == null) instance.Bookmarks = new Dictionary<string, object>();
-                    instance.Bookmarks.Add(instance._id, null);
-                    //((WorkflowInstance)instance).wfApp.Persist();
+                    Log.Verbose("InvokeOpenRPA: Run Instance ID " + instance._id);
+                    if (waitforcompleted)
+                    {
+                        context.CreateBookmark(instance._id, new BookmarkCallback(OnBookmarkCallback));
+                        if (instance.Bookmarks == null) instance.Bookmarks = new Dictionary<string, object>();
+                        instance.Bookmarks.Add(instance._id, null);
+                        //((WorkflowInstance)instance).wfApp.Persist();
+                    }
                 }
                 GenericTools.RunUI(() =>
                 {
-                    try
+                    if (designer != null & instance != null)
                     {
-                        if (designer != null)
-                        {
-                            designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
-                        }
-                        else if (instance != null)
-                        {
-                            instance.Run();
-                        }
+                        designer.Run(designer.VisualTracking, designer.SlowMotion, instance);
                     }
-                    catch (Exception ex)
+                    else if (instance != null)
                     {
-                        Log.Error(ex.ToString());
-
+                        instance.Run();
                     }
                 });
             }

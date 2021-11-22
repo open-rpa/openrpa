@@ -148,7 +148,7 @@ namespace OpenRPA.NM
             try
             {
                 System.Drawing.Bitmap b = await Interfaces.Image.Util.LoadBitmap(ImageString);
-                b.Dispose();
+                if(b != null) b.Dispose();
 
                 var basepath = Interfaces.Extensions.ProjectsDirectory;
                 var imagepath = System.IO.Path.Combine(basepath, "images");

@@ -5,6 +5,7 @@
     <ComponentGroup Id="IEComponents">
       <Component Id='IEComponent' Guid='{6F53CD9C-51AC-4B75-956C-8552D91D3AC8}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.IE.dll" Source="!(wix.IESource)\OpenRPA.IE.dll" />
+        <File Id="OpenRPA.IE.pdb" Source="!(wix.IESource)\OpenRPA.IE.pdb" />
         <File Id="HtmlAgilityPack.dll" Source="!(wix.IESource)\HtmlAgilityPack.dll" />
       </Component>
       <Component Id='IEComponentde' Win64='yes' Directory="IEde" Guid='{7161DAD7-AD0C-4799-80CE-1807DAA7E6B0}'>

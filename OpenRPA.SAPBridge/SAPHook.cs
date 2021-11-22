@@ -387,7 +387,6 @@ namespace OpenRPA.SAPBridge
         }
         private void Session_AbapScriptingEvent(string param)
         {
-            Program.log(param);
         }
         private void Session_Change(GuiSession Session, GuiComponent Component, object CommandArray)
         {
@@ -411,7 +410,7 @@ namespace OpenRPA.SAPBridge
             GuiComponent element = Component;
             while (element != null)
             {
-                Program.log(element.Id);
+                // Program.log(element.Id);
                 if (element is GuiSession)
                 {
                     id = id.Substring(element.Id.Length + 1);
@@ -419,6 +418,7 @@ namespace OpenRPA.SAPBridge
                 pathToRoot.Add(element);
                 element = element.Parent as GuiComponent;
             }
+            Program.log(Action + " " + ActionName + " " + id);
             var e = new SAPRecordingEvent();
             e.Action = Action;
             e.ActionName = ActionName;
@@ -427,8 +427,6 @@ namespace OpenRPA.SAPBridge
             e.TypeAsNumber = Component.TypeAsNumber;
             e.ContainerType = Component.ContainerType;
             e.Id = id;
-
-            // /app/con[0]/ses[0]/wnd[0]/sbar/pane[0]
             var idarr = id.Split('/');
             var sbarpath = idarr[0] + "/sbar/pane[0]";
             GuiStatusPane sbar = Session.GetSAPComponentById<GuiStatusPane>(sbarpath);
@@ -436,7 +434,6 @@ namespace OpenRPA.SAPBridge
             {
                 e.StatusBarText = sbar.Text;
             }
-            // StatusBarText
             try
             {
                 if (objs.Length > 2)
@@ -450,7 +447,7 @@ namespace OpenRPA.SAPBridge
                 Program.log(e.Action + " " + e.ActionName + " " + e.Id);
                 e.SystemName = Session.Info.SystemName;
                 var msg = new SAPEvent("recorderevent"); msg.Set(e);
-                Program.log("[send] " + msg.action);
+                if(Program.log_send_message) Program.log("[send] " + msg.action);
                 Program.pipe.PushMessage(msg);
             }
             catch (Exception ex)

@@ -12,7 +12,14 @@ namespace OpenRPA.Interfaces
     {
         public static void Minimize()
         {
-            Minimize(MainWindow);
+            try
+            {
+                Minimize(MainWindow);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public static void Minimize(System.Windows.Window window)
         {
@@ -34,7 +41,25 @@ namespace OpenRPA.Interfaces
         }
         public static void Minimize(IntPtr hWnd)
         {
-            NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MINIMIZE);
+            try
+            {
+                NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MINIMIZE);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
+        public static void Maximized(IntPtr hWnd)
+        {
+            try
+            {
+                NativeMethods.ShowWindow(hWnd, NativeMethods.SW_MAXIMIZE);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         public static void Restore()
         {
@@ -83,8 +108,16 @@ namespace OpenRPA.Interfaces
         }
         public static void Restore(IntPtr hWnd)
         {
-            NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
-            NativeMethods.SetForegroundWindow(hWnd);
+            try
+            {
+                NativeMethods.ShowWindow(hWnd, NativeMethods.SW_RESTORE);
+                NativeMethods.SetForegroundWindow(hWnd);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private static IntPtr _handle = IntPtr.Zero;
         public static IntPtr Handle
@@ -132,22 +165,43 @@ namespace OpenRPA.Interfaces
         }
         public static void RunUI(Action action)
         {
-            AutomationHelper.syncContext.Send(o =>
+            try
             {
-                action();
-            }, null);
+                AutomationHelper.syncContext.Send(o =>
+                {
+                    try
+                    {
+                        action();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }, null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
         private delegate void SafeCallDelegate();
         public static void RunUI(System.Windows.Forms.Form window, Action action)
         {
-            if (window != null)
+            try
             {
-                var d = new SafeCallDelegate(action);
-                window.Invoke(d);
+                if (window != null)
+                {
+                    var d = new SafeCallDelegate(action);
+                    window.Invoke(d);
+                }
+                else
+                {
+                    action();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                action();
+                Log.Error(ex.ToString());
             }
         }
         public static string ToShortString() => ToShortString(Guid.NewGuid());

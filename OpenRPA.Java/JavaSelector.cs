@@ -27,7 +27,7 @@ namespace OpenRPA.Java
             {
                 // Break on circular relationship (should not happen?)
                 //if (pathToRoot.Contains(element) || element.Equals(_rootElement)) { break; }
-                if (pathToRoot.Contains(element)) { break; }
+                // if (pathToRoot.Contains(element)) { break; }
                 if (element.Parent != null) pathToRoot.Add(element);
                 if (element.Parent == null) root = element;
                 try
@@ -106,6 +106,11 @@ namespace OpenRPA.Java
             if (_fromElement != null) startfrom = _fromElement;
             if (startfrom == null) startfrom = new JavaElement(jvm);
             current.Add(startfrom);
+            var _children = jvm.GetChildren();
+            foreach (var e in Plugin.EnumRoots(jvm))
+            {
+                current.Add(e);
+            }
             for (var i = 0; i < selectors.Count; i++)
             {
                 var sw = new System.Diagnostics.Stopwatch();
@@ -123,9 +128,9 @@ namespace OpenRPA.Java
                 if (current.Count == 0)
                 {
                     // TODO: Figure out, why this is needed when working with Java Menu's
-                    foreach(var _e in elements)
+                    foreach (var _e in elements)
                     {
-                        if(s.Match(_e)) current.Add(_e);
+                        if (s.Match(_e)) current.Add(_e);
                     }
                 }
                 if (i == (selectors.Count - 1)) result = current.ToArray();
@@ -155,14 +160,14 @@ namespace OpenRPA.Java
             if (result == null) return new JavaElement[] { };
             return result;
         }
-        public static JavaElement[] GetElementsWithuiSelector( JavaSelector selector, IElement fromElement = null, int maxresults = 1)
+        public static JavaElement[] GetElementsWithuiSelector(JavaSelector selector, IElement fromElement = null, int maxresults = 1)
         {
             Javahook.Instance.refreshJvms();
             var result = new List<JavaElement>();
             foreach (var jvm in Javahook.Instance.jvms)
             {
                 result.AddRange(GetElementsWithuiSelector(jvm, selector, fromElement, maxresults));
-                if(result.Count > maxresults) return result.ToArray();
+                if (result.Count > maxresults) return result.ToArray();
             }
             return result.ToArray();
         }

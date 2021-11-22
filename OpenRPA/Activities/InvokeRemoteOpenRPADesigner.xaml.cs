@@ -38,11 +38,9 @@ namespace OpenRPA.Activities
         {
             workflows.Clear();
             var result = new List<IWorkflow>();
-            foreach (var p in RobotInstance.instance.Projects)
-            {
-                foreach (var w in p.Workflows) result.Add(w);
-            }
-            result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+            foreach (var w in RobotInstance.instance.Workflows.FindAll()) result.Add(w);
+            // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
+            result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
             foreach (var w in result) workflows.Add(w);
         }
         private async void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
@@ -52,6 +50,16 @@ namespace OpenRPA.Activities
                 if (robots.Count() > 0) return;
                 originalworkflow = ModelItem.GetValue<string>("workflow");
                 originaltarget = ModelItem.GetValue<string>("target");
+
+                if (!string.IsNullOrEmpty(originalworkflow))
+                {
+                    var workflow2 = originalworkflow.Replace("\\", "/");
+                    if (originalworkflow != workflow2)
+                    {
+                        ModelItem.SetValueInArg("workflow", workflow2);
+                    }
+                }
+
                 //if (string.IsNullOrEmpty(originalworkflow)) throw new ArgumentException("ModelItem.workflow is null");
                 //if (string.IsNullOrEmpty(originaltarget)) throw new ArgumentException("ModelItem.target is null");
                 // loadLocalWorkflows();
@@ -71,7 +79,7 @@ namespace OpenRPA.Activities
                 string workflowid = ModelItem.GetValue<string>("workflow");
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
                 var designer = RobotInstance.instance.Window.Designer;
-                foreach(var p in workflow.Parameters)
+                foreach (var p in workflow.Parameters)
                 {
                     Type t = Type.GetType(p.type);
                     if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);

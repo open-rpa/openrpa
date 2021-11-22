@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <Description>Activities and record plugin for handling Internet Explorer, created for OpenRPA robot</Description>
@@ -97,7 +97,7 @@
     <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Interop.MSHTML">

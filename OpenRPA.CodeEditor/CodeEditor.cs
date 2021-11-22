@@ -27,14 +27,28 @@ namespace OpenRPA.CodeEditor
     {
         public async static Task Initialize()
         {
-            CodeEditor ce = null;
-            GenericTools.RunUI(() =>
+            try
             {
-                ce = new CodeEditor();
-                ce.document = ce.Initialize();
-            });
-            var completionService = CompletionService.GetService(ce.document);
-            var completionList = await Task.Run(async () => await completionService.GetCompletionsAsync(ce.document, 0));
+                CodeEditor ce = null;
+                GenericTools.RunUI(() =>
+                {
+                    try
+                    {
+                        ce = new CodeEditor();
+                        ce.document = ce.Initialize();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("CodeEditor.init-inner: " + ex.ToString());
+                    }
+                });
+                var completionService = CompletionService.GetService(ce.document);
+                var completionList = await Task.Run(async () => await completionService.GetCompletionsAsync(ce.document, 0));
+            }
+            catch (Exception ex)
+            {
+                Log.Error("CodeEditor.init: " + ex.ToString());
+            }
         }
     }
     public class CodeEditor : TextEditor, INotifyPropertyChanged

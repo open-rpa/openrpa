@@ -14,7 +14,7 @@ namespace OpenRPA.Windows
 {
     public class WindowsClickDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        public Detector Entity { get; set; }
+        public IDetector Entity { get; set; }
         public string Name
         {
             get
@@ -57,7 +57,7 @@ namespace OpenRPA.Windows
             }
         }
         public event DetectorDelegate OnDetector;
-        public void Initialize(IOpenRPAClient client, Detector InEntity)
+        public void Initialize(IOpenRPAClient client, IDetector InEntity)
         {
             Entity = InEntity;
             Start();

@@ -108,7 +108,7 @@ namespace OpenRPA.Interfaces
                             }
                             catch (Exception)
                             {
-                                Console.WriteLine(a.FullName);
+                                Log.Error("DynamicAssemblyMonitor: " + a.FullName);
                             }
 
                         }
@@ -151,7 +151,7 @@ namespace OpenRPA.Interfaces
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine(a.FullName);
+                            Log.Error("DynamicAssemblyMonitor2: " + a.FullName);
                         }
 
                     }

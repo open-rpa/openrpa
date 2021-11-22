@@ -63,6 +63,13 @@ namespace OpenRPA.Windows
             if (e == null) return null;
             return e.Value;
         }
+        public static bool mouse_over_search(this WindowsSelector selector)
+        {
+            var item = selector[0];
+            var e = item.Properties.Where(x => x.Name == "mouse_over_search").FirstOrDefault();
+            if (e == null) return PluginConfig.try_mouse_over_search;
+            return bool.Parse(e.Value);
+        }
         public static bool isImmersiveProcess(this Interfaces.Selector.SelectorItem item)
         {
             var e = item.Properties.Where(x => x.Name == "isImmersiveProcess").FirstOrDefault();

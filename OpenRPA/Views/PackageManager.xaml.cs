@@ -42,7 +42,7 @@ namespace OpenRPA.Views
         private bool _IsBusy = true;
         public bool IsBusy { get { return _IsBusy; } set { _IsBusy = value; NotifyPropertyChanged("IsBusy"); } }
         private string _BusyContent = "Loading NuGet feeds and packages ...";
-        public string BusyContent { get { return _BusyContent; } set { _BusyContent = value; Log.Output(value); NotifyPropertyChanged("BusyContent"); } }
+        public string BusyContent { get { return _BusyContent; } set { _BusyContent = value; NotifyPropertyChanged("BusyContent"); } }
         private bool _IncludePrerelease = false;
         public bool IncludePrerelease { get { return _IncludePrerelease; } set { _IncludePrerelease = value; NotifyPropertyChanged("IncludePrerelease"); FilterText = FilterText; } }
         private Project project;
@@ -186,11 +186,11 @@ namespace OpenRPA.Views
                     {
                         // Request accept
                     }
-                    if (project.dependencies == null) project.dependencies = Newtonsoft.Json.Linq.JObject.Parse("{}");
+                    if (project.dependencies == null) project.dependencies = new Dictionary<string, string>();
                     project.dependencies.Remove(identity.Id);
                     project.dependencies.Add(identity.Id, minver.MinVersion.ToString());
                     BusyContent = "Saving current project settings";
-                    await project.Save(false);
+                    await project.Save();
                     BusyContent = "Installing NuGet Packages";
                     await project.InstallDependencies(false);
                     NeedsReload = true;
@@ -226,9 +226,9 @@ namespace OpenRPA.Views
                     BusyContent = "Initializing";
                     var minver = VersionRange.Parse(SelectedPackageItem.InstalledVersion);
                     var identity = new PackageIdentity(SelectedPackageItem.Id, minver.MinVersion);
-                    if (project.dependencies == null) project.dependencies = Newtonsoft.Json.Linq.JObject.Parse("{}");
-                    project.dependencies.Remove(identity.Id);
 
+                    if (project.dependencies == null) project.dependencies = new Dictionary<string, string>();
+                    project.dependencies.Remove(identity.Id);
                     // per project or joined ?
                     // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
                     string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
@@ -237,7 +237,7 @@ namespace OpenRPA.Views
                     NuGetPackageManager.Instance.UninstallPackage(TargetFolder, identity);
                     SelectedPackageItem.IsInstalled = false;
                     BusyContent = "Saving current project settings";
-                    await project.Save(false);
+                    await project.Save();
                     //BusyContent = "Updating NuGet Packages";
                     //await project.InstallDependencies();
                     //BusyContent = "Reloading Activities Toolbox";

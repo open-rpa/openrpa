@@ -4,7 +4,7 @@
     <ApplicationIcon>Resources\OpenRPA2.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject />
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>

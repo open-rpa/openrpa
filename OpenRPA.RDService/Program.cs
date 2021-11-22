@@ -80,6 +80,7 @@ namespace OpenRPA.RDService
         {
             try
             {
+                InitializeOTEL();
                 Program.args = args;
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
@@ -140,6 +141,7 @@ namespace OpenRPA.RDService
         private async static void WebSocketClient_OnClose(string reason)
         {
             Log.Information("Disconnected " + reason);
+            openrpa_watchid = "";
             await Task.Delay(1000);
             if (autoReconnect)
             {
@@ -163,10 +165,12 @@ namespace OpenRPA.RDService
         {
             return System.Convert.ToBase64String(bytes);
         }
+        private static string openrpa_watchid;
         private static async void WebSocketClient_OnOpen()
         {
             try
             {
+                InitializeOTEL();
                 Log.Information("WebSocketClient_OnOpen");
                 TokenUser user = null;
                 while (user == null)
@@ -205,7 +209,7 @@ namespace OpenRPA.RDService
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
                 var servers = await global.webSocketClient.Query<unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
-                unattendedserver server = servers.FirstOrDefault();
+                server = servers.FirstOrDefault();
                 if (servers.Length == 0)
                 {
                     Log.Information("Adding new unattendedserver for " + computerfqdn);
@@ -216,43 +220,195 @@ namespace OpenRPA.RDService
                 //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
                 // Log.Information("Loaded " + sessions.Count + " sessions");
                 // Create listener for robots to connect too
-                if (pipe == null)
+
+                if (global.openflowconfig.supports_watch)
                 {
-                    PipeSecurity ps = new PipeSecurity();
-                    ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, System.Security.AccessControl.AccessControlType.Allow));
-                    ps.AddAccessRule(new PipeAccessRule("CREATOR OWNER", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                    ps.AddAccessRule(new PipeAccessRule("SYSTEM", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
-                    pipe = new OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage>("openrpa_service", ps);
-                    pipe.ClientConnected += Pipe_ClientConnected;
-                    pipe.ClientMessage += Pipe_ClientMessage;
-                    pipe.Start();
+                    if (string.IsNullOrEmpty(openrpa_watchid))
+                    {
+                        // "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}"
+                        // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'} } }]", onWatchEvent);
+                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent);
+
+                        // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[]", onWatchEvent);
+                        await ReloadConfig();
+                    }
+                }
+                else
+                {
+                    if (reloadTimer == null)
+                    {
+                        reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
+                        reloadTimer.Elapsed += async (o, e) =>
+                        {
+                            reloadTimer.Stop();
+                            try
+                            {
+                                await ReloadConfig();
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                            reloadTimer.Start();
+                        };
+                    }
+                    reloadTimer.Start();
                 }
 
-                if (reloadTimer == null)
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
+            }
+        }
+        private static void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
+        {
+            Log.Information("onWatchEvent");
+            try
+            {
+                string _type = data["fullDocument"].Value<string>("_type");
+                string _id = data["fullDocument"].Value<string>("_id");
+                long _version = data["fullDocument"].Value<long>("_version");
+                string operationType = data.Value<string>("operationType");
+                Log.Information("operationType: " + operationType);
+                if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now
+                if (_type == "unattendedclient")
                 {
-                    reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);
-                    reloadTimer.Elapsed += async (o, e) =>
+                    var unattendedclient = Newtonsoft.Json.JsonConvert.DeserializeObject<unattendedclient>(data["fullDocument"].ToString());
+                    if (unattendedclient != null && unattendedclient.computerfqdn == server.computerfqdn && unattendedclient.computername == server.computername)
                     {
-                        reloadTimer.Stop();
-                        try
-                        {
-                            await ReloadConfig();
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.ToString());
-                        }
-                        reloadTimer.Start();
-                    };
+                        UnattendedclientUpdated(unattendedclient);
+                    }
+                    else if (unattendedclient == null)
+                    {
+                        Log.Error("Failed DeserializeObject");
+                        return;
+                    }
                 }
-                reloadTimer.Start();
+                if (_type == "unattendedserver")
+                {
+                    // var unattendedserver = Newtonsoft.Json.JsonConvert.DeserializeObject<unattendedserver>(data["fullDocument"].ToString());
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
         }
+        private static void UnattendedclientUpdated(unattendedclient unattendedclient)
+        {
+            if (unattendedclient == null) return;
+            try
+            {
+                RobotUserSession session = null;
+                if (sessions != null) session = sessions.Where(x => x.client._id == unattendedclient._id).FirstOrDefault();
+                if (!unattendedclient.enabled)
+                {
+                    if (session != null)
+                    {
+                        session.client = unattendedclient;
+                        if (session.rdp != null || session.freerdp != null)
+                        {
+                            Log.Information("disconnecting session for " + session.client.windowsusername);
+                            try
+                            {
+                                session.disconnectrdp();
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        }
+
+                    }
+                    Log.Information("GetOwnerExplorer");
+                    System.Diagnostics.Process ownerexplorer = RobotUserSession.GetOwnerExplorer(unattendedclient);
+                    if (ownerexplorer != null)
+                    {
+                        if (server.logoff || session.client.autosignout)
+                        {
+                            Log.Information("WTSLogoffSession " + ownerexplorer.SessionId);
+                            NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)ownerexplorer.SessionId, true);
+                        }
+                        else
+                        {
+                            Log.Information("WTSDisconnectSession " + ownerexplorer.SessionId);
+                            NativeMethods.WTSDisconnectSession(IntPtr.Zero, (int)ownerexplorer.SessionId, true);
+                        }
+                    }
+                }
+                if (unattendedclient.enabled)
+                {
+                    if (server != null && server.singleuser)
+                    {
+                        Log.Information("GetOwnerExplorer");
+                        System.Diagnostics.Process ownerexplorer = RobotUserSession.GetOwnerExplorer(unattendedclient);
+                        int sessionid = -1;
+                        if (ownerexplorer != null) sessionid = ownerexplorer.SessionId;
+                        var procs = System.Diagnostics.Process.GetProcessesByName("explorer");
+                        foreach (var explorer in procs)
+                        {
+                            if (explorer.SessionId != sessionid)
+                            {
+                                if (server.logoff || session.client.autosignout)
+                                {
+                                    Log.Information("WTSLogoffSession " + explorer.SessionId);
+                                    NativeMethods.WTSLogoffSession(IntPtr.Zero, (int)explorer.SessionId, true);
+                                }
+                                else
+                                {
+                                    Log.Information("WTSDisconnectSession " + explorer.SessionId);
+                                    NativeMethods.WTSDisconnectSession(IntPtr.Zero, (int)explorer.SessionId, true);
+                                }
+                            }
+                        }
+                    }
+                    else if (server == null) Log.Information("server is null!!!");
+
+                    if (session != null)
+                    {
+                        Log.Information("Updating session for " + unattendedclient.windowsusername);
+                        session.client = unattendedclient;
+                        if (session.rdp == null && session.freerdp == null) session.BeginWork();
+                    }
+                    else
+                    {
+                        Log.Information("Adding session for " + unattendedclient.windowsusername);
+                        sessions.Add(new RobotUserSession(unattendedclient));
+                    }
+                }
+                cleanup();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
+            }
+        }
+        private static void cleanup()
+        {
+            var sessioncount = sessions.Count();
+            foreach (var session in sessions.ToList())
+            {
+                if (session.client != null && !string.IsNullOrEmpty(session.client._id) && !session.client.enabled)
+                {
+                    Log.Information("cleanup::Removing session for " + session.client.windowsusername);
+                    sessions.Remove(session);
+                    session.Dispose();
+                }
+            }
+            if (sessioncount != sessions.Count())
+            {
+                Log.Information("Currently have " + sessions.Count() + " sessions");
+            }
+        }
         private static bool disabledmessageshown = false;
+        private static unattendedserver server;
         private static async Task ReloadConfig()
         {
             try
@@ -261,7 +417,7 @@ namespace OpenRPA.RDService
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
 
                 var servers = await global.webSocketClient.Query<unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
-                unattendedserver server = servers.FirstOrDefault();
+                server = servers.FirstOrDefault();
 
                 unattendedclient[] clients = new unattendedclient[] { };
                 if (server != null && server.enabled)
@@ -277,67 +433,24 @@ namespace OpenRPA.RDService
                 var sessioncount = sessions.Count();
                 foreach (var c in clients)
                 {
-                    var session = sessions.Where(x => x.client.windowsusername == c.windowsusername).FirstOrDefault();
+                    RobotUserSession session = null;
+                    if (sessions != null) session = sessions.Where(x => x.client.windowsusername == c.windowsusername).FirstOrDefault();
                     if (session == null)
                     {
                         if (c.enabled)
                         {
-                            Log.Information("Adding session for " + c.windowsusername);
-                            sessions.Add(new RobotUserSession(c));
+                            UnattendedclientUpdated(c);
                         }
                     }
                     else
                     {
                         if (c._modified != session.client._modified || c._version != session.client._version)
                         {
-                            if (c.enabled)
-                            {
-                                Log.Information("Removing:1 session for " + session.client.windowsusername);
-                                sessions.Remove(session);
-                                session.Dispose();
-                                session = null;
-                                Log.Information("Adding session for " + c.windowsusername);
-                                sessions.Add(new RobotUserSession(c));
-                            }
-                            else
-                            {
-                                await session.SendSignout();
-                                if (session.rdp != null || session.freerdp != null)
-                                {
-                                    Log.Information("disconnecting session for " + session.client.windowsusername);
-                                    try
-                                    {
-                                        session.disconnectrdp();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Error(ex.ToString());
-                                    }
-                                }
-                                session.client = c;
-                            }
+                            UnattendedclientUpdated(c);
                         }
                     }
                 }
-                foreach (var session in sessions.ToList())
-                {
-                    var c = clients.Where(x => x.windowsusername == session.client.windowsusername).FirstOrDefault();
-                    if (c == null && session.client != null && !string.IsNullOrEmpty(session.client._id))
-                    {
-                        Log.Information("Removing:2 session for " + session.client.windowsusername);
-                        sessions.Remove(session);
-                        session.Dispose();
-                        //if (session.connection == null)
-                        //{
-                        //}
-                    }
-                }
-                if (sessioncount != sessions.Count())
-                {
-                    Log.Information("Currently have " + sessions.Count() + " sessions");
-                }
-
-                // Log.Information("Loaded " + sessions.Count + " sessions");
+                cleanup();
             }
             catch (Exception ex)
             {
@@ -345,46 +458,10 @@ namespace OpenRPA.RDService
             }
         }
         public static List<RobotUserSession> sessions = new List<RobotUserSession>();
-        private static void Pipe_ClientConnected(NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection)
+        private static bool InitializeOTEL()
         {
-            Log.Information("Client connected!");
+            return true;
         }
-        private static async void Pipe_ClientMessage(NamedPipeWrapper.NamedPipeConnection<RPAMessage, RPAMessage> connection, RPAMessage message)
-        {
-            try
-            {
-                if (message.command == "pong") return;
-                if (message.command == "hello")
-                {
-                    var windowsusername = message.windowsusername.ToLower();
-                    var session = sessions.Where(x => x.client.windowsusername == windowsusername).FirstOrDefault();
-                    if (session == null)
-                    {
-                        //Log.Information("Adding new unattendedclient for " + windowsusername);
-                        string computername = NativeMethods.GetHostName().ToLower();
-                        string computerfqdn = NativeMethods.GetFQDN().ToLower();
-                        var client = new unattendedclient() { computername = computername, computerfqdn = computerfqdn, windowsusername = windowsusername, name = computername + " " + windowsusername, openrpapath = message.openrpapath };
-                        // client = await global.webSocketClient.InsertOne("openrpa", 1, false, client);
-                        session = new RobotUserSession(client);
-                        sessions.Add(session);
-                    }
-                    if (session.client != null)
-                    {
-                        session.client.openrpapath = message.openrpapath;
-                        session.AddConnection(connection);
-                    }
-                }
-                if (message.command == "reloadconfig")
-                {
-                    await ReloadConfig();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
-        public static OpenRPA.NamedPipeWrapper.NamedPipeServer<RPAMessage> pipe = null;
         private static void DoWork()
         {
             try

@@ -14,7 +14,7 @@ namespace OpenRPA.FileWatcher
 {
     public class FileWatcherDetectorPlugin : ObservableObject, IDetectorPlugin
     {
-        public Detector Entity { get; set; }
+        public IDetector Entity { get; set; }
         public string Name
         {
             get
@@ -42,7 +42,7 @@ namespace OpenRPA.FileWatcher
         }
         public event DetectorDelegate OnDetector;
         FileSystemWatcher watcher = null;
-        public void Initialize(IOpenRPAClient client, Detector InEntity)
+        public void Initialize(IOpenRPAClient client, IDetector InEntity)
         {
             Entity = InEntity;
             watcher = new FileSystemWatcher();

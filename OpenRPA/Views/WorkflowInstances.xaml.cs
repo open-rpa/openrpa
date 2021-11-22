@@ -33,12 +33,12 @@ namespace OpenRPA.Views
             InitializeComponent();
             DataContext = this;
         }
-        public static readonly DependencyProperty WorkflowProperty = 
+        public static readonly DependencyProperty WorkflowProperty =
             DependencyProperty.Register("Workflow", typeof(Workflow), typeof(WorkflowInstances), new FrameworkPropertyMetadata
-        {
-            BindsTwoWayByDefault = true,
-            DefaultValue = null,
-            PropertyChangedCallback = OnWorkflowPropertyChanged
+            {
+                BindsTwoWayByDefault = true,
+                DefaultValue = null,
+                PropertyChangedCallback = OnWorkflowPropertyChanged
             });
         private static void OnWorkflowPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -46,22 +46,34 @@ namespace OpenRPA.Views
             if (me != null) me.Workflow = e.NewValue as Workflow;
         }
         private Workflow workflow = null;
-        public Workflow Workflow { 
+        public Workflow Workflow
+        {
             get
             {
                 return workflow;
-            } 
-            set {
+            }
+            set
+            {
                 workflow = value;
                 if (workflow == null) return;
                 if (!global.isConnected) return;
                 if (string.IsNullOrEmpty(workflow._id)) return;
                 Task.Run(() =>
                 {
-                    instances = global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + workflow._id + "'}", "{\"state\":1,\"_modified\":1,\"errormessage\":1}", orderby: "{\"_modified\": -1}", top: 10).Result;
-                    GenericTools.RunUI(() => NotifyPropertyChanged("Instances"));
+                    try
+                    {
+                        instances = global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + workflow._id + "'}", "{\"state\":1,\"_modified\":1,\"errormessage\":1}", orderby: "{\"_modified\": -1}", top: 10).Result;
+                        GenericTools.RunUI(() => NotifyPropertyChanged("Instances"));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                    finally
+                    {
+                    }
                 }); //.Wait();
-            }            
+            }
         }
         WorkflowInstance[] instances = new WorkflowInstance[] { };
         public WorkflowInstance[] Instances

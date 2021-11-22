@@ -339,9 +339,6 @@ namespace WindowsAccessBridgeInterop
             }
 
             var childNode = new AccessibleContextNode(AccessBridge, childHandle);
-            Debug.WriteLine("Child found: {0}-{1}-{2}-{3}", childNode.GetInfo().x, childNode.GetInfo().y,
-              childNode.GetInfo().width, childNode.GetInfo().height);
-
             var path = new Path<AccessibleNode>();
             for (AccessibleNode node = childNode; node != null; node = node.GetParent())
             {
@@ -356,7 +353,6 @@ namespace WindowsAccessBridgeInterop
             }
             return path;
         }
-
         public override string GetTitle()
         {
             var info = GetInfo();

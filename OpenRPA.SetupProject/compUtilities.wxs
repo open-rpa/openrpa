@@ -5,6 +5,7 @@
     <ComponentGroup Id="UtilitiesComponents">
       <Component Id='UtilitiesComponent' Guid='{C0E0BD5F-C9E0-448A-B0CD-9E0E4D037193}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.Utilities.dll" Source="!(wix.UtilitiesSource)\OpenRPA.Utilities.dll" />
+        <File Id="OpenRPA.Utilities.pdb" Source="!(wix.UtilitiesSource)\OpenRPA.Utilities.pdb" />
         <File Id="ClosedXML.dll" Source="!(wix.UtilitiesSource)\ClosedXML.dll" />
         <File Id="DocumentFormat.OpenXml.dll" Source="!(wix.UtilitiesSource)\DocumentFormat.OpenXml.dll" />
         <File Id="ExcelDataReader.DataSet.dll" Source="!(wix.UtilitiesSource)\ExcelDataReader.DataSet.dll" />
@@ -12,6 +13,8 @@
         <File Id="ExcelNumberFormat.dll" Source="!(wix.UtilitiesSource)\ExcelNumberFormat.dll" />
         <!--<File Id="FastMember.dll" Source="!(wix.UtilitiesSource)\FastMember.dll" />-->
         <File Id="itextsharp.dll" Source="!(wix.UtilitiesSource)\itextsharp.dll" />
+        <File Id="BouncyCastle.Crypto.dll" Source="!(wix.UtilitiesSource)\BouncyCastle.Crypto.dll" />
+
       </Component>
       <Component Id='UtilitiesComponentde' Win64='yes' Directory="Utilitiesde" Guid='{60894AD4-AF07-46CC-B54B-EB8E8C5CB89A}'>
         <File Id="OpenRPA.Utilities.resources.dll_de" Source="!(wix.UtilitiesSource)\de\OpenRPA.Utilities.resources.dll" />

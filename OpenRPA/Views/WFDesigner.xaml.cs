@@ -108,13 +108,6 @@ namespace OpenRPA.Views
         public bool HasChanged { get; set; }
         public void forceHasChanged(bool value) { HasChanged = value; }
         public ModelItem SelectedActivity { get; private set; }
-        public IProject Project
-        {
-            get
-            {
-                return Workflow.Project;
-            }
-        }
         private void OnCancel()
         {
             //GenericTools.RunUI(() =>
@@ -154,7 +147,7 @@ namespace OpenRPA.Views
                     //{
                     //}
                     if (e.AltKey || e.CtrlKey || e.ShiftKey || e.WinKey) return;
-                    if (Workflow.Activity == null) return;
+                    if (Workflow.Activity() == null) return;
                     Singlestep = true;
                     // if (e.Key == Input.KeyboardKey.F11) { StepInto = true; }
                     if (BreakPointhit)
@@ -217,7 +210,7 @@ namespace OpenRPA.Views
                 }
                 try
                 {
-                    if (Workflow.Activity == null) return;
+                    if (Workflow.Activity() == null) return;
                     Run(VisualTracking, SlowMotion, null);
                 }
                 catch (Exception ex)
@@ -272,6 +265,7 @@ namespace OpenRPA.Views
         public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
             InitializeComponent();
+            Log.Verbose("Open " + workflow.name + " version " + workflow._version);
             this.extratypes = extratypes;
             DataContext = this;
             this.tab = tab;
@@ -384,121 +378,131 @@ namespace OpenRPA.Views
         }
         public async Task<bool> SaveAsync()
         {
-            var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
-            if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
-            WorkflowDesigner.Flush();
-            if (global.isConnected)
+            try
             {
-                if (!string.IsNullOrEmpty(Workflow._id))
+                var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
+                if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
+                WorkflowDesigner.Flush();
+                if (global.isConnected)
                 {
-                    var exists = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow', _id: '" + Workflow._id + "'}", top: 1);
-                    if (Workflow.current_version != exists[0]._version)
+                    if (!string.IsNullOrEmpty(Workflow._id))
                     {
-                        var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version, that has been updated by " + exists[0]._modifiedby +
-                            ", do you still wish to overwrite the workflow ?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
-                        if (messageBoxResult != MessageBoxResult.Yes)
+                        var exists = await global.webSocketClient.Query<Workflow>("openrpa", "{_type: 'workflow', _id: '" + Workflow._id + "'}", top: 1);
+                        if (exists.Length > 0 && Workflow.current_version != exists[0]._version)
                         {
-                            Workflow.current_version = exists[0]._version;
-                            return false;
+                            var messageBoxResult = MessageBox.Show(Workflow.name + " has a newer version " + exists[0]._version + " , that has been updated by " + exists[0]._modifiedby +
+                                ", do you still wish to overwrite the workflow with your version " + Workflow.current_version + "?", "Workflow has been updated by someone else", MessageBoxButton.YesNo);
+                            if (messageBoxResult != MessageBoxResult.Yes)
+                            {
+                                Workflow.current_version = exists[0]._version;
+                                return false;
+                            }
+                        }
+                    }
+
+                    var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+                    var usedimages = new List<string>();
+                    using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+                    {
+                        foreach (ModelItem item in GetWorkflowActivities())
+                        {
+                            ModelProperty property = item.Properties["Image"];
+                            if ((property != null) && (property.Value != null) && !string.IsNullOrEmpty(Workflow._id))
+                            {
+                                string image = item.Properties["Image"].Value.ToString();
+                                if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
+                                {
+                                    var metadata = new OpenRPA.Interfaces.entity.metadata
+                                    {
+                                        // metadata.AddRight(global.webSocketClient.user, null);
+                                        _acl = Workflow._acl,
+                                        workflow = Workflow._id
+                                    };
+                                    var imageid = GenericTools.YoutubeLikeId();
+                                    var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
+                                    using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
+                                    {
+                                        using (var b = new System.Drawing.Bitmap(ms))
+                                        {
+                                            try
+                                            {
+                                                b.Save(tempfilename, System.Drawing.Imaging.ImageFormat.Png);
+                                            }
+                                            catch (Exception)
+                                            {
+                                                throw;
+                                            }
+                                        }
+                                    }
+                                    string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
+                                    var filename = System.IO.Path.Combine(imagepath, id + ".png");
+                                    System.IO.File.Copy(tempfilename, filename, true);
+                                    System.IO.File.Delete(tempfilename);
+                                    item.Properties["Image"].SetValue(id);
+                                    usedimages.Add(id);
+                                }
+                                else
+                                {
+                                    usedimages.Add(image);
+                                }
+                            }
+                        }
+                        editingScope.Complete();
+                    }
+                    WorkflowDesigner.Flush();
+                    if (!string.IsNullOrEmpty(Workflow._id))
+                    {
+                        var files = await global.webSocketClient.Query<Interfaces.entity.metadata>("files", "{\"metadata.workflow\": \"" + Workflow._id + "\"}");
+                        var unusedfiles = files.Where(x => !usedimages.Contains(x._id)).ToList();
+                        foreach (var f in unusedfiles)
+                        {
+                            await global.webSocketClient.DeleteOne("files", f._id);
+                            var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
+                            // if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
+                            if (System.IO.File.Exists(imagefilepath))
+                            {
+                                System.IO.File.Delete(imagefilepath);
+                            }
+                            else
+                            {
+                                Log.Error("Failed locating " + f._id + ".png");
+                            }
                         }
                     }
                 }
 
-                var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
-                var usedimages = new List<string>();
-                using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+                try
                 {
-                    foreach (ModelItem item in GetWorkflowActivities())
-                    {
-                        ModelProperty property = item.Properties["Image"];
-                        if ((property != null) && (property.Value != null) && !string.IsNullOrEmpty(Workflow._id))
-                        {
-                            string image = item.Properties["Image"].Value.ToString();
-                            if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
-                            {
-                                var metadata = new OpenRPA.Interfaces.entity.metadata
-                                {
-                                    // metadata.AddRight(global.webSocketClient.user, null);
-                                    _acl = Workflow._acl,
-                                    workflow = Workflow._id
-                                };
-                                var imageid = GenericTools.YoutubeLikeId();
-                                var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
-                                using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
-                                {
-                                    using (var b = new System.Drawing.Bitmap(ms))
-                                    {
-                                        try
-                                        {
-                                            b.Save(tempfilename, System.Drawing.Imaging.ImageFormat.Png);
-                                        }
-                                        catch (Exception)
-                                        {
-                                            throw;
-                                        }
-                                    }
-                                }
-                                string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
-                                var filename = System.IO.Path.Combine(imagepath, id + ".png");
-                                System.IO.File.Copy(tempfilename, filename, true);
-                                System.IO.File.Delete(tempfilename);
-                                item.Properties["Image"].SetValue(id);
-                                usedimages.Add(id);
-                            }
-                            else
-                            {
-                                usedimages.Add(image);
-                            }
-                        }
-                    }
-                    editingScope.Complete();
+                    Workflow.Xaml = WorkflowDesigner.Text;
+                    Parseparameters();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    return false;
                 }
                 WorkflowDesigner.Flush();
-                if (!string.IsNullOrEmpty(Workflow._id))
-                {
-                    var files = await global.webSocketClient.Query<Interfaces.entity.metadata>("files", "{\"metadata.workflow\": \"" + Workflow._id + "\"}");
-                    var unusedfiles = files.Where(x => !usedimages.Contains(x._id)).ToList();
-                    //Console.WriteLine("usedimages: " + usedimages.Count);
-                    //Console.WriteLine("files: " + files.Length);
-                    //Console.WriteLine("unusedfiles: " + unusedfiles.Count);
-                    //Console.WriteLine("*****");
-                    foreach (var f in unusedfiles)
-                    {
-                        await global.webSocketClient.DeleteOne("files", f._id);
-                        var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
-                        // if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
-                        if (System.IO.File.Exists(imagefilepath))
-                        {
-                            System.IO.File.Delete(imagefilepath);
-                        }
-                        else
-                        {
-                            Log.Error("Failed locating " + f._id + ".png");
-                        }
-                    }
-                }
-            }
-            try
-            {
+                var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
+                Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
                 Workflow.Xaml = WorkflowDesigner.Text;
-                Parseparameters();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-                return false;
-            }
-            WorkflowDesigner.Flush();
-            var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
-            Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
-            Workflow.Xaml = WorkflowDesigner.Text;
-            await Workflow.Save(false);
-            if (HasChanged)
-            {
+                var _hasChanged = HasChanged;
                 HasChanged = false;
-                OnChanged?.Invoke(this);
+                RobotInstance.instance.Workflows.Update(Workflow);
+                await Workflow.Save();
+                if (_hasChanged)
+                {
+                    HasChanged = false;
+                    OnChanged?.Invoke(this);
+                }
+                return true;
             }
-            return true;
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+            }
         }
         public void RenameWorkflow(string name)
         {
@@ -1155,173 +1159,172 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
         }
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
-
-            if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
+            if (instance == null) return;
+            try
             {
-                Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
-                var data = JObject.FromObject(instance.Parameters);
-                command.command = "invoke" + instance.state;
-                command.workflowid = instance.WorkflowId;
-                command.data = data;
-                if ((instance.state == "failed" || instance.state == "aborted") && instance.Exception != null)
+                if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
                 {
-                    command.data = JObject.FromObject(instance.Exception);
-                }
-                Task.Run(async () =>
-                {
-                    try
+                    Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
+                    var data = JObject.FromObject(instance.Parameters);
+                    command.command = "invoke" + instance.state;
+                    command.workflowid = instance.WorkflowId;
+                    command.data = data;
+                    if ((instance.state == "failed" || instance.state == "aborted") && instance.Exception != null)
                     {
-                        await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
+                        command.data = JObject.FromObject(instance.Exception);
                     }
-                    catch (Exception ex)
+                    Task.Run(async () =>
                     {
-                        Log.Debug(ex.Message);
-                    }
-                });
-                OnChanged?.Invoke(this);
-            }
-            if (instance.state == "idle" && Singlestep == true)
-            {
-                GenericTools.Minimize();
-                //GenericTools.RunUI(() =>
-                //{
-                //    SetDebugLocation(null);
-                //    Properties = wfDesigner.PropertyInspectorView;
-                //});
-            }
-            if (instance.state == "completed")
-            {
-                GenericTools.RunUI(() =>
-                {
-                    SetDebugLocation(null);
-                    Properties = WorkflowDesigner.PropertyInspectorView;
-                });
-            }
-            if ((string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId)) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted && Config.local.minimize)
-            {
-                GenericTools.RunUI(() =>
-                {
-                    GenericTools.Restore();
-                });
-            }
-
-            if (instance.state != "idle")
-            {
-                GenericTools.RunUI(() =>
-                {
-                    Properties = WorkflowDesigner.PropertyInspectorView;
-                    if (global.isConnected)
-                    {
-                        ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
-                    }
-                    else
-                    {
-                        ReadOnly = false;
-                    }
-                });
-
-                BreakPointhit = false; Singlestep = false;
-                bool isRemote = true;
-                if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
-                {
-                    isRemote = false;
-                    if (instance.state != "completed")
-                    {
-                        System.Activities.Debugger.SourceLocation location;
-                        if (instance.errorsource != null && !_sourceLocationMapping.ContainsKey(instance.errorsource))
+                        try
                         {
-                            InitializeStateEnvironment();
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
                         }
-
-                        if (instance.errorsource != null && _sourceLocationMapping.ContainsKey(instance.errorsource))
+                        catch (Exception ex)
                         {
-                            GenericTools.RunUI(() =>
-                            {
-                                location = _sourceLocationMapping[instance.errorsource];
-                                SetDebugLocation(location);
-                                if (_activityIdModelItemMapping.ContainsKey(instance.errorsource))
-                                {
-                                    ModelItem model = _activityIdModelItemMapping[instance.errorsource];
-                                    NavigateTo(model);
-                                }
-                            });
+                            Log.Debug(ex.Message);
+                        }
+                    });
+                    OnChanged?.Invoke(this);
+                }
+                if (instance.state == "idle" && Singlestep == true)
+                {
+                    GenericTools.Minimize();
+                    //GenericTools.RunUI(() =>
+                    //{
+                    //    SetDebugLocation(null);
+                    //    Properties = wfDesigner.PropertyInspectorView;
+                    //});
+                }
+                if (instance.state == "completed")
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        SetDebugLocation(null);
+                        Properties = WorkflowDesigner.PropertyInspectorView;
+                    });
+                }
+                if ((string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId)) && string.IsNullOrEmpty(instance.caller) && instance.isCompleted && Config.local.minimize)
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        GenericTools.Restore();
+                    });
+                }
+
+                if (instance.state != "idle")
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        Properties = WorkflowDesigner.PropertyInspectorView;
+                        if (global.isConnected)
+                        {
+                            ReadOnly = !Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.update);
                         }
                         else
                         {
-                            GenericTools.RunUI(() =>
-                            {
-                                SetDebugLocation(null);
-                            });
+                            ReadOnly = false;
+                        }
+                        CommandManager.InvalidateRequerySuggested();
+                    });
 
+                    BreakPointhit = false; Singlestep = false;
+                    bool isRemote = true;
+                    if (string.IsNullOrEmpty(instance.queuename) && string.IsNullOrEmpty(instance.correlationId))
+                    {
+                        isRemote = false;
+                        if (instance.state != "completed")
+                        {
+                            System.Activities.Debugger.SourceLocation location;
+                            if (instance.errorsource != null && !_sourceLocationMapping.ContainsKey(instance.errorsource))
+                            {
+                                InitializeStateEnvironment();
+                            }
+
+                            if (instance.errorsource != null && _sourceLocationMapping.ContainsKey(instance.errorsource))
+                            {
+                                GenericTools.RunUI(() =>
+                                {
+                                    location = _sourceLocationMapping[instance.errorsource];
+                                    SetDebugLocation(location);
+                                    if (_activityIdModelItemMapping.ContainsKey(instance.errorsource))
+                                    {
+                                        ModelItem model = _activityIdModelItemMapping[instance.errorsource];
+                                        NavigateTo(model);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                GenericTools.RunUI(() =>
+                                {
+                                    SetDebugLocation(null);
+                                });
+
+                            }
                         }
                     }
+                    string message = (instance.Workflow.name + " " + instance.state);
+                    if (!string.IsNullOrEmpty(instance.errorsource))
+                    {
+                        message += " at " + instance.errorsource;
+                    }
+                    if (instance.runWatch != null)
+                    {
+                        message += (" in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                    }
+                    if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                    Log.Output(message);
+                    if (instance.hasError || instance.isCompleted)
+                    {
+                        if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
+                        {
+                            if (instance.state == "completed")
+                            {
+                                // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
+                                App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Info);
+                            }
+                            else
+                            {
+                                // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
+                                App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
+                            }
+                        }
+                    }
+                    OnChanged?.Invoke(this);
                 }
-                //string message = "#*****************************#" + Environment.NewLine;
-                //if (instance.runWatch != null)
-                //{
-                //    message += ("# " + instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-                //}
-                //else
-                //{
-                //    message += ("# " + instance.Workflow.name + " " + instance.state);
-                //}
-                //if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
-                string message = "";
-                if (instance.runWatch != null)
-                {
-                    message += (instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
-                }
-                else
-                {
-                    message += (instance.Workflow.name + " " + instance.state);
-                }
-                if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
-                Log.Information(message);
                 if (instance.hasError || instance.isCompleted)
                 {
-                    if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
+                    _ = Task.Run(() =>
                     {
-                        if (instance.state == "completed")
+                        var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                        while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {
-                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
-                            App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Info);
-                        }
-                        else
-                        {
-                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
-                            App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
-                        }
-                    }
-                }
-
-
-                OnChanged?.Invoke(this);
-            }
-            if (instance.hasError || instance.isCompleted)
-            {
-                _ = Task.Run(() =>
-                {
-                    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
-                    while (sw.Elapsed < TimeSpan.FromSeconds(1))
-                    {
-                        lock (WorkflowInstance.Instances)
-                        {
-                            foreach (var wi in WorkflowInstance.Instances.ToList())
+                            lock (WorkflowInstance.Instances)
                             {
-                                if (wi.isCompleted) continue;
-                                if (wi.Bookmarks == null) continue;
-                                foreach (var b in wi.Bookmarks)
+                                foreach (var wi in WorkflowInstance.Instances.ToList())
                                 {
-                                    if (b.Key == instance._id)
+                                    if (wi.isCompleted) continue;
+                                    if (wi.Bookmarks == null) continue;
+                                    foreach (var b in wi.Bookmarks)
                                     {
-                                        wi.ResumeBookmark(b.Key, instance);
-                                        return;
+                                        if (b.Key == instance._id)
+                                        {
+                                            wi.ResumeBookmark(b.Key, instance);
+                                            return;
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            finally
+            {
             }
         }
         public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)
@@ -1391,11 +1394,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null);
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
                     }
                 }
                 ReadOnly = true;
@@ -1789,11 +1792,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;
@@ -1806,7 +1809,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 // if (instance != null) instance.Run();
                 if (_activityIdMapping.ContainsKey(id))
                 {
-                    Log.Information("Getting activity " + id);
                     var a = _activityIdMapping[id];
                     var root = _activityIdMapping["1.1"];
                     //var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
@@ -1858,11 +1860,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                     if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
                     }
                     else
                     {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, null, null) as WorkflowInstance;
+                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
                     }
                 }
                 ReadOnly = true;
@@ -1879,8 +1881,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
 
             });
         }
-
-
         public static async Task<string> LoadImages(string xaml)
         {
             WorkflowDesigner wfDesigner;
@@ -1933,6 +1933,5 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
             wfDesigner.Flush();
             return wfDesigner.Text;
         }
-
     }
 }

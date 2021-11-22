@@ -25,8 +25,8 @@ namespace OpenRPA
         {
             _path = path;
             _types = new Dictionary<string, Type>();
-            // _fileName = String.Format("{0}.dll", name);
-            _fileName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetTempFileName()) + ".dll";
+            _fileName = String.Format("{0}.dll", name);
+            // _fileName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetTempFileName()) + ".dll";
             _moduleName = name;
 
             // _ab = AppDomain.CurrentDomain.DefineDynamicAssembly( new AssemblyName(_moduleName), AssemblyBuilderAccess.RunAndSave);

@@ -26,7 +26,12 @@ namespace OpenRPA.Net
             if (reply == null) return new T();
             if (reply.command == "error")
             {
-                throw new Exception("server error: " + reply.data);
+                //if (!string.IsNullOrEmpty(reply.data) && reply.data.Contains("Not signed in, and missing jwt"))
+                //{
+                //    Log.Information("SocketCommand.SendMessage, data has Not signed in, and missing jwt, so closing connection " + msg.command);
+                //    global.webSocketClient.Close();
+                //}
+                throw new SocketException("server error: " + reply.data);
             }
             try
             {

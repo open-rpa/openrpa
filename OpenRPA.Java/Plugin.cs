@@ -13,6 +13,61 @@ namespace OpenRPA.Java
 {
     public class Plugin : ObservableObject, IRecordPlugin
     {
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        public static JavaElement[] EnumRoots(WindowsAccessBridgeInterop.AccessibleJvm jvm)
+        {
+            var results = new List<JavaElement>();
+            var children = jvm.GetChildren();
+            if (children != null && children.Count() > 0)
+            {
+                var firstac = children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
+                var hwnd = jvm.AccessBridge.Functions.GetHWNDFromAccessibleContext(jvm.JvmId, firstac.AccessibleContextHandle);
+                RECT rect = new RECT();
+                GetWindowRect(hwnd, ref rect);
+
+                int x = rect.Left + ((rect.Right - rect.Left) / 2);
+                int y = rect.Top + ((rect.Bottom - rect.Top) / 2);
+                var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(x, y));
+                if (res != null)
+                {
+                    var Root = new JavaElement(res.Root);
+                    var Parent = Root;
+                    while (Parent.Parent != null) Parent = Parent.Parent;
+                    if (!results.Contains(Parent)) results.Add(Parent);
+                }
+
+
+                //for(var x= rect.Left; x < rect.Right; x += 10)
+                //{
+                //    for (var y = rect.Top; y < rect.Bottom; y += 10)
+                //    {
+                //        var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(x, y));
+                //        if (res != null)
+                //        {
+                //            var Root = new JavaElement(res.Root);
+                //            var Parent = Root;
+                //            while (Parent.Parent != null) Parent = Parent.Parent;
+                //            if(!results.Contains(Parent)) results.Add(Parent);
+                //        }
+                //    }
+                //}
+            }
+
+
+            return results.ToArray();
+        }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         public static treeelement[] _GetRootElements(Selector anchor)
         {
@@ -34,7 +89,13 @@ namespace OpenRPA.Java
             {
                 foreach (var jvm in Javahook.Instance.jvms)
                 {
-                    result.Add(new JavaTreeElement(null, true, new JavaElement(jvm)));
+                    var item = new JavaTreeElement(null, true, new JavaElement(jvm));
+                    result.Add(item);
+                    foreach (var e in Plugin.EnumRoots(jvm))
+                    {
+                        item.Children.Add(new JavaTreeElement(item, true, e));
+                        // result.Add(new JavaTreeElement(item, true, e));
+                    }
                 }
             }
             return result.ToArray();
@@ -63,6 +124,7 @@ namespace OpenRPA.Java
         // public string Status => (hook!=null && hook.jvms.Count>0 ? "online":"offline");
         private string _Status = "";
         public string Status { get => _Status; }
+        public int Priority { get => 60; }
         private void SetStatus(string status)
         {
             _Status = status;
@@ -83,115 +145,126 @@ namespace OpenRPA.Java
         public void Start()
         {
             Javahook.Instance.init();
-            Javahook.Instance.OnMouseClicked += Hook_OnMouseClicked;
             Javahook.Instance.Connected += () => { SetStatus("Online"); };
             Javahook.Instance.Disconnected += () => { SetStatus("Offline"); };
+            InputDriver.Instance.OnMouseUp += OnMouseUp;
         }
         public void Stop()
         {
-            Javahook.Instance.OnMouseClicked -= Hook_OnMouseClicked;
+            InputDriver.Instance.OnMouseUp -= OnMouseUp;
+        }
+        private void OnMouseUp(InputEventArgs e)
+        {
+            JavaElement foundElement = null;
+            foreach (var jvm in Javahook.Instance.jvms)
+            {
+                var _children = jvm.GetChildren();
+                if (_children.Count() > 0)
+                {
+                    var firstac = _children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
+                    var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(e.X, e.Y));
+                    if (res != null)
+                    {
+                        var Root = new JavaElement(res.Root);
+                        var Parent = Root;
+                        while (Parent.Parent != null) Parent = Parent.Parent;
+                        if (res.Count > 0)
+                        {
+                            foundElement = new JavaElement(res.Last());
+                        }
+                    }
+                }
+            }
+            if (foundElement == null) return;
+
+
+            foundElement.SetPath();
+            Log.Debug("OnMouseClicked: " + foundElement.id + " " + foundElement.role + " " + foundElement.Name);
+            if (foundElement == null) return;
+
+            var re = new RecordEvent
+            {
+                Button = MouseButton.Left
+            }; var a = new GetElement { DisplayName = foundElement.title };
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            // sel = new JavaSelector(e.Element.rawElement, null, true);
+            JavaSelector sel = new JavaSelector(foundElement, null, true);
+            if (sel == null) return;
+            if (sel.Count < 2) return;
+            a.Selector = sel.ToString();
+            a.Image = foundElement.ImageString();
+            a.MaxResults = 1;
+            re.Element = foundElement;
+            re.Selector = sel;
+            re.X = foundElement.X;
+            re.Y = foundElement.Y;
+            re.a = new GetElementResult(a);
+            re.SupportInput = foundElement.SupportInput;
+            re.SupportSelect = false;
+
+            Log.Debug(string.Format("Java.Recording::OnMouseClicked::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+            OnUserAction?.Invoke(this, re);
         }
         private void Hook_OnJavaShutDown(int vmID)
         {
             Log.Information("JavaShutDown: " + vmID);
             NotifyPropertyChanged("Status");
         }
-        public JavaElement LastElement { get; set; }
-        private void Hook_OnMouseClicked(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
-        {
-            LastElement = new JavaElement(ac);
-            LastElement.SetPath();
-            Log.Debug("OnMouseClicked: " + LastElement.id + " " + LastElement.role + " " + LastElement.Name);
-            if (LastElement == null) return;
-
-            var re = new RecordEvent
-            {
-                Button = MouseButton.Left
-            }; var a = new GetElement { DisplayName = LastElement.title };
-            var sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-            // sel = new JavaSelector(e.Element.rawElement, null, true);
-            JavaSelector sel = new JavaSelector(LastElement, null, true);
-            if (sel == null) return;
-            if (sel.Count < 2) return;
-            a.Selector = sel.ToString();
-            a.Image = LastElement.ImageString();
-            a.MaxResults = 1;
-            re.Element = LastElement;
-            re.Selector = sel;
-            re.X = LastElement.X;
-            re.Y = LastElement.Y;
-            re.a = new GetElementResult(a);
-            re.SupportInput = LastElement.SupportInput;
-            re.SupportSelect = false;
-
-            Log.Debug(string.Format("Java.Recording::OnMouseClicked::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-            OnUserAction?.Invoke(this, re);
-        }
-        private void Hook_OnMouseEntered(int vmID, WindowsAccessBridgeInterop.AccessibleContextNode ac)
-        {
-            LastElement = new JavaElement(ac);
-            LastElement.SetPath();
-            Log.Verbose("MouseEntered: " + LastElement.id + " " + LastElement.role + " " + LastElement.Name);
-        }
+        // public JavaElement LastElement { get; set; }
         public bool ParseUserAction(ref IRecordEvent e)
         {
-            if (LastElement == null) return false;
             if (e.UIElement == null) return false;
 
-            if(e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
+            JavaElement foundElement = null;
+            foreach (var jvm in Javahook.Instance.jvms)
             {
-                if (e.UIElement.ProcessId < 1) return false;
-                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "java") return false;
+                var _children = jvm.GetChildren();
+                if (_children.Count() > 0)
+                {
+                    var firstac = _children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
+                    var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(e.X, e.Y));
+                    if (res != null)
+                    {
+                        var Root = new JavaElement(res.Root);
+                        var Parent = Root;
+                        while (Parent.Parent != null) Parent = Parent.Parent;
+                        if (res.Count > 0)
+                        {
+                            foundElement = new JavaElement(res.Last());
+                        }
+                    }
+                }
             }
-            var selector = new JavaSelector(LastElement, null, true);
-            var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.role + " " + LastElement.Name };
+            if (foundElement == null) return false;
+
+            var selector = new JavaSelector(foundElement, null, true);
+            var a = new GetElement { DisplayName = foundElement.id + " " + foundElement.role + " " + foundElement.Name };
             a.Selector = selector.ToString();
-            a.Image = LastElement.ImageString();
+            a.Image = foundElement.ImageString();
             a.MaxResults = 1;
 
             e.a = new GetElementResult(a);
-            e.SupportInput = LastElement.SupportInput;
+            e.SupportInput = foundElement.SupportInput;
             e.ClickHandled = true;
             e.Selector = selector;
-            e.Element = LastElement;
-            LastElement.Click(true, e.Button, 0,0, false, false);
+            e.Element = foundElement;
+            foundElement.Click(true, e.Button, 0, 0, false, false);
             return true;
         }
         public void Initialize(IOpenRPAClient client)
         {
-            // Javahook.Instance.init();
-            //try
-            //{
-            //    Javahook.Instance.init();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error(ex.ToString());
-            //}
             try
             {
                 Javahook.Instance.OnInitilized += Hook_OnInitilized;
                 Javahook.Instance.OnJavaShutDown += Hook_OnJavaShutDown;
-                Javahook.Instance.OnMouseEntered += Hook_OnMouseEntered;
                 Javahook.Instance.OnNewjvm += Hook_OnNewjvm;
                 Javahook.Instance.init();
-                //Task.Run(() =>
-                //{
-                //});
-                
-
-                //GenericTools.RunUI(() =>
-                //{
-                //});
-
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
             }
-
         }
         private void Hook_OnNewjvm(WindowsAccessBridgeInterop.AccessBridge accessBridge, WindowsAccessBridgeInterop.AccessibleJvm[] newjvms)
         {
@@ -205,7 +278,11 @@ namespace OpenRPA.Java
         }
         public IElement[] GetElementsWithSelector(Selector selector, IElement fromElement = null, int maxresults = 1)
         {
-            var result = JavaSelector.GetElementsWithuiSelector(selector as JavaSelector, fromElement, maxresults );
+            if (!(selector is JavaSelector javaselector))
+            {
+                javaselector = new JavaSelector(selector.ToString());
+            }
+            var result = JavaSelector.GetElementsWithuiSelector(javaselector, fromElement, maxresults);
             return result;
         }
         public IElement LaunchBySelector(Selector selector, bool CheckRunning, TimeSpan timeout)
@@ -223,17 +300,30 @@ namespace OpenRPA.Java
         }
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
-            if (LastElement == null) return false;
             if (e.UIElement == null) return false;
 
-            if (e.UIElement.ClassName == null || !e.UIElement.ClassName.StartsWith("SunAwt"))
+            JavaElement foundElement = null;
+            foreach (var jvm in Javahook.Instance.jvms)
             {
-                if (e.UIElement.ProcessId < 1) return false;
-                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "java") return false;
+                var _children = jvm.GetChildren();
+                if (_children.Count() > 0)
+                {
+                    var firstac = _children.First() as WindowsAccessBridgeInterop.AccessibleContextNode;
+                    var res = firstac.GetNodePathAtUsingAccessBridge(new System.Drawing.Point(e.X, e.Y));
+                    if (res != null)
+                    {
+                        var Root = new JavaElement(res.Root);
+                        var Parent = Root;
+                        while (Parent.Parent != null) Parent = Parent.Parent;
+                        if (res.Count > 0)
+                        {
+                            foundElement = new JavaElement(res.Last());
+                        }
+                    }
+                }
             }
-
-            e.Element = LastElement;
+            if (foundElement == null) return false;
+            e.Element = foundElement;
             return true;
         }
     }

@@ -29,18 +29,18 @@ namespace OpenRPA.Views
         public event Action<Project> onOpenProject;
         //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
         private AgentWindow main = null;
-        public ICommand PlayCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnPlay, AgentWindow.instance.CanPlay); } }
+        public ICommand PlayCommand { get { return new RelayCommand<object>(AgentWindow.Instance.OnPlay, AgentWindow.Instance.CanPlay); } }
         //public ICommand ExportCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnExport, AgentWindow.instance.CanExport); } }
         //public ICommand RenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnRename, AgentWindow.instance.CanRename); } }
         //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete2, AgentWindow.instance.CanDelete); } }
         //public ICommand DeleteCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnDelete, AgentWindow.instance.CanDelete); } }
         //public ICommand CopyIDCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyID, AgentWindow.instance.CanCopyID); } }
         //public ICommand CopyRelativeFilenameCommand { get { return new RelayCommand<object>(AgentWindow.instance.OnCopyRelativeFilename, AgentWindow.instance.CanCopyID); } }
-        public System.Collections.ObjectModel.ObservableCollection<Project> Projects
+        public List<Project> Projects
         {
             get
             {
-                return RobotInstance.instance.Projects;
+                return RobotInstance.instance.Projects.FindAll().ToList();
             }
         }
         public AgentViewProjects(AgentWindow main)
@@ -84,7 +84,7 @@ namespace OpenRPA.Views
                         f.XAML = workflow.Xaml;
                         f.ShowDialog();
                         workflow.Xaml = f.XAML;
-                        await workflow.Save(false);
+                        await workflow.Save();
                     }
                     catch (Exception ex)
                     {

@@ -5,8 +5,9 @@
     <ComponentGroup Id="PDPluginComponents">
       <Component Id='PDPluginComponent' Guid='{4F305262-DF6B-424F-A6A3-216FBA2A2F73}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.PDPlugin.dll" Source="!(wix.PDPluginSource)\OpenRPA.PDPlugin.dll" />
+        <File Id="OpenRPA.PDPlugin.pdb" Source="!(wix.PDPluginSource)\OpenRPA.PDPlugin.pdb" />
       </Component>
-      
+
       <Component Id='PDPluginComponentde' Win64='yes' Directory="PDPluginde" Guid='{6043A68D-BB45-44A2-8F16-6C49CDC57379}'>
         <File Id="OpenRPA.PDPlugin.resources.dll_de" Source="!(wix.PDPluginSource)\de\OpenRPA.PDPlugin.resources.dll" />
       </Component>

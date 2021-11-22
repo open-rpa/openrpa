@@ -18,6 +18,15 @@ namespace OpenRPA.Java
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
     public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
+        public GetElement()
+        {
+            MaxResults = 1;
+            MinResults = 1;
+            Timeout = new InArgument<TimeSpan>()
+            {
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(3000)")
+            };
+        }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<JavaElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }

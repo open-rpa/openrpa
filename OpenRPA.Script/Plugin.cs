@@ -54,6 +54,7 @@ namespace OpenRPA.Script
         }
         public string Name { get => "Script"; }
         public string Status { get => ""; }
+        public int Priority { get => 200; }
         public void Start()
         {
         }

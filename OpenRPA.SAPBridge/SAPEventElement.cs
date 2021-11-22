@@ -599,12 +599,12 @@ namespace OpenRPA.SAPBridge
                     var tool = Properties.Where(x => x.Name == "DefaultTooltip").FirstOrDefault();
                     if (tool == null)
                     {
-                        Program.log("Missing DefaultTooltip " + Id);
+                        // Program.log("Missing DefaultTooltip " + Id);
                     }
                 }
                 else
                 {
-                    Program.log("Missing DefaultTooltip " + Id + " (missing all properties)");
+                    // Program.log("Missing DefaultTooltip " + Id + " (missing all properties)");
                 }
             }
             if (string.IsNullOrEmpty(Name))

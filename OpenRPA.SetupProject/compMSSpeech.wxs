@@ -4,6 +4,7 @@
     <ComponentGroup Id="MSSpeechComponents">
       <Component Id='MSSpeechComponent' Guid='{65B32393-C413-475A-BF13-5FAF8E657025}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.MSSpeech.dll" Source="!(wix.MSSpeechSource)\OpenRPA.MSSpeech.dll" />
+        <File Id="OpenRPA.MSSpeech.pdb" Source="!(wix.MSSpeechSource)\OpenRPA.MSSpeech.pdb" />
       </Component>
       <!--<Component Id='MSSpeechComponentde' Win64='yes' Directory="MSSpeechde" Guid='{11330C3C-BEE2-4096-841B-3FE2322D5177}'>
       </Component>
@@ -23,9 +24,9 @@
         <File Id="OpenRPA.MSSpeech.resources.dll_zh" Source="!(wix.MSSpeechSource)\zh\OpenRPA.MSSpeech.resources.dll" />
       </Component>
     </ComponentGroup>
-    
+
     <DirectoryRef Id="INSTALLDIR">
-    <!--  <Directory Id="MSSpeechde" Name="de">
+      <!--  <Directory Id="MSSpeechde" Name="de">
       </Directory>
       <Directory Id="MSSpeechda" Name="da">
       </Directory>

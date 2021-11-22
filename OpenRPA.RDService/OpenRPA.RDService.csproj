@@ -5,7 +5,7 @@
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Windows Service to monitor Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
@@ -77,7 +77,6 @@
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
     <ProjectReference Include="..\OpenRPA.NamedPipeWrapper\OpenRPA.NamedPipeWrapper.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj" />
-    <ProjectReference Include="..\OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AxInterop.MSTSCLib">

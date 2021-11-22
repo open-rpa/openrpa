@@ -33,7 +33,7 @@ namespace OpenRPA.Interfaces.Views
             DataContext = this;
         }
         private KeyboardDetectorPlugin plugin;
-        public entity.Detector Entity
+        public IDetector Entity
         {
             get
             {

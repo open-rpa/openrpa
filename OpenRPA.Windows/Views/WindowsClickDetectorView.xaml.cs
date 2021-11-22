@@ -36,11 +36,11 @@ namespace OpenRPA.Windows.Views
             DataContext = this;
         }
         private IDetectorPlugin plugin;
-        public Detector Entity
+        public IDetector Entity
         {
             get
             {
-                return plugin.Entity as Detector;
+                return plugin.Entity as IDetector;
             }
         }
         public string EntityName

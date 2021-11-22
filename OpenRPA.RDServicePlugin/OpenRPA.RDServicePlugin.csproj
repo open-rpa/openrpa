@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Plugin to manage OpenRPS'a Windows Service that monitors Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
-    <ProjectReference Include="..\OpenRPA.RDServiceMonitor\OpenRPA.RDServiceMonitor.csproj" />
     <ProjectReference Include="..\OpenRPA.RDService\OpenRPA.RDService.csproj" />
   </ItemGroup>
   <ItemGroup>

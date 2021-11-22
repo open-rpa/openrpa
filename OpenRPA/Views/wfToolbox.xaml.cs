@@ -38,7 +38,6 @@ namespace OpenRPA.Views
             Instance = this;
         }
         public static WFToolbox Instance = null;
-
         private string getDisplayName(Type type)
         {
             string displayName = type.Name;

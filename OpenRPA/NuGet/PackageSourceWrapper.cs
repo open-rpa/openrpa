@@ -44,13 +44,13 @@ namespace OpenRPA
                     _cacheinstalled = new List<PackageSearchItem>();
                     if(project.dependencies != null)
                     {
-                        foreach (JProperty jp in (JToken)project.dependencies)
+                        foreach (var jp in project.dependencies)
                         {
-                            var ver_range = NuGet.Versioning.VersionRange.Parse((string)jp.Value);
+                            var ver_range = NuGet.Versioning.VersionRange.Parse(jp.Value);
                             if (ver_range.IsMinInclusive)
                             {
                                 var target_ver = NuGet.Versioning.NuGetVersion.Parse(ver_range.MinVersion.ToString());
-                                var _temp = await NuGetPackageManager.Instance.GetLocal(project, new NuGet.Packaging.Core.PackageIdentity(jp.Name, target_ver));
+                                var _temp = await NuGetPackageManager.Instance.GetLocal(project, new NuGet.Packaging.Core.PackageIdentity(jp.Key, target_ver));
                                 foreach(var item in _temp)
                                 {
                                     if(_cacheinstalled.Where(x=> x.Id == item.Id).FirstOrDefault() == null)
@@ -78,7 +78,6 @@ namespace OpenRPA
             }
             if (!string.IsNullOrEmpty(_currentsearchString))
             {
-                // Console.WriteLine("skipping: " + _currentsearchString + " " + searchString);
                 _currentsearchString = searchString;
                 return;
             }
@@ -86,15 +85,14 @@ namespace OpenRPA
 
             _ = Task.Run(async () =>
             {
-                Console.WriteLine("Searching for '" + searchString + "'");
+                Log.Debug("Searching for '" + searchString + "'");
                 var result = await NuGetPackageManager.Instance.Search(project, source, includePrerelease, searchString);
-                Console.WriteLine("Update list of packages based on '" + searchString + "'");
+                Log.Debug("Update list of packages based on '" + searchString + "'");
                 GenericTools.RunUI(() =>
                 {
                 });
                 if (!string.IsNullOrEmpty(_currentsearchString) && _currentsearchString != searchString)
                 {
-                    //Console.WriteLine("Start new search based on '" + _currentsearchString + "'");
                     var _searchString = _currentsearchString;
                     _currentsearchString = null;
                     _ = Search(project, view, includePrerelease, _searchString);
@@ -115,7 +113,6 @@ namespace OpenRPA
                     });
 
                 }
-                //Console.WriteLine("complete:: '" + searchString + "'");
             });
         }
     }

@@ -490,7 +490,6 @@ namespace OpenRPA
                 {
                     f2 = f.Substring(f.IndexOf("/", 0) + 1);
                 }
-
                 filename = System.IO.Path.GetFileName(f2);
                 dir = System.IO.Path.GetDirectoryName(f2);
                 target = System.IO.Path.Combine(TargetFolder, dir, filename);
@@ -534,7 +533,6 @@ namespace OpenRPA
         }
         public void UninstallPackage(string TargetFolder, PackageIdentity identity)
         {
-
             var packagePathResolver = new PackagePathResolver(PackagesInstallFolder);
             var installedPath = packagePathResolver.GetInstalledPath(identity);
 

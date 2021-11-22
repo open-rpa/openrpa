@@ -46,13 +46,13 @@ namespace OpenRPA.Activities
                         {
                             if (i.Workflow._id == workflowid || i.Workflow.RelativeFilename == workflowid)
                             {
-                                i.Abort("Killed by StopOpenRPA activity from " + Instance.Workflow.name);
+                                i.Abort("Killed by StopOpenRPA command from " + Instance.Workflow.name);
                                 result++;
                             }
                         }
                         else
                         {
-                            i.Abort("Killed by StopOpenRPA activity from " + Instance.Workflow.name);
+                            i.Abort("Killed StopOpenRPA command from " + Instance.Workflow.name);
                             result++;
                         }
                     }

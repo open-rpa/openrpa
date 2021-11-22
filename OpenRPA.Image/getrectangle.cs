@@ -107,7 +107,7 @@ namespace OpenRPA.Image
             OpenRPA.Input.InputDriver.Instance.CallNext = false;
 
             waitHandle = new System.Threading.AutoResetEvent(false);
-            await waitHandle.WaitOneAsync(TimeSpan.FromSeconds(5));
+            await waitHandle.WaitOneAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
             //System.Windows.Forms.Application.Exit();
 
             return rect;

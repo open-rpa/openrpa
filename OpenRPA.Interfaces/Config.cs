@@ -149,18 +149,26 @@ namespace OpenRPA
             {
                 if (_local == null)
                 {
-                    string filename = SettingsFile;
-                    _local = new Config();
-                    if (System.IO.File.Exists(filename))
+                    try
                     {
-                        var json = System.IO.File.ReadAllText(filename);
-                        _local.settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                        string filename = SettingsFile;
+                        _local = new Config();
+                        if (System.IO.File.Exists(filename))
+                        {
+                            var json = System.IO.File.ReadAllText(filename);
+                            _local.settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                        }
+                        // _local = Load(filename);
+                        // Hack to force updating old clients for new domain names
+                        if (_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
+                        {
+                            _local.wsurl = "wss://app.openiap.io/";
+                        }
                     }
-                    // _local = Load(filename);
-                    // Hack to force updating old clients for new domain names
-                    if (_local.wsurl == "wss://demo1.openrpa.dk/" || _local.wsurl == "wss://demo1.openrpa.dk")
+                    catch (Exception ex)
                     {
-                        _local.wsurl = "wss://app.openiap.io/";
+                        Log.Error(ex.ToString());
+                        System.Windows.MessageBox.Show(ex.Message);
                     }
                 }
                 return _local;

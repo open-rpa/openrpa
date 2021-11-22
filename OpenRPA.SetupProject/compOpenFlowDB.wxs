@@ -5,8 +5,9 @@
     <ComponentGroup Id="OpenFlowDBComponents">
       <Component Id='OpenFlowDBComponent' Guid='{B933EDED-15A4-44D7-8137-9499A3F9167E}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.OpenFlowDB.dll" Source="!(wix.OpenFlowDBSource)\OpenRPA.OpenFlowDB.dll" />
+        <File Id="OpenRPA.OpenFlowDB.pdb" Source="!(wix.OpenFlowDBSource)\OpenRPA.OpenFlowDB.pdb" />
       </Component>
-      
+
       <Component Id='OpenFlowDBComponentde' Win64='yes' Directory="OpenFlowDBde" Guid='{E6AB04E6-454A-4248-B95F-B5ABF39FC710}'>
         <File Id="OpenRPA.OpenFlowDB.resources.dll_de" Source="!(wix.OpenFlowDBSource)\de\OpenRPA.OpenFlowDB.resources.dll" />
       </Component>

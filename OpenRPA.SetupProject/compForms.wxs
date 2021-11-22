@@ -11,6 +11,7 @@
         <File Id="MaterialDesignColors.dll" Source="!(wix.FormsSource)\MaterialDesignColors.dll" />
         <File Id="MaterialDesignThemes.Wpf.dll" Source="!(wix.FormsSource)\MaterialDesignThemes.Wpf.dll" />
         <File Id="OpenRPA.Forms.dll" Source="!(wix.FormsSource)\OpenRPA.Forms.dll" />
+        <File Id="OpenRPA.Forms.pdb" Source="!(wix.FormsSource)\OpenRPA.Forms.pdb" />
         <File Id="ToastNotifications.dll" Source="!(wix.FormsSource)\ToastNotifications.dll" />
         <File Id="ToastNotifications.Messages.dll" Source="!(wix.FormsSource)\ToastNotifications.Messages.dll" />
       </Component>

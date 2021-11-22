@@ -123,7 +123,7 @@ namespace OpenRPA.RDServicePlugin.Views
                     var path = System.IO.Path.GetDirectoryName(filepath);
                     var filename = System.IO.Path.Combine(path, "OpenRPA.RDService.exe");
                     // Plugin.manager.InstallService(filename, new string[] { "username=" + NativeMethods.GetProcessUserName(), "password="+ windowspassword.Password });
-                    Plugin.manager.InstallService(filename,null);
+                    Plugin.manager.InstallService(filename, null);
                 }
             }
             catch (Exception ex)
@@ -179,7 +179,7 @@ namespace OpenRPA.RDServicePlugin.Views
 
                 var servers = await global.webSocketClient.Query<RDService.unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
                 server = servers.FirstOrDefault();
-                if(server == null)
+                if (server == null)
                 {
                     Log.Error("Server not found in OpenFlow, does current user have access to object " + computername + "?");
                     AddcurrentuserButton.Content = "Add current user";
@@ -194,7 +194,7 @@ namespace OpenRPA.RDServicePlugin.Views
                     UninstallServiceButton.IsEnabled = false;
                     return;
                 }
-                
+
                 var clients = await global.webSocketClient.Query<RDService.unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "', 'windowsusername':'" + windowsusername.Replace(@"\", @"\\") + "'}");
                 AddcurrentuserButton.Content = "Add current user";
                 if (clients.Length == 1)
@@ -203,6 +203,10 @@ namespace OpenRPA.RDServicePlugin.Views
                     AddcurrentuserButton.Content = "Update current user";
                     chkautosignout.IsChecked = client.autosignout;
                     lblWindowsLogin.Text = client.windowslogin;
+                }
+                else
+                {
+                    chkautosignout.IsChecked = true;
                 }
                 txtreloadinterval.Text = RDService.PluginConfig.reloadinterval.ToString();
                 chkUseFreeRDP.IsChecked = RDService.PluginConfig.usefreerdp;
@@ -213,14 +217,14 @@ namespace OpenRPA.RDServicePlugin.Views
                 StopServiceButton.IsEnabled = false;
                 InstallServiceButton.IsEnabled = true;
                 UninstallServiceButton.IsEnabled = false;
-                if(client!=null)
+                if (client != null)
                 {
                     lblExecutable.Text = client.openrpapath;
                 }
                 if (Plugin.manager.IsServiceInstalled)
                 {
                     AddcurrentuserButton.IsEnabled = true;
-                    RemovecurrentuserButton.IsEnabled = (client!=null);
+                    RemovecurrentuserButton.IsEnabled = (client != null);
                     ReauthenticateButton.IsEnabled = true;
                     StartServiceButton.IsEnabled = (Plugin.manager.Status != System.ServiceProcess.ServiceControllerStatus.Running);
                     StopServiceButton.IsEnabled = (Plugin.manager.Status == System.ServiceProcess.ServiceControllerStatus.Running);

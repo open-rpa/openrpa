@@ -273,7 +273,6 @@ namespace OpenRPA.Interfaces
                         var set = new System.Resources.ResourceSet(type.Assembly.GetManifestResourceStream(names[0]));
                         foreach (System.Collections.DictionaryEntry resource in set)
                         {
-                            // Log.Information("\n[{0}] \t{1}", resource.Key, resource.Value);
                             if (((string)resource.Key).EndsWith(resourceName.ToLower()))
                             {
                                 using (var reader = new System.IO.StreamReader(resource.Value as System.IO.Stream))
@@ -367,16 +366,50 @@ namespace OpenRPA.Interfaces
 
             return filename;
         }
-        public static Task WaitOneAsync(this System.Threading.WaitHandle waitHandle, TimeSpan timeout)
+        //public static Task WaitOneAsync(this System.Threading.WaitHandle waitHandle, TimeSpan timeout)
+        //{
+        //    if (waitHandle == null) throw new ArgumentNullException("waitHandle");
+        //    var Milliseconds = timeout.TotalMilliseconds;
+        //    if (Milliseconds < 1) Milliseconds = -1;
+        //    var tcs = new TaskCompletionSource<bool>();
+        //    var rwh = System.Threading.ThreadPool.RegisterWaitForSingleObject(waitHandle, delegate { tcs.TrySetResult(true); }, null, (uint)Milliseconds, true);
+        //    var t = tcs.Task;
+        //    t.ContinueWith((antecedent) => rwh.Unregister(null));
+        //    return t;
+        //}
+        public static async Task<bool> WaitOneAsync(this System.Threading.WaitHandle handle, int millisecondsTimeout, System.Threading.CancellationToken cancellationToken)
         {
-            if (waitHandle == null) throw new ArgumentNullException("waitHandle");
-            var Milliseconds = timeout.TotalMilliseconds;
-            if (Milliseconds < 1) Milliseconds = -1;
-            var tcs = new TaskCompletionSource<bool>();
-            var rwh = System.Threading.ThreadPool.RegisterWaitForSingleObject(waitHandle, delegate { tcs.TrySetResult(true); }, null, (uint)Milliseconds, true);
-            var t = tcs.Task;
-            t.ContinueWith((antecedent) => rwh.Unregister(null));
-            return t;
+            System.Threading.RegisteredWaitHandle registeredHandle = null;
+            var tokenRegistration = default(System.Threading.CancellationTokenRegistration);
+            try
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                registeredHandle = System.Threading.ThreadPool.RegisterWaitForSingleObject(
+                    handle,
+                    (state, timedOut) => ((TaskCompletionSource<bool>)state).TrySetResult(!timedOut),
+                    tcs,
+                    millisecondsTimeout,
+                    true);
+                tokenRegistration = cancellationToken.Register(
+                    state => ((TaskCompletionSource<bool>)state).TrySetCanceled(),
+                    tcs);
+                return await tcs.Task;
+            }
+            finally
+            {
+                if (registeredHandle != null)
+                    registeredHandle.Unregister(null);
+                tokenRegistration.Dispose();
+            }
+        }
+        public static Task<bool> WaitOneAsync(this System.Threading.WaitHandle handle, TimeSpan timeout, System.Threading.CancellationToken cancellationToken)
+        {
+            return handle.WaitOneAsync((int)timeout.TotalMilliseconds, cancellationToken);
+        }
+
+        public static Task<bool> WaitOneAsync(this System.Threading.WaitHandle handle, System.Threading.CancellationToken cancellationToken)
+        {
+            return handle.WaitOneAsync(System.Threading.Timeout.Infinite, cancellationToken);
         }
         public static bool TryCast<T>(this object obj, out T result)
         {

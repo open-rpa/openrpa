@@ -45,7 +45,6 @@ namespace OpenRPA.Java.Views
         }
         private void launch_java_bridge_Click(object sender, RoutedEventArgs e)
         {
-            Javahook.EnsureJavaBridge();
         }
     }
 }

@@ -5,8 +5,9 @@
     <ComponentGroup Id="FileWatcherComponents">
       <Component Id='FileWatcherComponent' Guid='{C29A141B-1D4E-40C1-94D8-E1610D06BF47}' Win64='yes' Directory="INSTALLDIR">
         <File Id="OpenRPA.FileWatcher.dll" Source="!(wix.FileWatcherSource)\OpenRPA.FileWatcher.dll" />
+        <File Id="OpenRPA.FileWatcher.pdb" Source="!(wix.FileWatcherSource)\OpenRPA.FileWatcher.pdb" />
       </Component>
-      
+
       <Component Id='FileWatcherComponentde' Win64='yes' Directory="FileWatcherde" Guid='{F8A354D8-7881-4C13-8B5E-27E26E5253D1}'>
         <File Id="OpenRPA.FileWatcher.resources.dll_de" Source="!(wix.FileWatcherSource)\de\OpenRPA.FileWatcher.resources.dll" />
       </Component>

@@ -44,6 +44,7 @@ namespace OpenRPA.PS
             {
                 await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password), "powershell");
             }
+            _Collections = null;
             if (Save.IsPresent)
             {
                 Config.local.wsurl = WSURL;

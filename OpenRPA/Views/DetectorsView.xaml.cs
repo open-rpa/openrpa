@@ -61,34 +61,33 @@ namespace OpenRPA.Views
             {
                 await semaphoreSlim.WaitAsync();
                 var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
-                foreach(var p in list.ToList())
+                foreach (var p in list.ToList())
                 {
-                    var Entity = (p.Entity as Interfaces.entity.Detector);
+                    var Entity = (p.Entity as Detector);
                     if (global.isConnected)
                     {
                         try
                         {
-                            if (string.IsNullOrEmpty(Entity._id))
-                            {
-                                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);
-                                Entity._id = result._id;
-                                Entity._acl = result._acl;
-                            }
-                            else
-                            {
-                                var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
-                                if(result!=null) Entity._acl = result._acl;
-                            }
+                            _ = Entity.Save();
+                            //if (string.IsNullOrEmpty(Entity._id) || Entity.isLocalOnly)
+                            //{
+                            //    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);
+                            //    Entity._id = result._id;
+                            //    Entity._acl = result._acl;
+                            //    Entity.isLocalOnly = false;
+                            //    Entity.isDirty = false;
+                            //}
+                            //else
+                            //{
+                            //    var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
+                            //    if (result != null) Entity._acl = result._acl;
+                            //}
                         }
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
                         }
-                    } else
-                    {
-                        if (string.IsNullOrEmpty(Entity._id)) Entity._id = Guid.NewGuid().ToString().Replace("{", "").Replace("}", "").Replace("-", ""); 
                     }
-                    Entity.SaveFile(Interfaces.Extensions.ProjectsDirectory);
                 }
             }
             catch (Exception ex)
@@ -108,22 +107,31 @@ namespace OpenRPA.Views
             {
                 var btn = sender as System.Windows.Controls.Button;
                 var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
-                var d = new Interfaces.entity.Detector(); d.Plugin = kv.Value.FullName;
+                var d = new Detector(); d.Plugin = kv.Value.FullName;
                 IDetectorPlugin dp = null;
-                d.Path = Interfaces.Extensions.ProjectsDirectory;
                 NotifyPropertyChanged("detectorPlugins");
                 d.name = kv.Value.Name;
-                var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
-                d._id = result._id;
-                d._acl = result._acl;
+                if (global.isConnected)
+                {
+                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
+                    d._id = result._id;
+                    d._acl = result._acl;
+                }
+                else
+                {
+                    d._id = Guid.NewGuid().ToString();
+                    d.isDirty = true;
+                    d.isLocalOnly = true;
+                }
                 IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
-                if(exists == null)
+                if (exists == null)
                 {
                     dp = Plugins.AddDetector(RobotInstance.instance, d);
                     dp.OnDetector += main.OnDetector;
-                    dp.Entity._id = result._id;
-                    dp.Entity._acl = result._acl;
                 }
+                var dexists = RobotInstance.instance.Detectors.FindById(d._id);
+                if (dexists == null) RobotInstance.instance.Detectors.Insert(d);
+                if (dexists != null) RobotInstance.instance.Detectors.Update(d);
             }
             catch (Exception ex)
             {
@@ -138,22 +146,35 @@ namespace OpenRPA.Views
             {
                 if (e.Key == Key.Delete)
                 {
-                    var item = lidtDetectors.SelectedValue as IDetectorPlugin;
-                    item.Stop();
-                    item.OnDetector -= main.OnDetector;
-                    var d = item.Entity as OpenRPA.Interfaces.entity.Detector;
-                    if (d != null) d.Delete();
-                    var kd = item.Entity;
-                    if (kd != null) kd.Delete();
-                    if (global.isConnected)
+                    var index = lidtDetectors.SelectedIndex;
+                    var items = new List<object>();
+                    foreach (var item in lidtDetectors.SelectedItems) items.Add(item);
+                    foreach (var item in items)
                     {
-                        var _id = (item.Entity as Interfaces.entity.Detector)._id;
-                        if (!string.IsNullOrEmpty(_id))
+                        var d = item as IDetectorPlugin;
+                        if (d != null)
                         {
-                            await global.webSocketClient.DeleteOne("openrpa", _id);
+                            var entity = d.Entity as Detector;
+                            d.OnDetector -= main.OnDetector;
+                            d.Stop();
+                            Plugins.detectorPlugins.Remove(d);
+                            if (entity != null)
+                            {
+                                await entity.Delete();
+                            }
                         }
                     }
-                    detectorPlugins.Remove(item);
+                    if (index > -1)
+                    {
+                        if (index >= lidtDetectors.Items.Count)
+                        {
+                            index = lidtDetectors.Items.Count - 1;
+                        }
+                        if (index > -1)
+                        {
+                            ((ListBoxItem)lidtDetectors.ItemContainerGenerator.ContainerFromIndex((lidtDetectors.Items.Count > 1 ? (index == 0 ? 1 : index - 1) : 0)))?.Focus();
+                        }
+                    }
                 }
             }
             catch (Exception ex)

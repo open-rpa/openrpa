@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>open_rpa128.png</PackageIcon>
@@ -80,10 +80,10 @@
     <None Remove="Resources\Images\Warning16.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.0.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.2.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.2.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+    <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.11.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Debugger.Contracts" Version="16.10.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Resources\CodeEditorResources.xaml" />

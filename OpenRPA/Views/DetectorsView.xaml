@@ -11,7 +11,7 @@
         <CollectionViewSource Source="{Binding DetectorTypes}" x:Key="DetectorTypes" />
     </UserControl.Resources>
 
-        <DockPanel>
+    <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar x:Name="toolbar" ItemsSource="{Binding Source={StaticResource DetectorTypes}}" >
                 <ToolBar.ItemTemplate>
@@ -19,7 +19,8 @@
                         <Button ToolTip="{Binding Key}" Click="Button_Click" Margin="5,0,5,0">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/OpenRPA;component/Resources/Buttons/Button.png" />
-                                <TextBlock Margin="3,0,0,0" Text="Add " /><TextBlock Margin="3,0,0,0" Text="{Binding Value.Name}" />
+                                <TextBlock Margin="3,0,0,0" Text="Add " />
+                                <TextBlock Margin="3,0,0,0" Text="{Binding Value.Name}" />
                             </StackPanel>
                         </Button>
                     </DataTemplate>
@@ -32,7 +33,18 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <TreeView x:Name="lidtDetectors" ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp" >
+            <ListBox SelectionMode="Extended" x:Name="lidtDetectors" ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp">
+                <ListBox.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+
+            <!--<TreeView x:Name="lidtDetectors2" ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp" >
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
                         <StackPanel Orientation="Horizontal">
@@ -40,7 +52,7 @@
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
-            </TreeView>
+            </TreeView>-->
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
             <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Margin="0,4,0,4" />
         </Grid>

@@ -15,6 +15,7 @@ namespace OpenRPA.Windows
     public class WindowsSelector : Selector
     {
         UIElement element { get; set; }
+        private WindowsSelector() { }
         public WindowsSelector(string json) : base(json) { }
         public WindowsSelector(AutomationElement element, WindowsSelector anchor, bool doEnum)
         {
@@ -23,7 +24,6 @@ namespace OpenRPA.Windows
             Log.Selector(string.Format("windowsselector::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
             AutomationElement root = null;
-            AutomationElement baseElement = null;
             var pathToRoot = new List<AutomationElement>();
             while (element != null)
             {
@@ -51,16 +51,16 @@ namespace OpenRPA.Windows
             }
             Log.Selector(string.Format("windowsselector::create pathToRoot::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             AutomationElement win = null;
-            for(var i = 0; i < pathToRoot.Count; i++)
+            for (var i = 0; i < pathToRoot.Count; i++)
             {
                 var _item = pathToRoot[i];
                 FlaUI.Core.Definitions.ControlType ct;
-                if(_item.Properties.ControlType.TryGetValue(out ct))
+                if (_item.Properties.ControlType.TryGetValue(out ct))
                 {
                     if (ct == FlaUI.Core.Definitions.ControlType.Window) win = _item;
                 }
             }
-            if(win != null)
+            if (win != null && PluginConfig.remove_fisrt_window)
             {
                 var indexof = pathToRoot.IndexOf(win) + 1;
                 pathToRoot.RemoveRange(indexof, pathToRoot.Count - indexof);
@@ -69,7 +69,7 @@ namespace OpenRPA.Windows
             if (anchor != null)
             {
                 bool SearchDescendants = anchor.First().SearchDescendants();
-                if(SearchDescendants)
+                if (SearchDescendants)
                 {
                     var a = anchor.Last();
                     var idx = -1;
@@ -105,7 +105,7 @@ namespace OpenRPA.Windows
 
             }
             WindowsSelectorItem item;
-            if(PluginConfig.traverse_selector_both_ways)
+            if (PluginConfig.traverse_selector_both_ways)
             {
                 Log.Selector(string.Format("windowsselector::create traverse_selector_both_ways::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
                 var temppathToRoot = new List<AutomationElement>();
@@ -124,8 +124,8 @@ namespace OpenRPA.Windows
                         count--;
                         var i = temppathToRoot.First();
                         temppathToRoot.Remove(i);
-                        item = new WindowsSelectorItem(i, false);
-                        if(parent!=null)
+                        item = new WindowsSelectorItem(i, false, null);
+                        if (parent != null)
                         {
                             var m = item.matches(root, count, parent, 2, isDesktop, false);
                             if (m.Length > 0)
@@ -165,14 +165,60 @@ namespace OpenRPA.Windows
                 Log.Error("Element has not parent, or is same as annchor");
                 return;
             }
-            baseElement = pathToRoot.First();
+            AutomationElement baseElement = pathToRoot.First();
+            WindowsSelectorItem rootselectoritem = new WindowsSelectorItem(baseElement, true, null);
+            if (PluginConfig.search_descendants && PluginConfig.create_short_selector)
+            {
+                Log.Selector(string.Format("windowsselector::begin create short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
+
+                bool testSelector = false;
+                using (var automation = AutomationUtil.getAutomation())
+                {
+                    var subparent = pathToRoot[0];
+                    var subparentui = new UIElement(subparent);
+                    UIElement[] subparents = { subparentui };
+                    item = new WindowsSelectorItem(pathToRoot.Last(), false, rootselectoritem);
+
+                    bool worked = true;
+                    if (testSelector)
+                    {
+                        Log.Selector(string.Format("windowsselector::begin test short selector using 1 item {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        var subelements2 = GetElementsWithuiSelectorItem(2, automation, item, subparents, 2, true, true).ToList();
+                        Log.Selector(string.Format("windowsselector::begin test found " + subelements2.Count + " {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        worked = subelements2.Count == 1;
+                    }
+                    if (worked)
+                    {
+                        if (anchor == null)
+                        {
+                            item = new WindowsSelectorItem(baseElement, true, rootselectoritem);
+                            item.Enabled = true;
+                            Items.Add(item);
+
+                            item = new WindowsSelectorItem(baseElement, false, rootselectoritem);
+                            item.Enabled = true;
+                            Items.Add(item);
+                        }
+                        item = new WindowsSelectorItem(pathToRoot.Last(), false, rootselectoritem);
+                        item.Enabled = true;
+                        Items.Add(item);
+                        Log.Selector(string.Format("windowsselector::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Count"));
+                        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+                        OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+                        return;
+
+                    }
+                }
+            }
+
             element = pathToRoot.Last();
             Clear();
             Log.Selector(string.Format("windowsselector::remove anchor if needed::end {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (anchor == null)
             {
                 Log.Selector(string.Format("windowsselector::create root element::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-                item = new WindowsSelectorItem(baseElement, true);
+                item = new WindowsSelectorItem(baseElement, true, rootselectoritem);
                 item.Enabled = true;
                 //item.canDisable = false;
                 Items.Add(item);
@@ -194,7 +240,7 @@ namespace OpenRPA.Windows
                     }
                 }
 
-                item = new WindowsSelectorItem(o, false, IndexInParent);
+                item = new WindowsSelectorItem(o, false, rootselectoritem, IndexInParent);
                 var _IndexInParent = item.Properties.Where(x => x.Name == "IndexInParent").FirstOrDefault();
                 if (_IndexInParent != null) _IndexInParent.Enabled = false;
                 if (i == 0 || i == (pathToRoot.Count() - 1)) item.canDisable = false;
@@ -216,7 +262,7 @@ namespace OpenRPA.Windows
                         {
                             p.Enabled = false;
                         }
-                                
+
                     }
                     //if (p.Name == "ClassName" && p.Value.StartsWith("WindowsForms10")) p.Value = "WindowsForms10*";
                     if (p.Name == "ClassName" && p.Value.ToLower() == "shelldll_defview")
@@ -283,7 +329,7 @@ namespace OpenRPA.Windows
                         var ps = System.Diagnostics.Process.GetProcessesByName(sel.processname()).Where(_p => _p.SessionId == me.SessionId).ToArray();
                         if (ps.Length == 0)
                         {
-                            Log.Selector("GetElementsWithuiSelector::Process " + sel.processname() + " not found, end with 0 results");
+                            Log.Selector(string.Format("GetElementsWithuiSelector::Process " + sel.processname() + " not found, end with 0 results"));
                             return new UIElement[] { };
                         }
                         var psids = ps.Select(x => x.Id).ToArray();
@@ -310,7 +356,7 @@ namespace OpenRPA.Windows
 
                         if (_current.Count == 0)
                         {
-                            Log.Debug("GetElementsWithuiSelector::Searchin for all " + con.ToString());
+                            Log.Debug(string.Format("GetElementsWithuiSelector::Searchin for all " + con.ToString()));
                             // var ___treeWalker = automation.TreeWalkerFactory.GetCustomTreeWalker(con);
                             var ___treeWalker = automation.TreeWalkerFactory.GetControlViewWalker();
                             int retries = 0;
@@ -332,7 +378,7 @@ namespace OpenRPA.Windows
                                 }
 
                             } while (hasError && retries < 10);
-                            
+
                             while (win != null)
                             {
                                 bool addit = false;
@@ -343,7 +389,7 @@ namespace OpenRPA.Windows
                                 if (addit)
                                 {
                                     var uiele = new UIElement(win);
-                                    Log.Debug("GetElementsWithuiSelector::Adding element " + uiele.ToString() );
+                                    Log.Debug("GetElementsWithuiSelector::Adding element " + uiele.ToString());
                                     _current.Add(uiele);
                                     if (win.Patterns.Window.TryGetPattern(out var winPattern))
                                     {
@@ -409,7 +455,7 @@ namespace OpenRPA.Windows
 
                     } while (hasError && retries < 10);
 
-                    
+
                     if (ele != null)
                     {
                         do
@@ -471,7 +517,7 @@ namespace OpenRPA.Windows
             // var automation = AutomationUtil.getAutomation();
             AutomationBase automation = null;
             if (ext != null) automation = ext.automation;
-            if(automation == null) automation = AutomationUtil.getAutomation();
+            if (automation == null) automation = AutomationUtil.getAutomation();
 
             UIElement[] result = null;
             // AutomationElement ele = null;
@@ -486,9 +532,9 @@ namespace OpenRPA.Windows
                 var current = _current.ToArray();
                 _current.Clear();
                 // if(i == 1 && current.Length == 1 && current.First().ControlType == sel.ControlType)
-                if(i == 1)
+                if (i == 1)
                 {
-                    foreach(var e in current)
+                    foreach (var e in current)
                     {
                         if (WindowsSelectorItem.Match(sel, e.RawElement))
                         {
@@ -499,9 +545,47 @@ namespace OpenRPA.Windows
                     //_current = GetElementsWithuiSelectorItem(automation, sel, current, maxresults, i == (selectors.Count - 1)).ToList();
                     //if(_current.Count == 0) _current = current.ToList();
                     //_current = current.ToList();
-                } 
+                }
                 _current = GetElementsWithuiSelectorItem(i, automation, sel, current, maxresults, i == (selectors.Count - 1), search_descendants).ToList();
-                if(i == 0 && _current.Count == 0) _current = current.ToList();
+                if (i == 0 && _current.Count == 0)
+                {
+                    _current = current.ToList();
+                }
+                else if (i > 0 && _current.Count == 0 && current.Length > 0 && (PluginConfig.try_mouse_over_search || selector.mouse_over_search()))
+                {
+                    for (var z = 0; z < current.Length; z++)
+                    {
+                        current[z].Focus();
+                        var x = current[z].Rectangle.X + 5; var y = current[z].Rectangle.Y + 5;
+                        var screen = automation.FromPoint(new System.Drawing.Point(x, y));
+                        Log.Selector("mouse point lookup at " + x + "," + y + " for " + sel.ToString());
+                        var screenel = screen.Parent;
+                        while (screenel != null)
+                        {
+                            var uiscreenel = new UIElement(screenel);
+
+                            if (WindowsSelectorItem.Match(sel, screenel))
+                            {
+                                _current.Clear();
+                                _current.Add(new UIElement(screenel));
+                                Log.Selector("Mouse lookup found " + uiscreenel.ToString());
+                                break;
+                            }
+                            else { screenel = screenel.Parent; }
+                            // only allow direct parents, or search for match in all child elements found ? ( like searching for a button inside a pane )
+                            //else
+                            //{
+                            //    Log.Output("Lookup in " + uiscreenel.ToString());
+                            //    _current = GetElementsWithuiSelectorItem(i, automation, sel, new UIElement[] { uiscreenel }, maxresults, i == (selectors.Count - 1), search_descendants).ToList();
+                            //    if (_current.Count != 0) break;
+                            //    screenel = screenel.Parent;
+                            //}
+                        }
+                        if (_current.Count > 0) break;
+                    }
+
+                }
+
             }
             Log.Debug(string.Format("GetElementsWithuiSelector::completed with " + _current.Count + " results {0:mm\\:ss\\.fff}", sw.Elapsed));
             if (_current.Count > 0)

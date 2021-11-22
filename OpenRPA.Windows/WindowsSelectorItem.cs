@@ -72,7 +72,7 @@ namespace OpenRPA.Windows
                 return e.Value;
             }
         }
-        public WindowsSelectorItem(AutomationElement element, bool isRoot, int IndexInParent = -1)
+        public WindowsSelectorItem(AutomationElement element, bool isRoot, SelectorItem rootselectoritem, int IndexInParent = -1)
         {
             this.Element = new UIElement(element);
             Properties = new ObservableCollection<SelectorItemProperty>();
@@ -99,6 +99,7 @@ namespace OpenRPA.Windows
                     }
                     Properties.Add(new SelectorItemProperty("Selector", "Windows"));
                     Properties.Add(new SelectorItemProperty("search_descendants", PluginConfig.search_descendants.ToString()));
+                    Properties.Add(new SelectorItemProperty("mouse_over_search", PluginConfig.try_mouse_over_search.ToString()));                    
                 }
                 foreach (var p in Properties)
                 {
@@ -108,10 +109,32 @@ namespace OpenRPA.Windows
             }
             else
             {
+                bool isAx = false;
+                if(rootselectoritem != null)
+                {
+                    var processname = "";
+                    if(!string.IsNullOrEmpty(rootselectoritem.processname()))
+                    {
+                        processname = rootselectoritem.processname().ToLower();
+                    }
+                    if(processname == "ax32.exe" || processname == "ax32") isAx = true;
+                }
                 try
                 {
-                    if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value)) Properties.Add(new SelectorItemProperty("Name", element.Properties.Name.Value));
-                    if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName)) Properties.Add(new SelectorItemProperty("ClassName", element.Properties.ClassName.Value));
+                    var classname = "";
+                    //AxChildFrame
+                    if (element.Properties.ClassName.IsSupported && !string.IsNullOrEmpty(element.Properties.ClassName))
+                    {
+                        classname = element.Properties.ClassName.Value;
+                        Properties.Add(new SelectorItemProperty("ClassName", classname));
+                    }
+                    if (element.Properties.Name.IsSupported && !string.IsNullOrEmpty(element.Properties.Name.Value))
+                    {
+                        var name = element.Properties.Name.Value;
+                        if (classname == "AxChildFrame" || classname == "AxPopupFrame") name = name.Substring(0, 14) + "*";
+                        if (classname == "AxMainFrame" && name.IndexOf("‎‪Session ID‬") > 0) name = name.Substring(0, name.IndexOf("‎‪Session ID‬") + 10) + "*";
+                        Properties.Add(new SelectorItemProperty("Name", name));
+                    }
                     if (element.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(element.Properties.ControlType.Value.ToString()))
                     {
 
@@ -120,7 +143,7 @@ namespace OpenRPA.Windows
                             Properties.Add(new SelectorItemProperty("ControlType", element.Properties.ControlType.Value.ToString()));
                         }
                     }
-                    if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId)) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
+                    if (element.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(element.Properties.AutomationId) && !isAx) Properties.Add(new SelectorItemProperty("AutomationId", element.Properties.AutomationId.Value));
                     if (element.Properties.FrameworkId.IsSupported && !string.IsNullOrEmpty(element.Properties.FrameworkId)) Properties.Add(new SelectorItemProperty("FrameworkId", element.Properties.FrameworkId.Value));
                     if (IndexInParent > -1) Properties.Add(new SelectorItemProperty("IndexInParent", IndexInParent.ToString()));
                 }
@@ -475,9 +498,19 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "Name")
                 {
-                    if (m.Properties.Name.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.Name.Value;
+                        if (m.Properties.Name.IsSupported)
+                        {
+                            v = m.Properties.Name.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.Name.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -492,10 +525,20 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "ClassName")
                 {
-
-                    if (m.Properties.ClassName.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.ClassName.Value;
+                        if (m.Properties.ClassName.IsSupported)
+                        {
+                            v = m.Properties.ClassName.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.ClassName.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -510,9 +553,20 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "AutomationId")
                 {
-                    if (m.Properties.AutomationId.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.AutomationId.Value;
+                        if (m.Properties.AutomationId.IsSupported)
+                        {
+                            v = m.Properties.AutomationId.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.AutomationId.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -527,9 +581,20 @@ namespace OpenRPA.Windows
                 }
                 if (p.Name == "FrameworkId")
                 {
-                    if (m.Properties.FrameworkId.IsSupported)
+                    string v = null;
+                    try
                     {
-                        var v = m.Properties.FrameworkId.Value;
+                        if (m.Properties.FrameworkId.IsSupported)
+                        {
+                            v = m.Properties.FrameworkId.Value;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(v))
+                    {
                         if (!PatternMatcher.FitsMask(m.Properties.FrameworkId.Value, p.Value))
                         {
                             Log.SelectorVerbose(p.Name + " mismatch '" + v + "' / '" + p.Value + "'");
@@ -566,7 +631,7 @@ namespace OpenRPA.Windows
         }
         public override string ToString()
         {
-            return "AutomationId:" + AutomationId + " Name:" + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
+            return "AutomationId:" + AutomationId + " Name: " + Name + " ClassName: " + ClassName + " ControlType: " + ControlType;
         }
     }
 }

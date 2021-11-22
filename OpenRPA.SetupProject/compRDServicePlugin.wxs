@@ -8,11 +8,13 @@
         <!--<File Id="AxInterop.MSTSCLib.dll" Source="!(wix.RDServicePluginSource)\AxInterop.MSTSCLib.dll" />
         <File Id="MSTSCLib.dll" Source="!(wix.RDServicePluginSource)\MSTSCLib.dll" />-->
         <File Id="OpenRPA.RDService.exe" Source="!(wix.RDServicePluginSource)\OpenRPA.RDService.exe" />
+        <File Id="OpenRPA.RDService.pdb" Source="!(wix.RDServicePluginSource)\OpenRPA.RDService.pdb" />
         <File Id="OpenRPA.RDService.exe.config" Source="!(wix.RDServicePluginSource)\OpenRPA.RDService.exe.config" />
-        <File Id="OpenRPA.RDServiceMonitor.exe" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServiceMonitor.exe" />
-        <File Id="OpenRPA.RDServiceMonitor.exe.config" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServiceMonitor.exe.config" />
+        <!--<File Id="OpenRPA.RDServiceMonitor.exe" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServiceMonitor.exe" />
+        <File Id="OpenRPA.RDServiceMonitor.exe.config" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServiceMonitor.exe.config" />-->
         <File Id="OpenRPA.RDServicePlugin.dll" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServicePlugin.dll" />
-        <File Id="SimpleImpersonation.dll" Source="!(wix.RDServicePluginSource)\SimpleImpersonation.dll" />        
+        <File Id="OpenRPA.RDServicePlugin.pdb" Source="!(wix.RDServicePluginSource)\OpenRPA.RDServicePlugin.pdb" />
+        <File Id="SimpleImpersonation.dll" Source="!(wix.RDServicePluginSource)\SimpleImpersonation.dll" />
       </Component>
 
       <Component Id='RDServicePluginComponentx64' Win64='yes' Directory="RDServicePluginx64" Guid='{81AD9BB8-D6A8-4509-A5B8-C36159A36B2B}'>

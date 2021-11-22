@@ -13,6 +13,7 @@ namespace OpenRPA.Image
     {
         public string Name => "Image";
         public string Status => "";
+        public int Priority { get => 9000; }
         private Views.RecordPluginView view;
         public System.Windows.Controls.UserControl editor
         {
@@ -68,6 +69,7 @@ namespace OpenRPA.Image
         {
             if (e.UIElement == null) { return false; }
 
+            if (!e.Element.Equals(e.UIElement)) { return false; }
             if (e.UIElement.Type != "Pane") { return false; }
             var element = e.UIElement.RawElement;
 
@@ -108,16 +110,17 @@ namespace OpenRPA.Image
         {
             if (e.UIElement == null) return false;
 
-            if(e.UIElement.Type != "Pane") return false;
+            if (!e.Element.Equals(e.UIElement)) { return false; }
+            if (e.UIElement.Type != "Pane") return false;
             var element = e.UIElement.RawElement;
 
             string Processname = "";
-            if (e.UIElement.ProcessId > 0 )
+            if (e.UIElement.ProcessId > 0)
             {
                 var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
                 if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") return false;
                 if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") return false;
-                if(p.ProcessName.ToLower() == "saplogon") return false;
+                if (p.ProcessName.ToLower() == "saplogon") return false;
                 Processname = p.ProcessName;
             }
 
@@ -150,7 +153,7 @@ namespace OpenRPA.Image
             a.Image = Interfaces.Image.Util.Bitmap2Base64(image);
             e.a = new GetElementResult(a);
 
-            NativeMethods.SetCursorPos(e.X, e.Y );
+            NativeMethods.SetCursorPos(e.X, e.Y);
 
             return true;
         }

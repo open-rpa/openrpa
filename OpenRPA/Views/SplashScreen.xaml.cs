@@ -83,24 +83,6 @@ namespace OpenRPA.Views
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //Console.WriteLine("Window_Loaded");
-            //BusyIndicator.IsBusy = true;
-            //BusyIndicator.BusyContent = "Initializing...";
-            //var worker = new System.ComponentModel.BackgroundWorker();
-            //worker.DoWork += (o, a) =>
-            //{
-            //    for (int index = 0; index < 5; index++)
-            //    {
-            //        BusyContent = "Loop : " + index;
-            //        Console.WriteLine("Loop : " + index);
-            //        System.Threading.Thread.Sleep(new TimeSpan(0, 0, 1));
-            //    }
-            //};
-            //worker.RunWorkerCompleted += (o, a) =>
-            //{
-            //    IsBusy = false;
-            //};
-            //worker.RunWorkerAsync();
         }
     }
 }

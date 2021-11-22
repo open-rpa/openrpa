@@ -425,8 +425,10 @@ namespace OpenRPA
                         }
                         if (exists._version > p._version && p.isDirty)
                         {
-                            Log.Debug("LoadServerData::Updating project " + p.name);
-                            await p.Save();
+                            //Log.Debug("LoadServerData::Updating project " + p.name);
+                            //await p.Save();
+                            Log.Warning("project " + p.name + " has a newer version on the server!");
+                            // await wf.Save();
                         }
                     }
                     else
@@ -500,9 +502,12 @@ namespace OpenRPA
                         try
                         {
                             if (exists._version < wf._version) reload_ids.Add(wf._id);
-                            if (exists._version > wf._version && wf.isDirty)
+                            if (exists._version > wf._version && wf.isDirty) // Do NOT save offline changes. LEt user do that using the right click menu
                             {
-                                Log.Warning(wf.RelativeFilename + " has a newer version on the server!");
+                                Log.Warning(exists.RelativeFilename + " has a newer version on the server!");
+                                var state = exists.State;
+                                exists.SetLastState("warning");
+                                await exists.Save(true);
                                 // await wf.Save();
                             }
                         }
@@ -527,10 +532,13 @@ namespace OpenRPA
                             Log.Debug("Removing local workflow " + wf.name);
                             Workflows.Delete(wf._id);
                         }
-                        else if (wf.isDirty || wf.isLocalOnly)
+                        else if ((wf.isDirty || wf.isLocalOnly) && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
                         {
+                            var _version = wf._version;
+                            string name = wf.name;
+                            string RelativeFilename = wf.RelativeFilename;
                             if (wf.isDeleted) await wf.Delete();
-                            if (!wf.isDeleted) await wf.Save();
+                            if (!wf.isDeleted && exists._version > wf._version) await wf.Save();
                         }
                     }
                     catch (Exception ex)

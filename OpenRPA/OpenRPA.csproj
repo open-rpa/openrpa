@@ -10,7 +10,7 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.3.31</Version>
+    <Version>1.3.32</Version>
     <PackageReleaseNotes>1.2.62 test fix: json parser work around
 1.2.61 Yet another fix UI error after adding Index and Total variables on loops
 1.2.60 Fix UI error after adding Index and Total variables on loops
@@ -472,6 +472,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Resources\state\Abort.png" />
     <None Remove="Resources\state\Completed.png" />
     <None Remove="Resources\state\failed.png" />
+    <None Remove="Resources\state\risk.png" />
     <None Remove="Resources\state\Running.png" />
     <None Remove="Resources\state\Running_green.png" />
     <None Remove="Resources\state\unloaded.png" />
@@ -939,6 +940,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <Resource Include="Resources\state\Abort.png" />
     <Resource Include="Resources\state\Completed.png" />
     <Resource Include="Resources\state\failed.png" />
+    <Resource Include="Resources\state\Risk.png" />
     <Resource Include="Resources\state\Running.png" />
     <Resource Include="Resources\state\Running_green.png" />
     <Resource Include="Resources\state\unloaded.png" />

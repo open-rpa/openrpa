@@ -175,9 +175,13 @@ namespace OpenRPA
             }
         }
         private string laststate = "unloaded";
-        [JsonIgnore, BsonIgnore]
+        [JsonIgnore]
         public string State
         {
+            set
+            {
+                laststate = value;
+            }
             get
             {
                 string state = laststate;
@@ -215,6 +219,7 @@ namespace OpenRPA
                     case "aborted": return "/OpenRPA;component/Resources/state/Abort.png";
                     case "failed": return "/OpenRPA;component/Resources/state/failed.png";
                     case "completed": return "/OpenRPA;component/Resources/state/Completed.png";
+                    case "warning": return "/OpenRPA;component/Resources/state/Risk.png";
                     default: return "/OpenRPA;component/Resources/state/unloaded.png";
                 }
             }

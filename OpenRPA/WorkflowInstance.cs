@@ -976,6 +976,7 @@ namespace OpenRPA
                         }
                         i.createApp(workflow.Activity());
                         i.Run();
+                        await Task.Delay(250);
                     }
                     catch (Exception ex)
                     {

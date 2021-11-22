@@ -93,11 +93,58 @@ namespace OpenRPA.Views
                 return null;
             }
         }
+        public ICommand GetServerVersionCommand
+        {
+            get
+            {
+                return new RelayCommand<object>(OnGetServerVersion, CanGetServerVersion);
+            }
+        }
         public ICommand DisableCachingCommand
         {
             get
             {
                 return new RelayCommand<object>(OnDisableCaching, CanDisableCaching);
+            }
+        }
+        internal bool CanGetServerVersion(object _item)
+        {
+            try
+            {
+                if (RobotInstance.instance.Window is AgentWindow) return false;
+                if (global.webSocketClient == null || !global.webSocketClient.isConnected) return false;
+                if (main.SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null)
+                    {
+                        return false;
+                    }
+                    if (view.listWorkflows.SelectedValue is Workflow workflow)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnGetServerVersion(object _item)
+        {
+            if (main.SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (!(view.listWorkflows.SelectedValue is Workflow workflow)) return;
+                var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", "{'_id': '" + workflow._id + "'}", null, top: 1);
+                if (server_workflows.Length > 0)
+                {
+                    await server_workflows[0].Save();
+                }
             }
         }
         internal bool CanDisableCaching(object _item)

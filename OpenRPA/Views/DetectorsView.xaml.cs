@@ -68,7 +68,7 @@ namespace OpenRPA.Views
                     {
                         try
                         {
-                            Entity.Save();
+                            _ = Entity.Save();
                             //if (string.IsNullOrEmpty(Entity._id) || Entity.isLocalOnly)
                             //{
                             //    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);

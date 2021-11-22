@@ -1645,6 +1645,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get server version.
+        /// </summary>
+        public static string menu_get_server_version {
+            get {
+                return ResourceManager.GetString("menu_get_server_version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimize.
         /// </summary>
         public static string minimize {

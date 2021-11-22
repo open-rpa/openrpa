@@ -74,6 +74,7 @@
                                 <MenuItem Header="{x:Static or:strings.copyid}" Command="{Binding Data.CopyIDCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.copyrelativefilename}" Command="{Binding Data.CopyRelativeFilenameCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                                 <MenuItem Header="{x:Static or:strings.delete}" Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                                <MenuItem Header="{x:Static or:strings.menu_get_server_version}" Command="{Binding Data.GetServerVersionCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                             </ContextMenu>
                         </StackPanel.ContextMenu>
                     </StackPanel>

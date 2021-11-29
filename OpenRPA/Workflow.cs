@@ -234,7 +234,15 @@ namespace OpenRPA
             if (laststate != State)
             {
                 laststate = State;
-                NotifyUIState();
+                GenericTools.RunUI(() => NotifyUIState());
+                if(laststate == "loaded" || laststate == "unloaded")
+                {
+                    _ = Save(true);
+                }
+                //Task.Run(async () =>
+                // {
+                //     await Save(true);
+                // });
             }
         }
         [JsonIgnore]
@@ -246,6 +254,7 @@ namespace OpenRPA
                 {
                     case "unloaded": return "/OpenRPA;component/Resources/state/unloaded.png";
                     case "running": return "/OpenRPA;component/Resources/state/Running_green.png";
+                    case "idle": return "/OpenRPA;component/Resources/state/Running_green.png";
                     case "aborted": return "/OpenRPA;component/Resources/state/Abort.png";
                     case "failed": return "/OpenRPA;component/Resources/state/failed.png";
                     case "completed": return "/OpenRPA;component/Resources/state/Completed.png";

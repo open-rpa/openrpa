@@ -2472,7 +2472,7 @@ namespace OpenRPA
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
                     if (!(view.listWorkflows.SelectedValue is Workflow wf)) return false;
-                    if (wf.State == "running") return false;
+                    if (wf.State == "running" || wf.State == "idle") return false;
                     if (global.isConnected)
                     {
                         return wf.hasRight(global.webSocketClient.user, ace_right.invoke);
@@ -2740,7 +2740,7 @@ namespace OpenRPA
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return false;
                     if (!(view.listWorkflows.SelectedValue is Workflow wf)) return false;
-                    if (wf.State == "running") return true;
+                    if (wf.State == "running" || wf.State == "idle") return true;
                     return false;
                 }
                 // if (!IsConnected) return false;
@@ -2772,6 +2772,7 @@ namespace OpenRPA
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return;
                     if (!(view.listWorkflows.SelectedValue is Workflow wf)) return;
+                    wf.SetLastState("aborted");
                     foreach (var i in wf.Instances)
                     {
                         if (i.isCompleted == false)

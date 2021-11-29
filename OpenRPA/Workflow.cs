@@ -184,43 +184,59 @@ namespace OpenRPA
             }
             get
             {
-                string state = laststate;
-                var instace = Instances;
-                if (instace.Count() > 0)
+                try
                 {
-                    var running = instace.Where(x => x.isCompleted == false).ToList();
-                    if (running.Count() > 0)
-                    {
-                        state = "running";
-                    }
-                    else
-                    {
-                        state = instace.OrderByDescending(x => x._modified).First().state;
-                    }
+                    string state = laststate;
+                    //Log.Output("laststate " + laststate);
+                    //var instace = Instances;
+                    //if (instace.Count() > 0)
+                    //{
+                    //    var running = instace.Where(x => x.isCompleted == false).ToList();
+                    //    if (running.Count() > 0)
+                    //    {
+                    //        state = "running";
+                    //    }
+                    //    else
+                    //    {
+                    //        state = instace.OrderByDescending(x => x._modified).First().state;
+                    //    }
 
-                    if (laststate != state)
-                    {
-                        laststate = state;
-                        _ = Save(true);
-                        Log.Output("Saving " + RelativeFilename);
-                    }
+                    //    if (laststate != state)
+                    //    {
+                    //        laststate = state;
+                    //        _ = Save(true);
+                    //        Log.Output("Saving " + RelativeFilename);
+                    //    }
+                    //}
+                    //else if (state == "running" || state == "idle")
+                    //{
+                    //    state = "unloaded";
+                    //    if (laststate != state)
+                    //    {
+                    //        laststate = state;
+                    //        _ = Save(true);
+                    //        Log.Output("Saving " + RelativeFilename);
+                    //    }
+                    //}
+                    return state;
                 }
-                else if (state == "running" || state == "idle")
+                catch (Exception ex)
                 {
-                    state = "unloaded";
-                    if (laststate != state)
-                    {
-                        laststate = state;
-                        _ = Save(true);
-                        Log.Output("Saving " + RelativeFilename);
-                    }
+                    Log.Error(ex.ToString());
+                    return "unloaded";
                 }
-                return state;
+
             }
         }
         public void SetLastState(string State)
         {
-            laststate = State;
+            if (State == "loaded") return;
+            if (laststate != State)
+            {
+                laststate = State;
+                NotifyUIState();
+            }
+            Log.Output("SetLastState " + State);
         }
         [JsonIgnore]
         public string StateImage

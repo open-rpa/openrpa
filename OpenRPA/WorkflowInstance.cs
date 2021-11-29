@@ -752,7 +752,6 @@ namespace OpenRPA
                 {
                     if (state == "running" || state == "idle" || state == "completed")
                     {
-                        state = "faulted";
                         state = "aborted";
                         if (e.TerminationException != null)
                         {
@@ -813,11 +812,8 @@ namespace OpenRPA
                 Bookmarks = bookmarks;
                 state = "idle";
                 Save();
-                if (state != "completed")
-                {
-                    NotifyIdle();
-                    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
-                }
+                NotifyIdle();
+                OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
             wfApp.PersistableIdle = delegate (System.Activities.WorkflowApplicationIdleEventArgs e)
             {

@@ -236,7 +236,6 @@ namespace OpenRPA
                 laststate = State;
                 NotifyUIState();
             }
-            Log.Output("SetLastState " + State);
         }
         [JsonIgnore]
         public string StateImage

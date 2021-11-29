@@ -195,10 +195,25 @@ namespace OpenRPA
                     }
                     else
                     {
-                        laststate = "running";
                         state = instace.OrderByDescending(x => x._modified).First().state;
                     }
-                    laststate = state;
+
+                    if (laststate != state)
+                    {
+                        laststate = state;
+                        _ = Save(true);
+                        Log.Output("Saving " + RelativeFilename);
+                    }
+                }
+                else if (state == "running" || state == "idle")
+                {
+                    state = "unloaded";
+                    if (laststate != state)
+                    {
+                        laststate = state;
+                        _ = Save(true);
+                        Log.Output("Saving " + RelativeFilename);
+                    }
                 }
                 return state;
             }

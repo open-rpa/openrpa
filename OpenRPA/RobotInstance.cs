@@ -532,7 +532,7 @@ namespace OpenRPA
                             Log.Debug("Removing local workflow " + wf.name);
                             Workflows.Delete(wf._id);
                         }
-                        else if ((wf.isDirty || wf.isLocalOnly) && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
+                        else if ((wf.isDirty || wf.isLocalOnly) && exists != null && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
                         {
                             var _version = wf._version;
                             string name = wf.name;

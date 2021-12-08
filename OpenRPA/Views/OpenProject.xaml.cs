@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -500,6 +501,165 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
             Log.FunctionOutdent("OpenProject", "ButtonEditXAML");
+        }
+        private void StartDrag(MouseEventArgs e)
+        {
+            IsDragging = true;
+            DependencyObject dependencyObject = listWorkflows.InputHitTest(e.GetPosition(listWorkflows)) as DependencyObject;
+            if (dependencyObject is TextBlock)
+            {
+                if (listWorkflows.SelectedValue is Workflow wf)
+                {
+                    if (System.Windows.Input.Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        DragDrop.DoDragDrop(listWorkflows, wf, DragDropEffects.Copy);
+                    }
+                    else
+                    {
+                        DragDrop.DoDragDrop(listWorkflows, wf, DragDropEffects.Move);
+                    }
+                    e.Handled = true;
+                }
+                // DataObject data = new DataObject(System.Windows.DataFormats.Text.ToString(), "abcd");
+                // DragDropEffects de = DragDrop.DoDragDrop(tvi, data, DragDropEffects.Move);
+            }
+            IsDragging = false;
+            return;
+        }
+        Point _startPoint;
+        bool IsDragging = false;
+        private void listWorkflows_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _startPoint = e.GetPosition(null);
+        }
+        private void listWorkflows_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && !IsDragging)
+            {
+                Point position = e.GetPosition(null); if (Math.Abs(position.X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    StartDrag(e);
+                }
+            }
+        }
+        private async void listWorkflows_Drop(object sender, DragEventArgs e)
+        {
+            Workflow wf = e.Data.GetData(typeof(Workflow)) as Workflow;
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            TreeViewItem target = null;
+            DependencyObject k = VisualTreeHelper.HitTest(listWorkflows, e.GetPosition(listWorkflows)).VisualHit;
+            while (k != null)
+            {
+                if (k is TreeViewItem treeNode)
+                {
+                    target = treeNode;
+
+                }
+                k = VisualTreeHelper.GetParent(k);
+            }
+            if (target == null) return;
+            Project p = null;
+            if (target.DataContext is Workflow targetwf)
+            {
+                p = targetwf.Project() as Project;
+            }
+            if (target.DataContext is Project targetp)
+            {
+                p = targetp;
+            }
+            if (wf != null)
+            {
+                e.Handled = true;
+                if (target != null)
+                {
+                    if (p != null && p._id != wf.projectid)
+                    {
+                        if (string.IsNullOrEmpty(wf.Filename)) wf.Filename = wf.UniqueFilename();
+                        var nameexists = p.Workflows.Where(x => x.name == wf.name).ToList();
+                        var filenameexists = p.Workflows.Where(x => x.Filename == wf.Filename).ToList();
+                        if (nameexists.Count() == 1)
+                        {
+                            var messageBoxResult = MessageBox.Show("Project " + p.name + " already contains a workflow with name " + Workflow.name +
+                            ", do you wish to overwrite this workflow (Yes)? or keep them seperate (no)", "Workflow already exists", MessageBoxButton.YesNo);
+                            if (messageBoxResult == MessageBoxResult.Yes)
+                            {
+                                nameexists[0].Xaml = wf.Xaml;
+                                nameexists[0].ParseParameters();
+                                if (filenameexists.Count() > 0) wf.Filename = wf.UniqueFilename();
+                                await nameexists[0].Save();
+                                // await wf.Delete();
+                            }
+                            else
+                            {
+                                if (e.Effects == DragDropEffects.Copy)
+                                {
+                                    wf = JObject.FromObject(wf).ToObject<Workflow>();
+                                    wf._id = null;
+                                    wf.projectid = p._id;
+                                    wf.Filename = wf.UniqueFilename();
+                                }
+                                wf.Filename = wf.UniqueFilename();
+                                wf.projectid = p._id;
+                                await wf.Save();
+                            }
+
+                        }
+                        else if (filenameexists.Count() == 1)
+                        {
+                            var messageBoxResult = MessageBox.Show("Project " + p.name + " already contains a workflow with filename " + Workflow.Filename + " with name \"" + Workflow.name + "\" " +
+                            ", do you wish to overwrite this workflow (Yes)? or keep them seperate (no)", "Workflow already exists", MessageBoxButton.YesNo);
+                            if (messageBoxResult == MessageBoxResult.Yes)
+                            {
+                                filenameexists[0].Xaml = wf.Xaml;
+                                filenameexists[0].ParseParameters();
+                                filenameexists[0].Filename = filenameexists[0].UniqueFilename();
+                                await filenameexists[0].Save();
+                                // await wf.Delete();
+                            }
+                            else
+                            {
+                                if (e.Effects == DragDropEffects.Copy)
+                                {
+                                    wf = JObject.FromObject(wf).ToObject<Workflow>();
+                                    wf._id = null;
+                                }
+                                wf.projectid = p._id;
+                                wf.Filename = wf.UniqueFilename();
+                                await wf.Save();
+                            }
+                        }
+                        else
+                        {
+                            if (e.Effects == DragDropEffects.Copy)
+                            {
+                                wf = JObject.FromObject(wf).ToObject<Workflow>();
+                                wf._id = null;
+                                wf.projectid = p._id;
+                                wf.UniqueFilename();
+                            }
+                            wf.projectid = p._id;
+                            await wf.Save();
+                        }
+                    }
+                }
+            }
+            if (files != null && files.Length > 0)
+            {
+                e.Handled = true;
+                foreach (var filename in files)
+                {
+                    if (!System.IO.File.Exists(filename)) continue;
+                    if (System.IO.Path.GetExtension(filename) == ".xaml")
+                    {
+                        var name = System.IO.Path.GetFileNameWithoutExtension(filename);
+                        Workflow workflow = await Workflow.Create(p, name);
+                        workflow.Xaml = System.IO.File.ReadAllText(filename);
+                        await workflow.Save();
+                        onOpenWorkflow?.Invoke(workflow);
+                    }
+                }
+            }
+            IsDragging = false;
         }
     }
 }

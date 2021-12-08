@@ -30,6 +30,10 @@
 
         <TreeView   x:Name="listWorkflows" ItemsSource="{Binding FilteredProjects}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
                                        MouseDoubleClick="ListWorkflows_MouseDoubleClick" SelectedItemChanged="listWorkflows_SelectedItemChanged"
+                                       DragDrop.Drop="listWorkflows_Drop"
+                    PreviewMouseLeftButtonDown="listWorkflows_PreviewMouseLeftButtonDown"
+                    PreviewMouseMove="listWorkflows_PreviewMouseMove"
+                                        AllowDrop="True"
                     >
             <TreeView.ItemContainerStyle>
                 <!-- 

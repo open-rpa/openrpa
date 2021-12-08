@@ -59,6 +59,9 @@ namespace OpenRPA
                         _modified = result._modified;
                         _modifiedby = result._modifiedby;
                         _modifiedbyid = result._modifiedbyid;
+                        _created = result._created;
+                        _createdby = result._createdby;
+                        _createdbyid = result._createdbyid;
                         Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }
                     else
@@ -79,6 +82,9 @@ namespace OpenRPA
                                     _modified = result._modified;
                                     _modifiedby = result._modifiedby;
                                     _modifiedbyid = result._modifiedbyid;
+                                    _created = result._created;
+                                    _createdby = result._createdby;
+                                    _createdbyid = result._createdbyid;
                                     _version = result._version;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                                 }

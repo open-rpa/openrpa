@@ -912,6 +912,16 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.affectedrows;
         }
+        public async Task<T[]> InsertMany<T>(string collectionname, int w, bool j, bool skipresults, T[] items)
+        {
+            InsertManyMessage<T> q = new InsertManyMessage<T>();
+            q.w = w; q.j = j;
+            q.collectionname = collectionname; q.items = items; q.skipresults = skipresults;
+            q = await q.SendMessage<InsertManyMessage<T>>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.results;
+        }
         public async Task<string> UploadFile(string filepath, string path, metadata metadata)
         {
             if (string.IsNullOrEmpty(path)) path = "";

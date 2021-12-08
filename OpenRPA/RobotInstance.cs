@@ -501,10 +501,14 @@ namespace OpenRPA
                     {
                         try
                         {
-                            if (exists._version < wf._version) reload_ids.Add(wf._id);
-                            if (exists._version > wf._version && wf.isDirty) // Do NOT save offline changes. LEt user do that using the right click menu
+                            if (exists.isDirty)
                             {
-                                Log.Warning(exists.RelativeFilename + " has a newer version on the server!");
+                                var b = true;
+                            }
+                            if (exists._version < wf._version) reload_ids.Add(wf._id);
+                            if (exists._version > wf._version && exists.isDirty) // Do NOT save offline changes. Let user do that using the right click menu
+                            {
+                                Log.Warning(exists.RelativeFilename + " has a newer version on the server! Open and save it, to preserve local changes, or right ciick and select \"get server version\" to fix mitch match");
                                 var state = exists.State;
                                 exists.SetLastState("warning");
                                 await exists.Save(true);
@@ -522,23 +526,33 @@ namespace OpenRPA
                     }
                 }
                 Log.Debug("LoadServerData::Loop " + local_workflows.Count + " local workflows");
-                foreach (var wf in local_workflows)
+                foreach (var _wf in local_workflows)
                 {
                     try
                     {
+                        var wf = _wf;
                         var exists = server_workflows.Where(x => x._id == wf._id).FirstOrDefault();
                         if (exists == null && !wf.isDirty)
                         {
                             Log.Debug("Removing local workflow " + wf.name);
                             Workflows.Delete(wf._id);
                         }
-                        else if ((wf.isDirty || wf.isLocalOnly) && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
+                        else if ((wf.isDirty || wf.isLocalOnly) && exists != null && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
                         {
                             var _version = wf._version;
                             string name = wf.name;
                             string RelativeFilename = wf.RelativeFilename;
                             if (wf.isDeleted) await wf.Delete();
                             if (!wf.isDeleted && exists._version > wf._version) await wf.Save();
+                        }
+                        else if (exists == null)
+                        {
+                            Log.Warning(wf.RelativeFilename + " no longer exists on server, but is marked as dirty! Open and save it, to preserve it, or delete it if no longer needed");
+                            if (wf.State != "warning")
+                            {
+                                wf.SetLastState("warning");
+                                await wf.Save(true);
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -1810,6 +1824,7 @@ namespace OpenRPA
                 if (_type == "project")
                 {
                     var project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(data["fullDocument"].ToString());
+                    project.isDirty = false;
                     Project exists = RobotInstance.instance.Projects.FindById(_id);
                     if (exists != null && _version != exists._version)
                     {
@@ -1824,6 +1839,7 @@ namespace OpenRPA
                 if (_type == "detector")
                 {
                     var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(data["fullDocument"].ToString());
+                    d.isDirty = false;
                     GenericTools.RunUI(() =>
                     {
                         try
@@ -1870,7 +1886,10 @@ namespace OpenRPA
                 {
                     if (!(instance.GetWorkflowDesignerByIDOrRelativeFilename(Workflow.RelativeFilename) is Views.WFDesigner designer))
                     {
-                        instance.Workflows.Update(Workflow as Workflow);
+                        var wfo = Workflow as Workflow;
+                        var isDirty = wfo.isDirty;
+                        wfo.isDirty = false;
+                        instance.Workflows.Update(wfo);
                     }
                     else
                     {

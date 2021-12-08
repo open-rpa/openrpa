@@ -80,6 +80,7 @@ namespace OpenRPA.Interfaces
         Task DeleteOne(string collectionname, string Id);
         Task<int> DeleteMany(string collectionname, string[] Ids);
         Task<int> DeleteMany(string collectionname, string query);
+        Task<T[]> InsertMany<T>(string collectionname, int w, bool j, bool skipresults, T[] items);
         Task<string> UploadFile(string filepath, string path, metadata metadata);
         Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath);
         Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath);

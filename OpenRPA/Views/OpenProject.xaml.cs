@@ -334,8 +334,9 @@ namespace OpenRPA.Views
             {
                 if (listWorkflows.SelectedItem is Workflow f)
                 {
-                    var freshwf = RobotInstance.instance.Workflows.FindById(f._id);
-                    onOpenWorkflow?.Invoke(freshwf);
+                    //var freshwf = RobotInstance.instance.Workflows.FindById(f._id);
+                    //onOpenWorkflow?.Invoke(freshwf);
+                    onOpenWorkflow?.Invoke(f);
                     return;
                 }
                 //var p = (Project)listWorkflows.SelectedItem;

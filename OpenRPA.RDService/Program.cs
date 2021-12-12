@@ -547,6 +547,13 @@ namespace OpenRPA.RDService
                             Log.Information("Saving temporart jwt token, from local settings.json");
                             PluginConfig.tempjwt = new System.Net.NetworkCredential(string.Empty, Config.local.UnprotectString(Config.local.jwt)).Password;
                             PluginConfig.wsurl = Config.local.wsurl;
+                            _ = PluginConfig.entropy;
+                            _ = PluginConfig.reloadinterval;
+                            _ = PluginConfig.usefreerdp;
+                            _ = PluginConfig.height;
+                            _ = PluginConfig.width;
+                            _ = PluginConfig.usefreerdp;
+                            PluginConfig.globallocal.wsurl = Config.local.wsurl;
                             PluginConfig.Save();
                         }
                         return;

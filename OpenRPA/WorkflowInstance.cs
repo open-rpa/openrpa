@@ -774,7 +774,7 @@ namespace OpenRPA
                 else if (e.CompletionState == System.Activities.ActivityInstanceState.Closed)
                 {
                     state = "completed";
-                    foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
+                    if (Parameters != null) foreach (var o in e.Outputs) Parameters[o.Key] = o.Value;
                     if (runWatch != null) runWatch.Stop();
                     NotifyCompleted();
                     OnIdleOrComplete?.Invoke(this, EventArgs.Empty);

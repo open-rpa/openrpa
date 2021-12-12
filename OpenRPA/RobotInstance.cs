@@ -501,10 +501,6 @@ namespace OpenRPA
                     {
                         try
                         {
-                            if (exists.isDirty)
-                            {
-                                var b = true;
-                            }
                             if (exists._version < wf._version) reload_ids.Add(wf._id);
                             if (exists._version > wf._version && exists.isDirty) // Do NOT save offline changes. Let user do that using the right click menu
                             {

@@ -187,37 +187,35 @@ namespace OpenRPA
                 try
                 {
                     string state = laststate;
-                    //Log.Output("laststate " + laststate);
-                    //var instace = Instances;
-                    //if (instace.Count() > 0)
-                    //{
-                    //    var running = instace.Where(x => x.isCompleted == false).ToList();
-                    //    if (running.Count() > 0)
-                    //    {
-                    //        state = "running";
-                    //    }
-                    //    else
-                    //    {
-                    //        state = instace.OrderByDescending(x => x._modified).First().state;
-                    //    }
+                    var instace = Instances;
+                    if (instace.Count() > 0)
+                    {
+                        var running = instace.Where(x => x.isCompleted == false).ToList();
+                        if (running.Count() > 0)
+                        {
+                            state = "running";
+                        }
+                        else
+                        {
+                            state = instace.OrderByDescending(x => x._modified).First().state;
+                        }
 
-                    //    if (laststate != state)
-                    //    {
-                    //        laststate = state;
-                    //        _ = Save(true);
-                    //        Log.Output("Saving " + RelativeFilename);
-                    //    }
-                    //}
-                    //else if (state == "running" || state == "idle")
-                    //{
-                    //    state = "unloaded";
-                    //    if (laststate != state)
-                    //    {
-                    //        laststate = state;
-                    //        _ = Save(true);
-                    //        Log.Output("Saving " + RelativeFilename);
-                    //    }
-                    //}
+                        if (laststate != state)
+                        {
+                            //laststate = state;
+                            //if (State != "idle" && State != "running")
+                            //{
+                            //    // _ = Save(true);
+                            //}
+                        }
+                    }
+                    else if (state == "running" || state == "idle")
+                    {
+                        if (laststate != state)
+                        {
+                            state = "unloaded";
+                        }
+                    }
                     return state;
                 }
                 catch (Exception ex)
@@ -228,21 +226,53 @@ namespace OpenRPA
 
             }
         }
+        private DateTime lastSaveTime = DateTime.Now.AddDays(-1);
         public void SetLastState(string State)
         {
             if (State == "loaded") return;
             if (laststate != State)
             {
+                //Task.Run(() =>
+                //{
+                //    if (State != "idle" && State != "running")
+                //    {
+                //        if (lastSaveTime.AddSeconds(5) < DateTime.Now || true)
+                //        {
+                //            Task.Run(async () =>
+                //            {
+                //                try
+                //                {
+                //                    // await Save(true);
+                //                    await Save<Workflow>(true);
+                //                }
+                //                catch (Exception ex)
+                //                {
+                //                    Log.Error(ex.ToString());
+                //                }
+                //            });
+                //            lastSaveTime = DateTime.Now;
+                //        }
+                //    }
+                //    laststate = State;
+                //    GenericTools.RunUI(() => NotifyUIState());
+                //});
                 laststate = State;
-                GenericTools.RunUI(() => NotifyUIState());
-                if(laststate == "loaded" || laststate == "unloaded")
+                if (State != "idle" && State != "running")
                 {
-                    _ = Save(true);
+                    Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await Save<Workflow>(true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    });
+
                 }
-                //Task.Run(async () =>
-                // {
-                //     await Save(true);
-                // });
+                GenericTools.RunUI(() => NotifyUIState());
             }
         }
         [JsonIgnore]
@@ -274,10 +304,12 @@ namespace OpenRPA
             get
             {
                 List<WorkflowInstance> result = null;
-                lock (WorkflowInstance.Instances)
-                {
-                    result = WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
-                }
+                var instances = WorkflowInstance.Instances.ToList();
+                //lock (WorkflowInstance.Instances)
+                //{
+                //    result = WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
+                //}
+                result = instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
                 return result;
             }
         }

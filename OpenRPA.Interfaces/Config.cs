@@ -401,13 +401,20 @@ namespace OpenRPA
                             try
                             {
                                 var c = new System.Drawing.RectangleConverter();
-                                // value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
                                 value = c.ConvertFromString(value.ToString());
                                 return (T)value;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                Log.Error(ex.ToString());
+                            }
+                            try
+                            {
+                                var c = new System.Drawing.RectangleConverter();
+                                value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
+                                return (T)value;
+                            }
+                            catch (Exception)
+                            {
                                 return (T)mydefault;
                             }
                         }

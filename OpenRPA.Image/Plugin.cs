@@ -163,6 +163,9 @@ namespace OpenRPA.Image
         public void Stop()
         {
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+        }
     }
     public class GetElementResult : IBodyActivity
     {

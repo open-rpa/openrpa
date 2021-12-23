@@ -167,6 +167,8 @@ namespace OpenRPA.Office
                 }
             }
         }
-
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+        }
     }
 }

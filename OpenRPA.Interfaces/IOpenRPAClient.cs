@@ -21,6 +21,8 @@ namespace OpenRPA.Interfaces
         bool isReadyForAction { get; set; }
         bool isRunningInChildSession { get; }
         IMainWindow Window { get; set; }
+        IDesigner CurrentDesigner { get; }
+        IDesigner[] Designers { get; }
         IDesigner GetWorkflowDesignerByIDOrRelativeFilename(string IDOrRelativeFilename);
         IWorkflow GetWorkflowByIDOrRelativeFilename(string IDOrRelativeFilename);
         IWorkflowInstance GetWorkflowInstanceByInstanceId(string InstanceId);

@@ -326,6 +326,9 @@ namespace OpenRPA.Java
             e.Element = foundElement;
             return true;
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+        }
     }
     public class GetElementResult : IBodyActivity
     {

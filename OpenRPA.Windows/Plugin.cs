@@ -468,6 +468,9 @@ namespace OpenRPA.Windows
         {
             return true;
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+        }
     }
     public class GetElementResult : IBodyActivity
     {

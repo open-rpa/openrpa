@@ -187,6 +187,14 @@ namespace OpenRPA
                 return Window.Designers;
             }
         }
+        public IDesigner CurrentDesigner
+        {
+            get
+            {
+                if (Window == null) return null;
+                return Window.Designers.Where(x => x.IsSelected).FirstOrDefault();
+            }
+        }
         public bool AutoReloading
         {
             get

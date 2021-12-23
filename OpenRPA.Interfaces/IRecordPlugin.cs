@@ -17,6 +17,7 @@ namespace OpenRPA.Interfaces
         int Priority { get; }
         event Action<IRecordPlugin, IRecordEvent> OnUserAction;
         event Action<IRecordPlugin, IRecordEvent> OnMouseMove;
+        void StatusTextMouseUp();
         bool ParseUserAction(ref IRecordEvent e);
         bool ParseMouseMoveAction(ref IRecordEvent e);
         Selector.treeelement[] GetRootElements(Selector.Selector anchor);

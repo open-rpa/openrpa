@@ -338,6 +338,14 @@ namespace OpenRPA.IE
             if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
             return true;
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+            var design = Plugin.client.CurrentDesigner;
+            if (design == null) return;
+            var browser = Browser.GetBrowser(true);
+            if (browser == null) return;
+            design.AddRecordingActivity(new OpenURL { DisplayName = "Open URL", Url = browser.wBrowser.LocationURL }, this);
+        }
     }
     public class GetElementResult : IBodyActivity
     {

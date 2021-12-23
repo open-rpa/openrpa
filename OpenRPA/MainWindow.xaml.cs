@@ -3837,6 +3837,12 @@ namespace OpenRPA
             }
             childSession.Show();
         }
+        private void StatusTextBlock_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var txt = sender as TextBlock;
+            var plugin = txt.DataContext as IRecordPlugin;
+            plugin.StatusTextMouseUp();
+        }
     }
     public class QuickLaunchItem
     {

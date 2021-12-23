@@ -465,7 +465,8 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Margin="10,0,10,0">
+                                <TextBlock Margin="10,0,10,0" MouseUp="StatusTextBlock_MouseUp"
+                                           >
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>

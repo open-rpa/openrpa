@@ -154,6 +154,9 @@ namespace OpenRPA.Script
         {
             return false;
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+        }
     }
 
 }

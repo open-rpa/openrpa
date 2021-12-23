@@ -364,6 +364,39 @@ namespace OpenRPA.NM
 
             return true;
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+            var design = Plugin.client.CurrentDesigner;
+            if (design == null) return;
+            if (NMHook.connected)
+            {
+                NMHook.enumwindowandtabs();
+                if (NMHook.chromeconnected)
+                {
+                    var tab = NMHook.CurrentChromeTab;
+                    if (tab != null)
+                    {
+                        design.AddRecordingActivity(new OpenURL { DisplayName = "Open URL", Url = tab.url, Browser = "chrome" }, this);
+                    }
+                }
+                if (NMHook.ffconnected)
+                {
+                    var tab = NMHook.CurrentFFTab;
+                    if (tab != null)
+                    {
+                        design.AddRecordingActivity(new OpenURL { DisplayName = "Open URL", Url = tab.url, Browser = "ff" }, this);
+                    }
+                }
+                if (NMHook.edgeconnected)
+                {
+                    var tab = NMHook.CurrentEdgeTab;
+                    if (tab != null)
+                    {
+                        design.AddRecordingActivity(new OpenURL { DisplayName = "Open URL", Url = tab.url, Browser = "edge" }, this);
+                    }
+                }
+            }
+        }
     }
     public class GetElementResult : IBodyActivity
     {

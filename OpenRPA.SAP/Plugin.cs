@@ -230,6 +230,20 @@ namespace OpenRPA.SAP
             if (e.Element == null) e.UIElement = null;
             return true;
         }
+        void IRecordPlugin.StatusTextMouseUp()
+        {
+            if (!SAPhook.Instance.isConnected)
+            {
+                SAPhook.EnsureSAPBridge();
+            }
+            else
+            {
+                if (SAPhook.Instance != null && SAPhook.Instance.Connections != null && SAPhook.Instance.Connections.Length < 1)
+                {
+                    System.Diagnostics.Process.Start("saplogon.exe");
+                }
+            }
+        }
     }
     public class GetElementResult : IBodyActivity
     {

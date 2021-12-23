@@ -102,11 +102,35 @@ namespace OpenRPA
                         deserialize: (bson) => JToken.Parse(bson.ToString())
                     );
                     var dbfilename = "offline.db";
+                    var logfilename = "offline-log.db";
                     if (!string.IsNullOrEmpty(Config.local.wsurl))
                     {
                         dbfilename = new Uri(Config.local.wsurl).Host + ".db";
+                        logfilename = new Uri(Config.local.wsurl).Host + "-log.db";
                     }
-                    _instance.db = new LiteDatabase(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
+                    try
+                    {
+                        _instance.db = new LiteDatabase(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
+                    }
+                    catch (LiteException ex)
+                    {
+                        if (System.IO.File.Exists(Interfaces.Extensions.ProjectsDirectory + @"\" + logfilename))
+                        {
+                            System.IO.File.Delete(Interfaces.Extensions.ProjectsDirectory + @"\" + logfilename);
+                        }
+                        if (System.IO.File.Exists(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename))
+                        {
+                            var backupfilename = dbfilename + ".bak"; int counter = 0;
+                            while (System.IO.File.Exists(Interfaces.Extensions.ProjectsDirectory + @"\" + backupfilename))
+                            {
+                                counter++;
+                                backupfilename = dbfilename + ".bak" + counter;
+                            }
+                            System.IO.File.Copy(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename, Interfaces.Extensions.ProjectsDirectory + @"\" + backupfilename);
+                            System.IO.File.Delete(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
+                            _instance.db = new LiteDatabase(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
+                        }
+                    }
                     _instance.Projects = _instance.db.GetCollection<Project>("projects");
                     _instance.Projects.EnsureIndex(x => x._id, true);
 

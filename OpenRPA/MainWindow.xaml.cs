@@ -73,13 +73,23 @@ namespace OpenRPA
             Log.FunctionOutdent("MainWindow", "MainWindow");
             instance = this;
         }
-
         private void Statetimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             NotifyPropertyChanged("wsstate");
             NotifyPropertyChanged("wsmsgqueue");
         }
-
+        public bool IsOnScreen(System.Drawing.Point pos)
+        {
+            var screens = System.Windows.Forms.Screen.AllScreens;
+            foreach (var screen in screens)
+            {
+                if (screen.WorkingArea.Contains(pos))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Log.FunctionIndent("MainWindow", "Window_Loaded");
@@ -90,10 +100,13 @@ namespace OpenRPA
                 var pos = Config.local.mainwindow_position;
                 if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
                 {
-                    Left = pos.Left;
-                    Top = pos.Top;
-                    Width = pos.Width;
-                    Height = pos.Height;
+                    if (IsOnScreen(new System.Drawing.Point(pos.X, pos.Y)))
+                    {
+                        Left = pos.Left;
+                        Top = pos.Top;
+                        Width = pos.Width;
+                        Height = pos.Height;
+                    }
                 }
                 SetStatus("loading workflow toolbox");
                 Toolbox = new Views.WFToolbox();
@@ -1821,7 +1834,7 @@ namespace OpenRPA
                     {
                         if (document.Content is Views.OpenProject op)
                         {
-                            document.IsSelected = true;
+                            // document.IsSelected = true;
                             Log.FunctionOutdent("MainWindow", "OnOpen", "allready open");
                             return;
                         }

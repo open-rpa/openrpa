@@ -101,6 +101,12 @@ namespace OpenRPA
                         serialize: (o) => o.ToString(),
                         deserialize: (bson) => JToken.Parse(bson.ToString())
                     );
+
+                    var connecttype = "";
+                    if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                    {
+                        connecttype = ";connection=shared";
+                    }
                     var dbfilename = "offline.db";
                     var logfilename = "offline-log.db";
                     if (!string.IsNullOrEmpty(Config.local.wsurl))
@@ -110,9 +116,16 @@ namespace OpenRPA
                     }
                     try
                     {
-                        _instance.db = new LiteDatabase(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
+                        _instance.db = new LiteDatabase("Filename=" + Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename + connecttype);
                     }
-                    catch (LiteException ex)
+                    catch (System.IO.IOException ex)
+                    {
+                        System.Windows.MessageBox.Show("Cannot start OpenRPA" + Environment.NewLine + ex.Message);
+                        System.Windows.Forms.Application.Exit();
+                        System.Environment.Exit(1);
+                        return _instance;
+                    }
+                    catch (LiteException)
                     {
                         if (System.IO.File.Exists(Interfaces.Extensions.ProjectsDirectory + @"\" + logfilename))
                         {
@@ -128,9 +141,17 @@ namespace OpenRPA
                             }
                             System.IO.File.Copy(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename, Interfaces.Extensions.ProjectsDirectory + @"\" + backupfilename);
                             System.IO.File.Delete(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
-                            _instance.db = new LiteDatabase(Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename);
+                            _instance.db = new LiteDatabase("Filename=" + Interfaces.Extensions.ProjectsDirectory + @"\" + dbfilename + connecttype);
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        System.Windows.MessageBox.Show("Cannot start OpenRPA" + Environment.NewLine + ex.Message);
+                        System.Windows.Forms.Application.Exit();
+                        System.Environment.Exit(1);
+                        return _instance;
+                    }
+
                     _instance.Projects = _instance.db.GetCollection<Project>("projects");
                     _instance.Projects.EnsureIndex(x => x._id, true);
 

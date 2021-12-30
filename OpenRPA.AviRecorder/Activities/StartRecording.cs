@@ -33,6 +33,7 @@ namespace OpenRPA.AviRecorder.Activities
             {
                 folder = Interfaces.Extensions.MyVideos;
             }
+            if (!string.IsNullOrEmpty(folder)) folder = Environment.ExpandEnvironmentVariables(folder);
             if (quality < 10) quality = 10;
             if (quality > 100) quality = 100;
             SharpAvi.FourCC codec;
@@ -52,7 +53,7 @@ namespace OpenRPA.AviRecorder.Activities
             if (p == null) return;
             var instance = p.client.GetWorkflowInstanceByInstanceId(context.WorkflowInstanceId.ToString());
             if (instance == null) return;
-            p.startRecording(instance);
+            p.startRecording(instance, folder);
         }
         public new string DisplayName
         {

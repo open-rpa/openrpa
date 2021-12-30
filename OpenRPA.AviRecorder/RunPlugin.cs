@@ -44,16 +44,16 @@ namespace OpenRPA.AviRecorder
         {
             if (!PluginConfig.enabled) return;
             stopRecording(e);
-            if(!PluginConfig.keepsuccessful)
+            if (!PluginConfig.keepsuccessful)
             {
-                if(!e.hasError && e.isCompleted)
+                if (!e.hasError && e.isCompleted)
                 {
                     Record r;
                     if (!Records.ContainsKey(e._id)) { r = new Record(e._id); Records.Add(e._id, r); } else { r = Records[e._id]; }
 
                     try
                     {
-                        if(r != null)
+                        if (r != null)
                         {
                             System.IO.File.Delete(r.lastFileName);
                         }
@@ -73,26 +73,27 @@ namespace OpenRPA.AviRecorder
         public bool onWorkflowResumeBookmark(ref IWorkflowInstance e, string bookmarkName, object value)
         {
             if (!PluginConfig.enabled) return true;
-            startRecording(e);
+            startRecording(e, null);
             return true;
         }
         public bool onWorkflowStarting(ref IWorkflowInstance e, bool resumed)
         {
             if (!PluginConfig.enabled) return true;
-            startRecording(e);
+            startRecording(e, null);
             return true;
         }
-        public Record startRecording(IWorkflowInstance e)
+        public Record startRecording(IWorkflowInstance e, string folder)
         {
             var strcodec = PluginConfig.codec;
-            var folder = PluginConfig.folder;
-            if(string.IsNullOrEmpty(folder)) folder = Interfaces.Extensions.MyVideos;
+            if (string.IsNullOrEmpty(folder)) folder = PluginConfig.folder;
+            if (string.IsNullOrEmpty(folder)) folder = Interfaces.Extensions.MyVideos;
             var quality = PluginConfig.quality;
 
             if (string.IsNullOrEmpty(folder))
             {
                 folder = Interfaces.Extensions.MyVideos;
             }
+            if (!string.IsNullOrEmpty(folder)) folder = Environment.ExpandEnvironmentVariables(folder);
             if (quality < 10) quality = 10;
             if (quality > 100) quality = 100;
             SharpAvi.FourCC codec;
@@ -110,9 +111,9 @@ namespace OpenRPA.AviRecorder
             }
             Record r;
             if (!Records.ContainsKey(e._id)) { r = new Record(e._id); Records.Add(e._id, r); } else { r = Records[e._id]; }
-            if(!r.IsRecording) r.StartRecording(codec, folder, quality, e.Workflow.name + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            if (!r.IsRecording) r.StartRecording(codec, folder, quality, e.Workflow.name + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             return r;
-            
+
         }
         public Record stopRecording(IWorkflowInstance e)
         {

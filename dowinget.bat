@@ -7,6 +7,6 @@ pause
 wingetcreate submit manifests\o\OpenRPAApS\OpenRPA\1.2.71.0
 
 
-rem wingetcreate update OpenRPAApS.OpenRPA -u https://github.com/open-rpa/openrpa/releases/download/1.3.36/OpenRPA.msi --version 1.3.36.0
-rem winget install --manifest manifests\o\OpenRPAApS\OpenRPA\1.3.36.0
-rem wingetcreate submit manifests\o\OpenRPAApS\OpenRPA\1.3.36.0
+rem wingetcreate update OpenRPAApS.OpenRPA -u https://github.com/open-rpa/openrpa/releases/download/1.3.39/OpenRPA.msi --version 1.3.39.0
+rem winget install --manifest manifests\o\OpenRPAApS\OpenRPA\1.3.39.0
+rem wingetcreate submit manifests\o\OpenRPAApS\OpenRPA\1.3.39.0

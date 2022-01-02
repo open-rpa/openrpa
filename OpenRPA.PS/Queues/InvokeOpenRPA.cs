@@ -96,18 +96,5 @@ namespace OpenRPA.PS
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
             }
         }
-        // private string correlationId = null;
-        // private Interfaces.mq.RobotCommand command = null;
-        //private void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
-        //{
-        //    if (correlationId == message.correlationId && message.data != null)
-        //    {
-        //        command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
-        //        if (command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "invokecompleted")
-        //        {
-        //            workItemsWaiting.Set();
-        //        }
-        //    }
-        //}
     }
 }

@@ -96,7 +96,7 @@ namespace OpenRPA.PS
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
             }
         }
-        private string correlationId = null;
+        // private string correlationId = null;
         // private Interfaces.mq.RobotCommand command = null;
         //private void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         //{

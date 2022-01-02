@@ -22,7 +22,7 @@ namespace OpenRPA.Office.Activities
         public InArgument<string> Filename { get; set; }
         [Category("Input")]
         [LocalizedDisplayName("activity_getparagraph_index", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_index_help", typeof(Resources.strings))]
-        public new InArgument<int> Index { get; set; }
+        public InArgument<int> Index { get; set; }
         [Category("Output")]
         [LocalizedDisplayName("activity_getparagraph_text", typeof(Resources.strings)), LocalizedDescription("activity_getparagraph_text_help", typeof(Resources.strings))]
         public OutArgument<string> Text { get; set; }

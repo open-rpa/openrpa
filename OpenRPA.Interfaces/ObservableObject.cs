@@ -128,7 +128,7 @@ namespace OpenRPA
                             else
                             {
 #if (DEBUG)
-                                Log.Output(modulename + " " + modulename2);
+                                // Log.Output(modulename + " " + modulename2);
 #else
 #endif
                                 _backingFieldValues["isDirty"] = true;

@@ -22,7 +22,7 @@ namespace OpenRPA
         {
             if (propertyName == "Projects")
             {
-                Views.OpenProject.UpdateProjectsList();
+                Views.OpenProject.UpdateProjectsList(true, false);
             }
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
@@ -313,7 +313,6 @@ namespace OpenRPA
                             var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
                             if (exists != null)
                             {
-                                // Log.Output(entity._id + " * " + entity.state + " " + exists.state);
                                 entity.state = exists.state;
                             }
                             entity.isDirty = true;
@@ -678,15 +677,11 @@ namespace OpenRPA
                         var exists = server_detectors.Where(x => x._id == detector._id).FirstOrDefault();
                         if (exists == null && !detector.isDirty)
                         {
+                            var _id = detector._id;
                             Log.Debug("Removing local detector " + detector.name);
                             var d = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
-                            if (d != null)
-                            {
-                                d.OnDetector -= Window.OnDetector;
-                                d.Stop();
-                                Plugins.detectorPlugins.Remove(d);
-                            }
-                            Detectors.Delete(detector._id);
+                            if (d != null) d.Stop();
+                            Detectors.Delete(_id);
                         }
                         else if (detector.isDirty)
                         {
@@ -714,20 +709,12 @@ namespace OpenRPA
                             if (exists != null && detector._version != exists.Entity._version)
                             {
                                 Log.Debug("LoadServerData::Updating detector " + detector.name);
-                                exists.Stop();
-                                exists.OnDetector -= Window.OnDetector;
-                                exists = Plugins.UpdateDetector(this, detector);
-                                if (exists != null) exists.OnDetector += Window.OnDetector;
+                                detector.UpdateRunning();
                             }
                             else if (exists == null)
                             {
                                 Log.Debug("LoadServerData::Adding detector " + detector.name);
-                                exists = Plugins.AddDetector(this, detector);
-                                if (exists != null)
-                                {
-                                    exists.OnDetector += Window.OnDetector;
-                                }
-                                else { Log.Debug("Failed loading detector " + detector.name); }
+                                detector.Start();
                             }
                             var dexists = Detectors.FindById(detector._id);
                             if (dexists == null)
@@ -1066,13 +1053,9 @@ namespace OpenRPA
                 foreach (var d in _detectors)
                 {
                     Log.Debug("Loading detector " + d.name);
-                    IDetectorPlugin dp = null;
-                    dp = Plugins.AddDetector(this, d);
-                    if (dp != null) dp.OnDetector += Window.OnDetector;
+                    d.Start();
                 }
-
             }
-
         }
         private void Show()
         {
@@ -1358,7 +1341,8 @@ namespace OpenRPA
                 {
                     if (string.IsNullOrEmpty(openrpa_watchid))
                     {
-                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'$exists': true} } }]", onWatchEvent);
+                        // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'$exists': true} } }]", onWatchEvent);
+                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
                     }
                 }
                 _ = LoadServerData();
@@ -1852,21 +1836,40 @@ namespace OpenRPA
                 }
                 long _version = data["fullDocument"].Value<long>("_version");
                 string operationType = data.Value<string>("operationType");
-                if (operationType != "replace" && operationType != "insert" && operationType != "update") return; // we don't support delete right now
+                if (operationType != "replace" && operationType != "insert" && operationType != "update" && operationType != "delete") return;
                 if (_type == "workflow")
                 {
                     Log.Verbose(operationType + " version " + _version);
                     var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
                     var wfexists = instance.Workflows.FindById(_id);
+                    if (operationType == "delete")
+                    {
+                        if (wfexists == null) return;
+                        if (instance.Workflows.Delete(_id))
+                        {
+                            Views.OpenProject.UpdateProjectsList(true, false);
+                        }
+                        else
+                        {
+                            Log.Error("Failed deleting workflow " + wfexists.name + " with id" + _id);
+                        }
+                        return;
+                    }
                     if (wfexists != null && wfexists._version != _version)
                     {
                         UpdateWorkflow(workflow, false);
+                        Log.Verbose("Update " + workflow.ProjectAndName + " from version " + wfexists._version + " to " + _version + " " + workflow._id);
                     }
                     else if (wfexists == null)
                     {
+                        Log.Verbose("Adding " + workflow.ProjectAndName + " with version " + _version + " " + workflow._id);
                         workflow.isDirty = false;
-                        await workflow.Save<Workflow>(true);
+                        bool skiponline = true;
+                        if (string.IsNullOrEmpty(workflow.Filename)) { workflow.Filename = workflow.UniqueFilename(); workflow.isDirty = true; skiponline = false; }
+                        _ = workflow.RelativeFilename;
+                        await workflow.Save<Workflow>(skiponline);
                         UpdateWorkflow(workflow, false);
+                        Log.Verbose("Adding " + workflow.ProjectAndName + " with version " + _version + " " + workflow._id);
                         instance.NotifyPropertyChanged("Projects");
                     }
                 }
@@ -1875,6 +1878,19 @@ namespace OpenRPA
                     var project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(data["fullDocument"].ToString());
                     project.isDirty = false;
                     Project exists = RobotInstance.instance.Projects.FindById(_id);
+                    if (operationType == "delete")
+                    {
+                        if (exists == null) return;
+                        if (instance.Projects.Delete(_id))
+                        {
+                            Views.OpenProject.UpdateProjectsList(true, false);
+                        }
+                        else
+                        {
+                            Log.Error("Failed deleting project " + exists.name + " with id" + _id);
+                        }
+                        return;
+                    }
                     if (exists != null && _version != exists._version)
                     {
                         await UpdateProject(project);
@@ -1894,25 +1910,33 @@ namespace OpenRPA
                         try
                         {
                             IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
+                            if (operationType == "delete")
+                            {
+                                if (exists == null) return;
+                                exists.Stop();
+                                if (instance.Detectors.Delete(_id))
+                                {
+                                    Views.OpenProject.UpdateProjectsList(false, true);
+                                }
+                                else
+                                {
+                                    if (exists.Entity != null) Log.Error("Failed deleting detector " + exists.Entity.name + " with id" + _id);
+                                    if (exists.Entity == null) Log.Error("Failed deleting detector with id" + _id);
+                                }
+                                return;
+                            }
                             if (exists != null && d._version != exists.Entity._version)
                             {
-                                exists.Stop();
-                                exists.OnDetector -= Window.OnDetector;
-                                exists = Plugins.UpdateDetector(this, d);
-                                if (exists != null) exists.OnDetector += Window.OnDetector;
+                                d.UpdateRunning();
                             }
                             else if (exists == null)
                             {
-                                exists = Plugins.AddDetector(this, d);
-                                if (exists != null)
-                                {
-                                    exists.OnDetector += Window.OnDetector;
-                                }
-                                else { Log.Information("Failed loading detector " + d.name); }
+                                d.Start();
                             }
                             var dexists = Detectors.FindById(d._id);
                             if (dexists == null) Detectors.Insert(d);
                             if (dexists != null) Detectors.Update(d);
+                            Views.OpenProject.UpdateProjectsList(false, true);
                         }
                         catch (Exception ex)
                         {

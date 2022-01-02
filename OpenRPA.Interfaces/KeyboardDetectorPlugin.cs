@@ -80,6 +80,22 @@ namespace OpenRPA.Interfaces
                 Entity.Properties["Processname"] = value;
             }
         }
+        public string _id
+        {
+            get
+            {
+                if (Entity == null) return null;
+                if (!Entity.Properties.ContainsKey("_id")) return null;
+                var _val = Entity.Properties["_id"];
+                if (_val == null) return null;
+                return _val.ToString();
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["_id"] = value;
+            }
+        }
         public void Start()
         {
             InputDriver.Instance.OnKeyDown += OnKeyDown;
@@ -93,12 +109,12 @@ namespace OpenRPA.Interfaces
         }
         private void RaiseDetector()
         {
-            if(!string.IsNullOrEmpty(Processname))
+            if (!string.IsNullOrEmpty(Processname))
             {
                 using (var automation = AutomationUtil.getAutomation())
                 {
                     var current = automation.FocusedElement();
-                    if(current.Properties.ProcessId.IsSupported)
+                    if (current.Properties.ProcessId.IsSupported)
                     {
                         var ProcessId = automation.FocusedElement().Properties.ProcessId.Value;
                         var p = System.Diagnostics.Process.GetProcessById(automation.FocusedElement().Properties.ProcessId.Value);
@@ -139,10 +155,11 @@ namespace OpenRPA.Interfaces
                 if (isMatch(lastk, e, keytype.down)) return;
             }
             var k = keys[keysindex];
-            if(isMatch(k, e, keytype.down))
+            if (isMatch(k, e, keytype.down))
             {
                 keysindex++;
-            } else if (keysindex>0)
+            }
+            else if (keysindex > 0)
             {
                 var lastk = keys[keysindex - 1];
                 if (!isMatch(lastk, e, keytype.down)) keysindex = 0;
@@ -200,8 +217,9 @@ namespace OpenRPA.Interfaces
         private class keyset
         {
             public keyset(keytype press, KeyboardKey Key) { this.Key = Key; this.press = press; }
-            public keyset(keytype press, char c) {
-                
+            public keyset(keytype press, char c)
+            {
+
                 this.c = c; this.press = press;
                 var helper = new Helper { Value = VkKeyScan(c) };
                 Key = (KeyboardKey)helper.Low;

@@ -20,5 +20,6 @@ namespace OpenRPA.Input
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
+        public string projectid { get; set; }
     }
 }

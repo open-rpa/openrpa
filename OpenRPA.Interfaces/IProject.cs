@@ -22,5 +22,6 @@ namespace OpenRPA.Interfaces
         Task Save();
         Task InstallDependencies(bool LoadDlls);
         void UpdateWorkflowsList();
+        void UpdateDetectorsList();
     }
 }

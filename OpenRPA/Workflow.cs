@@ -359,6 +359,8 @@ namespace OpenRPA
             Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
             var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name && x.projectid == workflow.projectid).FirstOrDefault();
             workflow.name = workflow.UniqueName();
+            workflow.Filename = workflow.UniqueFilename();
+            _ = workflow.RelativeFilename;
             workflow._type = "workflow";
             workflow.Parameters = new List<workflowparameter>();
             //workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();

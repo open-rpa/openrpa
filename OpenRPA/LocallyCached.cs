@@ -16,6 +16,7 @@ namespace OpenRPA
             bool wasDisableWatch = RobotInstance.instance.DisableWatch;
             try
             {
+                _backingFieldValues["_disabledirty"] = true;
                 if (RobotInstance.instance.db == null) return;
                 var collection = RobotInstance.instance.db.GetCollection<T>(_type.ToLower() + "s");
                 var entity = (T)Convert.ChangeType(this, typeof(T));
@@ -77,7 +78,7 @@ namespace OpenRPA
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
-                                    isDirty = false;
+                                    _backingFieldValues["isDirty"] = false;
                                     _acl = result._acl;
                                     _modified = result._modified;
                                     _modifiedby = result._modifiedby;
@@ -113,6 +114,7 @@ namespace OpenRPA
             }
             finally
             {
+                _backingFieldValues.Remove("_disabledirty");
                 Log.Debug("Save::DisableWatch " + wasDisableWatch);
                 RobotInstance.instance.DisableWatch = wasDisableWatch;
             }

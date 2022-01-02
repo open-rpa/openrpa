@@ -16,7 +16,8 @@ namespace OpenRPA
     {
         public Project()
         {
-            FilteredSource = ((System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Workflows));
+            FilteredWorkflowsSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Workflows);
+            FilteredDetectorsSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Detectors);
         }
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -33,18 +34,20 @@ namespace OpenRPA
         }
         public void UpdateWorkflowsList()
         {
+            var oldcount = _Workflows.Count;
             var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
-            Workflows.UpdateCollection(list);
+            _Workflows.UpdateCollection(list);
+            NotifyPropertyChanged("FilteredWorkflows");
         }
         [JsonIgnore, BsonIgnore]
-        public System.Windows.Data.ListCollectionView FilteredSource;
+        public System.Windows.Data.ListCollectionView FilteredWorkflowsSource;
         [JsonIgnore, BsonIgnore]
         public System.ComponentModel.ICollectionView FilteredWorkflows
         {
             get
             {
                 UpdateFilteredWorkflows();
-                return FilteredSource;
+                return FilteredWorkflowsSource;
             }
         }
         public void UpdateFilteredWorkflows()
@@ -52,27 +55,50 @@ namespace OpenRPA
             var FilterText = Views.OpenProject.Instance.FilterText;
             if (string.IsNullOrEmpty(FilterText))
             {
-                FilteredSource.Filter = null;
+                FilteredWorkflowsSource.Filter = null;
             }
-            FilteredSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());
-
+            FilteredWorkflowsSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());
         }
+        private System.Collections.ObjectModel.ObservableCollection<IDetector> _Detectors = new System.Collections.ObjectModel.ObservableCollection<IDetector>();
+        [JsonIgnore, BsonIgnore]
+        public System.Collections.ObjectModel.ObservableCollection<IDetector> Detectors
+        {
+            get
+            {
+                return _Detectors;
+            }
+        }
+        public void UpdateDetectorsList()
+        {
+            var oldcount = _Detectors.Count;
+            var list = Plugins.detectorPlugins.Where(x => x.Entity.projectid == _id).OrderBy(x => x.Entity.name).Select(x => x.Entity).ToList();
+            Detectors.UpdateCollection(list);
+            NotifyPropertyChanged("FilteredDetectors");
+        }
+        [JsonIgnore, BsonIgnore]
+        public System.Windows.Data.ListCollectionView FilteredDetectorsSource;
+        [JsonIgnore, BsonIgnore]
+        public System.ComponentModel.ICollectionView FilteredDetectors
+        {
+            get
+            {
+                UpdateFilteredDetectors();
+                return FilteredDetectorsSource;
+            }
+            set
+            {
 
-        //public override bool Equals(object obj)
-        //{
-        //    var p = obj as Project;
-        //    if (p == null) return false;
-        //    if (p._id != _id) return false;
-        //    return true;
-        //}
-        //public override int GetHashCode()
-        //{
-        //    int hash = 13;
-        //    hash = (hash * 7) + _id.GetHashCode();
-        //    return hash;
-        //}
-        // public List<IWorkflow> Workflows { get; set; }
-        // public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows { get; set; }
+            }
+        }
+        public void UpdateFilteredDetectors()
+        {
+            var FilterText = Views.OpenProject.Instance.FilterText;
+            if (string.IsNullOrEmpty(FilterText))
+            {
+                FilteredDetectorsSource.Filter = null;
+            }
+            FilteredDetectorsSource.Filter = p => ((IDetector)p).name.ToLower().Contains(FilterText.ToLower());
+        }
         [JsonIgnore, BsonIgnore]
         public string Path
         {
@@ -81,21 +107,16 @@ namespace OpenRPA
                 return System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, name);
             }
         }
-        // public string Path { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public static async Task<Project[]> LoadProjects(string Path)
-        {
-            var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.rpaproj", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-            var Projects = new List<Project>();
-            foreach (string file in ProjectFiles) Projects.Add(await FromFile(file));
-            return Projects.ToArray();
-        }
         public static async Task<Project> FromFile(string Filepath)
         {
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
+            var exists = RobotInstance.instance.Projects.FindById(project._id);
+            if (exists != null) { project._id = null; } else { project.isLocalOnly = true; }
+            project.isDirty = true;
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             project._type = "project";
-            project.Init();
+            project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
             await project.InstallDependencies(true);
             return project;
         }
@@ -143,6 +164,7 @@ namespace OpenRPA
                     if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                     {
                         var wf = RobotInstance.instance.Projects.FindById(_id);
+                        if (wf == null) return;
                         if (wf._version == _version)
                         {
                             Log.Verbose("Saving " + this.name + " with version " + this._version);
@@ -178,12 +200,27 @@ namespace OpenRPA
             Workflows.Add(w);
             return w;
         }
-        public void Init()
+        private void LoadFilesFromDisk(string folder)
         {
-            var Path = System.IO.Path.GetDirectoryName(System.IO.Path.Combine(this.Path, Filename));
-            var ProjectFiles = System.IO.Directory.EnumerateFiles(Path, "*.xaml", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-            foreach (string file in ProjectFiles) Workflows.Add(Workflow.FromFile(this, file));
-            //return Workflows.ToArray();
+            if (string.IsNullOrEmpty(folder)) folder = Path;
+            var Files = System.IO.Directory.EnumerateFiles(folder, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+            foreach (string file in Files)
+            {
+                if (System.IO.Path.GetExtension(file).ToLower() == ".xaml")
+                {
+                    Workflows.Add(Workflow.FromFile(this, file));
+                }
+                else if (System.IO.Path.GetExtension(file).ToLower() == ".json")
+                {
+                    var json = System.IO.File.ReadAllText(file);
+                    Detector _d = JsonConvert.DeserializeObject<Detector>(json);
+                    var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                    if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                    _d.isDirty = true;
+                    _d.Start();
+                    Detectors.Add(_d);
+                }
+            }
         }
         public static string UniqueName(string name, string _id = null)
         {
@@ -227,6 +264,12 @@ namespace OpenRPA
                 filenames.Add(workflow.Filename);
                 workflow.ExportFile(System.IO.Path.Combine(projectpath, workflow.Filename));
             }
+            foreach (var detector in Detectors)
+            {
+                var _name = detector.name;
+                _name = r.Replace(_name, "");
+                (detector as Detector).ExportFile(System.IO.Path.Combine(projectpath, _name + ".json"));
+            }
         }
         public async Task Save()
         {
@@ -235,6 +278,11 @@ namespace OpenRPA
             {
                 workflow.projectid = _id;
                 await workflow.Save();
+            }
+            foreach (Detector detector in Detectors)
+            {
+                detector.projectid = _id;
+                await detector.Save();
             }
         }
         public async Task Delete()

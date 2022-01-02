@@ -21,7 +21,6 @@ namespace OpenRPA.Views
                 return Visibility.Hidden;
             }
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             Visibility vis = (Visibility)value;

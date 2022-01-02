@@ -73,6 +73,11 @@ namespace OpenRPA
         /// </summary>
         protected bool SetProperty<T>(T newValue, [CallerMemberName] string propertyName = null)
         {
+            bool _disabledirty = false;
+            if (_backingFieldValues.ContainsKey("_disabledirty"))
+            {
+                if (_backingFieldValues.ContainsKey("_disabledirty") == true) _disabledirty = true;
+            }
             try
             {
                 if (propertyName == null)
@@ -85,43 +90,50 @@ namespace OpenRPA
                     string modulename2 = null;
                     try
                     {
-                        var stack = (new System.Diagnostics.StackTrace());
-                        modulename = stack.GetFrame(1).GetMethod().Module.ScopeName;
-                        if (stack.FrameCount > 3) modulename2 = stack.GetFrame(3).GetMethod().Module.ScopeName;
-                        if (modulename2 == "Newtonsoft.Json.dll")
+                        if (!_disabledirty)
                         {
-                        }
-                        else if (modulename == "OpenRPA.Interfaces.dll")
-                        {
-                        }
-                        else if (modulename == "OpenRPA.exe" && modulename2 == "CommonLanguageRuntimeLibrary")
-                        {
-                            _backingFieldValues["isDirty"] = true;
-                        }
-                        else if (modulename == "OpenRPA.exe" && modulename2 == "System.Activities.dll")
-                        {
-                            _backingFieldValues["isDirty"] = true;
-                        }
-                        else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.exe")
-                        {
-                            _backingFieldValues["isDirty"] = true;
-                        }
-                        else if (modulename == "OpenRPA.exe" && modulename2 == "LiteDB.dll")
-                        {
-                            _backingFieldValues["isDirty"] = true;
-                        }
-                        else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.Interfaces.dll")
-                        {
-                            _backingFieldValues["isDirty"] = true;
-                        }
-                        else if (modulename == "OpenRPA.exe" && modulename2 == "RefEmit_InMemoryManifestModule")
-                        {
-                            _backingFieldValues["isDirty"] = true;
-                        }
-                        else
-                        {
-                            Log.Output(modulename + " " + modulename2);
-                            _backingFieldValues["isDirty"] = true;
+                            var stack = (new System.Diagnostics.StackTrace());
+                            modulename = stack.GetFrame(1).GetMethod().Module.ScopeName;
+                            if (stack.FrameCount > 3) modulename2 = stack.GetFrame(3).GetMethod().Module.ScopeName;
+                            if (modulename2 == "Newtonsoft.Json.dll")
+                            {
+                            }
+                            else if (modulename2 == "LiteDB.dll")
+                            {
+                            }
+                            else if (modulename2 == "CommonLanguageRuntimeLibrary")
+                            {
+                                _backingFieldValues["isDirty"] = true;
+                            }
+                            else if (modulename == "OpenRPA.exe" && modulename2 == "System.Activities.dll")
+                            {
+                                _backingFieldValues["isDirty"] = true;
+                            }
+                            else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.exe")
+                            {
+                                _backingFieldValues["isDirty"] = true;
+                            }
+                            else if (modulename == "OpenRPA.exe" && modulename2 == "LiteDB.dll")
+                            {
+                                _backingFieldValues["isDirty"] = true;
+                            }
+                            else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.Interfaces.dll")
+                            {
+                                _backingFieldValues["isDirty"] = true;
+                            }
+                            else if (modulename == "OpenRPA.exe" && modulename2 == "RefEmit_InMemoryManifestModule")
+                            {
+                                _backingFieldValues["isDirty"] = true;
+                            }
+                            else
+                            {
+#if (DEBUG)
+                                Log.Output(modulename + " " + modulename2);
+#else
+#endif
+                                _backingFieldValues["isDirty"] = true;
+                            }
+
                         }
                     }
                     catch (Exception)

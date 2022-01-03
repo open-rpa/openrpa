@@ -192,8 +192,8 @@ namespace OpenRPA
             }
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-            result.createApp(Workflow.Activity());
             lock (Instances) Instances.Add(result);
+            result.createApp(Workflow.Activity());
             WorkflowInstance.CleanUp();
             CleanUp();
             return result;
@@ -368,14 +368,25 @@ namespace OpenRPA
                 });
                 state = "running";
                 // Log.Debug(String.Format("Workflow {0} resumed bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
-                Save();
+                // Save();
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        [JsonIgnore, LiteDB.BsonIgnore]
         public System.Diagnostics.Stopwatch runWatch { get; set; }
+        [JsonIgnore, LiteDB.BsonIgnore]
+        public Stack<System.Diagnostics.Activity> Activities = new Stack<System.Diagnostics.Activity>();
+        [JsonIgnore, LiteDB.BsonIgnore]
+        public System.Diagnostics.Activity RootActivity = null;
+        [JsonProperty(propertyName: "parentspanid")]
+        public string ParentSpanId { get; set; }
+        [JsonProperty(propertyName: "spanid")]
+        public string SpanId { get; set; }
+        [JsonIgnore, LiteDB.BsonIgnore]
+        public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
         IWorkflow IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
         public void RunThis(Activity root, Activity activity)
         {
@@ -709,7 +720,7 @@ namespace OpenRPA
                         InstanceId = wfApp.Id.ToString();
                     }
                     state = "running";
-                    Save();
+                    // Save();
                 }
                 else
                 {
@@ -723,7 +734,7 @@ namespace OpenRPA
                     }
                     Log.Information(name + " resumed in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
                     state = "running";
-                    Save();
+                    // Save();
                 }
             }
             catch (Exception ex)
@@ -895,15 +906,6 @@ namespace OpenRPA
         }
         public void Save()
         {
-            _ = Task.Run(async () =>
-              {
-                  if (isCompleted || hasError)
-                  {
-                      xml = null;
-                  }
-                  isDirty = true;
-                  await Save<WorkflowInstance>(true);
-              });
             if (Workflow != null) Workflow.NotifyUIState();
             if (isCompleted || hasError)
             {
@@ -920,7 +922,6 @@ namespace OpenRPA
                 if (Workflow != null) Workflow.NotifyUIState();
             }
         }
-        public static List<UnsavedWorkflowInstance> unsaved = new List<UnsavedWorkflowInstance>();
         private static bool hasRanPending = false;
         public static async Task RunPendingInstances()
         {

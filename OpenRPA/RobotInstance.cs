@@ -9,6 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Xceed.Wpf.AvalonDock.Layout;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 
 namespace OpenRPA
 {
@@ -1778,10 +1782,43 @@ namespace OpenRPA
         // private System.Diagnostics.PerformanceCounter mem_free_counter;
         // public Tracer tracer = null;
         // private InstrumentationWithActivitySource Sampler = null;
+        private TracerProvider StatsTracerProvider;
+        private TracerProvider tracerProvider;
         private bool InitializeOTEL()
         {
             try
             {
+                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+                if (Config.local.enable_analytics && StatsTracerProvider == null)
+                {
+                    StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
+                    .SetSampler(new AlwaysOnSampler())
+                    .AddSource("OpenRPA")
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
+                    .AddOtlpExporter(otlpOptions =>
+                    {
+                        otlpOptions.Endpoint = new Uri("http://otel.stats.openiap.io:4317");
+                        otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
+                    })
+                    .Build();
+                }
+                //if (!string.IsNullOrEmpty(Config.local.otel_trace_url) && tracerProvider == null)
+                //{
+                //    tracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
+                //    .SetSampler(new AlwaysOnSampler())
+                //    .AddSource("OpenRPA")
+                //    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
+                //    .AddOtlpExporter(otlpOptions =>
+                //    {
+                //        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
+                //        {
+                //            Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
+                //        }
+                //        otlpOptions.Endpoint = new Uri(Config.local.otel_trace_url);
+                //    })
+                //    .Build();
+                //}
+                Log.Output(Config.local.otel_trace_url);
                 return true;
             }
             catch (Exception ex)

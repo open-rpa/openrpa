@@ -2561,7 +2561,7 @@ namespace OpenRPA
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
                 if (designer.BreakPointhit) return true;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted == false)
                     {
@@ -2823,7 +2823,7 @@ namespace OpenRPA
                 if (isRecording) return true;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted != true && i.state != "loaded")
                     {
@@ -2849,7 +2849,7 @@ namespace OpenRPA
                     if (val == null) return;
                     if (!(view.listWorkflows.SelectedValue is Workflow wf)) return;
                     wf.SetLastState("aborted");
-                    foreach (var i in wf.Instances)
+                    foreach (var i in wf.LoadedInstances)
                     {
                         if (i.isCompleted == false)
                         {
@@ -2861,7 +2861,7 @@ namespace OpenRPA
 
                 if (!(SelectedContent is Views.WFDesigner)) return;
                 var designer = (Views.WFDesigner)SelectedContent;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted == false)
                     {
@@ -2894,7 +2894,7 @@ namespace OpenRPA
                 // if (!IsConnected) return false;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted == false)
                     {
@@ -3431,14 +3431,14 @@ namespace OpenRPA
                 }
                 if (instance.hasError || instance.isCompleted)
                 {
-                    string message = (instance.Workflow.name + " " + instance.state);
+                    string message = instance.name + " " + instance.state;
                     if (!string.IsNullOrEmpty(instance.errorsource))
                     {
                         message += " at " + instance.errorsource;
                     }
                     if (instance.runWatch != null)
                     {
-                        message += (" in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                        message += " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed);
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
                     Log.Output(message);
@@ -3446,36 +3446,44 @@ namespace OpenRPA
                     {
                         if (instance.state == "completed")
                         {
-                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
+                            // App.notifyIcon.ShowBalloonTip(1000, instance.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Info);
                             App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Info);
                         }
                         else
                         {
-                            // App.notifyIcon.ShowBalloonTip(1000, instance.Workflow.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
+                            // App.notifyIcon.ShowBalloonTip(1000, instance.name + " " + instance.state, message, System.Windows.Forms.ToolTipIcon.Error);
                             App.notifyIcon.ShowBalloonTip(1000, "", message, System.Windows.Forms.ToolTipIcon.Error);
                         }
                     }
                     _ = Task.Run(() =>
                     {
                         var sw = new System.Diagnostics.Stopwatch(); sw.Start();
-                        while (sw.Elapsed < TimeSpan.FromSeconds(1))
+                        try
                         {
-                            lock (WorkflowInstance.Instances)
+                            while (sw.Elapsed < TimeSpan.FromSeconds(1))
                             {
-                                foreach (var wi in WorkflowInstance.Instances.ToList())
+
+                                lock (WorkflowInstance.Instances)
                                 {
-                                    if (wi.isCompleted) continue;
-                                    if (wi.Bookmarks == null) continue;
-                                    foreach (var b in wi.Bookmarks)
+                                    foreach (var wi in WorkflowInstance.Instances.ToList())
                                     {
-                                        if (b.Key == instance._id)
+                                        if (wi.isCompleted) continue;
+                                        if (wi.Bookmarks == null) continue;
+                                        foreach (var b in wi.Bookmarks)
                                         {
-                                            wi.ResumeBookmark(b.Key, instance);
-                                            return;
+                                            if (b.Key == instance._id)
+                                            {
+                                                wi.ResumeBookmark(b.Key, instance);
+                                                return;
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
                         }
                     });
                 }

@@ -11,6 +11,8 @@ using System.Windows;
 using Xceed.Wpf.AvalonDock.Layout;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 
@@ -19,7 +21,6 @@ namespace OpenRPA
     public class RobotInstance : IOpenRPAClient, System.ComponentModel.INotifyPropertyChanged
     {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        // private static System.Windows.Threading.DispatcherTimer unsavedTimer = null;
         public static System.Timers.Timer unsavedTimer = null;
         private readonly System.Timers.Timer reloadTimer = null;
         public void NotifyPropertyChanged(string propertyName)
@@ -35,14 +36,6 @@ namespace OpenRPA
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
             reloadTimer.Elapsed += ReloadTimer_Elapsed;
             reloadTimer.Stop();
-
-
-            //unsavedTimer = new System.Windows.Threading.DispatcherTimer();
-            //unsavedTimer.Interval = TimeSpan.FromMilliseconds(5000);
-            //unsavedTimer.Tick += new EventHandler(delegate (object s, EventArgs a)
-            //{
-            //    UnsavedTimer_Elapsed(s, null);
-            //});
             unsavedTimer = new System.Timers.Timer(5000);
             unsavedTimer.Elapsed += UnsavedTimer_Elapsed;
             unsavedTimer.Start();
@@ -303,41 +296,50 @@ namespace OpenRPA
             try
             {
                 unsavedTimer.Stop();
-                if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
-                if (global.webSocketClient.user == null) return;
-                List<WorkflowInstance> wfinstances = null;
-                lock (WorkflowInstance.Instances) wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
-                if (wfinstances.Count > 0)
+                var list = WorkflowInstance.Instances.ToList();
+                foreach (var i in list)
                 {
-                    Log.Debug("UnsavedTimer processing " + wfinstances.Count + " items");
-                    foreach (var entity in wfinstances)
+                    if (i.isDirty)
                     {
-                        try
-                        {
-                            var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
-                            if (exists != null)
-                            {
-                                entity.state = exists.state;
-                            }
-                            entity.isDirty = true;
-                            await entity.Save<WorkflowInstance>();
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.ToString());
-                        }
-                    }
-                    lock (WorkflowInstance.Instances)
-                    {
-                        int Deleted = instance.dbWorkflowInstances.DeleteMany(x => x.isDirty == false && x.isCompleted && x._modified < DateTime.Now.AddMinutes(-15));
-                        if (Deleted > 0) Log.Debug("UnsavedTimer_Elapsed::maintenance deleted " + Deleted + " workflow instances");
+                        await i.Save<WorkflowInstance>();
+                        if (i.Workflow != null) i.Workflow.NotifyUIState();
                     }
                 }
-                else
-                {
-                    unsavedTimer.Interval += 5000;
-                    if (unsavedTimer.Interval > 60000 * 2) unsavedTimer.Interval = 60000 * 2;
-                }
+                //if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
+                //if (global.webSocketClient.user == null) return;
+                //List<WorkflowInstance> wfinstances = null;
+                //lock (WorkflowInstance.Instances) wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
+                //if (wfinstances.Count > 0)
+                //{
+                //    Log.Debug("UnsavedTimer processing " + wfinstances.Count + " items");
+                //    foreach (var entity in wfinstances)
+                //    {
+                //        try
+                //        {
+                //            var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
+                //            if (exists != null)
+                //            {
+                //                entity.state = exists.state;
+                //            }
+                //            entity.isDirty = true;
+                //            await entity.Save<WorkflowInstance>();
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Log.Error(ex.ToString());
+                //        }
+                //    }
+                //    lock (WorkflowInstance.Instances)
+                //    {
+                //        int Deleted = instance.dbWorkflowInstances.DeleteMany(x => x.isDirty == false && x.isCompleted && x._modified < DateTime.Now.AddMinutes(-15));
+                //        if (Deleted > 0) Log.Debug("UnsavedTimer_Elapsed::maintenance deleted " + Deleted + " workflow instances");
+                //    }
+                //}
+                //else
+                //{
+                //    unsavedTimer.Interval += 5000;
+                //    if (unsavedTimer.Interval > 60000 * 2) unsavedTimer.Interval = 60000 * 2;
+                //}
             }
             catch (Exception ex)
             {
@@ -748,7 +750,7 @@ namespace OpenRPA
 
                 if (Projects.Count() == 0)
                 {
-                    GenericTools.RunUI(async () =>
+                    GenericTools.RunUIAsync(async () =>
                     {
                         string Name = "New Project";
                         try
@@ -762,7 +764,7 @@ namespace OpenRPA
                         {
                             Log.Error(ex.ToString());
                         }
-                    });
+                    }).Wait();
                 }
                 NotifyPropertyChanged("Projects");
 
@@ -1189,7 +1191,7 @@ namespace OpenRPA
                             try
                             {
                                 Hide();
-                                GenericTools.RunUI(async () =>
+                                GenericTools.RunUIAsync(async () =>
                                 {
                                     try
                                     {
@@ -1241,7 +1243,7 @@ namespace OpenRPA
                                     {
                                         Log.Error(ex.ToString());
                                     }
-                                });
+                                }).Wait();
 
 
                             }
@@ -1783,7 +1785,9 @@ namespace OpenRPA
         // public Tracer tracer = null;
         // private InstrumentationWithActivitySource Sampler = null;
         private TracerProvider StatsTracerProvider;
-        private TracerProvider tracerProvider;
+        private Object StatsMeterProvider;
+        // private TracerProvider tracerProvider;
+        private static readonly Meter OpenRPAMeter = new Meter("OpenRPA");
         private bool InitializeOTEL()
         {
             try
@@ -1797,10 +1801,63 @@ namespace OpenRPA
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
                     .AddOtlpExporter(otlpOptions =>
                     {
-                        otlpOptions.Endpoint = new Uri("http://otel.stats.openiap.io:4317");
+                        otlpOptions.Endpoint = new Uri("http://otel.openiap.io");
                         otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                     })
                     .Build();
+                }
+                if (Config.local.enable_analytics && StatsMeterProvider == null)
+                {
+                    // Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
+                    try
+                    {
+                        if (WorkflowTrackingParticipant.hostname == null) WorkflowTrackingParticipant.hostname = System.Net.Dns.GetHostName();
+                    }
+                    catch (Exception)
+                    {
+                        WorkflowTrackingParticipant.hostname = "unknown";
+                    }
+                    var process = Process.GetCurrentProcess();
+                    var tag1 = new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid);
+                    var tag2 = new KeyValuePair<string, object>("host", WorkflowTrackingParticipant.hostname);
+                    var tag3 = new KeyValuePair<string, object>("username", Environment.UserName);
+                    OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateMemorySize", () =>
+                    {
+                        process.Refresh();
+                        if ((tag1.Value as string) != Config.local.openflow_uniqueid) tag1 = new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid);
+                        if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.name))
+                        {
+                            if ((tag3.Value as string) != global.webSocketClient.user.name)
+                                tag3 = new KeyValuePair<string, object>("username", global.webSocketClient.user.name);
+                        }
+                        return new List<Measurement<long>>() { new Measurement<long>(process.PrivateMemorySize64, tag1, tag2, tag3) };
+                    });
+                    OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateWorkingSet", () =>
+                    {
+                        if ((tag1.Value as string) != Config.local.openflow_uniqueid) tag1 = new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid);
+                        if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.name))
+                        {
+                            if ((tag3.Value as string) != global.webSocketClient.user.name)
+                                tag3 = new KeyValuePair<string, object>("username", global.webSocketClient.user.name);
+                        }
+                        var counter = new PerformanceCounter("Process", "Working Set - Private", process.ProcessName);
+                        return new List<Measurement<long>>() { new Measurement<long>(counter.RawValue, tag1, tag2, tag3) };
+                    });
+                    OpenRPAMeter.CreateObservableGauge("Process.PagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedSystemMemorySize64, tag1, tag2, tag3) });
+                    OpenRPAMeter.CreateObservableGauge("Process.NonpagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.NonpagedSystemMemorySize64, tag1, tag2, tag3) });
+                    OpenRPAMeter.CreateObservableGauge("Process.PagedMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedMemorySize64, tag1, tag2, tag3) });
+                    OpenRPAMeter.CreateObservableGauge("Process.WorkingSet", () => new List<Measurement<long>>() { new Measurement<long>(process.WorkingSet64, tag1, tag2, tag3) });
+                    OpenRPAMeter.CreateObservableGauge("Process.VirtualMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.VirtualMemorySize64, tag1, tag2, tag3) });
+                    StatsMeterProvider = OpenTelemetry.Sdk.CreateMeterProviderBuilder()
+                        .AddMeter(OpenRPAMeter.Name)
+                        .AddOtlpExporter(opt =>
+                        {
+                            // opt.Endpoint = new Uri("https://otel.stats.openiap.io");
+                            opt.Endpoint = new Uri("http://otel.openiap.io");
+                            opt.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
+                        })
+                        .Build();
+
                 }
                 //if (!string.IsNullOrEmpty(Config.local.otel_trace_url) && tracerProvider == null)
                 //{

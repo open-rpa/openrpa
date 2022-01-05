@@ -55,7 +55,7 @@ namespace OpenRPA
         }
         public static Dictionary<string, Dictionary<string, Stopwatch>> timers = new Dictionary<string, Dictionary<string, Stopwatch>>();
         public static object timerslock = new object();
-        private static string hostname = null;
+        public static string hostname = null;
         protected override void Track(TrackingRecord trackRecord, TimeSpan timeStamp)
         {
             try
@@ -90,8 +90,7 @@ namespace OpenRPA
                             System.Diagnostics.Activity.Current = null;
                             try
                             {
-                                // Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.Workflow.name, ActivityKind.Consumer);
+                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
                             }
                             catch (Exception)
                             {

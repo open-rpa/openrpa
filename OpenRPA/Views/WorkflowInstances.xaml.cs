@@ -55,32 +55,27 @@ namespace OpenRPA.Views
             set
             {
                 workflow = value;
-                if (workflow == null) return;
-                if (!global.isConnected) return;
-                if (string.IsNullOrEmpty(workflow._id)) return;
-                Task.Run(() =>
+                if (workflow != null)
                 {
-                    try
+                    Task.Run(() =>
                     {
-                        instances = global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{WorkflowId: '" + workflow._id + "'}", "{\"state\":1,\"_modified\":1,\"errormessage\":1}", orderby: "{\"_modified\": -1}", top: 10).Result;
-                        GenericTools.RunUI(() => NotifyPropertyChanged("Instances"));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                    finally
-                    {
-                    }
-                }); //.Wait();
+                        _Instances = workflow.Instances;
+                        NotifyPropertyChanged("Instances");
+                    });
+                }
+                else
+                {
+                    _Instances = new WorkflowInstance[] { };
+                    NotifyPropertyChanged("Instances");
+                }
             }
         }
-        WorkflowInstance[] instances = new WorkflowInstance[] { };
+        private WorkflowInstance[] _Instances = new WorkflowInstance[] { };
         public WorkflowInstance[] Instances
         {
             get
             {
-                return instances;
+                return _Instances;
             }
             set
             {

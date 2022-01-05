@@ -68,8 +68,9 @@
     <PackageReference Include="NuGet.Packaging" Version="5.11.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.11.0" />
     <PackageReference Include="NuGet.Resolver" Version="5.11.0" />
-    <PackageReference Include="OpenTelemetry" Version="1.1.0-beta1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.1.0-beta1" />
+    <PackageReference Include="OpenTelemetry" Version="1.2.0-rc1" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.2.0-rc1" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\BreakableDoWhileDesigner.xaml" />

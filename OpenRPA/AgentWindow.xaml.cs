@@ -373,13 +373,13 @@ namespace OpenRPA
                     string message = "";
                     if (instance.runWatch != null)
                     {
-                        message += (instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
+                        message += instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed);
                     }
                     else
                     {
-                        message += (instance.Workflow.name + " " + instance.state);
+                        message += instance.Workflow.name + " " + instance.state;
                     }
-                    if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                    if (!string.IsNullOrEmpty(instance.errormessage)) message += Environment.NewLine + "# " + instance.errormessage;
                     Log.Information(message);
                     if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
                     {
@@ -396,6 +396,7 @@ namespace OpenRPA
                     }
                     _ = Task.Run(() =>
                     {
+                        if(instance.Workflow != null) instance.Workflow.NotifyUIState();
                         var sw = new System.Diagnostics.Stopwatch(); sw.Start();
                         while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {
@@ -517,7 +518,7 @@ namespace OpenRPA
                 if (!IsConnected) return false;
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted != true && i.state != "loaded")
                     {
@@ -542,7 +543,7 @@ namespace OpenRPA
                     var val = view.listWorkflows.SelectedValue;
                     if (val == null) return;
                     if (!(view.listWorkflows.SelectedValue is Workflow wf)) return;
-                    foreach (var i in wf.Instances)
+                    foreach (var i in wf.LoadedInstances)
                     {
                         if (i.isCompleted == false)
                         {
@@ -553,7 +554,7 @@ namespace OpenRPA
                 }
                 if (!(SelectedContent is Views.WFDesigner)) return;
                 var designer = (Views.WFDesigner)SelectedContent;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted == false)
                     {
@@ -589,7 +590,7 @@ namespace OpenRPA
                 if (!(SelectedContent is Views.WFDesigner)) return false;
                 var designer = (Views.WFDesigner)SelectedContent;
                 if (designer.BreakPointhit) return true;
-                foreach (var i in designer.Workflow.Instances)
+                foreach (var i in designer.Workflow.LoadedInstances)
                 {
                     if (i.isCompleted == false)
                     {

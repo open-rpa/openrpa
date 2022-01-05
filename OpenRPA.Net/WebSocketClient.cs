@@ -915,7 +915,7 @@ namespace OpenRPA.Net
         public async Task<T[]> InsertMany<T>(string collectionname, int w, bool j, bool skipresults, T[] items)
         {
             var result = new List<T>();
-            for (var i = 0; i < items.Length; i = +50)
+            for (var i = 0; i < items.Length; i = i + 50)
             {
                 InsertManyMessage<T> q = new InsertManyMessage<T>();
                 q.w = w; q.j = j;

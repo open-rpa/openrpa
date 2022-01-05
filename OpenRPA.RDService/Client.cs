@@ -328,7 +328,7 @@ namespace OpenRPA.RDService
                 Connecting = false;
                 Dispose();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             finally

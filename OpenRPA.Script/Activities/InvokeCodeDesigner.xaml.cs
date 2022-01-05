@@ -51,9 +51,9 @@ namespace OpenRPA.Script.Activities
                 if (p != null)
                 {
                     var value = p.ComputedValue;
-                    if(value != null)
+                    if (value != null)
                     {
-                        if( value is System.Activities.DelegateInArgument)
+                        if (value is System.Activities.DelegateInArgument)
                         {
                             variableModels.Add(p.Value);
                         }
@@ -69,29 +69,36 @@ namespace OpenRPA.Script.Activities
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var ec = ModelItemExtensions.GetEditingContext(ModelItem);
-            var modelService = ec.Services.GetService<System.Activities.Presentation.Services.ModelService>();
-            ModelItemCollection importsModelItem = modelService.Root.Properties["Imports"].Collection;
-            var namespaces = new List<string>();
-            foreach (ModelItem import in importsModelItem) namespaces.Add(import.Properties["Namespace"].ComputedValue as string);
-            if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
-            if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");
+            try
+            {
+                var ec = ModelItemExtensions.GetEditingContext(ModelItem);
+                var modelService = ec.Services.GetService<System.Activities.Presentation.Services.ModelService>();
+                ModelItemCollection importsModelItem = modelService.Root.Properties["Imports"].Collection;
+                var namespaces = new List<string>();
+                foreach (ModelItem import in importsModelItem) namespaces.Add(import.Properties["Namespace"].ComputedValue as string);
+                if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
+                if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");
 
-            var vars = FindVariablesInScope(ModelItem);
-            string code = ModelItem.GetValue<string>("Code");
-            string language = ModelItem.GetValue<string>("Language");
-            if (string.IsNullOrEmpty(language)) language = "VB";
-            var f = new Editor(code, language, vars, namespaces.ToArray());
-            f.textEditor.SyntaxHighlighting = f.Languages.Where(x => x.Name == language).FirstOrDefault();
-            f.Owner = GenericTools.MainWindow;
-            f.ShowDialog();
-            if (f.textEditor.Text != code)
-            {
-                ModelItem.Properties["Code"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.textEditor.Text) });
+                var vars = FindVariablesInScope(ModelItem);
+                string code = ModelItem.GetValue<string>("Code");
+                string language = ModelItem.GetValue<string>("Language");
+                if (string.IsNullOrEmpty(language)) language = "VB";
+                var f = new Editor(code, language, vars, namespaces.ToArray());
+                f.textEditor.SyntaxHighlighting = f.Languages.Where(x => x.Name == language).FirstOrDefault();
+                f.Owner = GenericTools.MainWindow;
+                f.ShowDialog();
+                if (f.textEditor.Text != code)
+                {
+                    ModelItem.Properties["Code"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.textEditor.Text) });
+                }
+                if (f.textEditor.SyntaxHighlighting.Name != language)
+                {
+                    ModelItem.Properties["Language"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.textEditor.SyntaxHighlighting.Name) });
+                }
             }
-            if (f.textEditor.SyntaxHighlighting.Name != language)
+            catch (Exception ex)
             {
-                ModelItem.Properties["Language"].SetValue(new InArgument<string>() { Expression = new Literal<string>(f.textEditor.SyntaxHighlighting.Name) });
+                Log.Error(ex.ToString());
             }
         }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
@@ -102,19 +109,20 @@ namespace OpenRPA.Script.Activities
             var namespaces = new List<string>();
             foreach (ModelItem import in importsModelItem) namespaces.Add(import.Properties["Namespace"].ComputedValue as string);
             if (!namespaces.Contains("System.Collections")) namespaces.Add("System.Collections");
-            if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");            
+            if (!namespaces.Contains("System.Collections.Generic")) namespaces.Add("System.Collections.Generic");
 
-            
+
             string[] current = ModelItem.GetValue<string[]>("namespaces");
-            if(current == null || namespaces.Count() != current.Count())
+            if (current == null || namespaces.Count() != current.Count())
             {
                 ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
-            } else
+            }
+            else
             {
                 bool changed = false;
                 for (var i = 0; i < namespaces.Count(); i++)
                     if (namespaces[i] != current[i]) changed = true;
-                if(changed)
+                if (changed)
                 {
                     ModelItem.Properties["namespaces"].SetValue(namespaces.ToArray());
                 }

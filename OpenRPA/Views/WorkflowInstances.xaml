@@ -17,28 +17,7 @@
                 <DataGridTextColumn Header="Updated" Binding="{Binding _modified}"  Width="{Binding Path=ActualWidth, ElementName=grid}"/>
                 <DataGridTextColumn Header="State" Binding="{Binding state}" Width="Auto"  />
                 <DataGridTextColumn Header="" Binding="{Binding errormessage}" Width="*" />
-                <!--<DataGridTemplateColumn Header="Image" Width="SizeToCells" IsReadOnly="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding Image}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
             </DataGrid.Columns>
         </DataGrid>
-        <!--<TreeView ItemsSource="{Binding Instances,
-                                   Mode=TwoWay,
-                                   UpdateSourceTrigger=PropertyChanged}">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=_modified}"></TextBlock>
-                        <TextBlock Text="{Binding Path=state}"></TextBlock>
-                        <TextBlock Text="{Binding Path=errormessage}"></TextBlock>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-
-        </TreeView>-->
     </Grid>
 </UserControl>

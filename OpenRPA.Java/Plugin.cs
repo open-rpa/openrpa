@@ -145,8 +145,8 @@ namespace OpenRPA.Java
         public void Start()
         {
             Javahook.Instance.init();
-            Javahook.Instance.Connected += () => { SetStatus("Online"); };
-            Javahook.Instance.Disconnected += () => { SetStatus("Offline"); };
+            //Javahook.Instance.Connected += () => { SetStatus("Online"); };
+            //Javahook.Instance.Disconnected += () => { SetStatus("Offline"); };
             InputDriver.Instance.OnMouseUp += OnMouseUp;
         }
         public void Stop()
@@ -257,7 +257,7 @@ namespace OpenRPA.Java
             try
             {
                 Javahook.Instance.OnInitilized += Hook_OnInitilized;
-                Javahook.Instance.OnJavaShutDown += Hook_OnJavaShutDown;
+                //Javahook.Instance.OnJavaShutDown += Hook_OnJavaShutDown;
                 Javahook.Instance.OnNewjvm += Hook_OnNewjvm;
                 Javahook.Instance.init();
             }

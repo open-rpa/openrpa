@@ -61,6 +61,7 @@
     <PackageTags></PackageTags>
     <Platforms>AnyCPU;x86</Platforms>
     <Company>OpenIAP</Company>
+    <PackageId>OpenRPA.Interfaces</PackageId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\dist</OutputPath>

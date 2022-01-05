@@ -206,8 +206,8 @@ namespace OpenRPA.Views
                         Project p = obj as Project;
                         if (p.name.ToLower().Contains(FilterText)) return true;
                         p.UpdateFilteredWorkflows();
-                        if (p.FilteredSource.Count > 0) return true;
-                        //((IProject)p).name.ToLower().Contains(FilterText.ToLower()) || (IProject)p).FilteredSource.Count > 0;
+                        p.UpdateFilteredDetectors();
+                        if (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0) return true;
                         return false;
                     };
                 return FilteredSource;
@@ -215,33 +215,71 @@ namespace OpenRPA.Views
         }
         public static OpenProject Instance;
         public static bool isUpdating = false;
-        public static void UpdateProjectsList()
+        public static bool isUpdateProjectsList = false;
+        public static void UpdateProjectsList(bool workflows, bool detectors)
         {
+            if (isUpdateProjectsList) return;
+            isUpdateProjectsList = true;
             try
             {
                 if (Instance == null) { Log.Debug("UpdateProjectsList, Instance is null"); return; }
-                if (!string.IsNullOrEmpty(Instance.FilterText))
-                {
-                    foreach (var p in Instance.Projects)
-                    {
-                        p.NotifyPropertyChanged("FilteredWorkflows");
-                    }
-
-                    return;
-                }
-                var result = RobotInstance.instance.Projects.FindAll().OrderBy(x => x.name).ToList();
-                for (var i = 0; i < result.Count; i++)
-                {
-                    result[i].UpdateWorkflowsList();
-                }
                 GenericTools.RunUI(() =>
                 {
+                    if (!string.IsNullOrEmpty(Instance.FilterText))
+                    {
+                        foreach (var p in Instance.Projects)
+                        {
+                            p.NotifyPropertyChanged("FilteredWorkflows");
+                            p.NotifyPropertyChanged("FilteredDetectors");
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        GenericTools.RunUI(() =>
+                        {
+                            isUpdating = true;
+                            foreach (var p in Instance.Projects)
+                            {
+                                p.NotifyPropertyChanged("FilteredWorkflows");
+                                p.NotifyPropertyChanged("FilteredDetectors");
+                            }
+                            Instance.NotifyPropertyChanged("FilteredProjects");
+                            isUpdating = false;
+                        });
+                    }
+                    var _current = Instance._Projects.ToArray();
+                    var _fresh = RobotInstance.instance.Projects.FindAll().OrderBy(x => x.name).ToList();
+                    foreach (var p in _fresh)
+                    {
+                        var exists = _current.Where(x => x._id == p._id).FirstOrDefault();
+                        if (exists == null)
+                        {
+                            p.UpdateWorkflowsList();
+                            p.UpdateDetectorsList();
+                            Instance._Projects.Add(p);
+                        }
+                    }
+                    Instance.NotifyPropertyChanged("Projects");
+                    Instance.NotifyPropertyChanged("FilteredProjects");
+                    foreach (var p in _current)
+                    {
+                        var exists = _fresh.Where(x => x._id == p._id).FirstOrDefault();
+                        if (exists == null)
+                        {
+                            Instance._Projects.Remove(p);
+                        }
+                        else
+                        {
+                            p.UpdateDetectorsList();
+                            p.UpdateWorkflowsList();
+                        }
+                    }
                     isUpdating = true;
                     try
                     {
-                        if (Instance != null) Instance._Projects.UpdateCollection(result);
+                        // if (Instance != null) Instance._Projects.UpdateCollection(result);
                         System.Windows.Input.CommandManager.InvalidateRequerySuggested();
-
                     }
                     catch (Exception)
                     {
@@ -251,6 +289,10 @@ namespace OpenRPA.Views
             }
             catch (Exception)
             {
+            }
+            finally
+            {
+                isUpdateProjectsList = false;
             }
         }
         public OpenProject(IMainWindow main)
@@ -266,7 +308,7 @@ namespace OpenRPA.Views
                 this.main = main;
                 DataContext = this;
                 RobotInstance.instance.PropertyChanged += Instance_PropertyChanged;
-                UpdateProjectsList();
+                UpdateProjectsList(true, true);
             }
             catch (Exception ex)
             {
@@ -301,11 +343,15 @@ namespace OpenRPA.Views
                 isUpdating = true;
                 foreach (Project p in _Projects)
                 {
-                    p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : p.FilteredSource.Count > 0;
+                    p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0);
                 }
                 isUpdating = false;
                 // UpdateProjectsList();
-                foreach (var p in Instance.Projects) p.NotifyPropertyChanged("FilteredWorkflows");
+                foreach (var p in Instance.Projects)
+                {
+                    p.NotifyPropertyChanged("FilteredWorkflows");
+                    p.NotifyPropertyChanged("FilteredDetectors");
+                }
                 NotifyPropertyChanged("FilterText");
                 NotifyPropertyChanged("Projects");
                 NotifyPropertyChanged("FilteredProjects");
@@ -315,11 +361,15 @@ namespace OpenRPA.Views
                     isUpdating = true;
                     foreach (Project p in _Projects)
                     {
-                        p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : p.FilteredSource.Count > 0;
+                        p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0);
                     }
                     isUpdating = false;
                     // UpdateProjectsList();
-                    foreach (var p in Instance.Projects) p.NotifyPropertyChanged("FilteredWorkflows");
+                    foreach (var p in Instance.Projects)
+                    {
+                        p.NotifyPropertyChanged("FilteredWorkflows");
+                        p.NotifyPropertyChanged("FilteredDetectors");
+                    }
                     NotifyPropertyChanged("FilterText");
                     NotifyPropertyChanged("Projects");
                     NotifyPropertyChanged("FilteredProjects");
@@ -327,21 +377,32 @@ namespace OpenRPA.Views
                 isFiltering = false;
             }
         }
-        private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        async private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Log.FunctionIndent("OpenProject", "ListWorkflows_MouseDoubleClick");
             try
             {
                 if (listWorkflows.SelectedItem is Workflow f)
                 {
-                    //var freshwf = RobotInstance.instance.Workflows.FindById(f._id);
-                    //onOpenWorkflow?.Invoke(freshwf);
                     onOpenWorkflow?.Invoke(f);
                     return;
                 }
-                //var p = (Project)listWorkflows.SelectedItem;
-                //if (p == null) return;
-                //onOpenProject?.Invoke(p);
+                if (listWorkflows.SelectedItem is Detector d)
+                {
+                    if (main is MainWindow m)
+                    {
+                        var op = await m.OpenDetectors();
+                        if (op != null)
+                        {
+                            foreach (IDetectorPlugin dd in op.lidtDetectors.Items)
+                            {
+                                if (dd.Entity._id == d._id) op.lidtDetectors.SelectedItem = dd;
+                            }
+
+                        }
+                    }
+                    return;
+                }
             }
             catch (Exception ex)
             {
@@ -521,6 +582,18 @@ namespace OpenRPA.Views
                     }
                     e.Handled = true;
                 }
+                if (listWorkflows.SelectedValue is Detector d)
+                {
+                    if (System.Windows.Input.Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        DragDrop.DoDragDrop(listWorkflows, d, DragDropEffects.Copy);
+                    }
+                    else
+                    {
+                        DragDrop.DoDragDrop(listWorkflows, d, DragDropEffects.Move);
+                    }
+                    e.Handled = true;
+                }
                 // DataObject data = new DataObject(System.Windows.DataFormats.Text.ToString(), "abcd");
                 // DragDropEffects de = DragDrop.DoDragDrop(tvi, data, DragDropEffects.Move);
             }
@@ -537,7 +610,8 @@ namespace OpenRPA.Views
         {
             if (e.LeftButton == MouseButtonState.Pressed && !IsDragging)
             {
-                Point position = e.GetPosition(null); if (Math.Abs(position.X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+                Point position = e.GetPosition(null);
+                if (Math.Abs(position.X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
                     StartDrag(e);
                 }
@@ -545,50 +619,120 @@ namespace OpenRPA.Views
         }
         private async void listWorkflows_Drop(object sender, DragEventArgs e)
         {
-            Workflow wf = e.Data.GetData(typeof(Workflow)) as Workflow;
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            TreeViewItem target = null;
-            DependencyObject k = VisualTreeHelper.HitTest(listWorkflows, e.GetPosition(listWorkflows)).VisualHit;
-            while (k != null)
+            try
             {
-                if (k is TreeViewItem treeNode)
+                Workflow wf = e.Data.GetData(typeof(Workflow)) as Workflow;
+                Detector d = e.Data.GetData(typeof(Detector)) as Detector;
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                TreeViewItem target = null;
+                DependencyObject k = VisualTreeHelper.HitTest(listWorkflows, e.GetPosition(listWorkflows)).VisualHit;
+                while (k != null)
                 {
-                    target = treeNode;
-
-                }
-                k = VisualTreeHelper.GetParent(k);
-            }
-            if (target == null) return;
-            Project p = null;
-            if (target.DataContext is Workflow targetwf)
-            {
-                p = targetwf.Project() as Project;
-            }
-            if (target.DataContext is Project targetp)
-            {
-                p = targetp;
-            }
-            if (wf != null)
-            {
-                e.Handled = true;
-                if (target != null)
-                {
-                    if (p != null && p._id != wf.projectid)
+                    if (k is TreeViewItem treeNode)
                     {
-                        if (string.IsNullOrEmpty(wf.Filename)) wf.Filename = wf.UniqueFilename();
-                        var nameexists = p.Workflows.Where(x => x.name == wf.name).ToList();
-                        var filenameexists = p.Workflows.Where(x => x.Filename == wf.Filename).ToList();
-                        if (nameexists.Count() == 1)
+                        target = treeNode;
+
+                    }
+                    k = VisualTreeHelper.GetParent(k);
+                }
+                if (target == null) return;
+                Project p = null;
+                if (target.DataContext is Workflow targetwf)
+                {
+                    p = targetwf.Project() as Project;
+                }
+                if (target.DataContext is Project targetp)
+                {
+                    p = targetp;
+                }
+                if (d != null)
+                {
+                    e.Handled = true;
+                    if (target != null)
+                    {
+                        if (p != null && p._id != d.projectid)
                         {
-                            var messageBoxResult = MessageBox.Show("Project " + p.name + " already contains a workflow with name " + Workflow.name +
-                            ", do you wish to overwrite this workflow (Yes)? or keep them seperate (no)", "Workflow already exists", MessageBoxButton.YesNo);
-                            if (messageBoxResult == MessageBoxResult.Yes)
+                            if (e.Effects == DragDropEffects.Copy)
                             {
-                                nameexists[0].Xaml = wf.Xaml;
-                                nameexists[0].ParseParameters();
-                                if (filenameexists.Count() > 0) wf.Filename = wf.UniqueFilename();
-                                await nameexists[0].Save();
-                                // await wf.Delete();
+                                d = JObject.FromObject(d).ToObject<Detector>();
+                                d._id = null;
+                            }
+                            d.projectid = p._id;
+                            d.isDirty = true;
+                            d._acl = p._acl;
+                            await d.Save();
+                            d.Start();
+                        }
+                        UpdateProjectsList(false, true);
+                    }
+                }
+                if (wf != null)
+                {
+                    e.Handled = true;
+                    if (target != null)
+                    {
+                        if (p != null && p._id != wf.projectid)
+                        {
+                            if (string.IsNullOrEmpty(wf.Filename)) wf.Filename = wf.UniqueFilename();
+                            var nameexists = p.Workflows.Where(x => x.name == wf.name).ToList();
+                            var filenameexists = p.Workflows.Where(x => x.Filename == wf.Filename).ToList();
+                            if (nameexists.Count() == 1)
+                            {
+                                var messageBoxResult = MessageBox.Show("Project " + p.name + " already contains a workflow with name " + Workflow.name +
+                                ", do you wish to overwrite this workflow (Yes)? or keep them seperate (no)", "Workflow already exists", MessageBoxButton.YesNo);
+                                if (messageBoxResult == MessageBoxResult.Yes)
+                                {
+                                    nameexists[0].Xaml = wf.Xaml;
+                                    nameexists[0].ParseParameters();
+                                    if (filenameexists.Count() > 0) wf.Filename = wf.UniqueFilename();
+                                    await nameexists[0].Save();
+                                    // await wf.Delete();
+                                }
+                                else
+                                {
+                                    if (e.Effects == DragDropEffects.Copy)
+                                    {
+                                        wf = JObject.FromObject(wf).ToObject<Workflow>();
+                                        wf._id = null;
+                                        wf.projectid = p._id;
+                                        wf.Filename = wf.UniqueFilename();
+                                    }
+                                    wf.isDirty = true;
+                                    wf.Filename = wf.UniqueFilename();
+                                    wf.projectid = p._id;
+                                    wf._acl = p._acl;
+                                    await wf.Save();
+                                    await wf.UpdateImagePermissions();
+                                    UpdateProjectsList(true, false);
+                                }
+
+                            }
+                            else if (filenameexists.Count() == 1)
+                            {
+                                var messageBoxResult = MessageBox.Show("Project " + p.name + " already contains a workflow with filename " + Workflow.Filename + " with name \"" + Workflow.name + "\" " +
+                                ", do you wish to overwrite this workflow (Yes)? or keep them seperate (no)", "Workflow already exists", MessageBoxButton.YesNo);
+                                if (messageBoxResult == MessageBoxResult.Yes)
+                                {
+                                    filenameexists[0].Xaml = wf.Xaml;
+                                    filenameexists[0].ParseParameters();
+                                    filenameexists[0].Filename = filenameexists[0].UniqueFilename();
+                                    await filenameexists[0].Save();
+                                    // await wf.Delete();
+                                }
+                                else
+                                {
+                                    if (e.Effects == DragDropEffects.Copy)
+                                    {
+                                        wf = JObject.FromObject(wf).ToObject<Workflow>();
+                                        wf._id = null;
+                                    }
+                                    wf.projectid = p._id;
+                                    wf._acl = p._acl;
+                                    wf.Filename = wf.UniqueFilename();
+                                    wf.isDirty = true;
+                                    await wf.Save();
+                                    await wf.UpdateImagePermissions();
+                                }
                             }
                             else
                             {
@@ -597,70 +741,51 @@ namespace OpenRPA.Views
                                     wf = JObject.FromObject(wf).ToObject<Workflow>();
                                     wf._id = null;
                                     wf.projectid = p._id;
-                                    wf.Filename = wf.UniqueFilename();
-                                }
-                                wf.Filename = wf.UniqueFilename();
-                                wf.projectid = p._id;
-                                await wf.Save();
-                            }
-
-                        }
-                        else if (filenameexists.Count() == 1)
-                        {
-                            var messageBoxResult = MessageBox.Show("Project " + p.name + " already contains a workflow with filename " + Workflow.Filename + " with name \"" + Workflow.name + "\" " +
-                            ", do you wish to overwrite this workflow (Yes)? or keep them seperate (no)", "Workflow already exists", MessageBoxButton.YesNo);
-                            if (messageBoxResult == MessageBoxResult.Yes)
-                            {
-                                filenameexists[0].Xaml = wf.Xaml;
-                                filenameexists[0].ParseParameters();
-                                filenameexists[0].Filename = filenameexists[0].UniqueFilename();
-                                await filenameexists[0].Save();
-                                // await wf.Delete();
-                            }
-                            else
-                            {
-                                if (e.Effects == DragDropEffects.Copy)
-                                {
-                                    wf = JObject.FromObject(wf).ToObject<Workflow>();
-                                    wf._id = null;
+                                    wf.UniqueFilename();
                                 }
                                 wf.projectid = p._id;
-                                wf.Filename = wf.UniqueFilename();
+                                wf._acl = p._acl;
                                 await wf.Save();
+                                await wf.UpdateImagePermissions();
                             }
-                        }
-                        else
-                        {
-                            if (e.Effects == DragDropEffects.Copy)
-                            {
-                                wf = JObject.FromObject(wf).ToObject<Workflow>();
-                                wf._id = null;
-                                wf.projectid = p._id;
-                                wf.UniqueFilename();
-                            }
-                            wf.projectid = p._id;
-                            await wf.Save();
                         }
                     }
                 }
-            }
-            if (files != null && files.Length > 0)
-            {
-                e.Handled = true;
-                foreach (var filename in files)
+                if (files != null && files.Length > 0)
                 {
-                    if (!System.IO.File.Exists(filename)) continue;
-                    if (System.IO.Path.GetExtension(filename) == ".xaml")
+                    e.Handled = true;
+                    foreach (var filename in files)
                     {
-                        var name = System.IO.Path.GetFileNameWithoutExtension(filename);
-                        Workflow workflow = await Workflow.Create(p, name);
-                        workflow.Xaml = System.IO.File.ReadAllText(filename);
-                        await workflow.Save();
-                        onOpenWorkflow?.Invoke(workflow);
+                        if (!System.IO.File.Exists(filename)) continue;
+                        if (System.IO.Path.GetExtension(filename) == ".xaml")
+                        {
+                            var name = System.IO.Path.GetFileNameWithoutExtension(filename);
+                            Workflow workflow = await Workflow.Create(p, name);
+                            workflow.Xaml = System.IO.File.ReadAllText(filename);
+                            wf._acl = p._acl;
+                            await workflow.Save();
+                            onOpenWorkflow?.Invoke(workflow);
+                        }
+                        if (System.IO.Path.GetExtension(filename) == ".json")
+                        {
+                            var json = System.IO.File.ReadAllText(filename);
+                            Detector _d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(json);
+                            _d._acl = p._acl;
+                            var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                            if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                            _d.projectid = p._id;
+                            await _d.Save();
+                            _d.Start();
+                            UpdateProjectsList(false, true);
+                        }
                     }
                 }
+                IsDragging = false;
             }
-            IsDragging = false;
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
 }

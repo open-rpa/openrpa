@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -64,6 +64,19 @@ namespace OpenRPA.Interfaces.Views
             {
                 plugin.Processname = value;
                 NotifyPropertyChanged("Processname");
+            }
+        }
+        public string _id
+        {
+            get
+            {
+                if (Entity == null) return string.Empty;
+                return Entity._id;
+            }
+            set
+            {
+                Entity._id = value;
+                NotifyPropertyChanged("_id");
             }
         }
         public string Keys

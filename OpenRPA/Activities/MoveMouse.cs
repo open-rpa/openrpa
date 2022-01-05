@@ -30,9 +30,9 @@ namespace OpenRPA.Activities
         [RequiredArgument, LocalizedDisplayName("activity_animatemouse", typeof(Resources.strings)), LocalizedDescription("activity_animatemouse_help", typeof(Resources.strings))]
         public InArgument<bool> AnimateMouse { get; set; } = false;
         [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings)), LocalizedDescription("activity_offsetx_help", typeof(Resources.strings))]
-        public int OffsetX { get; set; } = 5;
+        public InArgument<int> OffsetX { get; set; } = 5;
         [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
-        public int OffsetY { get; set; } = 5;
+        public InArgument<int> OffsetY { get; set; } = 5;
         [LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
         [LocalizedDisplayName("activity_postwait", typeof(Resources.strings)), LocalizedDescription("activity_postwait_help", typeof(Resources.strings))]
@@ -42,9 +42,9 @@ namespace OpenRPA.Activities
             var el = Element.Get(context);
             var animatemouse = false;
             if (AnimateMouse != null) animatemouse = AnimateMouse.Get(context);
-            var x = OffsetX;
-            var y = OffsetY;
-            if(el != null)
+            var x = OffsetX.Get(context);
+            var y = OffsetY.Get(context);
+            if (el != null)
             {
                 x += el.Rectangle.X;
                 y += el.Rectangle.Y;
@@ -58,8 +58,8 @@ namespace OpenRPA.Activities
                 NativeMethods.SetCursorPos(x, y);
             }
             TimeSpan postwait = TimeSpan.Zero;
-            if (PostWait!=null) { postwait = PostWait.Get(context); }
-            if(postwait != TimeSpan.Zero)
+            if (PostWait != null) { postwait = PostWait.Get(context); }
+            if (postwait != TimeSpan.Zero)
             {
                 System.Threading.Thread.Sleep(postwait);
             }

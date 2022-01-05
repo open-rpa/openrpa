@@ -16,10 +16,10 @@ namespace OpenRPA.Java
         public delegate void OnNewjvmDelegate(AccessBridge accessBridge, AccessibleJvm[] newjvms);
         public event OnNewjvmDelegate OnNewjvm;
         public delegate void JavaShutDownDelegate(int vmID);
-        public event JavaShutDownDelegate OnJavaShutDown;
+        //public event JavaShutDownDelegate OnJavaShutDown;
         public delegate void JavaHandler();
-        public event JavaHandler Connected;
-        public event JavaHandler Disconnected;
+        //public event JavaHandler Connected;
+        //public event JavaHandler Disconnected;
 
         private HwndCache _windowCache = null;
         private SingleDelayedTask _delayedRefresh = new SingleDelayedTask();

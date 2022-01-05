@@ -1330,80 +1330,80 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
         public void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance)
         {
             GenericTools.RunUI(() =>
-            {
-                this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
-                if (BreakPointhit)
-                {
-                    SetDebugLocation(null);
-                    Properties = WorkflowDesigner.PropertyInspectorView;
-                    Singlestep = false;
-                    BreakPointhit = false;
-                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
-                    if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
-                    return;
-                }
-                WorkflowDesigner.Flush();
-                // InitializeStateEnvironment();
-                if (global.isConnected)
-                {
-                    if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
-                    {
-                        Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
-                        return;
-                    }
-                }
-                //GenericTools.RunUI(() =>
-                //{
-                //    if (_activityIdMapping.Count == 0)
-                //    {
-                //        int failCounter = 0;
-                //        while (_activityIdMapping.Count == 0 && failCounter < 3)
-                //        {
-                //            System.Windows.Forms.Application.DoEvents();
-                //            InitializeStateEnvironment(true);
-                //            System.Threading.Thread.Sleep(500);
-                //            failCounter++;
-                //        }
-                //    }
-                //    if (_activityIdMapping.Count == 0)
-                //    {
-                //        _ = Save();
-                //        // ReloadDesigner();
-                //    }
-                //    if (_activityIdMapping.Count == 0)
-                //    {
-                //        int failCounter = 0;
-                //        while (_activityIdMapping.Count == 0 && failCounter < 3)
-                //        {
-                //            System.Windows.Forms.Application.DoEvents();
-                //            InitializeStateEnvironment(true);
-                //            System.Threading.Thread.Sleep(500);
-                //            failCounter++;
-                //        }
-                //    }
+           {
+               this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
+               if (BreakPointhit)
+               {
+                   SetDebugLocation(null);
+                   Properties = WorkflowDesigner.PropertyInspectorView;
+                   Singlestep = false;
+                   BreakPointhit = false;
+                   if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
+                   if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
+                   return;
+               }
+               WorkflowDesigner.Flush();
+               // InitializeStateEnvironment();
+               if (global.isConnected)
+               {
+                   if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
+                   {
+                       Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
+                       return;
+                   }
+               }
+               //GenericTools.RunUI(() =>
+               //{
+               //    if (_activityIdMapping.Count == 0)
+               //    {
+               //        int failCounter = 0;
+               //        while (_activityIdMapping.Count == 0 && failCounter < 3)
+               //        {
+               //            System.Windows.Forms.Application.DoEvents();
+               //            InitializeStateEnvironment(true);
+               //            System.Threading.Thread.Sleep(500);
+               //            failCounter++;
+               //        }
+               //    }
+               //    if (_activityIdMapping.Count == 0)
+               //    {
+               //        _ = Save();
+               //        // ReloadDesigner();
+               //    }
+               //    if (_activityIdMapping.Count == 0)
+               //    {
+               //        int failCounter = 0;
+               //        while (_activityIdMapping.Count == 0 && failCounter < 3)
+               //        {
+               //            System.Windows.Forms.Application.DoEvents();
+               //            InitializeStateEnvironment(true);
+               //            System.Threading.Thread.Sleep(500);
+               //            failCounter++;
+               //        }
+               //    }
 
-                //});
-                //if (_activityIdMapping.Count == 0)
-                //{
-                //    Log.Error("Failed mapping activites!!!!!");
-                //    throw new Exception("Failed mapping activites!!!!!");
-                //}
-                if (instance == null)
-                {
-                    var param = new Dictionary<string, object>();
-                    BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
-                    if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
-                    {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
-                    }
-                    else
-                    {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
-                    }
-                }
-                ReadOnly = true;
-                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
-            });
+               //});
+               //if (_activityIdMapping.Count == 0)
+               //{
+               //    Log.Error("Failed mapping activites!!!!!");
+               //    throw new Exception("Failed mapping activites!!!!!");
+               //}
+               if (instance == null)
+               {
+                   var param = new Dictionary<string, object>();
+                   BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+                   if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
+                   {
+                       instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
+                   }
+                   else
+                   {
+                       instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
+                   }
+               }
+               ReadOnly = true;
+               if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
+           });
             if (instance != null) instance.Run();
         }
         private void ShowVariables(IDictionary<string, WorkflowInstanceValueType> Variables)

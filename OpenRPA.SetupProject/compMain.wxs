@@ -189,6 +189,31 @@
         <File Id="Microsoft.Bcl.AsyncInterfaces.dll" Source="!(wix.MainSource)\Microsoft.Bcl.AsyncInterfaces.dll" />
         <File Id="Microsoft.VisualStudio.Debugger.Contracts.dll" Source="!(wix.MainSource)\Microsoft.VisualStudio.Debugger.Contracts.dll" />
 
+        <!-- otel -->
+        <File Id="OpenTelemetry.Api.dll" Source="!(wix.MainSource)\OpenTelemetry.Api.dll" />
+        <File Id="OpenTelemetry.dll" Source="!(wix.MainSource)\OpenTelemetry.dll" />
+        <File Id="OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" Source="!(wix.MainSource)\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" />
+
+        <File Id="Google.Protobuf.dll" Source="!(wix.MainSource)\Google.Protobuf.dll" />
+        <File Id="Grpc.Core.Api.dll" Source="!(wix.MainSource)\Grpc.Core.Api.dll" />
+        <File Id="Grpc.Core.dll" Source="!(wix.MainSource)\Grpc.Core.dll" />
+        <File Id="grpc_csharp_ext.x64.dll" Source="!(wix.MainSource)\grpc_csharp_ext.x64.dll" />
+        <File Id="libgrpc_csharp_ext.x64.dylib" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.dylib" />
+        <File Id="libgrpc_csharp_ext.x64.so" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.so" />
+        <File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.Configuration.Binder.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Binder.dll" />
+        <File Id="Microsoft.Extensions.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.dll" />
+        <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.Logging.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.Logging.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Configuration.dll" />
+        <File Id="Microsoft.Extensions.Logging.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.dll" />
+        <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
+        <File Id="Microsoft.Extensions.Options.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.dll" />
+        <File Id="Microsoft.Extensions.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Primitives.dll" />
+        <File Id="Microsoft.Win32.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Win32.Primitives.dll" />
+        <File Id="System.Diagnostics.DiagnosticSource.dll" Source="!(wix.MainSource)\System.Diagnostics.DiagnosticSource.dll" />
+
+
         <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
       </Component>
       <Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>

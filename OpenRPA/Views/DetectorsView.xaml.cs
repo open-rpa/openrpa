@@ -37,6 +37,13 @@ namespace OpenRPA.Views
                 return Plugins.detectorPlugins;
             }
         }
+        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects
+        {
+            get
+            {
+                return OpenProject.Instance.Projects;
+            }
+        }
         public Dictionary<string, Type> DetectorTypes
         {
             get
@@ -50,56 +57,33 @@ namespace OpenRPA.Views
             InitializeComponent();
             this.main = main;
             DataContext = this;
-            detectorPlugins.ItemPropertyChanged += DetectorPlugins_ItemPropertyChanged;
+            // detectorPlugins.ItemPropertyChanged += DetectorPlugins_ItemPropertyChanged;
             Log.FunctionOutdent("DetectorsView", "DetectorsView");
         }
         static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-        private async void DetectorPlugins_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            Log.FunctionIndent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
-            try
-            {
-                await semaphoreSlim.WaitAsync();
-                var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
-                foreach (var p in list.ToList())
-                {
-                    var Entity = (p.Entity as Detector);
-                    if (global.isConnected)
-                    {
-                        try
-                        {
-                            _ = Entity.Save();
-                            //if (string.IsNullOrEmpty(Entity._id) || Entity.isLocalOnly)
-                            //{
-                            //    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, Entity);
-                            //    Entity._id = result._id;
-                            //    Entity._acl = result._acl;
-                            //    Entity.isLocalOnly = false;
-                            //    Entity.isDirty = false;
-                            //}
-                            //else
-                            //{
-                            //    var result = await global.webSocketClient.UpdateOne("openrpa", 0, false, p.Entity);
-                            //    if (result != null) Entity._acl = result._acl;
-                            //}
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.ToString());
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-            finally
-            {
-                semaphoreSlim.Release();
-            }
-            Log.FunctionOutdent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
-        }
+        //private async void DetectorPlugins_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    Log.FunctionIndent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
+        //    try
+        //    {
+        //        await semaphoreSlim.WaitAsync();
+        //        var list = (ExtendedObservableCollection<OpenRPA.Interfaces.IDetectorPlugin>)sender;
+        //        foreach (var p in list.ToList())
+        //        {
+        //            var Entity = p.Entity as Detector;
+        //            // Entity.isDirty = true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(ex.ToString());
+        //    }
+        //    finally
+        //    {
+        //        semaphoreSlim.Release();
+        //    }
+        //    Log.FunctionOutdent("DetectorsView", "DetectorPlugins_ItemPropertyChanged");
+        //}
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             Log.FunctionIndent("DetectorsView", "Button_Click");
@@ -108,7 +92,6 @@ namespace OpenRPA.Views
                 var btn = sender as System.Windows.Controls.Button;
                 var kv = (System.Collections.Generic.KeyValuePair<string, System.Type>)btn.DataContext;
                 var d = new Detector(); d.Plugin = kv.Value.FullName;
-                IDetectorPlugin dp = null;
                 NotifyPropertyChanged("detectorPlugins");
                 d.name = kv.Value.Name;
                 if (global.isConnected)
@@ -123,12 +106,8 @@ namespace OpenRPA.Views
                     d.isDirty = true;
                     d.isLocalOnly = true;
                 }
-                IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == d._id).FirstOrDefault();
-                if (exists == null)
-                {
-                    dp = Plugins.AddDetector(RobotInstance.instance, d);
-                    dp.OnDetector += main.OnDetector;
-                }
+                d.Start();
+                updateUIList = true;
                 var dexists = RobotInstance.instance.Detectors.FindById(d._id);
                 if (dexists == null) RobotInstance.instance.Detectors.Insert(d);
                 if (dexists != null) RobotInstance.instance.Detectors.Update(d);
@@ -139,6 +118,7 @@ namespace OpenRPA.Views
             }
             Log.FunctionOutdent("DetectorsView", "Button_Click");
         }
+        private bool updateUIList = false;
         private async void LidtDetectors_KeyUp(object sender, KeyEventArgs e)
         {
             Log.FunctionIndent("DetectorsView", "LidtDetectors_KeyUp");
@@ -146,6 +126,7 @@ namespace OpenRPA.Views
             {
                 if (e.Key == Key.Delete)
                 {
+                    updateUIList = true;
                     var index = lidtDetectors.SelectedIndex;
                     var items = new List<object>();
                     foreach (var item in lidtDetectors.SelectedItems) items.Add(item);
@@ -155,11 +136,9 @@ namespace OpenRPA.Views
                         if (d != null)
                         {
                             var entity = d.Entity as Detector;
-                            d.OnDetector -= main.OnDetector;
-                            d.Stop();
-                            Plugins.detectorPlugins.Remove(d);
                             if (entity != null)
                             {
+                                entity.Stop();
                                 await entity.Delete();
                             }
                         }
@@ -182,6 +161,52 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
             Log.FunctionOutdent("DetectorsView", "LidtDetectors_KeyUp");
+        }
+        public async void LayoutDocument_IsSelectedChanged(object sender, EventArgs e)
+        {
+            // lidtDetectors.SelectedIndex = -1;
+            var tab = sender as Xceed.Wpf.AvalonDock.Layout.LayoutContent;
+            if (tab != null && !tab.IsSelected)
+            {
+                try
+                {
+                    if (updateUIList)
+                    {
+                        OpenProject.UpdateProjectsList(false, true);
+                        updateUIList = false;
+                    }
+                    foreach (var d in detectorPlugins)
+                    {
+                        var Entity = d.Entity as Detector;
+                        if (Entity != null && Entity.isDirty)
+                        {
+                            try
+                            {
+                                await Entity.Save();
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+        }
+        private void lidtProjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var detector = lidtDetectors.SelectedItem as IDetectorPlugin;
+            if (detector == null) return;
+            var Entity = detector.Entity as Detector;
+            if (!lidtProjects.IsDropDownOpen) return;
+            Entity._acl = (lidtProjects.SelectedItem as Project)._acl;
+            Entity.isDirty = true;
+            updateUIList = true;
         }
     }
 }

@@ -21,38 +21,56 @@ namespace OpenRPA.Store
         private static object _lock = new object();
         public override void Save(Guid instanceId, Guid storeId, string doc)
         {
-            lock (_lock)
-            {
-                try
-                {
-                    var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
-                    if(i!=null)
-                    {
-                        i.xml = Interfaces.Extensions.Base64Encode(doc);
-                        if(string.IsNullOrEmpty(i._id))
-                        {
-                            i.Save();
-                        } 
-                        else if (global.isConnected)
-                        {
-                            i.Save();
-                        }   
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
-                }
-            }
-        }
-        public override string Load(Guid instanceId, Guid storeId)
-        {
+            //try
+            //{
+            //    var folder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "state");
+            //    var filename = System.IO.Path.Combine(folder, instanceId.ToString() + ".xml");
+            //    if (!System.IO.Directory.Exists(folder)) System.IO.Directory.CreateDirectory(folder);
+            //    System.IO.File.WriteAllText(filename, doc);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
+            //}
             try
             {
                 var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
                 if (i != null)
                 {
-                    if(string.IsNullOrEmpty(i.xml))
+                    i.xml = Interfaces.Extensions.Base64Encode(doc);
+                    _ = i.Save<WorkflowInstance>(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
+            }
+        }
+        public override string Load(Guid instanceId, Guid storeId)
+        {
+            //try
+            //{
+            //    var folder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "state");
+            //    var filename = System.IO.Path.Combine(folder, instanceId.ToString() + ".xml");
+            //    if (System.IO.File.Exists(filename))
+            //    {
+            //        var _xml = System.IO.File.ReadAllText(filename) + "";
+            //        if (!string.IsNullOrEmpty(_xml.Trim()))
+            //        {
+            //            return _xml;
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error("OpenFlowInstanceStore.Load: " + ex.Message);
+            //}
+            try
+            {
+                var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
+                if (i != null)
+                {
+                    if (string.IsNullOrEmpty(i.xml))
                     {
                         Log.Error("Error locating " + instanceId.ToString() + " in Instance Store ( found but state is empty!!!!) ");
                         return null;
@@ -65,7 +83,7 @@ namespace OpenRPA.Store
             }
             catch (Exception ex)
             {
-                Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
+                Log.Error("OpenFlowInstanceStore.Load: " + ex.Message);
             }
             return null;
         }

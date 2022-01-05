@@ -31,9 +31,10 @@ namespace OpenRPA.Interfaces
         Task Delete();
         string UniqueFilename();
         Task Save();
+        Task UpdateImagePermissions();
         Task ExportFile(string filepath);
-        void RunPendingInstances();
         void ParseParameters();
+        void NotifyUIState();
     }
     public enum workflowparameterdirection
     {

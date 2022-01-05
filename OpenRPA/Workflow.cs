@@ -187,7 +187,7 @@ namespace OpenRPA
                 try
                 {
                     string state = laststate;
-                    var instace = Instances;
+                    var instace = LoadedInstances;
                     if (instace.Count() > 0)
                     {
                         var running = instace.Where(x => x.isCompleted == false).ToList();
@@ -299,18 +299,24 @@ namespace OpenRPA
             NotifyPropertyChanged("StateImage");
         }
         [JsonIgnore, BsonIgnore]
-        public List<WorkflowInstance> Instances
+        public List<WorkflowInstance> LoadedInstances
         {
             get
             {
                 List<WorkflowInstance> result = null;
                 var instances = WorkflowInstance.Instances.ToList();
-                //lock (WorkflowInstance.Instances)
-                //{
-                //    result = WorkflowInstance.Instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
-                //}
                 result = instances.Where(x => (x.WorkflowId == _id && !string.IsNullOrEmpty(_id)) || (x.RelativeFilename.ToLower() == RelativeFilename.ToLower() && string.IsNullOrEmpty(_id))).ToList();
                 return result;
+            }
+        }
+        private WorkflowInstance[] _Instances = new WorkflowInstance[] { };
+        [JsonIgnore, BsonIgnore]
+        public WorkflowInstance[] Instances
+        {
+            get
+            {
+                return RobotInstance.instance.dbWorkflowInstances.Find(x => x.WorkflowId == _id).OrderByDescending(x => x._modified).Take(10).ToArray();
+                // return RobotInstance.instance.dbWorkflowInstances.Find(x => x.WorkflowId == _id, 0, 10).ToArray();
             }
         }
         [JsonIgnore, BsonIgnore]
@@ -359,6 +365,8 @@ namespace OpenRPA
             Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
             var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name && x.projectid == workflow.projectid).FirstOrDefault();
             workflow.name = workflow.UniqueName();
+            workflow.Filename = workflow.UniqueFilename();
+            _ = workflow.RelativeFilename;
             workflow._type = "workflow";
             workflow.Parameters = new List<workflowparameter>();
             //workflow.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
@@ -437,56 +445,6 @@ namespace OpenRPA
                 throw;
             }
         }
-        public void RunPendingInstances()
-        {
-            var statepath = System.IO.Path.Combine(Project().Path, "state");
-            if (System.IO.Directory.Exists(statepath))
-            {
-                var ProjectFiles = System.IO.Directory.EnumerateFiles(statepath, "*.json", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-                if (!global.isConnected)
-                {
-                    foreach (var f in ProjectFiles)
-                    {
-                        try
-                        {
-                            var i = JsonConvert.DeserializeObject<WorkflowInstance>(System.IO.File.ReadAllText(f));
-                            i.Workflow = this;
-                            i.Path = Project().Path;
-                            //if (idleOrComplete != null) i.OnIdleOrComplete += idleOrComplete;
-                            //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
-                            var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == i.InstanceId).FirstOrDefault();
-                            if (exists != null) continue;
-                            if (i.state != "failed" && i.state != "aborted" && i.state != "completed")
-                            {
-                                var _ref = (i as IWorkflowInstance);
-                                foreach (var runner in Plugins.runPlugins)
-                                {
-                                    if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
-                                }
-                                lock (WorkflowInstance.Instances) WorkflowInstance.Instances.Add(i);
-                                i.createApp(Activity());
-                                i.Run();
-                            }
-                        }
-                        catch (System.Runtime.DurableInstancing.InstancePersistenceException ex)
-                        {
-                            Log.Error("RunPendingInstances: " + ex.ToString());
-                            try
-                            {
-                                System.IO.File.Delete(f);
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error("RunPendingInstances: " + ex.ToString());
-                        }
-                    }
-                }
-            }
-        }
         public string UniqueName()
         {
             string Name = name;
@@ -554,7 +512,7 @@ namespace OpenRPA
             instance.queuename = queuename; instance.correlationId = correlationId;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             if (VisualTracking != null) instance.OnVisualTracking += VisualTracking;
-            Instances.Add(instance);
+            LoadedInstances.Add(instance);
             //instance.Run();
             return instance;
         }

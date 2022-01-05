@@ -9,6 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <CollectionViewSource Source="{Binding DetectorTypes}" x:Key="DetectorTypes" />
+        <local:NotNullConverter x:Key="NotNullConverter" />
     </UserControl.Resources>
 
     <DockPanel>
@@ -29,11 +30,16 @@
         </ToolBarTray>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition  />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-            <ListBox SelectionMode="Extended" x:Name="lidtDetectors" ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp">
+            <ListBox SelectionMode="Extended" x:Name="lidtDetectors" 
+                     ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Grid.RowSpan="2" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp">
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
                         <StackPanel Orientation="Horizontal">
@@ -44,17 +50,22 @@
 
             </ListBox>
 
-            <!--<TreeView x:Name="lidtDetectors2" ItemsSource="{Binding detectorPlugins}" BorderThickness="0" Grid.Column="0" Margin="0,4,0,4" KeyUp="LidtDetectors_KeyUp" >
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=Name}"></TextBlock>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>-->
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" Margin="0" Padding="0" Background = "Gray" Width = "2" />
-            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Margin="0,4,0,4" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock>Project</TextBlock>
+                <ComboBox x:Name="lidtProjects" ItemsSource="{Binding Projects, Mode=OneTime}" BorderThickness="0"  Margin="0,0,0,0"
+                     SelectedValuePath="_id" SelectedValue="{Binding ElementName=lidtDetectors, Path=SelectedValue.Entity.projectid, Converter={StaticResource NotNullConverter}}"
+                          SelectionChanged="lidtProjects_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type TreeViewItem}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=name}"></TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <ContentPresenter Content="{Binding ElementName=lidtDetectors, Path=SelectedValue.editor}" Grid.Column="1" Grid.Row="2" Margin="0,4,0,4" />
         </Grid>
 
     </DockPanel>

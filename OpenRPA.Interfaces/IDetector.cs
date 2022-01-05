@@ -10,6 +10,7 @@ namespace OpenRPA.Interfaces
     public interface IDetector : INotifyPropertyChanged, IBase
     {
         string Plugin { get; set; }
+        string projectid { get; set; }
         Dictionary<string, object> Properties { get; set; }
     }
 }

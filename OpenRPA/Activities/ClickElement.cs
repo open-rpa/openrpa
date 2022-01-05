@@ -14,7 +14,7 @@ namespace OpenRPA.Activities
 {
     [Designer(typeof(ClickElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.elementclick.png")]
-    [LocalizedToolboxTooltip("activity_clickelement_tooltip" , typeof(Resources.strings))]
+    [LocalizedToolboxTooltip("activity_clickelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_clickelement", typeof(Resources.strings))]
     public class ClickElement : CodeActivity
     {
@@ -34,9 +34,9 @@ namespace OpenRPA.Activities
         //[Editor(typeof(SelectButtonEditor), typeof(PropertyValueEditor))]
         public InArgument<int> Button { get; set; } = (int)Input.MouseButton.Left;
         [RequiredArgument, LocalizedDisplayName("activity_offsetx", typeof(Resources.strings)), LocalizedDescription("activity_offsetx_help", typeof(Resources.strings))]
-        public int OffsetX { get; set; } = 5;
+        public InArgument<int> OffsetX { get; set; } = 5;
         [RequiredArgument, LocalizedDisplayName("activity_offsety", typeof(Resources.strings)), LocalizedDescription("activity_offsety_help", typeof(Resources.strings))]
-        public int OffsetY { get; set; } = 5;
+        public InArgument<int> OffsetY { get; set; } = 5;
         [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_doubleclick", typeof(Resources.strings)), LocalizedDescription("activity_doubleclick_help", typeof(Resources.strings))]
@@ -67,7 +67,7 @@ namespace OpenRPA.Activities
             foreach (var vk in keys) disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));
 
             var _button = (Input.MouseButton)button;
-            el.Click(virtualClick, _button, OffsetX, OffsetY, doubleclick, animatemouse);
+            el.Click(virtualClick, _button, OffsetX.Get(context), OffsetY.Get(context), doubleclick, animatemouse);
             disposes.ForEach(x => { x.Dispose(); });
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait != null) { postwait = PostWait.Get(context); }

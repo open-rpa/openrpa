@@ -1191,7 +1191,7 @@ namespace OpenRPA
                             try
                             {
                                 Hide();
-                                GenericTools.RunUIAsync(async () =>
+                                GenericTools.RunUI(async () =>
                                 {
                                     try
                                     {
@@ -1243,7 +1243,7 @@ namespace OpenRPA
                                     {
                                         Log.Error(ex.ToString());
                                     }
-                                }).Wait();
+                                });
 
 
                             }

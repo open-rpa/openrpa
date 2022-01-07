@@ -678,9 +678,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "")
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
-            SigninMessage signin = new SigninMessage(username, password, asm.GetName().Version.ToString());
+            SigninMessage signin = new SigninMessage(username, password, global.version);
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
@@ -704,9 +702,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "")
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
-            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
+            SigninMessage signin = new SigninMessage(jwt, global.version);
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
@@ -730,9 +726,7 @@ namespace OpenRPA.Net
         }
         public async Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "")
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
-            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
+            SigninMessage signin = new SigninMessage(jwt, global.version);
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
@@ -756,9 +750,7 @@ namespace OpenRPA.Net
         }
         public async Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "")
         {
-            var asm = System.Reflection.Assembly.GetEntryAssembly();
-            if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
-            SigninMessage signin = new SigninMessage(jwt, asm.GetName().Version.ToString());
+            SigninMessage signin = new SigninMessage(jwt, global.version);
             signin.validate_only = validate_only;
             signin.longtoken = longtoken;
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;

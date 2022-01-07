@@ -47,7 +47,7 @@ namespace OpenRPA
             Console.SetError(new ConsoleDecorator(Console.Out, true));
             lvDataBinding.ItemsSource = Plugins.recordPlugins;
             NotifyPropertyChanged("Toolbox");
-            lblVersion.Text = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+            lblVersion.Text = global.version;
             WindowState = WindowState.Minimized;
         }
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
@@ -396,7 +396,7 @@ namespace OpenRPA
                     }
                     _ = Task.Run(() =>
                     {
-                        if(instance.Workflow != null) instance.Workflow.NotifyUIState();
+                        if (instance.Workflow != null) instance.Workflow.NotifyUIState();
                         var sw = new System.Diagnostics.Stopwatch(); sw.Start();
                         while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {

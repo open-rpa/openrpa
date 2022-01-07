@@ -158,6 +158,7 @@ namespace OpenRPA
         }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
+            if (RobotInstance.openrpa_workflow_run_count != null) RobotInstance.openrpa_workflow_run_count.Add(1, RobotInstance.tags);
             var result = new WorkflowInstance(Workflow) { Parameters = Parameters, name = Workflow.name, Path = Workflow.Project().Path };
             result.RelativeFilename = Workflow.RelativeFilename;
             result.projectid = Workflow.projectid;
@@ -182,7 +183,7 @@ namespace OpenRPA
             CleanUp();
             return result;
         }
-        public void createApp(Activity activity)
+        private void createApp(Activity activity)
         {
             //var xh = new XamlHelper(workflow.xaml);
             //extraextension.updateProfile(xh.Variables.ToArray(), xh.ArgumentNames.ToArray());
@@ -390,6 +391,7 @@ namespace OpenRPA
         public void RunThis(Activity root, Activity activity)
         {
             createApp(activity);
+            if (RobotInstance.openrpa_workflow_run_count != null) RobotInstance.openrpa_workflow_run_count.Add(1, RobotInstance.tags);
             Run();
 
 

@@ -1788,6 +1788,11 @@ namespace OpenRPA
         private Object StatsMeterProvider;
         // private TracerProvider tracerProvider;
         private static readonly Meter OpenRPAMeter = new Meter("OpenRPA");
+        private static PerformanceCounter process_cpu = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
+        private static PerformanceCounter total_cpu = new PerformanceCounter("Process", "% Processor Time", "_Total");
+        private static PerformanceCounter Working_Set = new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName);
+        public static Counter<long> openrpa_workflow_run_count;
+        public static TagList tags;
         private bool InitializeOTEL()
         {
             try
@@ -1818,36 +1823,66 @@ namespace OpenRPA
                         WorkflowTrackingParticipant.hostname = "unknown";
                     }
                     var process = Process.GetCurrentProcess();
-                    var tag1 = new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid);
-                    var tag2 = new KeyValuePair<string, object>("host", WorkflowTrackingParticipant.hostname);
-                    var tag3 = new KeyValuePair<string, object>("username", Environment.UserName);
+                    tags = new TagList();
+                    tags.Add(new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid));
+                    tags.Add(new KeyValuePair<string, object>("host", WorkflowTrackingParticipant.hostname));
+                    tags.Add(new KeyValuePair<string, object>("username", Environment.UserName));
+                    tags.Add(new KeyValuePair<string, object>("version", global.version));
                     OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateMemorySize", () =>
                     {
                         process.Refresh();
-                        if ((tag1.Value as string) != Config.local.openflow_uniqueid) tag1 = new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid);
+                        var username = Environment.UserName;
                         if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.name))
                         {
-                            if ((tag3.Value as string) != global.webSocketClient.user.name)
-                                tag3 = new KeyValuePair<string, object>("username", global.webSocketClient.user.name);
+                            username = global.webSocketClient.user.name;
                         }
-                        return new List<Measurement<long>>() { new Measurement<long>(process.PrivateMemorySize64, tag1, tag2, tag3) };
+                        var _tags = new TagList();
+                        _tags.Add(new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid));
+                        _tags.Add(new KeyValuePair<string, object>("host", WorkflowTrackingParticipant.hostname));
+                        _tags.Add(new KeyValuePair<string, object>("username", username));
+                        _tags.Add(new KeyValuePair<string, object>("version", global.version));
+                        tags = _tags;
+
+                        return new List<Measurement<long>>() { new Measurement<long>(process.PrivateMemorySize64, tags) };
                     });
                     OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateWorkingSet", () =>
                     {
-                        if ((tag1.Value as string) != Config.local.openflow_uniqueid) tag1 = new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid);
-                        if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.name))
-                        {
-                            if ((tag3.Value as string) != global.webSocketClient.user.name)
-                                tag3 = new KeyValuePair<string, object>("username", global.webSocketClient.user.name);
-                        }
-                        var counter = new PerformanceCounter("Process", "Working Set - Private", process.ProcessName);
-                        return new List<Measurement<long>>() { new Measurement<long>(counter.RawValue, tag1, tag2, tag3) };
+                        _ = Working_Set.NextValue();
+                        return new List<Measurement<long>>() { new Measurement<long>(Working_Set.RawValue, tags) };
                     });
-                    OpenRPAMeter.CreateObservableGauge("Process.PagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedSystemMemorySize64, tag1, tag2, tag3) });
-                    OpenRPAMeter.CreateObservableGauge("Process.NonpagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.NonpagedSystemMemorySize64, tag1, tag2, tag3) });
-                    OpenRPAMeter.CreateObservableGauge("Process.PagedMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedMemorySize64, tag1, tag2, tag3) });
-                    OpenRPAMeter.CreateObservableGauge("Process.WorkingSet", () => new List<Measurement<long>>() { new Measurement<long>(process.WorkingSet64, tag1, tag2, tag3) });
-                    OpenRPAMeter.CreateObservableGauge("Process.VirtualMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.VirtualMemorySize64, tag1, tag2, tag3) });
+                    OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimePercent", () =>
+                    {
+                        float t = total_cpu.NextValue();
+                        float p = process_cpu.NextValue();
+                        return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(p / t * 100), tags) };
+                    });
+                    OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTime", () =>
+                    {
+                        return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(process_cpu.NextValue()), tags) };
+                    });
+                    OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimeTotal", () =>
+                    {
+                        return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(total_cpu.NextValue()), tags) };
+                    });
+                    OpenRPAMeter.CreateObservableGauge("Process.PagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedSystemMemorySize64, tags) });
+                    OpenRPAMeter.CreateObservableGauge("Process.NonpagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.NonpagedSystemMemorySize64, tags) });
+                    OpenRPAMeter.CreateObservableGauge("Process.PagedMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedMemorySize64, tags) });
+                    OpenRPAMeter.CreateObservableGauge("Process.WorkingSet", () => new List<Measurement<long>>() { new Measurement<long>(process.WorkingSet64, tags) });
+                    OpenRPAMeter.CreateObservableGauge("Process.VirtualMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.VirtualMemorySize64, tags) });
+                    openrpa_workflow_run_count = OpenRPAMeter.CreateCounter<long>("openrpa.workflow_run_count");
+                    OpenRPAMeter.CreateObservableGauge<long>("openrpa.workflow_running_count", () =>
+                    {
+                        int result = 0;
+                        try
+                        {
+                            result = WorkflowInstance.Instances.Where(x => x.isCompleted == false).Count();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        return new List<Measurement<long>>() { new Measurement<long>(result, tags) };
+                    });
+
                     StatsMeterProvider = OpenTelemetry.Sdk.CreateMeterProviderBuilder()
                         .AddMeter(OpenRPAMeter.Name)
                         .AddOtlpExporter(opt =>

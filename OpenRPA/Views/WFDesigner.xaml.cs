@@ -412,34 +412,41 @@ namespace OpenRPA.Views
                                 string image = item.Properties["Image"].Value.ToString();
                                 if (!System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
                                 {
-                                    var metadata = new OpenRPA.Interfaces.entity.metadata
+                                    try
                                     {
-                                        // metadata.AddRight(global.webSocketClient.user, null);
-                                        _acl = Workflow._acl,
-                                        workflow = Workflow._id
-                                    };
-                                    var imageid = GenericTools.YoutubeLikeId();
-                                    var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
-                                    using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
-                                    {
-                                        using (var b = new System.Drawing.Bitmap(ms))
+                                        var metadata = new OpenRPA.Interfaces.entity.metadata
                                         {
-                                            try
+                                            // metadata.AddRight(global.webSocketClient.user, null);
+                                            _acl = Workflow._acl,
+                                            workflow = Workflow._id
+                                        };
+                                        var imageid = GenericTools.YoutubeLikeId();
+                                        var tempfilename = System.IO.Path.Combine(System.IO.Path.GetTempPath(), imageid + ".png");
+                                        using (var ms = new System.IO.MemoryStream(Convert.FromBase64String(image)))
+                                        {
+                                            using (var b = new System.Drawing.Bitmap(ms))
                                             {
-                                                b.Save(tempfilename, System.Drawing.Imaging.ImageFormat.Png);
-                                            }
-                                            catch (Exception)
-                                            {
-                                                throw;
+                                                try
+                                                {
+                                                    b.Save(tempfilename, System.Drawing.Imaging.ImageFormat.Png);
+                                                }
+                                                catch (Exception)
+                                                {
+                                                    throw;
+                                                }
                                             }
                                         }
+                                        string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
+                                        var filename = System.IO.Path.Combine(imagepath, id + ".png");
+                                        System.IO.File.Copy(tempfilename, filename, true);
+                                        System.IO.File.Delete(tempfilename);
+                                        item.Properties["Image"].SetValue(id);
+                                        usedimages.Add(id);
                                     }
-                                    string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
-                                    var filename = System.IO.Path.Combine(imagepath, id + ".png");
-                                    System.IO.File.Copy(tempfilename, filename, true);
-                                    System.IO.File.Delete(tempfilename);
-                                    item.Properties["Image"].SetValue(id);
-                                    usedimages.Add(id);
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error("WFDesigner.SaveAsync: " + ex.Message);
+                                    }
                                 }
                                 else
                                 {

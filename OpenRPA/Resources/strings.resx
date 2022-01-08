@@ -294,11 +294,17 @@
   <data name="activity_ignoreerrors_help" xml:space="preserve">
     <value>If an error occurs, will ignore it an continue</value>
   </data>
+  <data name="activity_image" xml:space="preserve">
+    <value>Image</value>
+  </data>
   <data name="activity_imageresult" xml:space="preserve">
     <value>Image Result</value>
   </data>
   <data name="activity_imageresult_help" xml:space="preserve">
     <value>Return the result as an image</value>
+  </data>
+  <data name="activity_image_help" xml:space="preserve">
+    <value>Image to add to clipboard</value>
   </data>
   <data name="activity_insertclipboard" xml:space="preserve">
     <value>Insert Clipboard</value>
@@ -461,6 +467,9 @@
   </data>
   <data name="activity_text" xml:space="preserve">
     <value>Text</value>
+  </data>
+  <data name="activity_text_help" xml:space="preserve">
+    <value>Text to add to clipboard</value>
   </data>
   <data name="activity_timeout" xml:space="preserve">
     <value>Timeout</value>

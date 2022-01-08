@@ -19,16 +19,20 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument, LocalizedDisplayName("activity_ignoreerrors", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
         public InArgument<bool> IgnoreErrors { get; set; } = false;
-        [RequiredArgument, LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
+        [RequiredArgument, OverloadGroup("Text"), LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_text_help", typeof(Resources.strings))]
         public InArgument<string> Text { get; set; }
+        [RequiredArgument, OverloadGroup("BitmapImage"), LocalizedDisplayName("activity_image", typeof(Resources.strings)), LocalizedDescription("activity_image_help", typeof(Resources.strings))]
+        public InArgument<System.Drawing.Bitmap> Image { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             string text = Text.Get(context);
+            System.Drawing.Bitmap image = Image.Get(context);
             try
             {
                 System.Threading.Thread staThread = new System.Threading.Thread(() =>
                 {
-                    System.Windows.Clipboard.SetDataObject(text, true);
+                    if (!string.IsNullOrEmpty(text)) System.Windows.Clipboard.SetDataObject(text, true);
+                    if (image != null) System.Windows.Clipboard.SetDataObject(image, true);
                 });
                 staThread.SetApartmentState(System.Threading.ApartmentState.STA);
                 staThread.Start();

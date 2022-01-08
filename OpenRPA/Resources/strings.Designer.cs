@@ -592,6 +592,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image.
+        /// </summary>
+        public static string activity_image {
+            get {
+                return ResourceManager.GetString("activity_image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image to add to clipboard.
+        /// </summary>
+        public static string activity_image_help {
+            get {
+                return ResourceManager.GetString("activity_image_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image Result.
         /// </summary>
         public static string activity_imageresult {
@@ -1092,6 +1110,15 @@ namespace OpenRPA.Resources {
         public static string activity_text {
             get {
                 return ResourceManager.GetString("activity_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text to add to clipboard.
+        /// </summary>
+        public static string activity_text_help {
+            get {
+                return ResourceManager.GetString("activity_text_help", resourceCulture);
             }
         }
         

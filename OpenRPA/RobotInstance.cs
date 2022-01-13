@@ -1788,15 +1788,39 @@ namespace OpenRPA
         private Object StatsMeterProvider;
         // private TracerProvider tracerProvider;
         private static readonly Meter OpenRPAMeter = new Meter("OpenRPA");
-        private static PerformanceCounter process_cpu = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
-        private static PerformanceCounter total_cpu = new PerformanceCounter("Process", "% Processor Time", "_Total");
-        private static PerformanceCounter Working_Set = new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName);
+        private static PerformanceCounter process_cpu = null;
+        private static PerformanceCounter total_cpu = null;
+        private static PerformanceCounter Working_Set = null;
         public static Counter<long> openrpa_workflow_run_count;
         public static TagList tags;
         private bool InitializeOTEL()
         {
             try
             {
+                try
+                {
+                    if (process_cpu == null) process_cpu = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
+                try
+                {
+                    if (total_cpu == null) total_cpu = new PerformanceCounter("Process", "% Processor Time", "_Total");
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
+                try
+                {
+                    if (Working_Set == null) Working_Set = new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
                 if (Config.local.enable_analytics && StatsTracerProvider == null)
                 {
@@ -1845,25 +1869,35 @@ namespace OpenRPA
 
                         return new List<Measurement<long>>() { new Measurement<long>(process.PrivateMemorySize64, tags) };
                     });
-                    OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateWorkingSet", () =>
+                    if (Working_Set != null)
                     {
-                        _ = Working_Set.NextValue();
-                        return new List<Measurement<long>>() { new Measurement<long>(Working_Set.RawValue, tags) };
-                    });
-                    OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimePercent", () =>
+                        OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateWorkingSet", () =>
+                        {
+                            _ = Working_Set.NextValue();
+                            return new List<Measurement<long>>() { new Measurement<long>(Working_Set.RawValue, tags) };
+                        });
+                    }
+                    if (process_cpu != null && total_cpu != null)
                     {
-                        float t = total_cpu.NextValue();
-                        float p = process_cpu.NextValue();
-                        return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(p / t * 100), tags) };
-                    });
-                    OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTime", () =>
+                        OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimePercent", () =>
+                        {
+                            float t = total_cpu.NextValue();
+                            float p = process_cpu.NextValue();
+                            return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(p / t * 100), tags) };
+                        });
+                        OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTime", () =>
+                        {
+                            return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(process_cpu.NextValue()), tags) };
+                        });
+                        OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimeTotal", () =>
+                        {
+                            return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(total_cpu.NextValue()), tags) };
+                        });
+                    }
+                    else
                     {
-                        return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(process_cpu.NextValue()), tags) };
-                    });
-                    OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimeTotal", () =>
-                    {
-                        return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(total_cpu.NextValue()), tags) };
-                    });
+
+                    }
                     OpenRPAMeter.CreateObservableGauge("Process.PagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedSystemMemorySize64, tags) });
                     OpenRPAMeter.CreateObservableGauge("Process.NonpagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.NonpagedSystemMemorySize64, tags) });
                     OpenRPAMeter.CreateObservableGauge("Process.PagedMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedMemorySize64, tags) });
@@ -1894,22 +1928,6 @@ namespace OpenRPA
                         .Build();
 
                 }
-                //if (!string.IsNullOrEmpty(Config.local.otel_trace_url) && tracerProvider == null)
-                //{
-                //    tracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
-                //    .SetSampler(new AlwaysOnSampler())
-                //    .AddSource("OpenRPA")
-                //    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
-                //    .AddOtlpExporter(otlpOptions =>
-                //    {
-                //        if (Config.local.otel_trace_url.Contains("http://") && Config.local.otel_trace_url.Contains(":80"))
-                //        {
-                //            Config.local.otel_trace_url = Config.local.otel_trace_url.Replace("http://", "https://").Replace(":80", "");
-                //        }
-                //        otlpOptions.Endpoint = new Uri(Config.local.otel_trace_url);
-                //    })
-                //    .Build();
-                //}
                 Log.Output(Config.local.otel_trace_url);
                 return true;
             }

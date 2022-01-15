@@ -110,8 +110,16 @@ namespace OpenRPA
         public static async Task<Project> FromFile(string Filepath)
         {
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
-            var exists = RobotInstance.instance.Projects.FindById(project._id);
-            if (exists != null) { project._id = null; } else { project.isLocalOnly = true; }
+            if(!string.IsNullOrEmpty(project._id))
+            {
+                var exists = RobotInstance.instance.Projects.FindById(project._id);
+                if (exists != null) { project._id = null; } else { project.isLocalOnly = true; }
+            }
+            if (string.IsNullOrEmpty(project._id))
+            {
+                project._id = Guid.NewGuid().ToString();
+                project.name = UniqueName(project.name, project._id);
+            }
             project.isDirty = true;
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
@@ -214,8 +222,12 @@ namespace OpenRPA
                 {
                     var json = System.IO.File.ReadAllText(file);
                     Detector _d = JsonConvert.DeserializeObject<Detector>(json);
-                    var exists = RobotInstance.instance.Detectors.FindById(_d._id);
-                    if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                    if (!string.IsNullOrEmpty(_d._id))
+                    {
+                        var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                        if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                    }
+                    if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
                     _d.isDirty = true;
                     _d.Start();
                     Detectors.Add(_d);

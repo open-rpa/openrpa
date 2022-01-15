@@ -447,8 +447,15 @@ namespace OpenRPA
             SaveLayout();
             if (RobotInstance.instance.db != null)
             {
-                RobotInstance.instance.db.Dispose();
-                RobotInstance.instance.db = null;
+                try
+                {
+                    RobotInstance.instance.db.Dispose();
+                    RobotInstance.instance.db = null;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
@@ -1386,7 +1393,7 @@ namespace OpenRPA
                     Title = "Open Workflow",
                     Filter = "OpenRPA Project (.rpaproj)|*.rpaproj"
                 };
-                if (wf != null || p != null) dialogOpen.Filter = "Workflows (.xaml)|*.xaml|Detector (.json)|*.json|OpenRPA Project (.rpaproj)|*.rpaproj";
+                if (wf != null || p != null) dialogOpen.Filter = "OpenRPA Files|*.rpaproj;*.json;*.xaml;|OpenRPA Project (.rpaproj)|*.rpaproj|Workflows (.xaml)|*.xaml|Detector (.json)|*.json";
                 if (dialogOpen.ShowDialog() == true) filename = dialogOpen.FileName;
                 if (string.IsNullOrEmpty(filename)) return;
                 if (System.IO.Path.GetExtension(filename) == ".xaml")

@@ -87,7 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
-    <ProjectReference Include="..\WindowsAccessBridgeInterop\WindowsAccessBridgeInterop.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -101,6 +100,9 @@
     <EmbeddedResource Include="Resources\check.png" />
     <EmbeddedResource Include="Resources\search.png" />
     <EmbeddedResource Include="Resources\x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenRPA.WindowsAccessBridgeInterop" Version="1.1.9" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\getjavaelement.png" />

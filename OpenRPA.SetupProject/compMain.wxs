@@ -1,328 +1,328 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment>
+	<Fragment>
 
-    <ComponentGroup Id="MainComponents"  >
-      <Component Id='OpenRPA.exe' Guid='7EBC5B95-EB7B-4F16-B65B-E1244403E7BF' Win64='yes' Directory="INSTALLDIR">
-        <!-- HKMU -->
-        <RegistryValue Root='HKCU' Key='Software\OpenRPA'
-                   Name='InstallFolder'
-                   Value='[INSTALLDIR]'
-                   Type='string'
-                   KeyPath='yes' />
-        <Environment
-                  Id="PATH"
-                  Name="PATH"
-                  Value="[INSTALLDIR]"
-                  Permanent="yes"
-                  Part="last"
-                  Action="set"
-                  System="yes" />
-        <File Id='openrpaExe' Source='!(wix.MainSource)\OpenRPA.exe' />
+		<ComponentGroup Id="MainComponents"  >
+			<Component Id='OpenRPA.exe' Guid='7EBC5B95-EB7B-4F16-B65B-E1244403E7BF' Win64='yes' Directory="INSTALLDIR">
+				<!-- HKMU -->
+				<RegistryValue Root='HKCU' Key='Software\OpenRPA'
+						   Name='InstallFolder'
+						   Value='[INSTALLDIR]'
+						   Type='string'
+						   KeyPath='yes' />
+				<Environment
+						  Id="PATH"
+						  Name="PATH"
+						  Value="[INSTALLDIR]"
+						  Permanent="yes"
+						  Part="last"
+						  Action="set"
+						  System="yes" />
+				<File Id='openrpaExe' Source='!(wix.MainSource)\OpenRPA.exe' />
 
-        <File Id="filC88C7623422BE649CB1D8DE7EFDA2999" Source="!(wix.MainSource)\CefSharp.Core.dll" />
-        <File Id="filF0CF59F24A01DAE00DEA461CE18C938A" Source="!(wix.MainSource)\CefSharp.dll" />
-        <File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF6" Source="!(wix.MainSource)\CefSharp.Wpf.dll" />
-        <File Id="Microsoft.Bcl.HashCode.dll" Source="!(wix.MainSource)\Microsoft.Bcl.HashCode.dll" />
+				<File Id="filC88C7623422BE649CB1D8DE7EFDA2999" Source="!(wix.MainSource)\CefSharp.Core.dll" />
+				<File Id="filF0CF59F24A01DAE00DEA461CE18C938A" Source="!(wix.MainSource)\CefSharp.dll" />
+				<File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF6" Source="!(wix.MainSource)\CefSharp.Wpf.dll" />
+				<File Id="Microsoft.Bcl.HashCode.dll" Source="!(wix.MainSource)\Microsoft.Bcl.HashCode.dll" />
 
-        <File Id="fil89D857203DD54ABCB0908F0A87409698" Source="!(wix.MainSource)\netstandard.dll" />
-        <File Id="fil5A4BD987D2852D4ABC653BD9F45AC1F3" Source="!(wix.MainSource)\DotNetProjects.DataVisualization.Toolkit.dll" />
-        <File Id="fil32CB20C686F2A6C01A3E679A4C6D58C6" Source="!(wix.MainSource)\DotNetProjects.Input.Toolkit.dll" />
-        <File Id="fil403875F1BC31A5787C30F5A9187BCC2B" Source="!(wix.MainSource)\DotNetProjects.Layout.Toolkit.dll" />
-        <File Id="fil6B6A91279F72BDFAC94FA2C53DD4E0E0" Source="!(wix.MainSource)\DotNetProjects.WPF.Themes.dll" />
-        <File Id="filC867EA0A820F3E5F56622396F0E263C1" Source="!(wix.MainSource)\FlaUI.Core.dll" />
-        <File Id="filA0FEE3F77E25D1C480F6F18CD547B5BC" Source="!(wix.MainSource)\FlaUI.UIA3.dll" />
-        <File Id="fil6D3D5546417727749907FC9E19D97FF8" Source="!(wix.MainSource)\ICSharpCode.AvalonEdit.dll" />
-        <File Id="fil9727C0AE97C7A52B6BA6DABB13D9BA49" Source="!(wix.MainSource)\Interop.UIAutomationClient.dll" />
-        <File Id="fil48A502818AF34CF3F90310C0DDE65DF8" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.dll" />
-        <File Id="fil11D1819F81DFD4511A8F9CE349C387F7" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.Features.dll" />
-        <File Id="fil19CF8ADEC4D357067D7436808E530ECE" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />
-        <File Id="filA694FFFBA0D6ABE28FDF8C85A0AEA552" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.dll" />
-        <File Id="filA528053A0C157E7F873A7E2028E87202" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.Features.dll" />
-        <!--<File Id="fil7592E7F010975DA8A9E8F2D930A00944" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.FlowAnalysis.Utilities.dll" />-->
-        <File Id="filBB99E52B21192E7D2453BCF3706FA61E" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.dll" />
-        <File Id="filFDE5D0DE119D17C35BF28D30ADCDCF5D" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.Features.dll" />
-        <File Id="fil6FB1F3A80B56FDE7F980C8573E18525D" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll" />
-        <File Id="filC0A966D19B84FD6A4969DA43A99C882B" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.Workspaces.dll" />
-        <File Id="fil05A7E61A6DFFA36C9ED0BAF2B52724DF" Source="!(wix.MainSource)\Microsoft.DiaSymReader.dll" />
-        <File Id="fil05FF769999D602AD4FA6A489C44ED290" Source="!(wix.MainSource)\Newtonsoft.Json.dll" />
-        <File Id="filB9D0C89E2BE03F54B6210850B37C7B82" Source="!(wix.MainSource)\NLog.dll" />
-        <File Id="fil793549DAC9BBACE3FE0A2C6207439558" Source="!(wix.MainSource)\NuGet.Common.dll" />
-        <File Id="fil1914470A96C406BB700EBFE4DFAB0CEF" Source="!(wix.MainSource)\NuGet.Configuration.dll" />
-        <File Id="filC77BFD5C891086AC3DFE76BB004671EB" Source="!(wix.MainSource)\NuGet.Frameworks.dll" />
-        <File Id="filA46D093A333210FF3DF479B37CE2796C" Source="!(wix.MainSource)\NuGet.Packaging.dll" />
-        <File Id="fil3EFEB876BC03C56EB2BD3B5232C1DB09" Source="!(wix.MainSource)\NuGet.Protocol.dll" />
-        <File Id="fil5A46BE503A05AA31B5318277C4BB848F" Source="!(wix.MainSource)\NuGet.Resolver.dll" />
-        <File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" Source="!(wix.MainSource)\NuGet.Versioning.dll" />
-        <File Id="fil6E894942E6ADFA63F3967E0A27F05784" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll" />
-        <File Id="fil6E894942E6ADFA63F3967E0A27F05785" Source="!(wix.MainSource)\OpenRPA.CodeEditor.pdb" />
-        <File Id="filF0FF646DFA53CCC3ABA2E049427B7EBE" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll.config" />
-        <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07922" Source="!(wix.MainSource)\OpenRPA.exe.config" />
-        <File Id="fil57AE31DC28AB7B6FFDA5F69E89C07923" Source="!(wix.MainSource)\OpenRPA.pdb" />
-        <File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7A" Source="!(wix.MainSource)\OpenRPA.Interfaces.dll" />
-        <File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7B" Source="!(wix.MainSource)\OpenRPA.Interfaces.pdb" />
-        <File Id="filA3BCD5A3D7D25B0128DBA215D4662EC5" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.dll" />
-        <File Id="filA3BCD5A3D7D25B0128DBA215D4662EC6" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.pdb" />
-        <File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A4" Source="!(wix.MainSource)\OpenRPA.Net.dll" />
-        <File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A5" Source="!(wix.MainSource)\OpenRPA.Net.pdb" />
-        <File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFC" Source="!(wix.MainSource)\OpenRPA.Windows.dll" />
-        <File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFD" Source="!(wix.MainSource)\OpenRPA.Windows.pdb" />
-        <File Id="filEDD81E77BF6933BF90C42AE0EFAA681B" Source="!(wix.MainSource)\System.Buffers.dll" />
-        <File Id="fil5D4575804C3CE3ACC76FF53290806177" Source="!(wix.MainSource)\System.Collections.Immutable.dll" />
-        <File Id="filB5FF2765E175A6C9AD05767B340DB194" Source="!(wix.MainSource)\System.Composition.AttributedModel.dll" />
-        <File Id="filEC8798B40F53EE426933B4A1772703AA" Source="!(wix.MainSource)\System.Composition.Convention.dll" />
-        <File Id="fil29E458EDBCB625D8059CFC1B5EAE625A" Source="!(wix.MainSource)\System.Composition.Hosting.dll" />
-        <File Id="filC3531745E3934A2AA3E3B573EF05822B" Source="!(wix.MainSource)\System.Composition.Runtime.dll" />
-        <File Id="fil4247AF19BBEC43CB533A0DF22E9A3DEB" Source="!(wix.MainSource)\System.Composition.TypedParts.dll" />
-        <File Id="fil1E24D2F3B531B1D76E1631314436BD58" Source="!(wix.MainSource)\System.Memory.dll" />
-        <File Id="fil377C264A4908CE349FB2070D4C79A5B4" Source="!(wix.MainSource)\System.Net.WebSockets.Client.Managed.dll" />
-        <File Id="fil41D7AC86F0924A477EE48B3AF9E39249" Source="!(wix.MainSource)\System.Numerics.Vectors.dll" />
-        <File Id="fil741DE04C3124C1446D2FFF811D83E100" Source="!(wix.MainSource)\System.Reflection.Metadata.dll" />
-        <File Id="fil8974B12282083EB6B4CB7BAC26546374" Source="!(wix.MainSource)\System.Runtime.CompilerServices.Unsafe.dll" />
-        <File Id="filC1BF4E80AF32E75E9827A0C9117D6A6B" Source="!(wix.MainSource)\System.Text.Encoding.CodePages.dll" />
-        <File Id="fil6A8BC02D0E287837DC8027D6A31B1B88" Source="!(wix.MainSource)\System.Threading.Tasks.Extensions.dll" />
-        <File Id="cmp2DF0B2895DFC3CB720B48A6D9BFD37EF" Source="!(wix.MainSource)\System.AppContext.dll" />
-        <File Id="cmpFCAB0086ACF92637C85CEFB939B694E1" Source="!(wix.MainSource)\System.Collections.Concurrent.dll" />
-        <File Id="cmpE4B4F7691D3ACD4A72AE99FFE470CE17" Source="!(wix.MainSource)\System.Collections.dll" />
-        <File Id="cmp75515765AA531707944115B02998F998" Source="!(wix.MainSource)\System.Collections.NonGeneric.dll" />
-        <File Id="cmp22D219EF6A7035FFC0254F6BE572FF77" Source="!(wix.MainSource)\System.Collections.Specialized.dll" />
-        <File Id="cmp22AEF5790256905123AF78698CD859DD" Source="!(wix.MainSource)\System.ComponentModel.dll" />
-        <File Id="cmp5349EC5703EBCAA1E6C7DA272802BE58" Source="!(wix.MainSource)\System.ComponentModel.EventBasedAsync.dll" />
-        <File Id="cmp7B3236183FA982DA508702B357E3D75E" Source="!(wix.MainSource)\System.ComponentModel.Primitives.dll" />
-        <File Id="cmp58C198180EDB7D42EDD28920E1B2E513" Source="!(wix.MainSource)\System.ComponentModel.TypeConverter.dll" />
-        <File Id="cmp03737AA3B5F539D51D9418A6ED0E4F6C" Source="!(wix.MainSource)\System.Console.dll" />
-        <File Id="cmpB25E057E8242CD01A509E8CBCAB104DA" Source="!(wix.MainSource)\System.Data.Common.dll" />
-        <File Id="cmp44C51162C2752731AF9E2E31BB09713C" Source="!(wix.MainSource)\System.Diagnostics.Contracts.dll" />
-        <File Id="cmpB0C2F11F7CA680BF7E48B8A4268E9C98" Source="!(wix.MainSource)\System.Diagnostics.Debug.dll" />
-        <File Id="cmpA59732DC764B94E5F1FB4BDE22083814" Source="!(wix.MainSource)\System.Diagnostics.FileVersionInfo.dll" />
-        <File Id="cmpF6FEF9FF36C695681C6A77FAD09A51DA" Source="!(wix.MainSource)\System.Diagnostics.Process.dll" />
-        <File Id="cmpFE82493E4455C953D8F01BA5365F9C1A" Source="!(wix.MainSource)\System.Diagnostics.StackTrace.dll" />
-        <File Id="cmp0E83A6F1E468052C63DFCFE168BE9F86" Source="!(wix.MainSource)\System.Diagnostics.TextWriterTraceListener.dll" />
-        <File Id="cmp50A76DD8AF0E25149A565F185A1F29A3" Source="!(wix.MainSource)\System.Diagnostics.Tools.dll" />
-        <File Id="cmpDBAE7236105C33C9758DD48E8B6DCCB2" Source="!(wix.MainSource)\System.Diagnostics.TraceSource.dll" />
-        <File Id="cmp5686A5DCF2A08C618B3500928277C12C" Source="!(wix.MainSource)\System.Diagnostics.Tracing.dll" />
-        <File Id="cmp8D6B0D0D5B997AF1B9BB2F2784692E03" Source="!(wix.MainSource)\System.Drawing.Primitives.dll" />
-        <File Id="cmp15CD896C1257803F1EAAF21F13643142" Source="!(wix.MainSource)\System.Dynamic.Runtime.dll" />
-        <File Id="cmp29422AE271D6B2356E2AF332D256B1DE" Source="!(wix.MainSource)\System.Globalization.Calendars.dll" />
-        <File Id="cmpAA087E95574A085C5201D270F443E62E" Source="!(wix.MainSource)\System.Globalization.dll" />
-        <File Id="cmp2AE6AC0EBDF241F5A2F3268BA1ACA754" Source="!(wix.MainSource)\System.Globalization.Extensions.dll" />
-        <File Id="cmp129F5F5267671C7AB542077C2BDD8D72" Source="!(wix.MainSource)\System.IO.Compression.dll" />
-        <File Id="cmp23F7C2354109EC7F3034457C47235AA0" Source="!(wix.MainSource)\System.IO.Compression.ZipFile.dll" />
-        <File Id="cmp1AB2F694FBE065FEC98E27EC233540D7" Source="!(wix.MainSource)\System.IO.dll" />
-        <File Id="cmp4F71FF3179249F40AA83CC5D26424EFE" Source="!(wix.MainSource)\System.IO.FileSystem.dll" />
-        <File Id="cmpCE934969B52A8BF6C3B94FA9636916F6" Source="!(wix.MainSource)\System.IO.FileSystem.DriveInfo.dll" />
-        <File Id="cmpC99C1FCF2F2B5727FFA9240232755632" Source="!(wix.MainSource)\System.IO.FileSystem.Primitives.dll" />
-        <File Id="cmp39DE53A6E602C76462F0260E369F2792" Source="!(wix.MainSource)\System.IO.FileSystem.Watcher.dll" />
-        <File Id="cmp4A7BCFB5DA46BC95D2E49236FC59D8A5" Source="!(wix.MainSource)\System.IO.IsolatedStorage.dll" />
-        <File Id="cmp3C994A927E01FC3CC7E0AE001AF0CD4C" Source="!(wix.MainSource)\System.IO.MemoryMappedFiles.dll" />
-        <File Id="cmp461F4A455CD0EB1AD2E4E35B51C09850" Source="!(wix.MainSource)\System.IO.Pipes.dll" />
-        <File Id="cmp6042D98678A0BF1EE1EB0EC4AF5E5C52" Source="!(wix.MainSource)\System.IO.UnmanagedMemoryStream.dll" />
-        <File Id="cmpEE5BBE99E2C22FC8023A8976953D2181" Source="!(wix.MainSource)\System.Linq.dll" />
-        <File Id="cmp3B693E836B896CF886DF7174A12D37F7" Source="!(wix.MainSource)\System.Linq.Expressions.dll" />
-        <File Id="cmp8EB6B1FB2B50FFBB0CA48841D0C7E01B" Source="!(wix.MainSource)\System.Linq.Parallel.dll" />
-        <File Id="cmpDB259A99945F85FEC221D6F75ACCB8EF" Source="!(wix.MainSource)\System.Linq.Queryable.dll" />
-        <File Id="cmp7C8ACFEA497AD75401FFD01A9AEB31D4" Source="!(wix.MainSource)\System.Net.Http.dll" />
-        <File Id="cmpD577135453C63C124E24214ACA6ED9B4" Source="!(wix.MainSource)\System.Net.NameResolution.dll" />
-        <File Id="cmp5CF9D73D8F28A4EF0D37B0136ED71006" Source="!(wix.MainSource)\System.Net.NetworkInformation.dll" />
-        <File Id="cmpE95A3A7DB0E5B6B057A2BEF1A9ACCBA6" Source="!(wix.MainSource)\System.Net.Ping.dll" />
-        <File Id="cmp57ED19A38749352B4A6312602AF32EEA" Source="!(wix.MainSource)\System.Net.Primitives.dll" />
-        <File Id="cmp3BED5AB46AF442FB282395C20F099F24" Source="!(wix.MainSource)\System.Net.Requests.dll" />
-        <File Id="cmp4629EBAC56A143487ECF260AF98BF78D" Source="!(wix.MainSource)\System.Net.Security.dll" />
-        <File Id="cmp6A4CEF696231A141C3BD0E963AF7FC9A" Source="!(wix.MainSource)\System.Net.Sockets.dll" />
-        <File Id="cmpC11D8B4CADC383AE71657D4082C7C44C" Source="!(wix.MainSource)\System.Net.WebHeaderCollection.dll" />
-        <File Id="cmp7CDF555F26EC27374503C4D251C0ADD7" Source="!(wix.MainSource)\System.Net.WebSockets.Client.dll" />
-        <File Id="cmp7FDA86390D774733F2019204F3EF9348" Source="!(wix.MainSource)\System.Net.WebSockets.dll" />
-        <File Id="cmp0ECCBE7E7A91EA3F9AC4E08C42060A74" Source="!(wix.MainSource)\System.ObjectModel.dll" />
-        <File Id="cmp7320660D409A823430EC1ADFF0D83564" Source="!(wix.MainSource)\System.Reflection.dll" />
-        <File Id="cmp68097EB457BBDE8DE960E7CC72000139" Source="!(wix.MainSource)\System.Reflection.Extensions.dll" />
-        <File Id="cmpC2109B9173A8B91CBDD411618A20588C" Source="!(wix.MainSource)\System.Reflection.Primitives.dll" />
-        <File Id="cmp48A7934AD38EE63A44A9478E1C31E3BB" Source="!(wix.MainSource)\System.Resources.Reader.dll" />
-        <File Id="cmp92E77A73B8159FC7BF51704F06BB1689" Source="!(wix.MainSource)\System.Resources.ResourceManager.dll" />
-        <File Id="cmp82CD5F539E128C7A8CC025CBA927B9F3" Source="!(wix.MainSource)\System.Resources.Writer.dll" />
-        <File Id="cmp336F82620F5FFCA06611B8FD22F7066F" Source="!(wix.MainSource)\System.Runtime.CompilerServices.VisualC.dll" />
-        <File Id="cmpF68CE304EDD0D14A7BFF18236F51BC48" Source="!(wix.MainSource)\System.Runtime.dll" />
-        <File Id="cmp975FB1B5D4A3126E0525915FB4C90ECF" Source="!(wix.MainSource)\System.Runtime.Extensions.dll" />
-        <File Id="cmpE55D5ABD5E06B7AC82A1A464F710DC2E" Source="!(wix.MainSource)\System.Runtime.Handles.dll" />
-        <File Id="cmpF8D128DB049817F164973BCC38DE4935" Source="!(wix.MainSource)\System.Runtime.InteropServices.dll" />
-        <File Id="cmpEF0EA4DA72195CE89ADEBCDFBBB1A537" Source="!(wix.MainSource)\System.Runtime.InteropServices.RuntimeInformation.dll" />
-        <File Id="cmp058B1E2892E76D2F98E9569E383E5B83" Source="!(wix.MainSource)\System.Runtime.Numerics.dll" />
-        <File Id="cmp8383C67527BDAFE41A3001900C896480" Source="!(wix.MainSource)\System.Runtime.Serialization.Formatters.dll" />
-        <File Id="cmp1D49D64F849E58598D108BA2293DAD87" Source="!(wix.MainSource)\System.Runtime.Serialization.Json.dll" />
-        <File Id="cmpFFD9C90842D9C8A5251533EE3764882E" Source="!(wix.MainSource)\System.Runtime.Serialization.Primitives.dll" />
-        <File Id="cmp852AADF38F8E567003DDA62F8B2655B6" Source="!(wix.MainSource)\System.Runtime.Serialization.Xml.dll" />
-        <File Id="cmp74104254FD237403FE1336A0257C4330" Source="!(wix.MainSource)\System.Security.Claims.dll" />
-        <File Id="cmp92D5F6B984CFD9B211394CCCEE1F04A5" Source="!(wix.MainSource)\System.Security.Cryptography.Algorithms.dll" />
-        <File Id="cmpDFB191D893C4B975B51D3352B7B82109" Source="!(wix.MainSource)\System.Security.Cryptography.Csp.dll" />
-        <File Id="cmp626E0E80197224B4DF0D25BD513CFE42" Source="!(wix.MainSource)\System.Security.Cryptography.Encoding.dll" />
-        <File Id="cmp9AFF12285630BC013517118B5EEA5D3C" Source="!(wix.MainSource)\System.Security.Cryptography.Primitives.dll" />
-        <File Id="cmp6951ADE3434FC5DEA7A943576EAFC9C9" Source="!(wix.MainSource)\System.Security.Cryptography.X509Certificates.dll" />
-        <File Id="cmpA0BE31D5F64E6C8E4232B1246C6E6EBA" Source="!(wix.MainSource)\System.Security.Principal.dll" />
-        <File Id="cmpE7D2AE44E717D315763AA4408AAB16FB" Source="!(wix.MainSource)\System.Security.SecureString.dll" />
-        <File Id="cmp75DAC5FDC2337ECAD4CD4B6633997292" Source="!(wix.MainSource)\System.Text.Encoding.dll" />
-        <File Id="cmp69B094884B9A8B61C779794ADEBBC1A9" Source="!(wix.MainSource)\System.Text.Encoding.Extensions.dll" />
-        <File Id="cmpC5D9D0B15AFBC0CF5AFAE1D408F93B74" Source="!(wix.MainSource)\System.Text.RegularExpressions.dll" />
-        <File Id="cmpF574B7D15C8F67E99CE93D4A59FC6585" Source="!(wix.MainSource)\System.Threading.dll" />
-        <File Id="cmpEA99956125140C149444D0EA2A2FBD11" Source="!(wix.MainSource)\System.Threading.Overlapped.dll" />
-        <File Id="cmp3B63C4A8BD59792FD308ADD749073AE3" Source="!(wix.MainSource)\System.Threading.Tasks.dll" />
-        <File Id="cmp632B6E4876B3D900A85D26C65E49B166" Source="!(wix.MainSource)\System.Threading.Tasks.Parallel.dll" />
-        <File Id="cmp6B712402D454F08D96D36C530166919B" Source="!(wix.MainSource)\System.Threading.Thread.dll" />
-        <File Id="cmp8AEEDC24B08C41AED47ACF763BF574A1" Source="!(wix.MainSource)\System.Threading.ThreadPool.dll" />
-        <File Id="cmpBAD65A0DD84D5EC853BB247DBE86F887" Source="!(wix.MainSource)\System.Threading.Timer.dll" />
-        <File Id="cmpCB5E5E4C7D798FA2732BABDEB0BE886D" Source="!(wix.MainSource)\System.ValueTuple.dll" />
-        <File Id="cmpB29480D26980660C0E9ADE25F14B43AD" Source="!(wix.MainSource)\System.Xml.ReaderWriter.dll" />
-        <File Id="cmpE59C0BD28DF5A4DF51B1078ACE43A415" Source="!(wix.MainSource)\System.Xml.XDocument.dll" />
-        <File Id="cmp3123E1EB1C5D225391FC1D6617D55C3F" Source="!(wix.MainSource)\System.Xml.XmlDocument.dll" />
-        <File Id="cmp31F020064DD03E3B81CC5C22BABF3806" Source="!(wix.MainSource)\System.Xml.XmlSerializer.dll" />
-        <File Id="cmp7F8869CF8631075DAAB292885B3366B9" Source="!(wix.MainSource)\System.Xml.XPath.dll" />
-        <File Id="cmp808A78AA924556012D14BE1271FD1203" Source="!(wix.MainSource)\System.Xml.XPath.XDocument.dll" />
-        <File Id="fil0F135695E925EFFCE422A78CD28F4C92" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.dll" />
-        <File Id="fil283C54AA0CCA5A82032AD6F88F3D5D84" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
-        <File Id="filB6214F7016ABD85F0A90650A1F105B9C" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F23" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F24" Source="!(wix.MainSource)\Xceed.Wpf.Toolkit.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F27" Source="!(wix.MainSource)\Microsoft.Expression.Interactions.dll" />
-        <File Id="filBB96100CC38385FF7DB0DBFE799C5F28" Source="!(wix.MainSource)\System.Windows.Interactivity.dll" />
-        <File Id="AxInterop.MSTSCLib.dll" Source="!(wix.MainSource)\AxInterop.MSTSCLib.dll" />
-        <File Id="MSTSCLib.dll" Source="!(wix.MainSource)\MSTSCLib.dll" />
-        <File Id="LiteDB.dll" Source="!(wix.MainSource)\LiteDB.dll" />
-        <!-- OpenRPA.CodeEditor -->
-        <File Id="Microsoft.Bcl.AsyncInterfaces.dll" Source="!(wix.MainSource)\Microsoft.Bcl.AsyncInterfaces.dll" />
-        <File Id="Microsoft.VisualStudio.Debugger.Contracts.dll" Source="!(wix.MainSource)\Microsoft.VisualStudio.Debugger.Contracts.dll" />
+				<File Id="fil89D857203DD54ABCB0908F0A87409698" Source="!(wix.MainSource)\netstandard.dll" />
+				<File Id="fil5A4BD987D2852D4ABC653BD9F45AC1F3" Source="!(wix.MainSource)\DotNetProjects.DataVisualization.Toolkit.dll" />
+				<File Id="fil32CB20C686F2A6C01A3E679A4C6D58C6" Source="!(wix.MainSource)\DotNetProjects.Input.Toolkit.dll" />
+				<File Id="fil403875F1BC31A5787C30F5A9187BCC2B" Source="!(wix.MainSource)\DotNetProjects.Layout.Toolkit.dll" />
+				<File Id="fil6B6A91279F72BDFAC94FA2C53DD4E0E0" Source="!(wix.MainSource)\DotNetProjects.WPF.Themes.dll" />
+				<File Id="filC867EA0A820F3E5F56622396F0E263C1" Source="!(wix.MainSource)\FlaUI.Core.dll" />
+				<File Id="filA0FEE3F77E25D1C480F6F18CD547B5BC" Source="!(wix.MainSource)\FlaUI.UIA3.dll" />
+				<File Id="fil6D3D5546417727749907FC9E19D97FF8" Source="!(wix.MainSource)\ICSharpCode.AvalonEdit.dll" />
+				<File Id="fil9727C0AE97C7A52B6BA6DABB13D9BA49" Source="!(wix.MainSource)\Interop.UIAutomationClient.dll" />
+				<File Id="fil48A502818AF34CF3F90310C0DDE65DF8" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.dll" />
+				<File Id="fil11D1819F81DFD4511A8F9CE349C387F7" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.Features.dll" />
+				<File Id="fil19CF8ADEC4D357067D7436808E530ECE" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.CSharp.Workspaces.dll" />
+				<File Id="filA694FFFBA0D6ABE28FDF8C85A0AEA552" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.dll" />
+				<File Id="filA528053A0C157E7F873A7E2028E87202" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.Features.dll" />
+				<!--<File Id="fil7592E7F010975DA8A9E8F2D930A00944" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.FlowAnalysis.Utilities.dll" />-->
+				<File Id="filBB99E52B21192E7D2453BCF3706FA61E" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.dll" />
+				<File Id="filFDE5D0DE119D17C35BF28D30ADCDCF5D" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.Features.dll" />
+				<File Id="fil6FB1F3A80B56FDE7F980C8573E18525D" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll" />
+				<File Id="filC0A966D19B84FD6A4969DA43A99C882B" Source="!(wix.MainSource)\Microsoft.CodeAnalysis.Workspaces.dll" />
+				<File Id="fil05A7E61A6DFFA36C9ED0BAF2B52724DF" Source="!(wix.MainSource)\Microsoft.DiaSymReader.dll" />
+				<File Id="fil05FF769999D602AD4FA6A489C44ED290" Source="!(wix.MainSource)\Newtonsoft.Json.dll" />
+				<File Id="filB9D0C89E2BE03F54B6210850B37C7B82" Source="!(wix.MainSource)\NLog.dll" />
+				<File Id="fil793549DAC9BBACE3FE0A2C6207439558" Source="!(wix.MainSource)\NuGet.Common.dll" />
+				<File Id="fil1914470A96C406BB700EBFE4DFAB0CEF" Source="!(wix.MainSource)\NuGet.Configuration.dll" />
+				<File Id="filC77BFD5C891086AC3DFE76BB004671EB" Source="!(wix.MainSource)\NuGet.Frameworks.dll" />
+				<File Id="filA46D093A333210FF3DF479B37CE2796C" Source="!(wix.MainSource)\NuGet.Packaging.dll" />
+				<File Id="fil3EFEB876BC03C56EB2BD3B5232C1DB09" Source="!(wix.MainSource)\NuGet.Protocol.dll" />
+				<File Id="fil5A46BE503A05AA31B5318277C4BB848F" Source="!(wix.MainSource)\NuGet.Resolver.dll" />
+				<File Id="filFAE94905D72D8368BA8CE7A78C6DEA45" Source="!(wix.MainSource)\NuGet.Versioning.dll" />
+				<File Id="fil6E894942E6ADFA63F3967E0A27F05784" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll" />
+				<File Id="fil6E894942E6ADFA63F3967E0A27F05785" Source="!(wix.MainSource)\OpenRPA.CodeEditor.pdb" />
+				<File Id="filF0FF646DFA53CCC3ABA2E049427B7EBE" Source="!(wix.MainSource)\OpenRPA.CodeEditor.dll.config" />
+				<File Id="fil57AE31DC28AB7B6FFDA5F69E89C07922" Source="!(wix.MainSource)\OpenRPA.exe.config" />
+				<File Id="fil57AE31DC28AB7B6FFDA5F69E89C07923" Source="!(wix.MainSource)\OpenRPA.pdb" />
+				<File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7A" Source="!(wix.MainSource)\OpenRPA.Interfaces.dll" />
+				<File Id="filDE9EE88175C8A92C8C6EDAEEC002AF7B" Source="!(wix.MainSource)\OpenRPA.Interfaces.pdb" />
+				<File Id="filA3BCD5A3D7D25B0128DBA215D4662EC5" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.dll" />
+				<File Id="filA3BCD5A3D7D25B0128DBA215D4662EC6" Source="!(wix.MainSource)\OpenRPA.NamedPipeWrapper.pdb" />
+				<File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A4" Source="!(wix.MainSource)\OpenRPA.Net.dll" />
+				<File Id="filC6183D826FBAEDB32E8F9DBD1F7E15A5" Source="!(wix.MainSource)\OpenRPA.Net.pdb" />
+				<File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFC" Source="!(wix.MainSource)\OpenRPA.Windows.dll" />
+				<File Id="filDB9CDEE3C08EDAA50BF126AEF358BCFD" Source="!(wix.MainSource)\OpenRPA.Windows.pdb" />
+				<File Id="filEDD81E77BF6933BF90C42AE0EFAA681B" Source="!(wix.MainSource)\System.Buffers.dll" />
+				<File Id="fil5D4575804C3CE3ACC76FF53290806177" Source="!(wix.MainSource)\System.Collections.Immutable.dll" />
+				<File Id="filB5FF2765E175A6C9AD05767B340DB194" Source="!(wix.MainSource)\System.Composition.AttributedModel.dll" />
+				<File Id="filEC8798B40F53EE426933B4A1772703AA" Source="!(wix.MainSource)\System.Composition.Convention.dll" />
+				<File Id="fil29E458EDBCB625D8059CFC1B5EAE625A" Source="!(wix.MainSource)\System.Composition.Hosting.dll" />
+				<File Id="filC3531745E3934A2AA3E3B573EF05822B" Source="!(wix.MainSource)\System.Composition.Runtime.dll" />
+				<File Id="fil4247AF19BBEC43CB533A0DF22E9A3DEB" Source="!(wix.MainSource)\System.Composition.TypedParts.dll" />
+				<File Id="fil1E24D2F3B531B1D76E1631314436BD58" Source="!(wix.MainSource)\System.Memory.dll" />
+				<File Id="fil377C264A4908CE349FB2070D4C79A5B4" Source="!(wix.MainSource)\System.Net.WebSockets.Client.Managed.dll" />
+				<File Id="fil41D7AC86F0924A477EE48B3AF9E39249" Source="!(wix.MainSource)\System.Numerics.Vectors.dll" />
+				<File Id="fil741DE04C3124C1446D2FFF811D83E100" Source="!(wix.MainSource)\System.Reflection.Metadata.dll" />
+				<File Id="fil8974B12282083EB6B4CB7BAC26546374" Source="!(wix.MainSource)\System.Runtime.CompilerServices.Unsafe.dll" />
+				<File Id="filC1BF4E80AF32E75E9827A0C9117D6A6B" Source="!(wix.MainSource)\System.Text.Encoding.CodePages.dll" />
+				<File Id="fil6A8BC02D0E287837DC8027D6A31B1B88" Source="!(wix.MainSource)\System.Threading.Tasks.Extensions.dll" />
+				<File Id="cmp2DF0B2895DFC3CB720B48A6D9BFD37EF" Source="!(wix.MainSource)\System.AppContext.dll" />
+				<File Id="cmpFCAB0086ACF92637C85CEFB939B694E1" Source="!(wix.MainSource)\System.Collections.Concurrent.dll" />
+				<File Id="cmpE4B4F7691D3ACD4A72AE99FFE470CE17" Source="!(wix.MainSource)\System.Collections.dll" />
+				<File Id="cmp75515765AA531707944115B02998F998" Source="!(wix.MainSource)\System.Collections.NonGeneric.dll" />
+				<File Id="cmp22D219EF6A7035FFC0254F6BE572FF77" Source="!(wix.MainSource)\System.Collections.Specialized.dll" />
+				<File Id="cmp22AEF5790256905123AF78698CD859DD" Source="!(wix.MainSource)\System.ComponentModel.dll" />
+				<File Id="cmp5349EC5703EBCAA1E6C7DA272802BE58" Source="!(wix.MainSource)\System.ComponentModel.EventBasedAsync.dll" />
+				<File Id="cmp7B3236183FA982DA508702B357E3D75E" Source="!(wix.MainSource)\System.ComponentModel.Primitives.dll" />
+				<File Id="cmp58C198180EDB7D42EDD28920E1B2E513" Source="!(wix.MainSource)\System.ComponentModel.TypeConverter.dll" />
+				<File Id="cmp03737AA3B5F539D51D9418A6ED0E4F6C" Source="!(wix.MainSource)\System.Console.dll" />
+				<File Id="cmpB25E057E8242CD01A509E8CBCAB104DA" Source="!(wix.MainSource)\System.Data.Common.dll" />
+				<File Id="cmp44C51162C2752731AF9E2E31BB09713C" Source="!(wix.MainSource)\System.Diagnostics.Contracts.dll" />
+				<File Id="cmpB0C2F11F7CA680BF7E48B8A4268E9C98" Source="!(wix.MainSource)\System.Diagnostics.Debug.dll" />
+				<File Id="cmpA59732DC764B94E5F1FB4BDE22083814" Source="!(wix.MainSource)\System.Diagnostics.FileVersionInfo.dll" />
+				<File Id="cmpF6FEF9FF36C695681C6A77FAD09A51DA" Source="!(wix.MainSource)\System.Diagnostics.Process.dll" />
+				<File Id="cmpFE82493E4455C953D8F01BA5365F9C1A" Source="!(wix.MainSource)\System.Diagnostics.StackTrace.dll" />
+				<File Id="cmp0E83A6F1E468052C63DFCFE168BE9F86" Source="!(wix.MainSource)\System.Diagnostics.TextWriterTraceListener.dll" />
+				<File Id="cmp50A76DD8AF0E25149A565F185A1F29A3" Source="!(wix.MainSource)\System.Diagnostics.Tools.dll" />
+				<File Id="cmpDBAE7236105C33C9758DD48E8B6DCCB2" Source="!(wix.MainSource)\System.Diagnostics.TraceSource.dll" />
+				<File Id="cmp5686A5DCF2A08C618B3500928277C12C" Source="!(wix.MainSource)\System.Diagnostics.Tracing.dll" />
+				<File Id="cmp8D6B0D0D5B997AF1B9BB2F2784692E03" Source="!(wix.MainSource)\System.Drawing.Primitives.dll" />
+				<File Id="cmp15CD896C1257803F1EAAF21F13643142" Source="!(wix.MainSource)\System.Dynamic.Runtime.dll" />
+				<File Id="cmp29422AE271D6B2356E2AF332D256B1DE" Source="!(wix.MainSource)\System.Globalization.Calendars.dll" />
+				<File Id="cmpAA087E95574A085C5201D270F443E62E" Source="!(wix.MainSource)\System.Globalization.dll" />
+				<File Id="cmp2AE6AC0EBDF241F5A2F3268BA1ACA754" Source="!(wix.MainSource)\System.Globalization.Extensions.dll" />
+				<File Id="cmp129F5F5267671C7AB542077C2BDD8D72" Source="!(wix.MainSource)\System.IO.Compression.dll" />
+				<File Id="cmp23F7C2354109EC7F3034457C47235AA0" Source="!(wix.MainSource)\System.IO.Compression.ZipFile.dll" />
+				<File Id="cmp1AB2F694FBE065FEC98E27EC233540D7" Source="!(wix.MainSource)\System.IO.dll" />
+				<File Id="cmp4F71FF3179249F40AA83CC5D26424EFE" Source="!(wix.MainSource)\System.IO.FileSystem.dll" />
+				<File Id="cmpCE934969B52A8BF6C3B94FA9636916F6" Source="!(wix.MainSource)\System.IO.FileSystem.DriveInfo.dll" />
+				<File Id="cmpC99C1FCF2F2B5727FFA9240232755632" Source="!(wix.MainSource)\System.IO.FileSystem.Primitives.dll" />
+				<File Id="cmp39DE53A6E602C76462F0260E369F2792" Source="!(wix.MainSource)\System.IO.FileSystem.Watcher.dll" />
+				<File Id="cmp4A7BCFB5DA46BC95D2E49236FC59D8A5" Source="!(wix.MainSource)\System.IO.IsolatedStorage.dll" />
+				<File Id="cmp3C994A927E01FC3CC7E0AE001AF0CD4C" Source="!(wix.MainSource)\System.IO.MemoryMappedFiles.dll" />
+				<File Id="cmp461F4A455CD0EB1AD2E4E35B51C09850" Source="!(wix.MainSource)\System.IO.Pipes.dll" />
+				<File Id="cmp6042D98678A0BF1EE1EB0EC4AF5E5C52" Source="!(wix.MainSource)\System.IO.UnmanagedMemoryStream.dll" />
+				<File Id="cmpEE5BBE99E2C22FC8023A8976953D2181" Source="!(wix.MainSource)\System.Linq.dll" />
+				<File Id="cmp3B693E836B896CF886DF7174A12D37F7" Source="!(wix.MainSource)\System.Linq.Expressions.dll" />
+				<File Id="cmp8EB6B1FB2B50FFBB0CA48841D0C7E01B" Source="!(wix.MainSource)\System.Linq.Parallel.dll" />
+				<File Id="cmpDB259A99945F85FEC221D6F75ACCB8EF" Source="!(wix.MainSource)\System.Linq.Queryable.dll" />
+				<File Id="cmp7C8ACFEA497AD75401FFD01A9AEB31D4" Source="!(wix.MainSource)\System.Net.Http.dll" />
+				<File Id="cmpD577135453C63C124E24214ACA6ED9B4" Source="!(wix.MainSource)\System.Net.NameResolution.dll" />
+				<File Id="cmp5CF9D73D8F28A4EF0D37B0136ED71006" Source="!(wix.MainSource)\System.Net.NetworkInformation.dll" />
+				<File Id="cmpE95A3A7DB0E5B6B057A2BEF1A9ACCBA6" Source="!(wix.MainSource)\System.Net.Ping.dll" />
+				<File Id="cmp57ED19A38749352B4A6312602AF32EEA" Source="!(wix.MainSource)\System.Net.Primitives.dll" />
+				<File Id="cmp3BED5AB46AF442FB282395C20F099F24" Source="!(wix.MainSource)\System.Net.Requests.dll" />
+				<File Id="cmp4629EBAC56A143487ECF260AF98BF78D" Source="!(wix.MainSource)\System.Net.Security.dll" />
+				<File Id="cmp6A4CEF696231A141C3BD0E963AF7FC9A" Source="!(wix.MainSource)\System.Net.Sockets.dll" />
+				<File Id="cmpC11D8B4CADC383AE71657D4082C7C44C" Source="!(wix.MainSource)\System.Net.WebHeaderCollection.dll" />
+				<File Id="cmp7CDF555F26EC27374503C4D251C0ADD7" Source="!(wix.MainSource)\System.Net.WebSockets.Client.dll" />
+				<File Id="cmp7FDA86390D774733F2019204F3EF9348" Source="!(wix.MainSource)\System.Net.WebSockets.dll" />
+				<File Id="cmp0ECCBE7E7A91EA3F9AC4E08C42060A74" Source="!(wix.MainSource)\System.ObjectModel.dll" />
+				<File Id="cmp7320660D409A823430EC1ADFF0D83564" Source="!(wix.MainSource)\System.Reflection.dll" />
+				<File Id="cmp68097EB457BBDE8DE960E7CC72000139" Source="!(wix.MainSource)\System.Reflection.Extensions.dll" />
+				<File Id="cmpC2109B9173A8B91CBDD411618A20588C" Source="!(wix.MainSource)\System.Reflection.Primitives.dll" />
+				<File Id="cmp48A7934AD38EE63A44A9478E1C31E3BB" Source="!(wix.MainSource)\System.Resources.Reader.dll" />
+				<File Id="cmp92E77A73B8159FC7BF51704F06BB1689" Source="!(wix.MainSource)\System.Resources.ResourceManager.dll" />
+				<File Id="cmp82CD5F539E128C7A8CC025CBA927B9F3" Source="!(wix.MainSource)\System.Resources.Writer.dll" />
+				<File Id="cmp336F82620F5FFCA06611B8FD22F7066F" Source="!(wix.MainSource)\System.Runtime.CompilerServices.VisualC.dll" />
+				<File Id="cmpF68CE304EDD0D14A7BFF18236F51BC48" Source="!(wix.MainSource)\System.Runtime.dll" />
+				<File Id="cmp975FB1B5D4A3126E0525915FB4C90ECF" Source="!(wix.MainSource)\System.Runtime.Extensions.dll" />
+				<File Id="cmpE55D5ABD5E06B7AC82A1A464F710DC2E" Source="!(wix.MainSource)\System.Runtime.Handles.dll" />
+				<File Id="cmpF8D128DB049817F164973BCC38DE4935" Source="!(wix.MainSource)\System.Runtime.InteropServices.dll" />
+				<File Id="cmpEF0EA4DA72195CE89ADEBCDFBBB1A537" Source="!(wix.MainSource)\System.Runtime.InteropServices.RuntimeInformation.dll" />
+				<File Id="cmp058B1E2892E76D2F98E9569E383E5B83" Source="!(wix.MainSource)\System.Runtime.Numerics.dll" />
+				<File Id="cmp8383C67527BDAFE41A3001900C896480" Source="!(wix.MainSource)\System.Runtime.Serialization.Formatters.dll" />
+				<File Id="cmp1D49D64F849E58598D108BA2293DAD87" Source="!(wix.MainSource)\System.Runtime.Serialization.Json.dll" />
+				<File Id="cmpFFD9C90842D9C8A5251533EE3764882E" Source="!(wix.MainSource)\System.Runtime.Serialization.Primitives.dll" />
+				<File Id="cmp852AADF38F8E567003DDA62F8B2655B6" Source="!(wix.MainSource)\System.Runtime.Serialization.Xml.dll" />
+				<File Id="cmp74104254FD237403FE1336A0257C4330" Source="!(wix.MainSource)\System.Security.Claims.dll" />
+				<File Id="cmp92D5F6B984CFD9B211394CCCEE1F04A5" Source="!(wix.MainSource)\System.Security.Cryptography.Algorithms.dll" />
+				<File Id="cmpDFB191D893C4B975B51D3352B7B82109" Source="!(wix.MainSource)\System.Security.Cryptography.Csp.dll" />
+				<File Id="cmp626E0E80197224B4DF0D25BD513CFE42" Source="!(wix.MainSource)\System.Security.Cryptography.Encoding.dll" />
+				<File Id="cmp9AFF12285630BC013517118B5EEA5D3C" Source="!(wix.MainSource)\System.Security.Cryptography.Primitives.dll" />
+				<File Id="cmp6951ADE3434FC5DEA7A943576EAFC9C9" Source="!(wix.MainSource)\System.Security.Cryptography.X509Certificates.dll" />
+				<File Id="cmpA0BE31D5F64E6C8E4232B1246C6E6EBA" Source="!(wix.MainSource)\System.Security.Principal.dll" />
+				<File Id="cmpE7D2AE44E717D315763AA4408AAB16FB" Source="!(wix.MainSource)\System.Security.SecureString.dll" />
+				<File Id="cmp75DAC5FDC2337ECAD4CD4B6633997292" Source="!(wix.MainSource)\System.Text.Encoding.dll" />
+				<File Id="cmp69B094884B9A8B61C779794ADEBBC1A9" Source="!(wix.MainSource)\System.Text.Encoding.Extensions.dll" />
+				<File Id="cmpC5D9D0B15AFBC0CF5AFAE1D408F93B74" Source="!(wix.MainSource)\System.Text.RegularExpressions.dll" />
+				<File Id="cmpF574B7D15C8F67E99CE93D4A59FC6585" Source="!(wix.MainSource)\System.Threading.dll" />
+				<File Id="cmpEA99956125140C149444D0EA2A2FBD11" Source="!(wix.MainSource)\System.Threading.Overlapped.dll" />
+				<File Id="cmp3B63C4A8BD59792FD308ADD749073AE3" Source="!(wix.MainSource)\System.Threading.Tasks.dll" />
+				<File Id="cmp632B6E4876B3D900A85D26C65E49B166" Source="!(wix.MainSource)\System.Threading.Tasks.Parallel.dll" />
+				<File Id="cmp6B712402D454F08D96D36C530166919B" Source="!(wix.MainSource)\System.Threading.Thread.dll" />
+				<File Id="cmp8AEEDC24B08C41AED47ACF763BF574A1" Source="!(wix.MainSource)\System.Threading.ThreadPool.dll" />
+				<File Id="cmpBAD65A0DD84D5EC853BB247DBE86F887" Source="!(wix.MainSource)\System.Threading.Timer.dll" />
+				<File Id="cmpCB5E5E4C7D798FA2732BABDEB0BE886D" Source="!(wix.MainSource)\System.ValueTuple.dll" />
+				<File Id="cmpB29480D26980660C0E9ADE25F14B43AD" Source="!(wix.MainSource)\System.Xml.ReaderWriter.dll" />
+				<File Id="cmpE59C0BD28DF5A4DF51B1078ACE43A415" Source="!(wix.MainSource)\System.Xml.XDocument.dll" />
+				<File Id="cmp3123E1EB1C5D225391FC1D6617D55C3F" Source="!(wix.MainSource)\System.Xml.XmlDocument.dll" />
+				<File Id="cmp31F020064DD03E3B81CC5C22BABF3806" Source="!(wix.MainSource)\System.Xml.XmlSerializer.dll" />
+				<File Id="cmp7F8869CF8631075DAAB292885B3366B9" Source="!(wix.MainSource)\System.Xml.XPath.dll" />
+				<File Id="cmp808A78AA924556012D14BE1271FD1203" Source="!(wix.MainSource)\System.Xml.XPath.XDocument.dll" />
+				<File Id="fil0F135695E925EFFCE422A78CD28F4C92" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.dll" />
+				<File Id="fil283C54AA0CCA5A82032AD6F88F3D5D84" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
+				<File Id="filB6214F7016ABD85F0A90650A1F105B9C" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
+				<File Id="filBB96100CC38385FF7DB0DBFE799C5F23" Source="!(wix.MainSource)\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
+				<File Id="filBB96100CC38385FF7DB0DBFE799C5F24" Source="!(wix.MainSource)\Xceed.Wpf.Toolkit.dll" />
+				<File Id="filBB96100CC38385FF7DB0DBFE799C5F27" Source="!(wix.MainSource)\Microsoft.Expression.Interactions.dll" />
+				<File Id="filBB96100CC38385FF7DB0DBFE799C5F28" Source="!(wix.MainSource)\System.Windows.Interactivity.dll" />
+				<File Id="AxInterop.MSTSCLib.dll" Source="!(wix.MainSource)\AxInterop.MSTSCLib.dll" />
+				<File Id="MSTSCLib.dll" Source="!(wix.MainSource)\MSTSCLib.dll" />
+				<File Id="LiteDB.dll" Source="!(wix.MainSource)\LiteDB.dll" />
+				<!-- OpenRPA.CodeEditor -->
+				<File Id="Microsoft.Bcl.AsyncInterfaces.dll" Source="!(wix.MainSource)\Microsoft.Bcl.AsyncInterfaces.dll" />
+				<File Id="Microsoft.VisualStudio.Debugger.Contracts.dll" Source="!(wix.MainSource)\Microsoft.VisualStudio.Debugger.Contracts.dll" />
 
-        <!-- otel -->
-        <File Id="OpenTelemetry.Api.dll" Source="!(wix.MainSource)\OpenTelemetry.Api.dll" />
-        <File Id="OpenTelemetry.dll" Source="!(wix.MainSource)\OpenTelemetry.dll" />
-        <File Id="OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" Source="!(wix.MainSource)\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" />
+				<!-- otel -->
+				<File Id="OpenTelemetry.Api.dll" Source="!(wix.MainSource)\OpenTelemetry.Api.dll" />
+				<File Id="OpenTelemetry.dll" Source="!(wix.MainSource)\OpenTelemetry.dll" />
+				<File Id="OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" Source="!(wix.MainSource)\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" />
 
-        <File Id="Google.Protobuf.dll" Source="!(wix.MainSource)\Google.Protobuf.dll" />
-        <File Id="Grpc.Core.Api.dll" Source="!(wix.MainSource)\Grpc.Core.Api.dll" />
-        <File Id="Grpc.Core.dll" Source="!(wix.MainSource)\Grpc.Core.dll" />
-        <File Id="grpc_csharp_ext.x64.dll" Source="!(wix.MainSource)\grpc_csharp_ext.x64.dll" />
-        <File Id="libgrpc_csharp_ext.x64.dylib" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.dylib" />
-        <File Id="libgrpc_csharp_ext.x64.so" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.so" />
-        <File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Abstractions.dll" />
-        <File Id="Microsoft.Extensions.Configuration.Binder.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Binder.dll" />
-        <File Id="Microsoft.Extensions.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.dll" />
-        <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-        <File Id="Microsoft.Extensions.Logging.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Abstractions.dll" />
-        <File Id="Microsoft.Extensions.Logging.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Configuration.dll" />
-        <File Id="Microsoft.Extensions.Logging.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.dll" />
-        <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
-        <File Id="Microsoft.Extensions.Options.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.dll" />
-        <File Id="Microsoft.Extensions.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Primitives.dll" />
-        <File Id="Microsoft.Win32.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Win32.Primitives.dll" />
-        <File Id="System.Diagnostics.DiagnosticSource.dll" Source="!(wix.MainSource)\System.Diagnostics.DiagnosticSource.dll" />
+				<File Id="Google.Protobuf.dll" Source="!(wix.MainSource)\Google.Protobuf.dll" />
+				<File Id="Grpc.Core.Api.dll" Source="!(wix.MainSource)\Grpc.Core.Api.dll" />
+				<File Id="Grpc.Core.dll" Source="!(wix.MainSource)\Grpc.Core.dll" />
+				<File Id="grpc_csharp_ext.x64.dll" Source="!(wix.MainSource)\grpc_csharp_ext.x64.dll" />
+				<File Id="libgrpc_csharp_ext.x64.dylib" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.dylib" />
+				<File Id="libgrpc_csharp_ext.x64.so" Source="!(wix.MainSource)\libgrpc_csharp_ext.x64.so" />
+				<File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Abstractions.dll" />
+				<File Id="Microsoft.Extensions.Configuration.Binder.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Binder.dll" />
+				<File Id="Microsoft.Extensions.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.dll" />
+				<File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+				<File Id="Microsoft.Extensions.Logging.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Abstractions.dll" />
+				<File Id="Microsoft.Extensions.Logging.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Configuration.dll" />
+				<File Id="Microsoft.Extensions.Logging.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.dll" />
+				<File Id="Microsoft.Extensions.Options.ConfigurationExtensions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
+				<File Id="Microsoft.Extensions.Options.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Options.dll" />
+				<File Id="Microsoft.Extensions.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Primitives.dll" />
+				<File Id="Microsoft.Win32.Primitives.dll" Source="!(wix.MainSource)\Microsoft.Win32.Primitives.dll" />
+				<File Id="System.Diagnostics.DiagnosticSource.dll" Source="!(wix.MainSource)\System.Diagnostics.DiagnosticSource.dll" />
 
 
-        <RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
-      </Component>
-      <Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>
-        <File Id="filA5458E628554269CB6826367CEFB1666" Source="!(wix.MainSource)\de\OpenRPA.Interfaces.resources.dll" />
-        <File Id="fil797F0C60977BD6032BC2A613D743DD25" Source="!(wix.MainSource)\de\OpenRPA.resources.dll" />
-        <File Id="fil14DBE8E2B9C70D54810FE919E0752A69" Source="!(wix.MainSource)\de\OpenRPA.Windows.resources.dll" />
-        <File Id="fil9D2A1A803B60D41FC0B1B7FD67EEC9C8" Source="!(wix.MainSource)\de\Xceed.Wpf.AvalonDock.resources.dll" />
-      </Component>
-      <Component Id='mainComponentda' Win64='yes' Directory="mainda" Guid='{1D088BCA-915A-4C5A-A4D7-2CC4C201E51C}'>
-        <File Id="filA24898E5C7E8CB87CEA35187DAE669B3" Source="!(wix.MainSource)\da\OpenRPA.Interfaces.resources.dll" />
-        <File Id="fil4BE0EB83D68A5739E022CDE8B7A3D262" Source="!(wix.MainSource)\da\OpenRPA.resources.dll" />
-        <File Id="filDBB52774CBA866987F7C6B5046F7D82A" Source="!(wix.MainSource)\da\OpenRPA.Windows.resources.dll" />
-      </Component>
-      <Component Id='mainComponentes' Win64='yes' Directory="maines" Guid='{3D21139F-5E2F-41B7-AF81-86763AF93542}'>
-        <File Id="fil901A37465B4269BCE9EE3F7B1884B8FA" Source="!(wix.MainSource)\es\OpenRPA.Interfaces.resources.dll" />
-        <File Id="filDFE451954FC532AF4BBB503DD282485A" Source="!(wix.MainSource)\es\OpenRPA.resources.dll" />
-        <File Id="filA78901410E91AE56E3995ED51BBC7B53" Source="!(wix.MainSource)\es\OpenRPA.Windows.resources.dll" />
-        <File Id="filB2E79FB9BDA560198EF614222AEFD35B" Source="!(wix.MainSource)\es\Xceed.Wpf.AvalonDock.resources.dll" />
-      </Component>
-      <Component Id='mainComponentpt' Win64='yes' Directory="mainpt" Guid='{F7315FEA-84DC-485E-999A-8CD6FA8B0C0D}'>
-        <File Id="filF4BA2BA8FD71B387B8821A723886F1BF" Source="!(wix.MainSource)\pt\OpenRPA.Interfaces.resources.dll" />
-        <File Id="fil34429B66C2C40EB3EEE1D2DA86B6B5DE" Source="!(wix.MainSource)\pt\OpenRPA.resources.dll" />
-        <File Id="fil3316B9A3F177CF529C4C501F3A61AB77" Source="!(wix.MainSource)\pt\OpenRPA.Windows.resources.dll" />
-      </Component>
-      <Component Id='mainComponentro' Win64='yes' Directory="mainro" Guid='{A5C38BDE-0F0A-49B0-BFEF-964B81A02F35}'>
-        <File Id="filCB0114F5EFE192364FBA9FB7F2F0C61F" Source="!(wix.MainSource)\ro\OpenRPA.Interfaces.resources.dll" />
-        <File Id="fil36507B8C89ECB8F8BF5B934D6FA434F8" Source="!(wix.MainSource)\ro\OpenRPA.resources.dll" />
-        <File Id="filDA3067B9DC56657830C3E584F1D6B0B6" Source="!(wix.MainSource)\ro\OpenRPA.Windows.resources.dll" />
-        <File Id="fil3F9345202472B57C4B615EF270AFC9AA" Source="!(wix.MainSource)\ro\Xceed.Wpf.AvalonDock.resources.dll" />
-      </Component>
-      <Component Id='mainComponentru' Win64='yes' Directory="mainru" Guid='{28ABE303-A809-461B-9CE0-04AE18FC466E}'>
-        <File Id="fil99D92301886B43CC25CA00F3CC04DD25" Source="!(wix.MainSource)\ru\OpenRPA.Interfaces.resources.dll" />
-        <File Id="filAB7C65F71250E2651BC942C367B07E6C" Source="!(wix.MainSource)\ru\OpenRPA.resources.dll" />
-        <File Id="fil126FD8D7BC3CA134C631C10414C0844C" Source="!(wix.MainSource)\ru\OpenRPA.Windows.resources.dll" />
-        <File Id="fil746AB0109F6368FE0AE56C2FA8C44711" Source="!(wix.MainSource)\ru\Xceed.Wpf.AvalonDock.resources.dll" />
-      </Component>
-      <Component Id='mainComponentja' Win64='yes' Directory="mainja" Guid='{A0C9CC00-7B62-4296-8E8B-9F14C0BEA6B6}'>
-        <File Id="A0C9CC007B6242968E8B9F14C0BEA6B6" Source="!(wix.MainSource)\ja\OpenRPA.resources.dll" />
-        <File Id="DEB91C7224B2421EB67FE7ED8D99978A" Source="!(wix.MainSource)\ja\OpenRPA.Interfaces.resources.dll" />
-        <File Id="E4DA92091EB045328D402CA5EA4F24F7" Source="!(wix.MainSource)\ja\OpenRPA.Windows.resources.dll" />
-      </Component>
-      <Component Id='mainComponentx64' Win64='yes' Directory="mainx64" Guid='{225DF59C-8C11-4AFF-95A9-88A98A6CD576}'>
-        <!--<File Id="filB436E4594E3544C098B9943DBDC1A518" Source="!(wix.MainSource)\x64\cef.pak" />-->
-        <File Id="filCB052B4928C8DBE2730D9A211E470208" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.dll" />
-        <File Id="filAD8611FDD6171BAEF79E9F9EC1705EE9" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.exe" />
-        <File Id="filC88C7623422BE649CB1D8DE7EFDA2998" Source="!(wix.MainSource)\x64\CefSharp.Core.Runtime.dll" />
-        <!--<File Id="filC88C7623422BE649CB1D8DE7EFDA2997" Source="!(wix.MainSource)\x64\CefSharp.Core.dll" />
+				<RemoveFolder Id='RemoveLocalAppDataFolder' Directory='INSTALLDIR' On='uninstall' />
+			</Component>
+			<Component Id='mainComponentde' Win64='yes' Directory="mainde" Guid='{5B022629-6132-43BC-87EF-8777CD939585}'>
+				<File Id="filA5458E628554269CB6826367CEFB1666" Source="!(wix.MainSource)\de\OpenRPA.Interfaces.resources.dll" />
+				<File Id="fil797F0C60977BD6032BC2A613D743DD25" Source="!(wix.MainSource)\de\OpenRPA.resources.dll" />
+				<File Id="fil14DBE8E2B9C70D54810FE919E0752A69" Source="!(wix.MainSource)\de\OpenRPA.Windows.resources.dll" />
+				<File Id="fil9D2A1A803B60D41FC0B1B7FD67EEC9C8" Source="!(wix.MainSource)\de\Xceed.Wpf.AvalonDock.resources.dll" />
+			</Component>
+			<Component Id='mainComponentda' Win64='yes' Directory="mainda" Guid='{1D088BCA-915A-4C5A-A4D7-2CC4C201E51C}'>
+				<File Id="filA24898E5C7E8CB87CEA35187DAE669B3" Source="!(wix.MainSource)\da\OpenRPA.Interfaces.resources.dll" />
+				<File Id="fil4BE0EB83D68A5739E022CDE8B7A3D262" Source="!(wix.MainSource)\da\OpenRPA.resources.dll" />
+				<File Id="filDBB52774CBA866987F7C6B5046F7D82A" Source="!(wix.MainSource)\da\OpenRPA.Windows.resources.dll" />
+			</Component>
+			<Component Id='mainComponentes' Win64='yes' Directory="maines" Guid='{3D21139F-5E2F-41B7-AF81-86763AF93542}'>
+				<File Id="fil901A37465B4269BCE9EE3F7B1884B8FA" Source="!(wix.MainSource)\es\OpenRPA.Interfaces.resources.dll" />
+				<File Id="filDFE451954FC532AF4BBB503DD282485A" Source="!(wix.MainSource)\es\OpenRPA.resources.dll" />
+				<File Id="filA78901410E91AE56E3995ED51BBC7B53" Source="!(wix.MainSource)\es\OpenRPA.Windows.resources.dll" />
+				<File Id="filB2E79FB9BDA560198EF614222AEFD35B" Source="!(wix.MainSource)\es\Xceed.Wpf.AvalonDock.resources.dll" />
+			</Component>
+			<Component Id='mainComponentpt' Win64='yes' Directory="mainpt" Guid='{F7315FEA-84DC-485E-999A-8CD6FA8B0C0D}'>
+				<File Id="filF4BA2BA8FD71B387B8821A723886F1BF" Source="!(wix.MainSource)\pt\OpenRPA.Interfaces.resources.dll" />
+				<File Id="fil34429B66C2C40EB3EEE1D2DA86B6B5DE" Source="!(wix.MainSource)\pt\OpenRPA.resources.dll" />
+				<File Id="fil3316B9A3F177CF529C4C501F3A61AB77" Source="!(wix.MainSource)\pt\OpenRPA.Windows.resources.dll" />
+			</Component>
+			<Component Id='mainComponentro' Win64='yes' Directory="mainro" Guid='{A5C38BDE-0F0A-49B0-BFEF-964B81A02F35}'>
+				<File Id="filCB0114F5EFE192364FBA9FB7F2F0C61F" Source="!(wix.MainSource)\ro\OpenRPA.Interfaces.resources.dll" />
+				<File Id="fil36507B8C89ECB8F8BF5B934D6FA434F8" Source="!(wix.MainSource)\ro\OpenRPA.resources.dll" />
+				<File Id="filDA3067B9DC56657830C3E584F1D6B0B6" Source="!(wix.MainSource)\ro\OpenRPA.Windows.resources.dll" />
+				<File Id="fil3F9345202472B57C4B615EF270AFC9AA" Source="!(wix.MainSource)\ro\Xceed.Wpf.AvalonDock.resources.dll" />
+			</Component>
+			<Component Id='mainComponentru' Win64='yes' Directory="mainru" Guid='{28ABE303-A809-461B-9CE0-04AE18FC466E}'>
+				<File Id="fil99D92301886B43CC25CA00F3CC04DD25" Source="!(wix.MainSource)\ru\OpenRPA.Interfaces.resources.dll" />
+				<File Id="filAB7C65F71250E2651BC942C367B07E6C" Source="!(wix.MainSource)\ru\OpenRPA.resources.dll" />
+				<File Id="fil126FD8D7BC3CA134C631C10414C0844C" Source="!(wix.MainSource)\ru\OpenRPA.Windows.resources.dll" />
+				<File Id="fil746AB0109F6368FE0AE56C2FA8C44711" Source="!(wix.MainSource)\ru\Xceed.Wpf.AvalonDock.resources.dll" />
+			</Component>
+			<Component Id='mainComponentja' Win64='yes' Directory="mainja" Guid='{A0C9CC00-7B62-4296-8E8B-9F14C0BEA6B6}'>
+				<File Id="A0C9CC007B6242968E8B9F14C0BEA6B6" Source="!(wix.MainSource)\ja\OpenRPA.resources.dll" />
+				<File Id="DEB91C7224B2421EB67FE7ED8D99978A" Source="!(wix.MainSource)\ja\OpenRPA.Interfaces.resources.dll" />
+				<File Id="E4DA92091EB045328D402CA5EA4F24F7" Source="!(wix.MainSource)\ja\OpenRPA.Windows.resources.dll" />
+			</Component>
+			<Component Id='mainComponentx64' Win64='yes' Directory="mainx64" Guid='{225DF59C-8C11-4AFF-95A9-88A98A6CD576}'>
+				<!--<File Id="filB436E4594E3544C098B9943DBDC1A518" Source="!(wix.MainSource)\x64\cef.pak" />-->
+				<File Id="filCB052B4928C8DBE2730D9A211E470208" Source="!(wix.MainSource)\CefSharp.BrowserSubprocess.Core.dll" />
+				<File Id="filAD8611FDD6171BAEF79E9F9EC1705EE9" Source="!(wix.MainSource)\CefSharp.BrowserSubprocess.exe" />
+				<File Id="filC88C7623422BE649CB1D8DE7EFDA2998" Source="!(wix.MainSource)\CefSharp.Core.Runtime.dll" />
+				<!--<File Id="filC88C7623422BE649CB1D8DE7EFDA2997" Source="!(wix.MainSource)\x64\CefSharp.Core.dll" />
         <File Id="fil4C19941476E258861D238F3315543B39" Source="!(wix.MainSource)\x64\CefSharp.Core.xml" />-->
-        <File Id="filF0CF59F24A01DAE00DEA461CE18C9389" Source="!(wix.MainSource)\x64\CefSharp.dll" />
-        <!--<File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF5" Source="!(wix.MainSource)\x64\CefSharp.Wpf.dll" />
+				<File Id="filF0CF59F24A01DAE00DEA461CE18C9389" Source="!(wix.MainSource)\CefSharp.dll" />
+				<!--<File Id="filB95C83CD1FA714D6B1FEAF7CC01A5BF5" Source="!(wix.MainSource)\x64\CefSharp.Wpf.dll" />
         <File Id="fil20A7E14E1D3C37B0E54D8397517A3E73" Source="!(wix.MainSource)\x64\CefSharp.Wpf.XML" />
         <File Id="filD2AA37AE152DD56688B960E7D87291C5" Source="!(wix.MainSource)\x64\CefSharp.XML" />-->
-        <!--<File Id="fil18028080F88700FE877D5F5995B9FAAC" Source="!(wix.MainSource)\x64\cef_100_percent.pak" />
+				<!--<File Id="fil18028080F88700FE877D5F5995B9FAAC" Source="!(wix.MainSource)\x64\cef_100_percent.pak" />
         <File Id="fil86FBD9BD4053D025057804F494C3C44E" Source="!(wix.MainSource)\x64\cef_200_percent.pak" />-->
-        <File Id="fil18028080F88700FE877D5F5995B9FAAE" Source="!(wix.MainSource)\x64\chrome_100_percent.pak" />
-        <File Id="fil86FBD9BD4053D025057804F494C3C44F" Source="!(wix.MainSource)\x64\chrome_200_percent.pak" />
-        <!--<File Id="filD132C0CB08CAA3499E2E024BAF5FE50F" Source="!(wix.MainSource)\x64\cef_extensions.pak" />-->
-        <File Id="filDDDF9CCC8E330C0F855A1C50665348FD" Source="!(wix.MainSource)\x64\chrome_elf.dll" />
-        <File Id="fil1BD7CBF242A2FF3CDDABAEFD77107A5A" Source="!(wix.MainSource)\x64\d3dcompiler_47.dll" />
-        <!--<File Id="filA849CD5386108EDE5B8B3D8518EEEDB3" Source="!(wix.MainSource)\x64\devtools_resources.pak" />-->
-        <File Id="filB0AB397896475F4E74FF1B70A72D0B8B" Source="!(wix.MainSource)\x64\icudtl.dat" />
-        <File Id="fil323CAEE6BB05F64F185321F5B2E40B68" Source="!(wix.MainSource)\x64\libcef.dll" />
-        <File Id="filAD78B91DA97E98FE6AF8DD9B80F98B22" Source="!(wix.MainSource)\x64\libEGL.dll" />
-        <File Id="fil37B200E9C3DCCC4F10FC43F9BEC63A0F" Source="!(wix.MainSource)\x64\libGLESv2.dll" />
-        <!--<File Id="fil4E634A3E360C3A8A8E07F98A66B10343" Source="!(wix.MainSource)\x64\natives_blob.bin" />-->
-        <File Id="fil9ACC4265158BEE28AC5D12597C532D84" Source="!(wix.MainSource)\x64\README.txt" />
-        <File Id="filA849CD5386108EDE5B8B3D8518EEEDB4" Source="!(wix.MainSource)\x64\resources.pak" />
-        <File Id="fil171EB7F3B881DFD880449D01AB09ECA1" Source="!(wix.MainSource)\x64\snapshot_blob.bin" />
-        <File Id="fil9CFD5D2CAB69A2A827A1756C5C77ACD3" Source="!(wix.MainSource)\x64\v8_context_snapshot.bin" />
-      </Component>
-      <Component Id='mainComponentx64locales' Win64='yes' Directory="mainx64locales" Guid='{BDFFBBB0-5B79-416C-864C-771950B1A1A6}'>
-        <File Id="filEF12054F8A16DD0B055F01537814B5BE" Source="!(wix.MainSource)\x64\locales\en-US.pak" />
-      </Component>
+				<File Id="fil18028080F88700FE877D5F5995B9FAAE" Source="!(wix.MainSource)\chrome_100_percent.pak" />
+				<File Id="fil86FBD9BD4053D025057804F494C3C44F" Source="!(wix.MainSource)\chrome_200_percent.pak" />
+				<!--<File Id="filD132C0CB08CAA3499E2E024BAF5FE50F" Source="!(wix.MainSource)\x64\cef_extensions.pak" />-->
+				<File Id="filDDDF9CCC8E330C0F855A1C50665348FD" Source="!(wix.MainSource)\chrome_elf.dll" />
+				<File Id="fil1BD7CBF242A2FF3CDDABAEFD77107A5A" Source="!(wix.MainSource)\d3dcompiler_47.dll" />
+				<!--<File Id="filA849CD5386108EDE5B8B3D8518EEEDB3" Source="!(wix.MainSource)\x64\devtools_resources.pak" />-->
+				<File Id="filB0AB397896475F4E74FF1B70A72D0B8B" Source="!(wix.MainSource)\icudtl.dat" />
+				<File Id="fil323CAEE6BB05F64F185321F5B2E40B68" Source="!(wix.MainSource)\libcef.dll" />
+				<File Id="filAD78B91DA97E98FE6AF8DD9B80F98B22" Source="!(wix.MainSource)\libEGL.dll" />
+				<File Id="fil37B200E9C3DCCC4F10FC43F9BEC63A0F" Source="!(wix.MainSource)\libGLESv2.dll" />
+				<!--<File Id="fil4E634A3E360C3A8A8E07F98A66B10343" Source="!(wix.MainSource)\x64\natives_blob.bin" />-->
+				<!--<File Id="fil9ACC4265158BEE28AC5D12597C532D84" Source="!(wix.MainSource)\x64\README.txt" />-->
+				<File Id="filA849CD5386108EDE5B8B3D8518EEEDB4" Source="!(wix.MainSource)\resources.pak" />
+				<File Id="fil171EB7F3B881DFD880449D01AB09ECA1" Source="!(wix.MainSource)\snapshot_blob.bin" />
+				<File Id="fil9CFD5D2CAB69A2A827A1756C5C77ACD3" Source="!(wix.MainSource)\v8_context_snapshot.bin" />
+			</Component>
+			<Component Id='mainComponentx64locales' Win64='yes' Directory="mainx64locales" Guid='{BDFFBBB0-5B79-416C-864C-771950B1A1A6}'>
+				<File Id="filEF12054F8A16DD0B055F01537814B5BE" Source="!(wix.MainSource)\locales\en-US.pak" />
+			</Component>
 
-      <Component Id='mainComponent64swiftshader' Win64='yes' Directory="mainx64swiftshader" Guid='{C3F02B5A-0400-4E48-B59C-084F57274F53}'>
-        <File Id="filC9308A93852388F958DCE84F682053A6" Source="!(wix.MainSource)\x64\swiftshader\libEGL.dll" />
-        <File Id="fil8FF6AC89C5907A8A5363662784AB3F58" Source="!(wix.MainSource)\x64\swiftshader\libGLESv2.dll" />
-      </Component>
+			<Component Id='mainComponent64swiftshader' Win64='yes' Directory="mainx64swiftshader" Guid='{C3F02B5A-0400-4E48-B59C-084F57274F53}'>
+				<File Id="filC9308A93852388F958DCE84F682053A6" Source="!(wix.MainSource)\swiftshader\libEGL.dll" />
+				<File Id="fil8FF6AC89C5907A8A5363662784AB3F58" Source="!(wix.MainSource)\swiftshader\libGLESv2.dll" />
+			</Component>
 
-      <Component Id='mainComponentzh' Win64='yes' Directory="mainzh" Guid='{0D177985-1CD6-43C0-BB13-19209789FAF0}'>
-        <File Id="ED69C2B027A8485085512581DF0FBF1C" Source="!(wix.MainSource)\zh\OpenRPA.resources.dll" />
-        <File Id="F4BCCF92B56B4313982A0457F0DAD1A4" Source="!(wix.MainSource)\zh\OpenRPA.Interfaces.resources.dll" />
-        <File Id="BB6C4642DAAB463798B57182BC26DCA2" Source="!(wix.MainSource)\zh\OpenRPA.Windows.resources.dll" />
-      </Component>
+			<Component Id='mainComponentzh' Win64='yes' Directory="mainzh" Guid='{0D177985-1CD6-43C0-BB13-19209789FAF0}'>
+				<File Id="ED69C2B027A8485085512581DF0FBF1C" Source="!(wix.MainSource)\zh\OpenRPA.resources.dll" />
+				<File Id="F4BCCF92B56B4313982A0457F0DAD1A4" Source="!(wix.MainSource)\zh\OpenRPA.Interfaces.resources.dll" />
+				<File Id="BB6C4642DAAB463798B57182BC26DCA2" Source="!(wix.MainSource)\zh\OpenRPA.Windows.resources.dll" />
+			</Component>
 
-    </ComponentGroup>
+		</ComponentGroup>
 
-    <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="mainx64" Name="x64">
-        <Directory Id="mainx64swiftshader" Name="swiftshader" />
-        <Directory Id="mainx64locales" Name="locales" />
-      </Directory>
-      <Directory Id="mainde" Name="de">
-      </Directory>
-      <Directory Id="mainda" Name="da">
-      </Directory>
-      <Directory Id="maines" Name="es">
-      </Directory>
-      <Directory Id="mainpt" Name="pt">
-      </Directory>
-      <Directory Id="mainro" Name="ro">
-      </Directory>
-      <Directory Id="mainru" Name="ru">
-      </Directory>
-      <Directory Id="mainja" Name="ja">
-      </Directory>
-      <Directory Id="mainzh" Name="zh">
-      </Directory>
-    </DirectoryRef>
+		<DirectoryRef Id="INSTALLDIR">
+			<Directory Id="mainx64" Name="x64">
+				<Directory Id="mainx64swiftshader" Name="swiftshader" />
+				<Directory Id="mainx64locales" Name="locales" />
+			</Directory>
+			<Directory Id="mainde" Name="de">
+			</Directory>
+			<Directory Id="mainda" Name="da">
+			</Directory>
+			<Directory Id="maines" Name="es">
+			</Directory>
+			<Directory Id="mainpt" Name="pt">
+			</Directory>
+			<Directory Id="mainro" Name="ro">
+			</Directory>
+			<Directory Id="mainru" Name="ru">
+			</Directory>
+			<Directory Id="mainja" Name="ja">
+			</Directory>
+			<Directory Id="mainzh" Name="zh">
+			</Directory>
+		</DirectoryRef>
 
-  </Fragment>
+	</Fragment>
 </Wix>

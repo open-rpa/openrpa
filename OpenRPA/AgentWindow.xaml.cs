@@ -215,8 +215,15 @@ namespace OpenRPA
             InputDriver.Instance.Dispose();
             if (RobotInstance.instance.db != null)
             {
-                RobotInstance.instance.db.Dispose();
-                RobotInstance.instance.db = null;
+                try
+                {
+                    RobotInstance.instance.db.Dispose();
+                    RobotInstance.instance.db = null;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
             }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();

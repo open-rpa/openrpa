@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FreeRDP-Sharp" Version="0.1.0" />
-    <PackageReference Include="SimpleImpersonation" Version="3.0.0" />
+    <PackageReference Include="SimpleImpersonation" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />

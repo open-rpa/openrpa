@@ -1873,8 +1873,17 @@ namespace OpenRPA
                     {
                         OpenRPAMeter.CreateObservableGauge<long>("Process.PrivateWorkingSet", () =>
                         {
-                            _ = Working_Set.NextValue();
-                            return new List<Measurement<long>>() { new Measurement<long>(Working_Set.RawValue, tags) };
+                            long value = 0;
+                            try
+                            {
+                                _ = Working_Set.NextValue();
+                                value = Working_Set.RawValue;
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Verbose(ex.ToString());
+                            }
+                            return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                         });
                     }
                     if (process_cpu != null && total_cpu != null)
@@ -1883,20 +1892,43 @@ namespace OpenRPA
                         {
                             float t = total_cpu.NextValue();
                             float p = process_cpu.NextValue();
-                            return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(p / t * 100), tags) };
+                            long value = 0;
+                            try
+                            {
+                                value = Convert.ToInt64(p / t * 100);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Verbose(ex.ToString());
+                            }
+                            return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                         });
                         OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTime", () =>
                         {
-                            return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(process_cpu.NextValue()), tags) };
+                            long value = 0;
+                            try
+                            {
+                                value = Convert.ToInt64(process_cpu.NextValue());
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Verbose(ex.ToString());
+                            }
+                            return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                         });
                         OpenRPAMeter.CreateObservableGauge<long>("Process.ProcessorTimeTotal", () =>
                         {
-                            return new List<Measurement<long>>() { new Measurement<long>(Convert.ToInt64(total_cpu.NextValue()), tags) };
+                            long value = 0;
+                            try
+                            {
+                                value = Convert.ToInt64(total_cpu.NextValue());
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Verbose(ex.ToString());
+                            }
+                            return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                         });
-                    }
-                    else
-                    {
-
                     }
                     OpenRPAMeter.CreateObservableGauge("Process.PagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedSystemMemorySize64, tags) });
                     OpenRPAMeter.CreateObservableGauge("Process.NonpagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.NonpagedSystemMemorySize64, tags) });
@@ -1906,15 +1938,16 @@ namespace OpenRPA
                     openrpa_workflow_run_count = OpenRPAMeter.CreateCounter<long>("openrpa.workflow_run_count");
                     OpenRPAMeter.CreateObservableGauge<long>("openrpa.workflow_running_count", () =>
                     {
-                        int result = 0;
+                        int value = 0;
                         try
                         {
-                            result = WorkflowInstance.Instances.Where(x => x.isCompleted == false).Count();
+                            value = WorkflowInstance.Instances.Where(x => x.isCompleted == false).Count();
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            Log.Verbose(ex.ToString());
                         }
-                        return new List<Measurement<long>>() { new Measurement<long>(result, tags) };
+                        return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                     });
 
                     StatsMeterProvider = OpenTelemetry.Sdk.CreateMeterProviderBuilder()

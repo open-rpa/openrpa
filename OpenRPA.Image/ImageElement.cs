@@ -1,6 +1,10 @@
-﻿using OpenRPA.Interfaces;
+﻿using Emgu.CV;
+using Emgu.CV.Structure;
+using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -151,7 +155,8 @@ namespace OpenRPA.Image
                     _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
 
                     // OpenRPA.Interfaces.Image.Util.SaveImageStamped(element, "OCR");
-                    using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(element))
+                    BitmapData bitmapData = element.LockBits(new Rectangle(0, 0, element.Width, element.Height), ImageLockMode.ReadOnly, element.PixelFormat);
+                    using (var img = new Image<Bgr, byte>(element.Width, element.Height, bitmapData.Stride, bitmapData.Scan0))
                     {
                         return ocr.OcrImage(_ocr, img.Mat);
                     }

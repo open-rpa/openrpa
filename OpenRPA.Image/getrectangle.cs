@@ -12,6 +12,9 @@ namespace OpenRPA.Image
     using OpenRPA.Interfaces;
     using Emgu.CV;
     using FlaUI.Core.AutomationElements;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using Emgu.CV.Structure;
 
     public static class getrectangle
     {
@@ -184,7 +187,8 @@ namespace OpenRPA.Image
             //var point = new System.Drawing.Point(x - elementx, y - elementy);
             var point = new System.Drawing.Point(x, y);
 
-            var saveimage = new Image<Emgu.CV.Structure.Bgr, Byte>(desktopb);
+            BitmapData bitmapData = desktopb.LockBits(new Rectangle(0, 0, desktopb.Width, desktopb.Height), ImageLockMode.ReadOnly, desktopb.PixelFormat);
+            var saveimage = new Image<Bgr, byte>(desktopb.Width, desktopb.Height, bitmapData.Stride, bitmapData.Scan0);
             foreach (var match in con)
             {
                 saveimage.Draw(match, new Emgu.CV.Structure.Bgr(System.Drawing.Color.Red), 2);
@@ -277,7 +281,8 @@ namespace OpenRPA.Image
 
             if (rect != System.Drawing.Rectangle.Empty)
             {
-                saveimage = new Image<Emgu.CV.Structure.Bgr, Byte>(desktopb);
+                bitmapData = desktopb.LockBits(new Rectangle(0, 0, desktopb.Width, desktopb.Height), ImageLockMode.ReadOnly, desktopb.PixelFormat);
+                saveimage = new Image<Bgr, byte>(desktopb.Width, desktopb.Height, bitmapData.Stride, bitmapData.Scan0);
                 saveimage.Draw(rect, new Emgu.CV.Structure.Bgr(System.Drawing.Color.Red), 2);
                 // rpaactivities.image.util.saveImage(saveimage, "GuessContour-result");
                 saveimage.Dispose();
@@ -307,7 +312,9 @@ namespace OpenRPA.Image
             double cannyThreshold = 180.0;
             Emgu.CV.Structure.LineSegment2D[] lines;
             UMat cannyEdges = new UMat();
-            using (var img = new Image<Emgu.CV.Structure.Bgr, Byte>(bitmap))
+
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            using (var img = new Image<Bgr, byte>(bitmap.Width, bitmap.Height, bitmapData.Stride, bitmapData.Scan0))
             {
                 using (UMat uimage = new UMat())
                 {

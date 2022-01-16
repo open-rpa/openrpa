@@ -12,46 +12,12 @@ namespace OpenRPA.Image
     using Emgu.CV.Util;
     using OpenRPA.Interfaces;
     using System.Drawing;
+    using System.Drawing.Imaging;
+
     static class Matches
     {
         // https://stackoverflow.com/questions/8218997/how-to-detect-the-sun-from-the-space-sky-in-opencv/8221251#8221251
         // https://stackoverflow.com/questions/30867391/how-to-call-opencvs-matchtemplate-method-from-c-sharp
-
-
-        public static Bitmap DrawRectangle(Bitmap Source, Rectangle rect)
-        {
-            var img = new Image<Bgr, byte>(Source);
-            img.Draw(rect, new Bgr(0, 0, 255), 2);
-            return img.ToBitmap();
-        }
-
-        public static Rectangle FindMatch(Bitmap Source, Bitmap Template, double Threshold)
-        {
-            return FindMatch(new Image<Bgr, byte>(Source), new Image<Bgr, byte>(Template), Threshold);
-        }
-        public static Rectangle FindMatch(Image<Bgr, byte> Source, Image<Bgr, byte> Template, double Threshold)
-        {
-            try
-            {
-                using (Image<Gray, float> result = Source.MatchTemplate(Template, TemplateMatchingType.CcoeffNormed))
-                {
-                    double[] minValues, maxValues;
-                    Point[] minLocations, maxLocations;
-                    result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-                    // between 0.75 and 0.95 would be good.
-                    if (maxValues[0] > Threshold)
-                    {
-                        Rectangle match = new Rectangle(maxLocations[0], Template.Size);
-                        return match;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Debug(ex.ToString());
-            }
-            return Rectangle.Empty;
-        }
 
         public static Rectangle[] FindMatches(Bitmap Source, Bitmap Template, double Threshold, int maxResults, bool asGray)
         {
@@ -61,9 +27,11 @@ namespace OpenRPA.Image
                 if (Template.Height > Source.Height) throw new ArgumentException("Template is higher than the source");
                 if (asGray)
                 {
-                    using (var source = new Image<Gray, byte>(Source))
+                    BitmapData sourceBitmapData = Source.LockBits(new Rectangle(0, 0, Source.Width, Source.Height), ImageLockMode.ReadOnly, Source.PixelFormat);
+                    using (var source = new Image<Bgr, byte>(Source.Width, Source.Height, sourceBitmapData.Stride, sourceBitmapData.Scan0))
                     {
-                        using (var template = new Image<Gray, byte>(Template))
+                        BitmapData bitmapData = Template.LockBits(new Rectangle(0, 0, Template.Width, Template.Height), ImageLockMode.ReadOnly, Template.PixelFormat);
+                        using (var template = new Image<Bgr, byte>(Template.Width, Template.Height, bitmapData.Stride, bitmapData.Scan0))
                         {
                             //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
                             //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");
@@ -77,9 +45,11 @@ namespace OpenRPA.Image
                 }
                 else
                 {
-                    using (var source = new Image<Bgr, byte>(Source))
+                    BitmapData sourceBitmapData = Source.LockBits(new Rectangle(0, 0, Source.Width, Source.Height), ImageLockMode.ReadOnly, Source.PixelFormat);
+                    using (var source = new Image<Bgr, byte>(Source.Width, Source.Height, sourceBitmapData.Stride, sourceBitmapData.Scan0))
                     {
-                        using (var template = new Image<Bgr, byte>(Template))
+                        BitmapData bitmapData = Template.LockBits(new Rectangle(0, 0, Template.Width, Template.Height), ImageLockMode.ReadOnly, Template.PixelFormat);
+                        using (var template = new Image<Bgr, byte>(Template.Width, Template.Height, bitmapData.Stride, bitmapData.Scan0))
                         {
                             //Interfaces.Image.Util.SaveImageStamped(source.Bitmap, "c:\\temp", "FindMatches-source");
                             //Interfaces.Image.Util.SaveImageStamped(template.Bitmap, "c:\\temp", "FindMatches-template");

@@ -287,6 +287,8 @@ namespace OpenRPA.Interfaces
                     if (dllFile.Contains("WindowsAccessBridge-32.dll")) continue;
                     if (dllFile.Contains("WindowsAccessBridge-64.dll")) continue;
                     if (dllFile.Contains("WindowsAccessBridge.dll")) continue;
+                    if (dllFile.Contains("vk_swiftshader.dll")) continue;
+                    if (dllFile.Contains("vulkan-1.dll")) continue;
                     AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                     Assembly assembly = Assembly.Load(an);
                     // assemblies.Add(assembly);

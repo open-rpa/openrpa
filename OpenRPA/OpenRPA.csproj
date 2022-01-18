@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<!--<CefSharpTargetDir>cef</CefSharpTargetDir>-->
 		<CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net462</TargetFramework>
@@ -44,6 +45,7 @@
 		<OutputPath />
 		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
+	
 	<Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
 		<PropertyGroup>
 			<NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
@@ -60,7 +62,7 @@
 		<None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CefSharp.Wpf" Version="97.1.11" />
+		<PackageReference Include="CefSharp.Wpf" Version="92.0.260" />
 		<PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
 		<PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
 		<PackageReference Include="Grpc.Core" Version="2.43.0" />

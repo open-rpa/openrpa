@@ -32,6 +32,8 @@
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Platforms>AnyCPU;x86</Platforms>
     <Company>OpenIAP</Company>
+    <PlatformTarget>x64</PlatformTarget>
+    <BaseOutputPath>..\dist</BaseOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>
@@ -90,7 +92,7 @@
     <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EMGU.CV" Version="4.5.5.4823" />
+    <PackageReference Include="Emgu.CV" Version="4.1.1.3497" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetColorDesigner.xaml">

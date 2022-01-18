@@ -1,6 +1,4 @@
-﻿using Emgu.CV;
-using Emgu.CV.Structure;
-using OpenRPA.Interfaces;
+﻿using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Activities.Presentation.PropertyEditing;
@@ -8,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -66,8 +63,7 @@ namespace OpenRPA.Image
             {
                 sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
             }
-            BitmapData bitmapData = sourceimg.LockBits(new Rectangle(0, 0, sourceimg.Width, sourceimg.Height), ImageLockMode.ReadOnly, sourceimg.PixelFormat);
-            using (var img = new Image<Bgr, byte>(sourceimg.Width, sourceimg.Height, bitmapData.Stride, bitmapData.Scan0))
+            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
             {
                 result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
             }
@@ -111,8 +107,7 @@ namespace OpenRPA.Image
             {
                 sourceimg = Interfaces.Image.Util.Screenshot(ele.Rectangle.X, ele.Rectangle.Y, ele.Rectangle.Width, ele.Rectangle.Height);
             }
-            BitmapData bitmapData = sourceimg.LockBits(new Rectangle(0, 0, sourceimg.Width, sourceimg.Height), ImageLockMode.ReadOnly, sourceimg.PixelFormat);
-            using (var img = new Image<Bgr, byte>(sourceimg.Width, sourceimg.Height, bitmapData.Stride, bitmapData.Scan0))
+            using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(sourceimg))
             {
                 result = ocr.OcrImage2(_ocr, img.Mat, wordlimit, casesensitive);
             }

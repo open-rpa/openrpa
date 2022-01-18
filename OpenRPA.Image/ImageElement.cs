@@ -1,10 +1,6 @@
-﻿using Emgu.CV;
-using Emgu.CV.Structure;
-using OpenRPA.Interfaces;
+﻿using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +18,11 @@ namespace OpenRPA.Image
         public string Text { get; set; }
         public float Confidence { get; set; }
         private System.Drawing.Bitmap _element = null;
-        public System.Drawing.Bitmap element {
+        public System.Drawing.Bitmap element
+        {
             get
             {
-                if(_element==null)
+                if (_element == null)
                 {
                     _element = Interfaces.Image.Util.Screenshot(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                 }
@@ -71,7 +68,8 @@ namespace OpenRPA.Image
             if (AnimateMouse)
             {
                 FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY));
-            } else
+            }
+            else
             {
                 NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
             }
@@ -132,7 +130,7 @@ namespace OpenRPA.Image
         }
         public void Dispose()
         {
-            if(_element!=null) _element.Dispose();
+            if (_element != null) _element.Dispose();
         }
         private Emgu.CV.OCR.Tesseract _ocr;
         public string Value
@@ -141,7 +139,7 @@ namespace OpenRPA.Image
             {
                 try
                 {
-                    if(!string.IsNullOrEmpty(Text))
+                    if (!string.IsNullOrEmpty(Text))
                     {
                         return Text;
                     }
@@ -155,8 +153,7 @@ namespace OpenRPA.Image
                     _ocr.PageSegMode = Emgu.CV.OCR.PageSegMode.SparseText;
 
                     // OpenRPA.Interfaces.Image.Util.SaveImageStamped(element, "OCR");
-                    BitmapData bitmapData = element.LockBits(new Rectangle(0, 0, element.Width, element.Height), ImageLockMode.ReadOnly, element.PixelFormat);
-                    using (var img = new Image<Bgr, byte>(element.Width, element.Height, bitmapData.Stride, bitmapData.Scan0))
+                    using (var img = new Emgu.CV.Image<Emgu.CV.Structure.Bgr, byte>(element))
                     {
                         return ocr.OcrImage(_ocr, img.Mat);
                     }
@@ -186,7 +183,7 @@ namespace OpenRPA.Image
                 element.Save(filename);
                 return true;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }

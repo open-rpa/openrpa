@@ -525,6 +525,10 @@ namespace OpenRPA.Views
                         var f = new PackageManager(project);
                         if (RobotInstance.instance.Window is MainWindow main) f.Owner = main;
                         f.ShowDialog();
+                        if(project.isDirty)
+                        {
+                            await project.Save();
+                        }
                         if (f.NeedsReload)
                         {
                             await project.InstallDependencies(true);
@@ -545,6 +549,10 @@ namespace OpenRPA.Views
                         var f = new PackageManager(p);
                         if (RobotInstance.instance.Window is MainWindow main) f.Owner = main;
                         f.ShowDialog();
+                        if (p.isDirty)
+                        {
+                            await p.Save();
+                        }
                         if (f.NeedsReload)
                         {
                             await p.InstallDependencies(true);

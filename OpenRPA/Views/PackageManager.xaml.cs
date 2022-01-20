@@ -187,10 +187,14 @@ namespace OpenRPA.Views
                         // Request accept
                     }
                     if (project.dependencies == null) project.dependencies = new Dictionary<string, string>();
-                    project.dependencies.Remove(identity.Id);
+                    var keys = project.dependencies.Keys.ToList();
+                    foreach (var key in keys)
+                    {
+                        if (key.ToLower() == identity.Id.ToLower()) project.dependencies.Remove(key);
+                    }
                     project.dependencies.Add(identity.Id, minver.MinVersion.ToString());
                     BusyContent = "Saving current project settings";
-                    await project.Save();
+                    await project.Save<Project>(true);
                     BusyContent = "Installing NuGet Packages";
                     await project.InstallDependencies(false);
                     NeedsReload = true;
@@ -228,7 +232,11 @@ namespace OpenRPA.Views
                     var identity = new PackageIdentity(SelectedPackageItem.Id, minver.MinVersion);
 
                     if (project.dependencies == null) project.dependencies = new Dictionary<string, string>();
-                    project.dependencies.Remove(identity.Id);
+                    var keys = project.dependencies.Keys.ToList();
+                    foreach (var key in keys)
+                    {
+                        if(key.ToLower() == identity.Id.ToLower()) project.dependencies.Remove(key);
+                    }                    
                     // per project or joined ?
                     // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
                     string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
@@ -237,7 +245,7 @@ namespace OpenRPA.Views
                     NuGetPackageManager.Instance.UninstallPackage(TargetFolder, identity);
                     SelectedPackageItem.IsInstalled = false;
                     BusyContent = "Saving current project settings";
-                    await project.Save();
+                    await project.Save<Project>(true);
                     //BusyContent = "Updating NuGet Packages";
                     //await project.InstallDependencies();
                     //BusyContent = "Reloading Activities Toolbox";
@@ -248,12 +256,14 @@ namespace OpenRPA.Views
                     {
                         Config.local.files_pending_deletion = NuGetPackageManager.PendingDeletion.ToArray();
                         Config.Save();
-                        MessageBox.Show("Please restart the robot for the change to take fully effect");
+                        Log.Output("Please restart the robot for the change to take fully effect");
+                        Log.Warning("package files will be deleted next time you start the robot");
+                        // MessageBox.Show("Please restart the robot for the change to take fully effect");
                     }
                     if(SelectedPackageSource.source == null) { 
-                        SelectedPackageSource.ClearCache();
                         GenericTools.RunUI(() =>
                         {
+                            SelectedPackageSource.ClearCache();
                             FilterText = FilterText;
                         });                        
                     }

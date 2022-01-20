@@ -286,12 +286,14 @@ namespace OpenRPA
         public async Task Save()
         {
             await Save<Project>();
-            foreach (var workflow in Workflows)
+            var wfs = Workflows.ToList();
+            var dts = Detectors.ToList();
+            foreach (var workflow in wfs)
             {
                 workflow.projectid = _id;
                 await workflow.Save();
             }
-            foreach (Detector detector in Detectors)
+            foreach (Detector detector in dts)
             {
                 detector.projectid = _id;
                 await detector.Save();

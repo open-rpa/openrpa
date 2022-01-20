@@ -467,6 +467,7 @@ namespace OpenRPA
                     return;
                 }
                 Log.Debug("LoadServerData::query project versions");
+                SetStatus("query project versions");
                 var server_projects = await global.webSocketClient.Query<Project>("openrpa", "{\"_type\": 'project'}", "{\"_version\": 1}", top: Config.local.max_projects);
                 var local_projects = Projects.FindAll().ToList();
                 var reload_ids = new List<string>();
@@ -513,6 +514,7 @@ namespace OpenRPA
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " projects");
                     var q = "{ _type: 'project', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
+                    SetStatus("fetch updated " + reload_ids.Count + "projects");
                     server_projects = await global.webSocketClient.Query<Project>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_projects);
                     foreach (var p in server_projects)
                     {
@@ -548,6 +550,7 @@ namespace OpenRPA
 
                 Log.Debug("LoadServerData::query workflow versions");
                 var _q = "{ _type: 'workflow', 'projectid': {'$in': [" + string.Join(",", local_project_ids) + "]}}";
+                SetStatus("query updated workflows");
                 var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", _q, "{\"_version\": 1}", top: Config.local.max_workflows);
                 var local_workflows = Workflows.FindAll().ToList();
                 reload_ids = new List<string>();
@@ -620,6 +623,7 @@ namespace OpenRPA
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'workflow', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
                     Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " workflows");
+                    SetStatus("fetch updated " + reload_ids.Count + " workflows");
                     server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_workflows);
                     foreach (var wf in server_workflows)
                     {
@@ -653,6 +657,7 @@ namespace OpenRPA
 
 
                 Log.Debug("LoadServerData::query detector versions");
+                SetStatus("query updated detectors");
                 var server_detectors = await global.webSocketClient.Query<Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
                 var local_detectors = Detectors.FindAll().ToList();
                 reload_ids = new List<string>();
@@ -705,6 +710,7 @@ namespace OpenRPA
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'detector', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
                     Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " detectors");
+                    SetStatus("Fetch " + reload_ids.Count  + "updated detectors");
                     server_detectors = await global.webSocketClient.Query<Detector>("openrpa", q, orderby: "{\"name\":-1}");
                     foreach (var detector in server_detectors)
                     {
@@ -784,6 +790,7 @@ namespace OpenRPA
                 Log.Debug("LoadServerData::query pending workflow instances");
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                SetStatus("query idle or running openrpa_instances");
                 var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
                 var runpending = false;
                 foreach (var i in runninginstances)
@@ -1152,7 +1159,7 @@ namespace OpenRPA
                         }
                         catch (Exception ex)
                         {
-                            Hide();
+                            // Hide();
                             Log.Error(ex, "");
                             errormessage = ex.Message;
                         }

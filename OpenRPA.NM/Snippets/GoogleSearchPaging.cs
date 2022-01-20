@@ -10,11 +10,11 @@ using OpenRPA.Interfaces.entity;
 
 namespace OpenRPA.NM.Snippets
 {
-    public class FirefoxGoogleSearch : ISnippet
+    public class GoogleSearchPaging : ISnippet
     {
-        public string Name => "Firefox Google Search";
+        public string Name => "Google Search Pagination";
         public string Category => "NM";
-        public string Xaml => Extensions.ResourceAsString(typeof(GoogleSearch), "FirefoxGoogleSearch.xaml");
+        public string Xaml => Extensions.ResourceAsString(typeof(GoogleSearch), "GoogleSearchPaging.xaml");
         public snippet Snippet { get; set; }
     }
 }

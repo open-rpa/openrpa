@@ -85,8 +85,8 @@
     <None Remove="Resources\designer\gethtmlelement.png" />
     <None Remove="Resources\toolbox\detector.png" />
     <None Remove="Resources\toolbox\gethtmlelement.png" />
-    <None Remove="Snippets\ChromeGoogleSearch.xaml" />
-    <None Remove="Snippets\FirefoxGoogleSearch.xaml" />
+    <None Remove="Snippets\GoogleSearch.xaml" />
+    <None Remove="Snippets\GoogleSearchPaging.xaml" />
     <None Remove="Views\DownloadDetectorView.xaml" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
@@ -144,12 +144,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gethtmlelement.png" />
-    <Resource Include="Snippets\FirefoxGoogleSearch.xaml">
+    <Resource Include="Snippets\GoogleSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <Resource Include="Snippets\ChromeGoogleSearch.xaml">
-      <SubType>Designer</SubType>
+    <Resource Include="Snippets\GoogleSearchPaging.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Resource>
   </ItemGroup>

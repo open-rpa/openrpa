@@ -1902,7 +1902,7 @@ namespace OpenRPA
                             long value = 0;
                             try
                             {
-                                value = Convert.ToInt64(p / t * 100);
+                                if(t > 0) value = Convert.ToInt64(p / t * 100);
                             }
                             catch (Exception ex)
                             {

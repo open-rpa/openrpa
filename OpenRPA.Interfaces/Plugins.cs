@@ -242,6 +242,8 @@ namespace OpenRPA.Interfaces
             {
                 foreach (var path in System.IO.Directory.GetFiles(projectsDirectory, "*.dll")) dllFileNames.Add(path);
             }
+            var extensions = System.IO.Path.Combine(Extensions.ProjectsDirectory, "extensions");
+            foreach (var path in System.IO.Directory.GetFiles(extensions, "*.dll")) dllFileNames.Add(path);
             
             // ICollection<Assembly> assemblies = new List<Assembly>();
             foreach (string dllFile in dllFileNames)

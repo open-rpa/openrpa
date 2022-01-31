@@ -388,7 +388,7 @@ namespace OpenRPA.NM
                         data = "innerhtml"
                     };
                     NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, PluginConfig.protocol_timeout);
-                    if (subsubresult == null) throw new Exception("Failed clicking html element");
+                    if (subsubresult == null) throw new Exception("Failed locating element again (zn_id " + zn_id + ")");
                     parseChromeString(subsubresult.result.ToString());
                     if (Attributes.ContainsKey("innerhtml"))
                     {

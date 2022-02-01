@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "OpenRPA.SAPBridge": {
+      "commandName": "Project"
+    },
+    "TTTTT": {
+      "commandName": "Executable",
+      "executablePath": "C:\\code\\OpenRPA\\dist\\net462\\OpenRPA.SAPBridge.exe",
+      "workingDirectory": "C:\\code\\OpenRPA\\dist\\net462\\"
+    }
+  }
+}

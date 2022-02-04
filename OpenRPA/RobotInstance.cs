@@ -1728,7 +1728,7 @@ namespace OpenRPA
                 var IsChildSessionsEnabled = false;
                 try
                 {
-                    IsChildSessionsEnabled = Interfaces.win32.ChildSession.IsChildSessionsEnabled()
+                    IsChildSessionsEnabled = Interfaces.win32.ChildSession.IsChildSessionsEnabled();
                 }
                 catch (Exception)
                 {

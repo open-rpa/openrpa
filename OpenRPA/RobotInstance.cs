@@ -100,9 +100,16 @@ namespace OpenRPA
                     );
 
                     var connecttype = "";
-                    if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                    try
                     {
-                        connecttype = ";connection=shared";
+                        if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                        {
+                            connecttype = ";connection=shared";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.Message);
                     }
                     var dbfilename = "offline.db";
                     var logfilename = "offline-log.db";
@@ -1718,7 +1725,15 @@ namespace OpenRPA
             {
                 bool registerqueues = true;
                 Interfaces.entity.TokenUser user = global.webSocketClient.user;
-                if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                var IsChildSessionsEnabled = false;
+                try
+                {
+                    IsChildSessionsEnabled = Interfaces.win32.ChildSession.IsChildSessionsEnabled()
+                }
+                catch (Exception)
+                {
+                }
+                if (IsChildSessionsEnabled)
                 {
                     var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
                     var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);

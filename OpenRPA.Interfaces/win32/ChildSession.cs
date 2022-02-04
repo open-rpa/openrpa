@@ -18,7 +18,7 @@ namespace OpenRPA.Interfaces.win32
             }
             catch (Exception exception)
             {
-                throw new InvalidOperationException("Failed to enable child session. Are you using Windows Server 2012/Windows 8 or newer?", exception);
+                throw new InvalidOperationException("Failed to checking for child session. Are you using Windows Server 2012/Windows 8 or newer?", exception);
             }
             return res;
         }

@@ -822,7 +822,15 @@ namespace OpenRPA
         {
             get
             {
-                return Interfaces.win32.ChildSession.IsChildSessionsEnabled();
+                try
+                {
+                    return Interfaces.win32.ChildSession.IsChildSessionsEnabled();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString());
+                }
+                return false;
             }
             set
             {

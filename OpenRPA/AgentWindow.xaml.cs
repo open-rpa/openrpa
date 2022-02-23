@@ -465,7 +465,6 @@ namespace OpenRPA
         {
             try
             {
-                RobotInstance.instance.autoReconnect = true;
                 var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                 foreach (var document in ld)
                 {

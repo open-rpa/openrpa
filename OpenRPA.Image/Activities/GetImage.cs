@@ -65,10 +65,12 @@ namespace OpenRPA.Image
                 {
                     var _element = AutomationHelper.GetFromPoint(match.X, match.Y);
                     if (_element.ProcessId < 1) throw new ElementNotFoundException("Failed locating Image, expected " + processname + " but found nothing");
-                    var p = System.Diagnostics.Process.GetProcessById(_element.ProcessId);
-                    if (p.ProcessName != processname)
+                    using (var p = System.Diagnostics.Process.GetProcessById(_element.ProcessId))
                     {
-                        throw new ElementNotFoundException("Failed locating Image, expected " + processname + " but found " + p.ProcessName);
+                        if (p.ProcessName != processname)
+                        {
+                            throw new ElementNotFoundException("Failed locating Image, expected " + processname + " but found " + p.ProcessName);
+                        }
                     }
                 }
             }

@@ -145,8 +145,8 @@ namespace OpenRPA.SAP
             if (e.UIElement == null) { Log.Output("UIElement is null"); return false; }
             if (e.UIElement.ProcessId > 0)
             {
-                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "saplogon") { Log.Output("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
+                using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+                    if (p.ProcessName.ToLower() != "saplogon") { Log.Output("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
             }
             else
             {
@@ -222,8 +222,8 @@ namespace OpenRPA.SAP
             if (e.UIElement.ProcessId < 1) return false;
             if (e.UIElement.ProcessId != lastid)
             {
-                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName.ToLower() != "saplogon") return false;
+                using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+                    if (p.ProcessName.ToLower() != "saplogon") return false;
                 lastid = e.UIElement.ProcessId;
             }
             e.Element = SAPhook.Instance.LastElement;

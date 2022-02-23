@@ -185,7 +185,6 @@ namespace OpenRPA
             }
         }
         public string robotqueue = "";
-        public bool autoReconnect = true;
         public bool loginInProgress = false;
         private bool first_connect = true;
         private int connect_attempts = 0;
@@ -312,41 +311,6 @@ namespace OpenRPA
                         if (i.Workflow != null) i.Workflow.NotifyUIState();
                     }
                 }
-                //if (global.webSocketClient == null || global.webSocketClient.ws == null || global.webSocketClient.ws.State != System.Net.WebSockets.WebSocketState.Open) return;
-                //if (global.webSocketClient.user == null) return;
-                //List<WorkflowInstance> wfinstances = null;
-                //lock (WorkflowInstance.Instances) wfinstances = instance.dbWorkflowInstances.Find(x => x.isDirty).ToList();
-                //if (wfinstances.Count > 0)
-                //{
-                //    Log.Debug("UnsavedTimer processing " + wfinstances.Count + " items");
-                //    foreach (var entity in wfinstances)
-                //    {
-                //        try
-                //        {
-                //            var exists = WorkflowInstance.Instances.Where(x => x.InstanceId == entity.InstanceId && !string.IsNullOrEmpty(entity.InstanceId)).FirstOrDefault();
-                //            if (exists != null)
-                //            {
-                //                entity.state = exists.state;
-                //            }
-                //            entity.isDirty = true;
-                //            await entity.Save<WorkflowInstance>();
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            Log.Error(ex.ToString());
-                //        }
-                //    }
-                //    lock (WorkflowInstance.Instances)
-                //    {
-                //        int Deleted = instance.dbWorkflowInstances.DeleteMany(x => x.isDirty == false && x.isCompleted && x._modified < DateTime.Now.AddMinutes(-15));
-                //        if (Deleted > 0) Log.Debug("UnsavedTimer_Elapsed::maintenance deleted " + Deleted + " workflow instances");
-                //    }
-                //}
-                //else
-                //{
-                //    unsavedTimer.Interval += 5000;
-                //    if (unsavedTimer.Interval > 60000 * 2) unsavedTimer.Interval = 60000 * 2;
-                //}
             }
             catch (Exception ex)
             {
@@ -463,7 +427,6 @@ namespace OpenRPA
         public async Task LoadServerData()
         {
             Log.Debug("LoadServerData::begin");
-            DisableWatch = true;
             Window.IsLoading = true;
             try
             {
@@ -717,7 +680,7 @@ namespace OpenRPA
                     for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
                     var q = "{ _type: 'detector', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
                     Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " detectors");
-                    SetStatus("Fetch " + reload_ids.Count  + "updated detectors");
+                    SetStatus("Fetch " + reload_ids.Count + "updated detectors");
                     server_detectors = await global.webSocketClient.Query<Detector>("openrpa", q, orderby: "{\"name\":-1}");
                     foreach (var detector in server_detectors)
                     {
@@ -908,14 +871,11 @@ namespace OpenRPA
                     SetStatus("Offline");
                 }
                 AutoReloading = true;
-                Log.Debug("LoadServerData::DisableWatch false");
-                DisableWatch = false;
                 Window.IsLoading = false;
                 Window.OnOpen(null);
                 Log.Debug("LoadServerData::end");
             }
         }
-        private string openrpa_watchid = "";
         private void SetStatus(string message)
         {
             Log.FunctionIndent("RobotInstance", "SetStatus", "Status?.Invoke");
@@ -978,7 +938,7 @@ namespace OpenRPA
                     global.webSocketClient.OnQueueClosed += WebSocketClient_OnQueueClosed;
                     global.webSocketClient.OnQueueMessage += WebSocketClient_OnQueueMessage;
                     SetStatus("Connecting to " + Config.local.wsurl);
-                    _ = global.webSocketClient.Connect();
+                    await Connect();
                 }
                 else
                 {
@@ -1359,11 +1319,7 @@ namespace OpenRPA
             {
                 if (global.openflowconfig != null && global.openflowconfig.supports_watch)
                 {
-                    if (string.IsNullOrEmpty(openrpa_watchid))
-                    {
-                        // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'$exists': true} } }]", onWatchEvent);
-                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
-                    }
+                    await global.webSocketClient.Watch("openrpa", "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
                 }
                 _ = LoadServerData();
             }
@@ -1381,7 +1337,6 @@ namespace OpenRPA
                 Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
                 if (global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
                 SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
-                openrpa_watchid = null;
                 try
                 {
                     Disconnected?.Invoke();
@@ -1429,33 +1384,25 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
+            _ = Connect();
+            Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnClose");
+        }
+        async internal Task Connect()
+        {
             try
             {
                 await Task.Delay(ReconnectDelay);
                 ReconnectDelay += 5000;
                 if (ReconnectDelay > 60000 * 2) ReconnectDelay = 60000 * 2;
-                if (autoReconnect)
-                {
-                    try
-                    {
-                        connect_attempts++;
-                        autoReconnect = false;
-                        SetStatus("Connecting to " + Config.local.wsurl);
-                        await global.webSocketClient.Connect();
-                        autoReconnect = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                    }
-                }
-
+                connect_attempts++;
+                SetStatus("Connecting to " + Config.local.wsurl);
+                await global.webSocketClient.Connect();
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+                _ = Connect();
             }
-            Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnClose");
         }
         private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
@@ -1705,7 +1652,7 @@ namespace OpenRPA
             }
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnQueueMessage");
         }
-        private async void WebSocketClient_OnQueueClosed(IQueueClosedMessage message, QueueMessageEventArgs e)
+        protected internal async void WebSocketClient_OnQueueClosed(IQueueClosedMessage message, QueueMessageEventArgs e)
         {
             await Task.Delay(5000);
             await RegisterQueues();
@@ -1917,7 +1864,7 @@ namespace OpenRPA
                             long value = 0;
                             try
                             {
-                                if(t > 0) value = Convert.ToInt64(p / t * 100);
+                                if (t > 0) value = Convert.ToInt64(p / t * 100);
                             }
                             catch (Exception ex)
                             {
@@ -1992,52 +1939,15 @@ namespace OpenRPA
             }
             return false;
         }
-        //private async void metricTime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        //{
-        ////public static Prometheus.Client.Abstractions.IGauge mem_used = factory.CreateGauge("openrpa_memory_size_used_bytes", "Amount of heap memory usage for OpenRPA client");
-        ////public static Prometheus.Client.Abstractions.IGauge mem_total = factory.CreateGauge("openrpa_memory_size_total_bytes", "Amount of heap memory usage for OpenRPA client");
-        //metricTime.Stop();
-        //    try
-        //    {
-        //        if (global.webSocketClient != null && global.webSocketClient.user != null)
-        //        {
-        //            //mem_used.Set(mem_used_counter.NextValue());
-        //            //// mem_total.Set(mem_total_counter.NextValue());
-        //            //using (var memoryStream = await Prometheus.Client.ScrapeHandler.ProcessAsync(registry))
-        //            //{
-        //            //    var result = System.Text.Encoding.ASCII.GetString(memoryStream.ToArray());
-        //            //    if (last_metric != result)
-        //            //    {
-        //            //        await global.webSocketClient.PushMetrics(result);
-        //            //        last_metric = result;
-        //            //    }
-        //            //}
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if(ex.Message == "server error: Unknown command error")
-        //        {
-        //            return;
-        //        }
-        //        Log.Error(ex.ToString());
-        //    }
-        //    metricTime.Start();
-        //}
-        public bool DisableWatch = false;
         private async void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
         {
             try
             {
                 string _type = data["fullDocument"].Value<string>("_type");
                 string _id = data["fullDocument"].Value<string>("_id");
-                if (DisableWatch)
-                {
-                    Log.Debug("onWatchEvent: " + _type + " with id " + _id + " was updated, ignoring due to DisableWatch is true");
-                    return;
-                }
-                long _version = data["fullDocument"].Value<long>("_version");
                 string operationType = data.Value<string>("operationType");
+                Log.Debug("WatchEvent: " + _type + " with id " + _id + " operation: " + operationType);
+                long _version = data["fullDocument"].Value<long>("_version");
                 if (operationType != "replace" && operationType != "insert" && operationType != "update" && operationType != "delete") return;
                 if (_type == "workflow")
                 {

@@ -474,10 +474,12 @@ namespace OpenRPA.Interfaces
             try
             {
                 processId = element.Properties.ProcessId.Value;
-                var p = System.Diagnostics.Process.GetProcessById(processId);
-                handle = p.Handle;
-                result.ProcessName = p.ProcessName;
-                result.Filename = p.MainModule.FileName.ReplaceEnvironmentVariable();
+                using (var p = System.Diagnostics.Process.GetProcessById(processId))
+                {
+                    handle = p.Handle;
+                    result.ProcessName = p.ProcessName;
+                    result.Filename = p.MainModule.FileName.ReplaceEnvironmentVariable();
+                }
             }
             catch (Exception)
             {

@@ -13,7 +13,6 @@ namespace OpenRPA
         private static object savelock = new object();
         public async Task Save<T>(bool skipOnline = false) where T : apibase
         {
-            bool wasDisableWatch = RobotInstance.instance.DisableWatch;
             try
             {
                 _backingFieldValues["_disabledirty"] = true;
@@ -52,9 +51,6 @@ namespace OpenRPA
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {
-                        wasDisableWatch = RobotInstance.instance.DisableWatch;
-                        Log.Debug("Save::DisableWatch true");
-                        RobotInstance.instance.DisableWatch = true;
                         var result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
                         isLocalOnly = false;
                         isDirty = false;
@@ -75,9 +71,6 @@ namespace OpenRPA
                             entity._version++; // Add one to avoid watch update
                             try
                             {
-                                wasDisableWatch = RobotInstance.instance.DisableWatch;
-                                Log.Debug("Save::DisableWatch true");
-                                RobotInstance.instance.DisableWatch = true;
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
@@ -118,8 +111,6 @@ namespace OpenRPA
             finally
             {
                 _backingFieldValues.Remove("_disabledirty");
-                Log.Debug("Save::DisableWatch " + wasDisableWatch);
-                RobotInstance.instance.DisableWatch = wasDisableWatch;
             }
         }
         public async Task Delete<T>() where T : apibase

@@ -101,8 +101,10 @@ namespace OpenRPA.IE
                     Button = e.Button
                 }; var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
 
-                var p = System.Diagnostics.Process.GetProcessById(e.Element.ProcessId);
-                if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return;
+                using (var p = System.Diagnostics.Process.GetProcessById(e.Element.ProcessId))
+                {
+                    if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return;
+                }
 
                 var browser = new Browser();
                 var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -163,8 +165,10 @@ namespace OpenRPA.IE
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
+            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+            {
+                if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
+            }
             var browser = new Browser();
 
             var htmlelement = browser.ElementFromPoint(e.X, e.Y);
@@ -334,8 +338,10 @@ namespace OpenRPA.IE
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
+            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+            {
+                if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
+            }
             return true;
         }
         void IRecordPlugin.StatusTextMouseUp()

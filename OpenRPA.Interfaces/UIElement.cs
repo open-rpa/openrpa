@@ -181,8 +181,8 @@ namespace OpenRPA
         private void UntilResponsive()
         {
             if (ProcessId <= 0) return;
-            var process = System.Diagnostics.Process.GetProcessById(ProcessId);
-            while (!process.Responding) { }
+            using (var process = System.Diagnostics.Process.GetProcessById(ProcessId))
+                while (!process.Responding) { }
         }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {

@@ -117,11 +117,13 @@ namespace OpenRPA.Interfaces
                     if (current.Properties.ProcessId.IsSupported)
                     {
                         var ProcessId = automation.FocusedElement().Properties.ProcessId.Value;
-                        var p = System.Diagnostics.Process.GetProcessById(automation.FocusedElement().Properties.ProcessId.Value);
-                        if (!PatternMatcher.FitsMask(p.ProcessName.ToLower(), Processname.ToLower()))
+                        using (var p = System.Diagnostics.Process.GetProcessById(automation.FocusedElement().Properties.ProcessId.Value))
                         {
-                            Log.Information("KeyboardDetector skipped, expected " + Processname + ", but got " + p.ProcessName);
-                            return;
+                            if (!PatternMatcher.FitsMask(p.ProcessName.ToLower(), Processname.ToLower()))
+                            {
+                                Log.Information("KeyboardDetector skipped, expected " + Processname + ", but got " + p.ProcessName);
+                                return;
+                            }
                         }
                     }
                 }

@@ -151,15 +151,17 @@ namespace OpenRPA.SAPBridge
                     }
                     if (SAPProcessId != ProcessId)
                     {
-                        var p = System.Diagnostics.Process.GetProcessById(ProcessId);
-                        if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
-                        if (p.ProcessName.ToLower() != "saplogon")
+                        using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
                         {
-                            lock (_lock)
+                            if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
+                            if (p.ProcessName.ToLower() != "saplogon")
                             {
-                                isMoving = false;
+                                lock (_lock)
+                                {
+                                    isMoving = false;
+                                }
+                                return;
                             }
-                            return;
                         }
                     }
                     if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
@@ -237,9 +239,11 @@ namespace OpenRPA.SAPBridge
                     if (SAPProcessId > 0 && SAPProcessId != ProcessId) return;
                     if (SAPProcessId != ProcessId)
                     {
-                        var p = System.Diagnostics.Process.GetProcessById(ProcessId);
-                        if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
-                        if (p.ProcessName.ToLower() != "saplogon") return;
+                        using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
+                        {
+                            if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
+                            if (p.ProcessName.ToLower() != "saplogon") return;
+                        }
                     }
                     SAPEventElement[] elements = new SAPEventElement[] { };
                     lock (SAPHook.Instance.UIElements)

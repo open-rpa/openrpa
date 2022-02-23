@@ -458,8 +458,8 @@ namespace OpenRPA.Windows
                     if (element.Properties.ProcessId.IsSupported)
                     {
                         var processid = element.Properties.ProcessId.Value;
-                        var Process = System.Diagnostics.Process.GetProcessById(processid);
-                        Process.Kill();
+                        using (var Process = System.Diagnostics.Process.GetProcessById(processid))
+                            Process.Kill();
                     }
                 }
             }

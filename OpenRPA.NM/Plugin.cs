@@ -314,16 +314,16 @@ namespace OpenRPA.NM
                     System.Windows.MessageBox.Show("You clicked inside Firefix, but it looks like you dont have the OpenRPA plugin installed");
                     return false;
                 }
-            }
-            if (LastElement == null) return false;
-            if (LastElement.message == null) return false;
-            if (LastElement.message.tab == null)
-            {
-                LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
-            }
-            if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
-            {
-                // if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
+                if (LastElement == null) return false;
+                if (LastElement.message == null) return false;
+                if (LastElement.message.tab == null)
+                {
+                    LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
+                }
+                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
+                {
+                    // if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
+                }
             }
             var selector = new NMSelector(LastElement, null, true, null);
             var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };

@@ -13,10 +13,12 @@ namespace OpenRPA
         {
             _type = "detector";
             Properties = new Dictionary<string, object>();
+            detectortype = "exchange";
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string detectortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public async Task Save()
         {
             await Save<Detector>();
@@ -44,6 +46,10 @@ namespace OpenRPA
             }
             dp.OnDetector -= RobotInstance.instance.Window.OnDetector;
             dp.OnDetector += RobotInstance.instance.Window.OnDetector;
+            if(dp.Entity != null && dp.Entity.detectortype == "exchange" && !string.IsNullOrEmpty(dp.Entity._id))
+            {
+                global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false);
+            }
             dp.Start();
         }
         public void Stop()

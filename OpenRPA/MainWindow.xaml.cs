@@ -3377,7 +3377,14 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0);
+                        if (plugin.Entity.detectortype == "exchange")
+                        {
+                            await global.webSocketClient.QueueMessage(Entity._id, "", command, null, null, 0);
+                        }
+                        else
+                        {
+                            await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0);
+                        }
                     }
                     catch (Exception ex)
                     {

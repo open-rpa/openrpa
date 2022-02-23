@@ -797,6 +797,52 @@ namespace OpenRPA.Net
             {
             }
         }
+        public async Task<string> RegisterExchange(string exchangename, string algorithm, bool addqueue)
+        {
+            try
+            {
+                RegisterExchangeMessage RegisterExchange = new RegisterExchangeMessage(exchangename, algorithm);
+                RegisterExchange.addqueue = addqueue;
+                RegisterExchange = await RegisterExchange.SendMessage<RegisterExchangeMessage>(this);
+                if (!string.IsNullOrEmpty(RegisterExchange.error)) throw new SocketException(RegisterExchange.error);
+                return RegisterExchange.queuename;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+        }
+        public async Task<string> RegisterExchange(string exchangename, string algorithm, string routingkey, bool addqueue)
+        {
+            try
+            {
+                RegisterExchangeMessage RegisterExchange = new RegisterExchangeMessage(exchangename, algorithm);
+                RegisterExchange.routingkey = routingkey; RegisterExchange.addqueue = addqueue;
+                RegisterExchange = await RegisterExchange.SendMessage<RegisterExchangeMessage>(this);
+                if (!string.IsNullOrEmpty(RegisterExchange.error)) throw new SocketException(RegisterExchange.error);
+                return RegisterExchange.queuename;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+            }
+        }
+        public async Task<object> QueueMessage(string exchange, string routingkey, object data, string replyto, string correlationId, int expiration)
+        {
+            QueueMessage qm = new QueueMessage();
+            qm.expiration = expiration; qm.exchange = exchange; qm.routingkey = routingkey; 
+            qm.data = data; qm.replyto = replyto;
+            qm.correlationId = correlationId;
+            qm = await qm.SendMessage<QueueMessage>(this);
+            if (!string.IsNullOrEmpty(qm.error)) throw new SocketException(qm.error);
+            return qm.data;
+        }
         public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration)
         {
             QueueMessage qm = new QueueMessage(queuename);

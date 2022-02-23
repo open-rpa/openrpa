@@ -11,6 +11,7 @@ namespace OpenRPA.Interfaces
     {
         string Plugin { get; set; }
         string projectid { get; set; }
+        string detectortype { get; set; }
         Dictionary<string, object> Properties { get; set; }
     }
 }

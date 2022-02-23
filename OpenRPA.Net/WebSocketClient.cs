@@ -264,7 +264,7 @@ namespace OpenRPA.Net
                     else
                     {
                         if (!string.IsNullOrEmpty(json)) Log.Error(json);
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                         await Task.Delay(3000);
                         await this.Close();
                     }
@@ -279,7 +279,7 @@ namespace OpenRPA.Net
                     else
                     {
                         if (!string.IsNullOrEmpty(json)) Log.Error(json);
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                         await Task.Delay(3000);
                         //await this.Close();
                     }
@@ -385,12 +385,15 @@ namespace OpenRPA.Net
             }
             catch (WebSocketException ex)
             {
-                Log.Error(ex, "");
-                _ = Close();
+                if(ws.State != WebSocketState.Open)
+                {
+                    Log.Error(ex.ToString());
+                    _ = Close();
+                }
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
             }
             finally
             {

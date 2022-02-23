@@ -1424,7 +1424,7 @@ namespace OpenRPA
                     _d.isDirty = true;
                     _d.projectid = p._id;
                     await _d.Save();
-                    _d.Start();
+                    _d.Start(true);
                     OpenProject.UpdateProjectsList(false, true);
                     return;
                 }

@@ -107,7 +107,7 @@ namespace OpenRPA.Views
                     d.isDirty = true;
                     d.isLocalOnly = true;
                 }
-                d.Start();
+                d.Start(true);
                 updateUIList = true;
                 var dexists = RobotInstance.instance.Detectors.FindById(d._id);
                 if (dexists == null) RobotInstance.instance.Detectors.Insert(d);

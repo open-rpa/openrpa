@@ -32,7 +32,7 @@ namespace OpenRPA
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
             System.IO.File.WriteAllText(filepath, json);
         }
-        public void Start()
+        public void Start(bool doRegisterExchange)
         {
             IDetectorPlugin dp = Plugins.detectorPlugins.Where(x => x.Entity._id == _id).FirstOrDefault();
             if (dp == null)
@@ -44,13 +44,29 @@ namespace OpenRPA
                     return;
                 }
             }
-            dp.OnDetector -= RobotInstance.instance.Window.OnDetector;
-            dp.OnDetector += RobotInstance.instance.Window.OnDetector;
-            if(dp.Entity != null && dp.Entity.detectortype == "exchange" && !string.IsNullOrEmpty(dp.Entity._id))
+            if(doRegisterExchange) _ = RegisterExchange();
+            if(RobotInstance.instance != null && RobotInstance.instance.Window != null)
             {
-                global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false);
+                dp.OnDetector -= RobotInstance.instance.Window.OnDetector;
+                dp.OnDetector += RobotInstance.instance.Window.OnDetector;
+            } else
+            {
+                Log.Error("Failed registering detector event sink for " + name + " main window not loaded yet !!!!!");
             }
             dp.Start();
+        }
+        async public Task RegisterExchange()
+        {
+            Log.Output("Register Exchange for " + name);
+            IDetectorPlugin dp = Plugins.detectorPlugins.Where(x => x.Entity._id == _id).FirstOrDefault();
+            if (dp == null) return;
+            if (global.webSocketClient.isConnected)
+            {
+                if (dp.Entity != null && dp.Entity.detectortype == "exchange" && !string.IsNullOrEmpty(dp.Entity._id))
+                {
+                    await global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false);
+                }
+            }
         }
         public void Stop()
         {
@@ -66,7 +82,7 @@ namespace OpenRPA
         {
             Stop();
             Plugins.UpdateDetector(RobotInstance.instance, this);
-            Start();
+            Start(true);
         }
         public override string ToString()
         {

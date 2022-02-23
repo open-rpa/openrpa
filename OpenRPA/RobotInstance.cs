@@ -342,7 +342,7 @@ namespace OpenRPA
                 var filename = IDOrRelativeFilename.ToLower().Replace("\\", "/");
                 if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0)
                 {
-                    foreach (var p in Views.OpenProject.Instance.Projects)
+                    foreach (var p in Views.OpenProject.Instance.Projects.ToList())
                     {
                         result = p.Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
                         if (result != null) return result;
@@ -696,7 +696,7 @@ namespace OpenRPA
                             else if (exists == null)
                             {
                                 Log.Debug("LoadServerData::Adding detector " + detector.name);
-                                detector.Start();
+                                detector.Start(true);
                             }
                             var dexists = Detectors.FindById(detector._id);
                             if (dexists == null)
@@ -1033,7 +1033,7 @@ namespace OpenRPA
                 foreach (var d in _detectors)
                 {
                     Log.Debug("Loading detector " + d.name);
-                    d.Start();
+                    d.Start(false);
                 }
             }
         }
@@ -1270,7 +1270,14 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            CreateMainWindow();
+            try
+            {
+                CreateMainWindow();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }            
             GenericTools.RunUI(() =>
             {
                 if (App.splash != null)
@@ -1322,6 +1329,18 @@ namespace OpenRPA
                     await global.webSocketClient.Watch("openrpa", "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
                 }
                 _ = LoadServerData();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            try
+            {
+                foreach(var d in Plugins.detectorPlugins)
+                {
+                    var _d = d.Entity as Detector;
+                    await _d.RegisterExchange();
+                }
             }
             catch (Exception ex)
             {
@@ -1724,17 +1743,17 @@ namespace OpenRPA
                     SetStatus("Registering queues");
                     Log.Debug("Registering queue for robot " + user._id);
                     robotqueue = await global.webSocketClient.RegisterQueue(user._id);
-
-                    foreach (var role in global.webSocketClient.user.roles)
-                    {
-                        var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
-                        if (roles.Length == 1 && roles[0].rparole)
+                    if(global.webSocketClient.user != null)
+                        foreach (var role in global.webSocketClient.user.roles)
                         {
-                            SetStatus("Add queue " + role.name);
-                            Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
-                            await global.webSocketClient.RegisterQueue(role._id);
+                            var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
+                            if (roles.Length == 1 && roles[0].rparole)
+                            {
+                                SetStatus("Add queue " + role.name);
+                                Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
+                                await global.webSocketClient.RegisterQueue(role._id);
+                            }
                         }
-                    }
                 }
             }
             catch (Exception)
@@ -2043,7 +2062,7 @@ namespace OpenRPA
                             }
                             else if (exists == null)
                             {
-                                d.Start();
+                                d.Start(true);
                             }
                             var dexists = Detectors.FindById(d._id);
                             if (dexists == null) Detectors.Insert(d);

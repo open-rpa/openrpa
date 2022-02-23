@@ -669,7 +669,7 @@ namespace OpenRPA.Views
                             d.isDirty = true;
                             d._acl = p._acl;
                             await d.Save();
-                            d.Start();
+                            d.Start(true);
                         }
                         UpdateProjectsList(false, true);
                     }
@@ -783,7 +783,7 @@ namespace OpenRPA.Views
                             if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
                             _d.projectid = p._id;
                             await _d.Save();
-                            _d.Start();
+                            _d.Start(true);
                             UpdateProjectsList(false, true);
                         }
                     }

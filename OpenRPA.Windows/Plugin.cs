@@ -150,7 +150,7 @@ namespace OpenRPA.Windows
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                     }
                     lock (_lock)
                     {
@@ -175,7 +175,7 @@ namespace OpenRPA.Windows
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                 }
             }));
             thread.IsBackground = true;
@@ -278,11 +278,11 @@ namespace OpenRPA.Windows
                         }
                         catch (System.Threading.ThreadAbortException ex)
                         {
-                            Log.Error(ex, "");
+                            Log.Error(ex.ToString());
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex, "");
+                            Log.Error(ex.ToString());
                         }
                         return new UIElement[] { };
                     }, TimeSpan.FromMilliseconds(5000)).Result;
@@ -372,11 +372,11 @@ namespace OpenRPA.Windows
                         }
                         catch (System.Threading.ThreadAbortException ex)
                         {
-                            Log.Error(ex, "");
+                            Log.Error(ex.ToString());
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex, "");
+                            Log.Error(ex.ToString());
                         }
                         return new UIElement[] { };
                     }, TimeSpan.FromMilliseconds(5000)).Result;
@@ -424,7 +424,7 @@ namespace OpenRPA.Windows
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                     }
                     return new UIElement[] { };
                 }, TimeSpan.FromMilliseconds(5000)).Result;

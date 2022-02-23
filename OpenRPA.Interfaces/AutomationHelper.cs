@@ -48,7 +48,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     tcs.TrySetException(ex);
                 }
             }));
@@ -77,7 +77,7 @@ namespace OpenRPA
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                     }
                     try
                     {
@@ -96,13 +96,13 @@ namespace OpenRPA
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
             }
             return null;
         }

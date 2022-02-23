@@ -858,7 +858,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
             }
             finally
             {
@@ -1104,7 +1104,7 @@ namespace OpenRPA
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex, "");
+                            Log.Error(ex.ToString());
                             errormessage = ex.Message;
                         }
                     }
@@ -1127,7 +1127,7 @@ namespace OpenRPA
                         catch (Exception ex)
                         {
                             // Hide();
-                            Log.Error(ex, "");
+                            Log.Error(ex.ToString());
                             errormessage = ex.Message;
                         }
                     }
@@ -1152,7 +1152,7 @@ namespace OpenRPA
                             catch (Exception ex)
                             {
                                 Hide();
-                                Log.Error(ex, "");
+                                Log.Error(ex.ToString());
                                 errormessage = ex.Message;
                             }
                         }

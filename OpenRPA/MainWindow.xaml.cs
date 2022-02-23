@@ -857,7 +857,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
                 //Config.local.recording_add_to_designer = value;
@@ -1219,7 +1219,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -1443,7 +1443,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnImport");
@@ -1584,7 +1584,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }, null);
@@ -1698,7 +1698,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -1765,7 +1765,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -1876,7 +1876,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }, null);
@@ -2233,7 +2233,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
@@ -2310,7 +2310,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnSave");
@@ -2379,7 +2379,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnNewWorkflow");
@@ -2418,7 +2418,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnNewProject");
@@ -2451,7 +2451,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnCopy");
@@ -2548,7 +2548,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnDelete");
@@ -2897,7 +2897,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -3396,7 +3396,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnDetector");

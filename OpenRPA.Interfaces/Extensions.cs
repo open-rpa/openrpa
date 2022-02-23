@@ -584,7 +584,7 @@ namespace OpenRPA.Interfaces
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 return null;
             }
             return result;

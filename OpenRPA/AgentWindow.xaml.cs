@@ -57,7 +57,7 @@ namespace OpenRPA
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             Exception ex = (Exception)args.ExceptionObject;
-            Log.Error(ex, "");
+            Log.Error(ex.ToString());
             Log.Error("MyHandler caught : " + ex.Message);
             Log.Error("Runtime terminating: {0}", (args.IsTerminating).ToString());
         }
@@ -337,7 +337,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -478,7 +478,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -507,7 +507,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }, null);
@@ -578,7 +578,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }

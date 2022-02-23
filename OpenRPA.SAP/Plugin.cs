@@ -94,7 +94,7 @@ namespace OpenRPA.SAP
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
             }
         }
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

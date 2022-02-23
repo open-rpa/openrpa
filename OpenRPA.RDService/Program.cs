@@ -129,7 +129,7 @@ namespace OpenRPA.RDService
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             Exception ex = (Exception)args.ExceptionObject;
-            Log.Error(ex, "");
+            Log.Error(ex.ToString());
             Log.Error("MyHandler caught : " + ex.Message);
             Log.Error("Runtime terminating: {0}", (args.IsTerminating).ToString());
         }

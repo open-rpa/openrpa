@@ -314,7 +314,7 @@ namespace OpenRPA.Input
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                         return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                     }
                     // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
@@ -346,7 +346,7 @@ namespace OpenRPA.Input
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
             }
             e.Element = Element;
             // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;

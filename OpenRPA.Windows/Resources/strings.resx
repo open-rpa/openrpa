@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_closewindow" xml:space="preserve">
+    <value>Close Window</value>
+  </data>
+  <data name="activity_closewindow_tooltip" xml:space="preserve">
+    <value>Used to close a window found with Get Element or Get Windows</value>
+  </data>
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>
   </data>
@@ -128,6 +134,12 @@
   </data>
   <data name="activity_getelement_tooltip" xml:space="preserve">
     <value>Find an Windows UI element based on selector</value>
+  </data>
+  <data name="activity_getwindows" xml:space="preserve">
+    <value>Get Windows</value>
+  </data>
+  <data name="activity_getwindows_tooltip" xml:space="preserve">
+    <value>Get all open windows on the desktop</value>
   </data>
   <data name="detector_button_highlight" xml:space="preserve">
     <value>Highlight</value>

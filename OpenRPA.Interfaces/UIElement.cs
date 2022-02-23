@@ -23,6 +23,7 @@ namespace OpenRPA
                 ProcessId = Element.Properties.ProcessId.ValueOrDefault;
                 // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
                 Name = Element.Properties.Name.ValueOrDefault;
+                if (string.IsNullOrEmpty(Name)) Name = "";
                 ClassName = Element.Properties.ClassName.ValueOrDefault;
                 Type = Element.Properties.ControlType.ValueOrDefault.ToString();
                 FrameworkId = Element.Properties.FrameworkId.ValueOrDefault;
@@ -139,7 +140,27 @@ namespace OpenRPA
                 return false;
             }
         }
-
+        private string _ProcessName = null;
+        public string ProcessName
+        {
+            get
+            {
+                if (ProcessId < 1) return "system";
+                if (!string.IsNullOrEmpty(_ProcessName)) return _ProcessName;
+                try
+                {
+                    using(var p = System.Diagnostics.Process.GetProcessById(ProcessId))
+                    {
+                        _ProcessName = p.ProcessName;
+                        return _ProcessName;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                return null;
+            }
+        }
         [JsonIgnore]
         public UIElement Parent
         {

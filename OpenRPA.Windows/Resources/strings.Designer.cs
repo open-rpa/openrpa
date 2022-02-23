@@ -19,7 +19,7 @@ namespace OpenRPA.Windows.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -61,6 +61,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close Window.
+        /// </summary>
+        public static string activity_closewindow {
+            get {
+                return ResourceManager.GetString("activity_closewindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Used to close a window found with Get Element or Get Windows.
+        /// </summary>
+        public static string activity_closewindow_tooltip {
+            get {
+                return ResourceManager.GetString("activity_closewindow_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get Element.
         /// </summary>
         public static string activity_getelement {
@@ -93,6 +111,24 @@ namespace OpenRPA.Windows.Resources {
         public static string activity_getelement_tooltip {
             get {
                 return ResourceManager.GetString("activity_getelement_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Windows.
+        /// </summary>
+        public static string activity_getwindows {
+            get {
+                return ResourceManager.GetString("activity_getwindows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get all open windows on the desktop.
+        /// </summary>
+        public static string activity_getwindows_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getwindows_tooltip", resourceCulture);
             }
         }
         

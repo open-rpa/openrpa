@@ -86,10 +86,14 @@
     </PropertyGroup>
   </Target>
   <ItemGroup>
+    <None Remove="Activities\CloseWindowDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
+    <None Remove="Activities\GetWindowsDesigner.xaml" />
     <None Remove="Resources\check.png" />
+    <None Remove="Resources\designer\closewindow.png" />
     <None Remove="Resources\designer\getuielement.png" />
     <None Remove="Resources\search.png" />
+    <None Remove="Resources\toolbox\closewindow.png" />
     <None Remove="Resources\toolbox\getuielement.png" />
     <None Remove="Resources\x.png" />
     <None Remove="Views\RecordPluginView.xaml" />
@@ -98,10 +102,17 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\check.png" />
     <EmbeddedResource Include="Resources\search.png" />
+    <EmbeddedResource Include="Resources\toolbox\closewindow.png" />
     <EmbeddedResource Include="Resources\toolbox\getuielement.png" />
     <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\CloseWindowDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetWindowsDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\GetElementDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,6 +136,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\closewindow.png" />
     <Resource Include="Resources\designer\getuielement.png" />
   </ItemGroup>
   <ItemGroup>

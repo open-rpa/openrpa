@@ -95,7 +95,7 @@ namespace OpenRPA.Windows
                     catch (Exception ex)
                     {
                         element = null;
-                        Log.Error(ex, "");
+                        Log.Error(ex.ToString());
                         // return;
                     }
                 }

@@ -75,10 +75,12 @@ namespace OpenRPA.Image
 
             if (e.UIElement.ProcessId > 0)
             {
-                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") { return false; }
-                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") { return false; }
-                if (p.ProcessName.ToLower() == "saplogon") return false;
+                using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+                {
+                    if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") { return false; }
+                    if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") { return false; }
+                    if (p.ProcessName.ToLower() == "saplogon") return false;
+                }
             }
             e.Element = lastelement;
             lock (_lock)
@@ -117,11 +119,13 @@ namespace OpenRPA.Image
             string Processname = "";
             if (e.UIElement.ProcessId > 0)
             {
-                var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-                if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") return false;
-                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") return false;
-                if (p.ProcessName.ToLower() == "saplogon") return false;
-                Processname = p.ProcessName;
+                using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+                {
+                    if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") return false;
+                    if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") return false;
+                    if (p.ProcessName.ToLower() == "saplogon") return false;
+                    Processname = p.ProcessName;
+                }
             }
 
 

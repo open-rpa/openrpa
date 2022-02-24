@@ -81,9 +81,12 @@ namespace OpenRPA.Image
             var element = AutomationHelper.GetFromPoint(rect.X, rect.Y);
             if (element != null)
             {
-                var p = System.Diagnostics.Process.GetProcessById(element.ProcessId);
-                var Processname = p.ProcessName;
-                ModelItem.Properties["Processname"].SetValue(new System.Activities.InArgument<string>(Processname));
+                using (var p = System.Diagnostics.Process.GetProcessById(element.ProcessId))
+                {
+                    var Processname = p.ProcessName;
+
+                    ModelItem.Properties["Processname"].SetValue(new System.Activities.InArgument<string>(Processname));
+                }
             }
             Interfaces.GenericTools.Restore();
 

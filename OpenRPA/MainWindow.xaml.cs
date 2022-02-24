@@ -857,7 +857,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
                 //Config.local.recording_add_to_designer = value;
@@ -1219,7 +1219,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -1349,7 +1349,7 @@ namespace OpenRPA
             Log.Function("MainWindow", "OnReload");
             if (!global.isConnected)
             {
-                _ = global.webSocketClient.Connect();
+                _ = RobotInstance.instance.Connect();
             }
             else
             {
@@ -1424,7 +1424,7 @@ namespace OpenRPA
                     _d.isDirty = true;
                     _d.projectid = p._id;
                     await _d.Save();
-                    _d.Start();
+                    _d.Start(true);
                     OpenProject.UpdateProjectsList(false, true);
                     return;
                 }
@@ -1443,7 +1443,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnImport");
@@ -1584,7 +1584,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }, null);
@@ -1684,7 +1684,6 @@ namespace OpenRPA
         {
             try
             {
-                RobotInstance.instance.autoReconnect = true;
                 var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
                 foreach (var document in ld)
                 {
@@ -1699,7 +1698,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -1766,7 +1765,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -1877,7 +1876,7 @@ namespace OpenRPA
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     MessageBox.Show(ex.Message);
                 }
             }, null);
@@ -2234,7 +2233,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "_onOpenWorkflow");
@@ -2311,7 +2310,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnSave");
@@ -2380,7 +2379,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnNewWorkflow");
@@ -2419,7 +2418,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnNewProject");
@@ -2452,7 +2451,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnCopy");
@@ -2549,7 +2548,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnDelete");
@@ -2898,7 +2897,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
         }
@@ -2970,11 +2969,13 @@ namespace OpenRPA
                 if (element != null && element.Properties.ProcessId.IsSupported)
                 {
                     if (element.Properties.ProcessId == lastsapprocessid) return;
-                    var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId);
-                    if (p.ProcessName.ToLower() == "saplogon")
+                    using (var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId))
                     {
-                        lastsapprocessid = element.Properties.ProcessId;
-                        return;
+                        if (p.ProcessName.ToLower() == "saplogon")
+                        {
+                            lastsapprocessid = element.Properties.ProcessId;
+                            return;
+                        }
                     }
                 }
                 var cancelkey = InputDriver.Instance.cancelKeys.Where(x => x.KeyValue == e.KeyValue).ToList();
@@ -3015,11 +3016,12 @@ namespace OpenRPA
                 if (element != null && element.Properties.ProcessId.IsSupported)
                 {
                     if (element.Properties.ProcessId == lastsapprocessid) return;
-                    var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId);
-                    if (p.ProcessName.ToLower() == "saplogon")
-                    {
-                        lastsapprocessid = element.Properties.ProcessId;
-                        return;
+                    using (var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId)) { 
+                        if (p.ProcessName.ToLower() == "saplogon")
+                        {
+                            lastsapprocessid = element.Properties.ProcessId;
+                            return;
+                        }
                     }
                 }
 
@@ -3377,7 +3379,14 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0);
+                        if (plugin.Entity.detectortype == "exchange")
+                        {
+                            await global.webSocketClient.QueueMessage(Entity._id, "", command, null, null, 0);
+                        }
+                        else
+                        {
+                            await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -3387,7 +3396,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
             Log.FunctionOutdent("MainWindow", "OnDetector");

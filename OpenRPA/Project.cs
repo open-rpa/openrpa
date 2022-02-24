@@ -229,7 +229,7 @@ namespace OpenRPA
                     }
                     if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
                     _d.isDirty = true;
-                    _d.Start();
+                    _d.Start(true);
                     Detectors.Add(_d);
                 }
             }

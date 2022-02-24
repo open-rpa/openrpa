@@ -13,10 +13,12 @@ namespace OpenRPA
         {
             _type = "detector";
             Properties = new Dictionary<string, object>();
+            detectortype = "exchange";
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string detectortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public async Task Save()
         {
             await Save<Detector>();
@@ -30,7 +32,7 @@ namespace OpenRPA
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
             System.IO.File.WriteAllText(filepath, json);
         }
-        public void Start()
+        public void Start(bool doRegisterExchange)
         {
             IDetectorPlugin dp = Plugins.detectorPlugins.Where(x => x.Entity._id == _id).FirstOrDefault();
             if (dp == null)
@@ -42,9 +44,32 @@ namespace OpenRPA
                     return;
                 }
             }
-            dp.OnDetector -= RobotInstance.instance.Window.OnDetector;
-            dp.OnDetector += RobotInstance.instance.Window.OnDetector;
+            if(doRegisterExchange) _ = RegisterExchange();
+            if(RobotInstance.instance != null && RobotInstance.instance.Window != null)
+            {
+                dp.OnDetector -= RobotInstance.instance.Window.OnDetector;
+                dp.OnDetector += RobotInstance.instance.Window.OnDetector;
+            } else
+            {
+                Log.Error("Failed registering detector event sink for " + name + " main window not loaded yet !!!!!");
+            }
             dp.Start();
+        }
+        async public Task RegisterExchange()
+        {
+            Log.Output("Register Exchange for " + name);
+            IDetectorPlugin dp = Plugins.detectorPlugins.Where(x => x.Entity._id == _id).FirstOrDefault();
+            if (dp == null) return;
+            if (global.webSocketClient.isConnected && global.openflowconfig != null && !string.IsNullOrEmpty(global.openflowconfig.version))
+            {
+                var ver = Version.Parse(global.openflowconfig.version);
+                var reqver = Version.Parse("1.3.103"); // exchange support for detectors was not added until 1.3.103
+                if (ver < reqver) return;
+                if (dp.Entity != null && dp.Entity.detectortype == "exchange" && !string.IsNullOrEmpty(dp.Entity._id))
+                {                    
+                    await global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false);
+                }
+            }
         }
         public void Stop()
         {
@@ -60,7 +85,7 @@ namespace OpenRPA
         {
             Stop();
             Plugins.UpdateDetector(RobotInstance.instance, this);
-            Start();
+            Start(true);
         }
         public override string ToString()
         {

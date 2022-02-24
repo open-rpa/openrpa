@@ -312,7 +312,7 @@ namespace OpenRPA.Interfaces
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                 }
             }
             LoadPlugins(client);

@@ -86,7 +86,7 @@ namespace OpenRPA.Views
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 MessageBox.Show("InitializeSnippets: " + ex.Message);
             }
         }

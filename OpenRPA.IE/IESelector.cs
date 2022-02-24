@@ -100,7 +100,7 @@ namespace OpenRPA.IE
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "");
+                    Log.Error(ex.ToString());
                     return;
                 }
             }

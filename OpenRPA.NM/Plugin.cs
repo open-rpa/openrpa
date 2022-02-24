@@ -294,34 +294,36 @@ namespace OpenRPA.NM
             if (e.UIElement == null) return false;
 
             if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
+            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+            {
+                if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
 
-            if (p.ProcessName.ToLower() == "chrome")
-            {
-                if (!NMHook.chromeconnected) { System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed"); return false; }
-                if (string.IsNullOrEmpty(e.UIElement.FrameworkId) || e.UIElement.FrameworkId.ToLower() != "chrome") return false;
+                if (p.ProcessName.ToLower() == "chrome")
+                {
+                    if (!NMHook.chromeconnected) { System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed"); return false; }
+                    if (string.IsNullOrEmpty(e.UIElement.FrameworkId) || e.UIElement.FrameworkId.ToLower() != "chrome") return false;
 
-            }
-            if (p.ProcessName.ToLower() == "msedge" && !NMHook.edgeconnected)
-            {
-                System.Windows.MessageBox.Show("You clicked inside Edge, but it looks like you dont have the OpenRPA plugin installed");
-                return false;
-            }
-            if (p.ProcessName.ToLower() == "firefox" && !NMHook.ffconnected)
-            {
-                System.Windows.MessageBox.Show("You clicked inside Firefix, but it looks like you dont have the OpenRPA plugin installed");
-                return false;
-            }
-            if (LastElement == null) return false;
-            if (LastElement.message == null) return false;
-            if (LastElement.message.tab == null)
-            {
-                LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
-            }
-            if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
-            {
-                // if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
+                }
+                if (p.ProcessName.ToLower() == "msedge" && !NMHook.edgeconnected)
+                {
+                    System.Windows.MessageBox.Show("You clicked inside Edge, but it looks like you dont have the OpenRPA plugin installed");
+                    return false;
+                }
+                if (p.ProcessName.ToLower() == "firefox" && !NMHook.ffconnected)
+                {
+                    System.Windows.MessageBox.Show("You clicked inside Firefix, but it looks like you dont have the OpenRPA plugin installed");
+                    return false;
+                }
+                if (LastElement == null) return false;
+                if (LastElement.message == null) return false;
+                if (LastElement.message.tab == null)
+                {
+                    LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
+                }
+                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
+                {
+                    // if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
+                }
             }
             var selector = new NMSelector(LastElement, null, true, null);
             var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };
@@ -355,8 +357,10 @@ namespace OpenRPA.NM
             if (e.UIElement == null) return false;
 
             if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+            {
+                if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+            }                
             if (LastElement == null) return false;
             e.Element = LastElement;
             e.OffsetX = e.X - LastElement.Rectangle.X;

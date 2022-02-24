@@ -70,6 +70,9 @@ namespace OpenRPA.Interfaces
         Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "");
         Task RegisterUser(string name, string username, string password);
         Task<string> RegisterQueue(string queuename);
+        Task<string> RegisterExchange(string exchangename, string algorithm, bool addqueue);
+        Task<string> RegisterExchange(string exchangename, string algorithm, string routingkey, bool addqueue);
+        Task<object> QueueMessage(string exchange, string routingkey, object data, string replyto, string correlationId, int expiration);
         Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration);
         Task<string> CreateWorkflowInstance(string workflowid, string resultqueue, string targetid, object payload, bool initialrun, string correlationId = null, string parentid = null);
         Task<T[]> Query<T>(string collectionname, string query, string projection = null, int top = 100, int skip = 0, string orderby = null, string queryas = null);

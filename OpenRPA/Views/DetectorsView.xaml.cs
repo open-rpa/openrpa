@@ -94,6 +94,7 @@ namespace OpenRPA.Views
                 var d = new Detector(); d.Plugin = kv.Value.FullName;
                 NotifyPropertyChanged("detectorPlugins");
                 d.name = kv.Value.Name;
+                d.detectortype = "exchange";
                 if (global.isConnected)
                 {
                     var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
@@ -106,7 +107,7 @@ namespace OpenRPA.Views
                     d.isDirty = true;
                     d.isLocalOnly = true;
                 }
-                d.Start();
+                d.Start(true);
                 updateUIList = true;
                 var dexists = RobotInstance.instance.Detectors.FindById(d._id);
                 if (dexists == null) RobotInstance.instance.Detectors.Insert(d);
@@ -198,15 +199,20 @@ namespace OpenRPA.Views
                 }
             }
         }
-        private void lidtProjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void listProjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var detector = lidtDetectors.SelectedItem as IDetectorPlugin;
             if (detector == null) return;
             var Entity = detector.Entity as Detector;
-            if (!lidtProjects.IsDropDownOpen) return;
-            Entity._acl = (lidtProjects.SelectedItem as Project)._acl;
+            if (!listProjects.IsDropDownOpen) return;
+            Entity._acl = (listProjects.SelectedItem as Project)._acl;
             Entity.isDirty = true;
             updateUIList = true;
+        }
+
+        private void listType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -66,8 +66,8 @@ namespace OpenRPA.Office
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "excel") return false;
+            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+                if (p.ProcessName.ToLower() != "excel") return false;
             if (e.UIElement.ControlType != "DataItem") return false;
             try
             {
@@ -101,8 +101,8 @@ namespace OpenRPA.Office
         {
             if (e.UIElement == null) return false;
             if (e.UIElement.ProcessId < 1) return false;
-            var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId);
-            if (p.ProcessName.ToLower() != "excel") return false;
+            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
+                if (p.ProcessName.ToLower() != "excel") return false;
             if (e.UIElement.ControlType != "DataItem") return false;
             e.UIElement = null;
             e.Element = null;

@@ -548,7 +548,7 @@ namespace OpenRPA
             //}
             //catch (Exception ex)
             //{
-            //    Log.Error(ex, "");
+            //    Log.Error(ex.ToString());
             //    hasError = true;
             //    isCompleted = true;
             //    //isUnloaded = true;
@@ -633,7 +633,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 hasError = true;
                 isCompleted = true;
                 //isUnloaded = true;
@@ -748,7 +748,7 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
                 hasError = true;
                 isCompleted = true;
                 //isUnloaded = true;

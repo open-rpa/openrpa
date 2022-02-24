@@ -266,5 +266,9 @@ namespace OpenRPA.Interfaces
         public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
+        [DllImport("USER32.DLL")]
+        public static extern int GetWindowTextLength(IntPtr hWnd);
+        [DllImport("USER32.DLL")]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
     }
 }

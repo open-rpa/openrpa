@@ -263,7 +263,7 @@ namespace OpenRPA.Java
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Error(ex.ToString());
             }
         }
         private void Hook_OnNewjvm(WindowsAccessBridgeInterop.AccessBridge accessBridge, WindowsAccessBridgeInterop.AccessibleJvm[] newjvms)

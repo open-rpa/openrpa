@@ -22,9 +22,8 @@ namespace OpenRPA.Windows
     [LocalizedDisplayName("activity_getwindows", typeof(Resources.strings))]
     public class GetWindows : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
-        public GetWindows()
-        {
-        }
+        public InArgument<bool> IncludeHidden { get; set; }
+        public InArgument<bool> includeEmptyTitle { get; set; }
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
@@ -35,36 +34,21 @@ namespace OpenRPA.Windows
         public Activity LoopAction { get; set; }
         protected override void StartLoop(NativeActivityContext context)
         {
-
             var result = new List<UIElement>();
-            var windows = RuningWindows.GetOpenedWindows();
+            var windows = RuningWindows.GetOpenedWindows(IncludeHidden.Get(context), includeEmptyTitle.Get(context));
             using (var automation = AutomationUtil.getAutomation())
             {
                 foreach (var window in windows)
                 {
-                    // Console.WriteLine(window.Value.Title + " " + window.Value.File);
                     var _window = automation.FromHandle(window.Key);
                     result.Add(new UIElement(_window));
                 }
             }
-            //string path = RuningWindows.GetProcessPath(windowActive.Handle);
-            //if (string.IsNullOrEmpty(path)) return;
-            //windowActive.File = new System.IO.FileInfo(path);
-            //int length = GenericTools.GetWindowTextLength(windowActive.Handle);
-            //if (length == 0) return;
-            //StringBuilder builder = new StringBuilder(length);
-            //GenericTools.GetWindowText(windowActive.Handle, builder, length + 1);
-            //windowActive.Title = builder.ToString();
-
-
-
-
             WindowsCacheExtension ext = context.GetExtension<WindowsCacheExtension>();
             var sw = new Stopwatch();
             sw.Start();
             Log.Selector(string.Format("Windows.GetWindows::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
 
-            // UIElement[] elements = new UIElement[] { };
             UIElement[] elements = result.ToArray();
             context.SetValue(Elements, elements);
 
@@ -180,23 +164,37 @@ namespace OpenRPA.Windows
     {
         /// <summary>Returns a dictionary that contains the handle and title of all the open windows.</summary>
         /// <returns>A dictionary that contains the handle and title of all the open windows.</returns>
-        public static IDictionary<IntPtr, InfoWindow> GetOpenedWindows()
+        public static IDictionary<IntPtr, InfoWindow> GetOpenedWindows(bool includeHidden, bool includeEmptyTitle)
         {
             IntPtr shellWindow = GetShellWindow();
             Dictionary<IntPtr, InfoWindow> windows = new Dictionary<IntPtr, InfoWindow>();
 
             EnumWindows(new EnumWindowsProc(delegate (IntPtr hWnd, int lParam) {
-                if (hWnd == shellWindow) return true;
-                if (!IsWindowVisible(hWnd)) return true;
-                int length = GenericTools.GetWindowTextLength(hWnd);
-                if (length == 0) return true;
-                StringBuilder builder = new StringBuilder(length);
-                GenericTools.GetWindowText(hWnd, builder, length + 1);
-                var info = new InfoWindow();
-                info.Handle = hWnd;
-                info.File = new System.IO.FileInfo(GetProcessPath(hWnd));
-                info.Title = builder.ToString();
-                windows[hWnd] = info;
+                try
+                {
+                    if (hWnd == shellWindow) return true;
+                    if (!includeHidden) { if (!IsWindowVisible(hWnd)) return true; }
+                    int length = GenericTools.GetWindowTextLength(hWnd);
+                    string Title = "";
+                    if (length == 0)
+                    {
+                        if (!includeEmptyTitle) return true;
+                    }
+                    else
+                    {
+                        StringBuilder builder = new StringBuilder(length);
+                        GenericTools.GetWindowText(hWnd, builder, length + 1);
+                        Title = builder.ToString();
+                    }
+                    var info = new InfoWindow();
+                    info.Handle = hWnd;
+                    info.File = new System.IO.FileInfo(GetProcessPath(hWnd));
+                    info.Title = Title;
+                    windows[hWnd] = info;
+                }
+                catch (Exception)
+                {
+                }
                 return true;
             }), 0);
             return windows;

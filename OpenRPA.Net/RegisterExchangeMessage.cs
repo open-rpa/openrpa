@@ -19,6 +19,7 @@ namespace OpenRPA.Net
             queuename = "";
             this.algorithm = algorithm;
             addqueue = false;
+            routingkey = "";
         }
         public string exchangename { get; set; }
         public string algorithm { get; set; }

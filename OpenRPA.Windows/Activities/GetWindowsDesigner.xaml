@@ -28,30 +28,20 @@
     <sap:ActivityDesigner.Resources>
         <DataTemplate x:Key="Collapsed">
             <StackPanel>
-                <Image Source="{Binding Image}"></Image>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="Expanded">
             <StackPanel>
-                <!-- <Button Content="Select element" /> -->
-                <Button Content="{x:Static or:strings.getelement_open_selector}" Click="Open_Selector" />
-                <Button Click="Highlight_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding HighlightImage}" Height="16" Width="16" />
-                        <TextBlock Text="{x:Static or:strings.getelement_highlight}"></TextBlock>
-                    </StackPanel>
-                </Button>
-                <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
-                                    HintText="{x:Static or:strings.getelement_drop_hint}" AllowedItemType="sa:Activity"
-                                      Grid.Row="1" />
+                                        HintText="{x:Static or:strings.getelement_drop_hint}" AllowedItemType="sa:Activity"
+                                          Grid.Row="1" />
                 <TextBlock HorizontalAlignment="Center" Margin="63,0"><Hyperlink FontStyle="Italic" Foreground="Gray" Click="Hyperlink_Click" 
                                                                    ToolTip="{x:Static or:strings.activity_getelement_loopaction_tooltop}" >
                     <TextBlock Text="{x:Static or:strings.activity_getelement_loopaction}"></TextBlock>
                     </Hyperlink>
                 </TextBlock>
                 <ContentPresenter Style="{DynamicResource LoopExpandOrCollapsedStyle}" Content="{Binding}" />
-                
+
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="LoopCollapsed">

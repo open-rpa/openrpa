@@ -23,7 +23,7 @@ namespace OpenRPA.Windows
     public class GetWindows : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public InArgument<bool> IncludeHidden { get; set; }
-        public InArgument<bool> includeEmptyTitle { get; set; }
+        public InArgument<bool> IncludeEmptyTitle { get; set; }
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }
         public OutArgument<UIElement[]> Elements { get; set; }
@@ -35,7 +35,17 @@ namespace OpenRPA.Windows
         protected override void StartLoop(NativeActivityContext context)
         {
             var result = new List<UIElement>();
-            var windows = RuningWindows.GetOpenedWindows(IncludeHidden.Get(context), includeEmptyTitle.Get(context));
+            var includeHidden = false;
+            var includeEmptyTitle = false;
+            try
+            {
+                if (IncludeEmptyTitle != null) includeEmptyTitle = IncludeEmptyTitle.Get(context);
+                if (IncludeHidden != null) includeHidden = IncludeHidden.Get(context);
+            }
+            catch (Exception)
+            {
+            }
+            var windows = RuningWindows.GetOpenedWindows(includeHidden, includeEmptyTitle);
             using (var automation = AutomationUtil.getAutomation())
             {
                 foreach (var window in windows)

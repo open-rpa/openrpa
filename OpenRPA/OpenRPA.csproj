@@ -62,7 +62,7 @@
 		<None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CefSharp.Wpf" Version="92.0.260" />
+		<PackageReference Include="CefSharp.Wpf" Version="98.1.210" />
 		<PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
 		<PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
 		<PackageReference Include="Grpc.Core" Version="2.43.0" />

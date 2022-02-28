@@ -37,17 +37,33 @@ namespace OpenRPA.Activities
         public InArgument<IElement> Element { get; set; }
         [LocalizedDisplayName("activity_postwait", typeof(Resources.strings)), LocalizedDescription("activity_postwait_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> PostWait { get; set; }
+        [LocalizedDisplayName("activity_mousebutton", typeof(Resources.strings)), LocalizedDescription("activity_mousebutton_help", typeof(Resources.strings))]
+        public InArgument<int> Button { get; set; } = (int)Input.MouseButton.Left;
+
         protected override void Execute(CodeActivityContext context)
         {
             var el = Element.Get(context);
             var animatemouse = false;
             if (AnimateMouse != null) animatemouse = AnimateMouse.Get(context);
+            var button = -1;
+            if (Button != null) button  = Button.Get(context);
             var x = OffsetX.Get(context);
             var y = OffsetY.Get(context);
             if (el != null)
             {
                 x += el.Rectangle.X;
                 y += el.Rectangle.Y;
+            }
+            if(button > -1)
+            {
+                if(button == 1) // MouseButton.Left
+                {
+                    NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                } 
+                else if (button == 1) // MouseButton.Right
+                {
+                    NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_RIGHTDOWN , 0, 0, 0, 0);
+                }
             }
             if (animatemouse)
             {
@@ -56,6 +72,17 @@ namespace OpenRPA.Activities
             else
             {
                 NativeMethods.SetCursorPos(x, y);
+            }
+            if (button > -1)
+            {
+                if (button == 1) // MouseButton.Left
+                {
+                    NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                }
+                else if (button == 1) // MouseButton.Right
+                {
+                    NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+                }
             }
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait != null) { postwait = PostWait.Get(context); }

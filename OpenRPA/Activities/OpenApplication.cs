@@ -115,11 +115,14 @@ namespace OpenRPA.Activities
                 var width = Width.Get(context);
                 var height = Height.Get(context);
                 var animatemove = AnimateMove.Get(context);
-                if (animatemove) ui.MoveWindowTo(x, y, width, height);
-                if (!animatemove)
+                if (width <= 30 || height <= 10)
                 {
-                    ui.SetWindowSize(width, height);
-                    ui.SetWindowPosition(x, y);
+                    if (animatemove) ui.MoveWindowTo(x, y, width, height);
+                    if (!animatemove)
+                    {
+                        ui.SetWindowSize(width, height);
+                        ui.SetWindowPosition(x, y);
+                    }
                 }
             }
         }

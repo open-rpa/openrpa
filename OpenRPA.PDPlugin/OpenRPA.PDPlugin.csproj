@@ -31,6 +31,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\dist</OutputPath>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />

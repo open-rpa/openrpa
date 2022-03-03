@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.3.55</Version>
+		<Version>1.3.56</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>open_rpa128.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -33,9 +33,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<OutputPath>..\dist</OutputPath>
 		<PlatformTarget>x64</PlatformTarget>
+		<Optimize>False</Optimize>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
 		<OutputPath>..\dist</OutputPath>
+		<Optimize>False</Optimize>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
 		<OutputPath></OutputPath>
@@ -62,7 +64,7 @@
 		<None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CefSharp.Wpf" Version="98.1.210" />
+		<PackageReference Include="CefSharp.Wpf" Version="92.0.260" />
 		<PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
 		<PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
 		<PackageReference Include="Grpc.Core" Version="2.43.0" />

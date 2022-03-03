@@ -16,6 +16,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Interop.SAPFEWSELib.dll" />
   </ItemGroup>

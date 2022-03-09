@@ -10,7 +10,7 @@ namespace OpenRPA.Net
     {
         public RegisterUserMessage() : base()
         {
-            msg.command = "registerqueue";
+            msg.command = "registeruser";
         }
         public RegisterUserMessage(string name, string username, string password) : base()
         {

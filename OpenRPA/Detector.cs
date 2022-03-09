@@ -57,7 +57,7 @@ namespace OpenRPA
         }
         async public Task RegisterExchange()
         {
-            Log.Output("Register Exchange for " + name);
+            Log.Debug("Register Exchange for " + name);
             IDetectorPlugin dp = Plugins.detectorPlugins.Where(x => x.Entity._id == _id).FirstOrDefault();
             if (dp == null) return;
             if (global.webSocketClient.isConnected && global.openflowconfig != null && !string.IsNullOrEmpty(global.openflowconfig.version))

@@ -9,6 +9,7 @@ namespace OpenRPA.Net
 {
     public class Message : BaseMessage, IMessage
     {
+        internal int sendcount = 0;
         public Message(string command)
         {
             id = Guid.NewGuid().ToString();
@@ -28,21 +29,25 @@ namespace OpenRPA.Net
             command = msg.command;
             this.data = data;
         }
-        public void SendMessage(WebSocketClient ws)
+        public void SendMessage(WebSocketClient ws, int priority)
         {
             if (string.IsNullOrEmpty(data))
             {
-                var message = new SocketMessage(this);
+                var message = new SocketMessage(this, priority);
                 message.Send(ws);
+                sendcount++;
+                // Log.Information("SendMessage(" + id + " / " + sendcount + ") " + command);
                 return;
             }
             var messages = data.Split(ws.websocket_package_size).ToArray();
             if(command != "pong") Log.Network("Send (" + messages.Length.ToString() + ") " + command + " / " + data);
             for (var i = 0; i < messages.Length; i++)
             {
-                var message = new SocketMessage(this, messages[i], messages.Length, i);
+                var message = new SocketMessage(this, messages[i], messages.Length, i, priority);
                 message.Send(ws);
             }
+            sendcount++;
+            // Log.Information("SendMessage(" + id + " / " + sendcount + ") " + command);
             // new Task(() => { ws.ProcessQueue(); });
             _ = ws.ProcessQueue();
             // 

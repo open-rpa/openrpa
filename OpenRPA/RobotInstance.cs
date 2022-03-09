@@ -1076,7 +1076,7 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            Interfaces.entity.TokenUser user = global.webSocketClient.user;
+            Interfaces.entity.TokenUser user = null;
             try
             {
                 string url = "http";
@@ -1104,7 +1104,7 @@ namespace OpenRPA
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex.ToString());
+                            Log.Error("RobotInstance.RobotInstance_WebSocketClient_OnOpen.userlogin: " + ex.Message);
                             errormessage = ex.Message;
                         }
                     }
@@ -1112,53 +1112,30 @@ namespace OpenRPA
                     {
                         try
                         {
+                            if (!global.webSocketClient.isConnected) return;
                             SetStatus("Sign in to " + Config.local.wsurl);
                             Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                            if (user != null)
+                            if (user == null)
                             {
-                                Config.local.username = user.username;
-                                Config.local.password = new byte[] { };
-                                // Config.Save();
-                                Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                return;
                             }
+                            Config.local.username = user.username;
+                            Config.local.password = new byte[] { };
+                            // Config.Save();
+                            Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                         }
                         catch (Exception ex)
                         {
-                            // Hide();
-                            Log.Error(ex.ToString());
+                            Log.Error("RobotInstance.RobotInstance_WebSocketClient_OnOpen.tokenlogin: " + ex.Message);
                             errormessage = ex.Message;
                         }
                     }
-                    // Retry, if message timed out ... is this even possible ?
-                    if (user == null)
-                        if (Config.local.jwt != null && Config.local.jwt.Length > 0)
-                        {
-                            try
-                            {
-                                SetStatus("Sign in to " + Config.local.wsurl);
-                                Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                                if (user != null)
-                                {
-                                    Config.local.username = user.username;
-                                    Config.local.password = new byte[] { };
-                                    // Config.Save();
-                                    Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Hide();
-                                Log.Error(ex.ToString());
-                                errormessage = ex.Message;
-                            }
-                        }
+                    if (!global.webSocketClient.isConnected) return;
                     if (user == null)
                     {
-                        if (loginInProgress == false && global.webSocketClient.user == null)
+                        if (loginInProgress == false && (global.webSocketClient.isConnected && !global.webSocketClient.signedin))
                         {
                             loginInProgress = true;
                             string jwt = null;
@@ -1215,11 +1192,9 @@ namespace OpenRPA
                                     }
                                     catch (Exception ex)
                                     {
-                                        Log.Error(ex.ToString());
+                                        Log.Error("RobotInstance.RobotInstance_WebSocketClient_OnOpen.UIlogin: " + ex.Message);
                                     }
                                 });
-
-
                             }
                             catch (Exception)
                             {
@@ -1410,10 +1385,14 @@ namespace OpenRPA
         {
             try
             {
+                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Connecting) return;
+                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Open) return;
                 await Task.Delay(ReconnectDelay);
                 ReconnectDelay += 5000;
                 if (ReconnectDelay > 60000 * 2) ReconnectDelay = 60000 * 2;
                 connect_attempts++;
+                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Connecting) return;
+                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Open) return;
                 SetStatus("Connecting to " + Config.local.wsurl);
                 await global.webSocketClient.Connect();
             }
@@ -1678,13 +1657,8 @@ namespace OpenRPA
         }
         async private Task RegisterQueues()
         {
-            if (!global.isConnected || global.webSocketClient.user == null)
+            if (!global.isConnected || !global.webSocketClient.signedin )
             {
-                _ = Task.Run(async () =>
-                {
-                    await Task.Delay(5000);
-                    await RegisterQueues();
-                });
                 return;
             }
             try
@@ -1756,13 +1730,14 @@ namespace OpenRPA
                         }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _ = Task.Run(async () =>
-                {
-                    await Task.Delay(5000);
-                    await RegisterQueues();
-                });
+                Log.Error(ex.ToString());
+                //_ = Task.Run(async () =>
+                //{
+                //    await Task.Delay(5000);
+                //    await RegisterQueues();
+                //});
             }
         }
 
@@ -1949,7 +1924,6 @@ namespace OpenRPA
                         .Build();
 
                 }
-                Log.Output(Config.local.otel_trace_url);
                 return true;
             }
             catch (Exception ex)

@@ -32,7 +32,8 @@ namespace OpenRPA.Net
         public event QueueMessageDelegate OnQueueMessage;
         public event QueueClosedDelegate OnQueueClosed;
         public int MessageQueueSize { get { return _messageQueue.Count; } }
-        public TokenUser user { get; private set; }
+        public TokenUser user { get; set; }
+        public bool signedin { get; private set; }
         public string jwt { get; private set; }
         public bool isConnected
         {
@@ -54,6 +55,7 @@ namespace OpenRPA.Net
         private WebSocketClient(string url)
         {
             this.url = url;
+            signedin = false;
         }
         public async Task Connect()
         {
@@ -88,6 +90,7 @@ namespace OpenRPA.Net
                 if (ws.State == System.Net.WebSockets.WebSocketState.Connecting || ws.State == System.Net.WebSockets.WebSocketState.Open) return;
                 if (ws.State == System.Net.WebSockets.WebSocketState.CloseReceived)
                 {
+                    signedin = false;
                     OnClose?.Invoke("Socket closing");
                     ws.Dispose();
                     ws = null;
@@ -99,11 +102,11 @@ namespace OpenRPA.Net
                 tempbuffer = "";
                 Task receiveTask = Task.Run(async () => await receiveLoop(), src.Token);
                 Task pingTask = Task.Run(async () => await PingLoop(), src.Token);
-                user = null;
                 OnOpen?.Invoke();
             }
             catch (Exception ex)
             {
+                signedin = false;
                 OnClose?.Invoke(ex.Message);
             }
         }
@@ -127,7 +130,7 @@ namespace OpenRPA.Net
                 }
                 //ws = null;
             }
-            user = null;
+            signedin = false;
             lock (_sendQueuelock) _sendQueue.Clear();
             src.Cancel();
         }
@@ -147,6 +150,7 @@ namespace OpenRPA.Net
                     if (ws == null) { return; }
                     if (ws.State != System.Net.WebSockets.WebSocketState.Open)
                     {
+                        signedin = false;
                         OnClose?.Invoke("");
                         return;
                     }
@@ -155,10 +159,10 @@ namespace OpenRPA.Net
                     lock (lockobject)
                     {
                         json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-                        if (lastmessage.AddMinutes(1) < DateTime.Now)
+                        if (lastmessage.AddMinutes(10) < DateTime.Now && !string.IsNullOrEmpty(tempbuffer))
                         {
-                            Log.Error("Recevied no ping/message for more than a minute, clearing local buffer!");
-                            tempbuffer = "";
+                            //Log.Error("Recevied no ping/message for more than a minute, clearing local buffer!");
+                            //tempbuffer = "";
                         }
 
                         var serializer = new JsonSerializer();
@@ -207,58 +211,13 @@ namespace OpenRPA.Net
                         }
                         else { tempbuffer += json; }
                     }
-
-
-
-                    //if (tempbuffer.Length > 0 && (workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
-                    //{
-                    //    int start = -1;
-                    //    for (var i = 0; i < tempbuffer.Length; i++)
-                    //    {
-                    //        if (tempbuffer[i] == '{' && start == -1) start = i;
-                    //        if (tempbuffer[i] == '}' && start != -1)
-                    //        {
-
-                    //            try
-                    //            {
-                    //                var tempjson = tempbuffer.Substring(start, i + 1);
-                    //                bool hadError = false;
-                    //                var message = JsonConvert.DeserializeObject<SocketMessage>(tempjson, new JsonSerializerSettings
-                    //                {
-                    //                    Error = (sender, errorArgs) =>
-                    //                    {
-                    //                        errorArgs.ErrorContext.Handled = true;
-                    //                        hadError = true;
-                    //                        var currentError = errorArgs.ErrorContext.Error.Message;
-                    //                    }
-                    //                });
-                    //                if (!hadError && message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command))
-                    //                {
-                    //                    tempbuffer = tempbuffer.Substring(i + 1);
-                    //                    i = -1;
-                    //                    lock (_receiveQueue)
-                    //                    {
-                    //                        foundone = true;
-                    //                        if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
-                    //                        _receiveQueue.Add(message);
-                    //                    }
-                    //                }
-                    //                if (!hadError) start = -1;
-
-                    //            }
-                    //            catch (Exception ex)
-                    //            {
-                    //                Log.Error(ex.ToString());
-                    //            }
-                    //        }
-                    //    }
-                    //}
                     if (foundone) await ProcessQueue();
                 }
                 catch (System.Net.WebSockets.WebSocketException ex)
                 {
                     if (ws.State != System.Net.WebSockets.WebSocketState.Open)
                     {
+                        signedin = false;
                         OnClose?.Invoke(ex.Message);
                     }
                     else
@@ -266,14 +225,14 @@ namespace OpenRPA.Net
                         if (!string.IsNullOrEmpty(json)) Log.Error(json);
                         Log.Error(ex.ToString());
                         await Task.Delay(3000);
-                        await this.Close();
+                        // await this.Close();
                     }
-
                 }
                 catch (Exception ex)
                 {
                     if (ws.State != System.Net.WebSockets.WebSocketState.Open)
                     {
+                        signedin = false;
                         OnClose?.Invoke(ex.Message);
                     }
                     else
@@ -288,12 +247,11 @@ namespace OpenRPA.Net
         }
         private async Task PingLoop()
         {
-            byte[] buffer = new byte[1024];
             while (isConnected)
             {
                 await Task.Delay(10000);
                 var msg = new Message("ping");
-                msg.SendMessage(this);
+                msg.SendMessage(this, 5);
             }
         }
         public async Task ProcessQueue()
@@ -356,7 +314,7 @@ namespace OpenRPA.Net
                 List<SocketMessage> templist;
                 lock (_sendQueuelock)
                 {
-                    templist = _sendQueue.ToList();
+                    templist = _sendQueue.OrderBy(x => x.priority).ToList();
                 }
                 foreach (var msg in templist)
                 {
@@ -388,7 +346,7 @@ namespace OpenRPA.Net
                 if(ws.State != WebSocketState.Open)
                 {
                     Log.Error(ex.ToString());
-                    _ = Close();
+                    // _ = Close();
                 }
             }
             catch (Exception ex)
@@ -415,16 +373,6 @@ namespace OpenRPA.Net
         }
         private void Process(Message msg)
         {
-            //if (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("Not signed in, and missing jwt"))
-            //{
-            //    Log.Information("WebSocketClient.Process, data has Not signed in, and missing jwt, so closing connection " + msg.command);
-            //    global.webSocketClient.Close();
-
-            //    return;
-            //}
-            //if  (!string.IsNullOrEmpty(msg.data) && msg.data.Contains("\"error\":\"jwt must be provided\""))
-            //{
-            //}
             if (!string.IsNullOrEmpty(msg.replyto))
             {
                 if (msg.command != "pong") { Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RESC: " + msg.replyto + "/" + msg.id); }
@@ -449,7 +397,7 @@ namespace OpenRPA.Net
                 {
                     case "ping":
                         msg.reply("pong");
-                        msg.SendMessage(this);
+                        msg.SendMessage(this, 5);
                         break;
                     case "refreshtoken":
                         msg.reply();
@@ -472,7 +420,7 @@ namespace OpenRPA.Net
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
-                            msg.SendMessage(this);
+                            msg.SendMessage(this, 3);
                             break;
                         }
                         try
@@ -484,7 +432,7 @@ namespace OpenRPA.Net
                             {
                                 msg.command = "error";
                                 msg.data = "Sorry, I'm bussy";
-                                msg.SendMessage(this);
+                                msg.SendMessage(this, 3);
                                 return;
                             }
                         }
@@ -493,7 +441,7 @@ namespace OpenRPA.Net
                             msg.command = "error";
                             msg.data = ex.ToString();
                         }
-                        msg.SendMessage(this);
+                        msg.SendMessage(this, 3);
                         // if (string.IsNullOrEmpty(qm.replyto)) msg.SendMessage(this);
                         break;
                     case "queuemessage":
@@ -506,7 +454,7 @@ namespace OpenRPA.Net
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
-                            msg.SendMessage(this);
+                            msg.SendMessage(this, 3);
                             break;
                         }
                         try
@@ -518,7 +466,7 @@ namespace OpenRPA.Net
                             {
                                 msg.command = "error";
                                 msg.data = "Sorry, I'm bussy";
-                                msg.SendMessage(this);
+                                msg.SendMessage(this, 3);
                                 return;
                             }
                         }
@@ -527,7 +475,7 @@ namespace OpenRPA.Net
                             msg.command = "error";
                             msg.data = ex.ToString();
                         }
-                        msg.SendMessage(this);
+                        msg.SendMessage(this, 3);
                         // if (string.IsNullOrEmpty(qm.replyto)) msg.SendMessage(this);
                         break;
                     case "watchevent":
@@ -551,7 +499,7 @@ namespace OpenRPA.Net
                         catch (Exception ex)
                         {
                             Log.Error(ex.ToString());
-                            msg.SendMessage(this);
+                            msg.SendMessage(this, 3);
                             break;
                         }
                         //msg.SendMessage(this);
@@ -564,7 +512,6 @@ namespace OpenRPA.Net
         }
         public async Task<Message> SendMessage(Message msg)
         {
-            int retries = 0;
             var qm = new QueuedMessage(msg);
             lock (_messageQueue)
             {
@@ -576,54 +523,69 @@ namespace OpenRPA.Net
                 {
                     while (qm.reply == null)
                     {
-                        if (ws.State != WebSocketState.Open)
+                        if (msg.command != "queuemessage" && msg.command != "insertone" && msg.command != "insertorupdateone" 
+                         && msg.command != "savefile" && msg.command != "updateone" && msg.command != "deleteone" && msg.command != "deletemany" && msg.command != "query")
                         {
-                            System.Threading.Thread.Sleep(250);
-                            continue;
-                        }
-                        if (global.webSocketClient.user == null && msg.command != "signin")
-                        {
-                            System.Threading.Thread.Sleep(250);
-                            continue;
-                        }
-                        if (retries > 0)
-                        {
-                            if (msg.command == "signin") break;
-                            if (msg.command != "ping" && msg.command != "pong")
+                            if (msg.sendcount == 0 && ws.State == WebSocketState.Open )
                             {
+                                if(signedin || msg.command == "signin" )
+                                {
+                                    Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
+                                    msg.SendMessage(this, 1);
+                                }
+                                else
+                                {
+                                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command + " not signed in (" + (_messageQueue.Count - 1)  + ")");
+                                    lock (_messageQueue)
+                                    {
+                                        _messageQueue.Remove(qm);
+                                    }
+                                    throw new Exception("Not connected/signed in to OpenFlow");
+                                }
+                            } else
+                            {
+                                Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command + " not connected");
                                 lock (_messageQueue)
                                 {
                                     _messageQueue.Remove(qm);
-                                    _messageQueue.Add(qm);
                                 }
-                                if (user == null && msg.command == "signin")
+                                throw new Exception("Not connected/signed in to OpenFlow");
+                            }
+                        } else
+                        {
+                            if (msg.sendcount > 0)
+                            {
+                                // for now, lets only retry these specefic commands
+                                // insertmany skipped for now, always skip ping and poing and signin
+                                if (signedin)
                                 {
+                                    //lock (_messageQueue)
+                                    //{
+                                    //    _messageQueue.Remove(qm);
+                                    //    _messageQueue.Add(qm);
+                                    //}
                                     Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
-                                    msg.SendMessage(this);
-                                }
-                                else if (user != null)
-                                {
-                                    Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
-                                    msg.SendMessage(this);
+                                    msg.SendMessage(this, 3);
                                 }
                                 else
                                 {
                                     Log.Warning("Message NOOP " + qm.msg.id + " " + qm.msg.command);
                                 }
                             }
+                            else if (signedin)
+                            {
+                                Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
+                                msg.SendMessage(this, 3);
+                            }
                         }
-                        else
-                        {
-                            Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
-                            msg.SendMessage(this);
-                        }
+                        // Log.Information("WaitOneAsync(" + msg.id + " / " + msg.sendcount + ") " + msg.command);
                         bool wasraised = await qm.autoReset.WaitOneAsync(Config.local.network_message_timeout, CancellationToken.None);
                         // if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("\"error\":\"Not signed in, and missing jwt\"")))
                         if (qm.reply != null && !string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("Not signed in, and missing jwt"))
                         {
-                            Log.Information("WebSocketClient.SendMessage.Reply.data has Not signed in, and missing jwt, so closing connection (" + msg.command + ")");
+                            // Log.Information("WebSocketClient.SendMessage.Reply.data has Not signed in, and missing jwt, so closing connection (" + msg.command + ")");
                             // global.webSocketClient.Close();
-                            await Close();
+                            // await Close();
                         }
                         if (qm.reply == null || (!string.IsNullOrEmpty(qm.reply.data) && qm.reply.data.Contains("jwt must be provided")))
                         {
@@ -631,50 +593,45 @@ namespace OpenRPA.Net
                             //qm.autoReset.Dispose();
                             //qm.autoReset = null;
                             //qm.autoReset = qm.autoReset = new AutoResetEvent(false);
-                            retries++;
                             if (msg.command == "insertorupdateone")
                             {
                                 var data = JObject.Parse(msg.data);
                                 var _id = data["item"].Value<string>("_id");
                                 var state = data["item"].Value<string>("state");
-                                if (state == "running" || state == "idle" || retries > 50)
+                                if (state == "running" || state == "idle" || msg.sendcount > 50)
                                 {
-                                    retries = 0;
                                     lock (_messageQueue)
                                     {
                                         _messageQueue.Remove(qm);
                                     }
                                     return null;
                                 }
-                                Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command + " id:" + _id + " state: " + state);
+                                Log.Warning("Message " + qm.msg.id + " (" + qm.msg.command + ") state " + state + " timed out, retrying state: ");
                             }
                             else
                             {
-                                Log.Warning("Message timed out " + qm.msg.id + " " + qm.msg.command);
+                                Log.Warning("Message " + qm.msg.id + " (" + qm.msg.command + ") timed out, retrying");
                             }
                             qm.reply = null;
-                        }
-                        else
-                        {
-                            retries = 0;
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex.ToString());
+                Log.Error("WebSocketClient.SendMessage: " + ex.Message);
             }
-            if (retries > 0)
+            if (msg.sendcount > 0 && qm.reply == null)
             {
-                // Gave up on 56b5181f-c867-42f1-b250-411cee6f634a queuemessage
                 if (qm.msg.command == "queuemessage")
                 {
-                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                    // Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                    throw new Exception("Gave up on " + qm.msg.id + " " + qm.msg.command);
                 }
                 else
                 {
-                    Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                    // Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command);
+                    throw new Exception("Gave up on " + qm.msg.id + " " + qm.msg.command);
                 }
             }
             return qm.reply as Message;
@@ -686,6 +643,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
+            if (signin.user == null) throw new SocketException("signin failed, received a null user object");
             user = signin.user;
             jwt = signin.jwt;
             if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
@@ -701,6 +659,7 @@ namespace OpenRPA.Net
             {
                 this.websocket_package_size = signin.websocket_package_size;
             }
+            signedin = true;
             return signin.user;
         }
         public async Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "")
@@ -710,6 +669,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
+            if (signin.user == null) throw new SocketException("signin failed, received a null user object");
             user = signin.user;
             this.jwt = signin.jwt;
             if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
@@ -725,31 +685,41 @@ namespace OpenRPA.Net
             {
                 this.websocket_package_size = signin.websocket_package_size;
             }
+            signedin = true;
             return signin.user;
         }
         public async Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "")
         {
-            SigninMessage signin = new SigninMessage(jwt, global.version);
-            if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
-            if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
-            signin = await signin.SendMessage<SigninMessage>(this);
-            if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
-            user = signin.user;
-            this.jwt = signin.jwt;
-            if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+            try
             {
-                Config.local.openflow_uniqueid = signin.openflow_uniqueid;
-                Config.local.enable_analytics = signin.enable_analytics;
+                SigninMessage signin = new SigninMessage(jwt, global.version);
+                if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
+                if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
+                signin = await signin.SendMessage<SigninMessage>(this);
+                if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
+                if (signin.user == null) throw new SocketException("signin failed, received a null user object");
+                user = signin.user;
+                this.jwt = signin.jwt;
+                if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
+                {
+                    Config.local.openflow_uniqueid = signin.openflow_uniqueid;
+                    Config.local.enable_analytics = signin.enable_analytics;
+                }
+                if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
+                if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
+                if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
+                if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
+                if (signin.websocket_package_size > 100)
+                {
+                    this.websocket_package_size = signin.websocket_package_size;
+                }
+                signedin = true;
+                return signin.user;
             }
-            if (!string.IsNullOrEmpty(signin.otel_trace_url)) Config.local.otel_trace_url = signin.otel_trace_url;
-            if (!string.IsNullOrEmpty(signin.otel_metric_url)) Config.local.otel_metric_url = signin.otel_metric_url;
-            if (signin.otel_trace_interval > 0) Config.local.otel_trace_interval = signin.otel_trace_interval;
-            if (signin.otel_metric_interval > 0) Config.local.otel_metric_interval = signin.otel_metric_interval;
-            if (signin.websocket_package_size > 100)
+            catch (Exception ex)
             {
-                this.websocket_package_size = signin.websocket_package_size;
+                throw ex;
             }
-            return signin.user;
         }
         public async Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "")
         {
@@ -760,6 +730,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new Exception(signin.error);
+            if (signin.user == null) throw new SocketException("signin failed, received a null user object");
             user = signin.user;
             this.jwt = signin.jwt;
             if (!string.IsNullOrEmpty(signin.openflow_uniqueid))
@@ -775,6 +746,7 @@ namespace OpenRPA.Net
             {
                 this.websocket_package_size = signin.websocket_package_size;
             }
+            signedin = true;
             return signin.jwt;
         }
         public async Task RegisterUser(string name, string username, string password)
@@ -876,11 +848,15 @@ namespace OpenRPA.Net
                     q = await q.SendMessage<QueryMessage<T>>(this);
                     if (q == null) throw new SocketException("Server returned an empty response");
                     if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
-                    result.AddRange(q.result);
-                    if (q.result.Count() == _top && result.Count < top)
+                    if(q.result == null) throw new SocketException("Server returned an empty response");
+                    if (q.result != null)
                     {
-                        cont = true;
-                        _skip += _top;
+                        result.AddRange(q.result);
+                        if (q.result.Count() == _top && result.Count < top)
+                        {
+                            cont = true;
+                            _skip += _top;
+                        }
                     }
                 } while (cont);
                 return result.ToArray();
@@ -1077,6 +1053,7 @@ namespace OpenRPA.Net
             q.collectionname = collectionname; q.aggregates = JArray.Parse(aggregates);
             q = await q.SendMessage<WatchMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
+            if (string.IsNullOrEmpty(q.id)) throw new SocketException("Failed registering watch, id is null");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             if (!watches.ContainsKey(q.id)) watches.Add(q.id, onWatchEvent);
             return q.id;

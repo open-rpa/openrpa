@@ -474,6 +474,7 @@ namespace OpenRPA
                 Config.local.password = new byte[] { };
                 Config.local.jwt = new byte[] { };
                 global.webSocketClient.url = Config.local.wsurl;
+                global.webSocketClient.user = null;
                 _ = global.webSocketClient.Close();
             }
             catch (Exception ex)

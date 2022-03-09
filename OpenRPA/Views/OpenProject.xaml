@@ -168,6 +168,10 @@
                 <TextBlock Text="{x:Static or:strings.open_modified}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._modified}" ></TextBlock>
             </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{x:Static or:strings.version}" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._version}" ></TextBlock>
+            </StackPanel>
         </StackPanel>
     </Grid>
 

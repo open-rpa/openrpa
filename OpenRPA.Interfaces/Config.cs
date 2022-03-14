@@ -80,6 +80,7 @@ namespace OpenRPA
         public int max_trace_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
         public int max_output_lines { get { return GetProperty(null, 250); } set { SetProperty(null, value); } }
         public TimeSpan network_message_timeout { get { return GetProperty(null, TimeSpan.FromSeconds(15)); } set { SetProperty(null, value); } }
+        public bool disable_instance_store { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
             if (entropy == null || entropy.Length == 0)
@@ -239,6 +240,7 @@ namespace OpenRPA
                 _ = notify_on_workflow_end;
                 _ = notify_on_workflow_remote_end;
                 _ = log_busy_warning;
+                _ = disable_instance_store;
 
                 _ = max_trace_lines;
                 _ = max_output_lines;

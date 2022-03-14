@@ -21,24 +21,16 @@ namespace OpenRPA.Store
         private static object _lock = new object();
         public override void Save(Guid instanceId, Guid storeId, string doc)
         {
-            //try
-            //{
-            //    var folder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "state");
-            //    var filename = System.IO.Path.Combine(folder, instanceId.ToString() + ".xml");
-            //    if (!System.IO.Directory.Exists(folder)) System.IO.Directory.CreateDirectory(folder);
-            //    System.IO.File.WriteAllText(filename, doc);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error("OpenFlowInstanceStore.save: " + ex.Message);
-            //}
             try
             {
-                var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
-                if (i != null)
+                var instance = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
+                if (instance != null)
                 {
-                    i.xml = Interfaces.Extensions.Base64Encode(doc);
-                    _ = i.Save<WorkflowInstance>(true);
+                    if (instance != null && instance.Workflow != null && instance.Workflow.Serializable == true)
+                    {
+                        instance.xml = Interfaces.Extensions.Base64Encode(doc);
+                        _ = instance.Save<WorkflowInstance>(true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -48,35 +40,23 @@ namespace OpenRPA.Store
         }
         public override string Load(Guid instanceId, Guid storeId)
         {
-            //try
-            //{
-            //    var folder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "state");
-            //    var filename = System.IO.Path.Combine(folder, instanceId.ToString() + ".xml");
-            //    if (System.IO.File.Exists(filename))
-            //    {
-            //        var _xml = System.IO.File.ReadAllText(filename) + "";
-            //        if (!string.IsNullOrEmpty(_xml.Trim()))
-            //        {
-            //            return _xml;
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error("OpenFlowInstanceStore.Load: " + ex.Message);
-            //}
             try
             {
-                var i = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
-                if (i != null)
+                var instance = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
+                if (instance != null)
                 {
-                    if (string.IsNullOrEmpty(i.xml))
+                    if (string.IsNullOrEmpty(instance.xml))
                     {
                         Log.Error("Error locating " + instanceId.ToString() + " in Instance Store ( found but state is empty!!!!) ");
                         return null;
                     }
+                    if (instance.Workflow != null && instance.Workflow.Serializable == false)
+                    {
+                        Log.Error("Instance " + instanceId.ToString() + " was found in Instance Store, but workflow now has Serializable=false");
+                        return null;
+                    }
                     Log.Debug("Loading " + instanceId.ToString() + " from Instance Store");
-                    return Interfaces.Extensions.Base64Decode(i.xml);
+                    return Interfaces.Extensions.Base64Decode(instance.xml);
                 }
                 Log.Error("Error locating " + instanceId.ToString() + " in Instance Store");
                 return null;

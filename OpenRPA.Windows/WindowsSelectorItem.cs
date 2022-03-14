@@ -298,7 +298,7 @@ namespace OpenRPA.Windows
                 {
                     try
                     {
-                        if (now - _list[i].Created > timeout) RemoveFromCache(_list[i]);
+                        if (now - _list[i].Created > timeout) RemoveFromCache(_list[i], true);
                         if (_list[i].Conditions == Conditions && _list[i].Root.Equals(root) && _list[i].Ident == ident)
                         {
                             result = _list[i];
@@ -306,7 +306,7 @@ namespace OpenRPA.Windows
                     }
                     catch (Exception)
                     {
-                        RemoveFromCache(_list[i]);
+                        RemoveFromCache(_list[i], false);
                     }
                 }
             }
@@ -322,12 +322,12 @@ namespace OpenRPA.Windows
                         // _ = e.Parent;
                         if (!e.IsAvailable)
                         {
-                            RemoveFromCache(result);
+                            RemoveFromCache(result, false);
                             return null;
                         }
                         else if (!e.Properties.BoundingRectangle.IsSupported || e.Properties.BoundingRectangle.Value == System.Drawing.Rectangle.Empty)
                         {
-                            RemoveFromCache(result);
+                            RemoveFromCache(result, false);
                             return null;
                         }
                         //else if ((e.ControlType == FlaUI.Core.Definitions.ControlType.Button ||
@@ -344,20 +344,23 @@ namespace OpenRPA.Windows
                 }
                 catch (Exception)
                 {
-                    RemoveFromCache(result);
+                    RemoveFromCache(result, false);
                 }
                 return result.Result;
             }
             return null;
         }
-        public static void RemoveFromCache(MatchCacheItem item)
+        public static void RemoveFromCache(MatchCacheItem item, bool remove_related)
         {
             try
             {
-                lock (cache_lock)
+                if(remove_related)
                 {
-                    var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
-                    foreach (var e in items) MatchCache.Remove(e);
+                    lock (cache_lock)
+                    {
+                        var items = MatchCache.Where(x => x.Root.Equals(item.Root) && x.Ident >= item.Ident).ToList();
+                        foreach (var e in items) MatchCache.Remove(e);
+                    }
                 }
             }
             catch (Exception)

@@ -125,6 +125,11 @@
                     Margin="20,0,0,0" Content="{x:Static or:strings.disable_local_caching}"
                     Command="{Binding Data.DisableCachingCommand, Source={StaticResource proxy}}" 
                     ></CheckBox>
+                <CheckBox 
+                    IsChecked="{Binding ElementName=listWorkflows, Path=SelectedValue.Serializable}" 
+                    Margin="20,0,0,0" Content="{x:Static or:strings.disable_serializable}"
+                    Command="{Binding Data.SerializableCommand, Source={StaticResource proxy}}" 
+                    ></CheckBox>
             </StackPanel>
             <StackPanel x:Name="EditXAMLPanel">
                 <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>

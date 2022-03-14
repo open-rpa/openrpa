@@ -762,7 +762,7 @@ namespace OpenRPA
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 SetStatus("query idle or running openrpa_instances");
                 var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
-                var runpending = false;
+                // var runpending = false;
                 foreach (var i in runninginstances)
                 {
                     var exists = dbWorkflowInstances.Find(x => x._id == i._id).FirstOrDefault();
@@ -781,11 +781,11 @@ namespace OpenRPA
                         {
                             if (exists.state == "idle" || exists.state == "running")
                             {
-                                var e = WorkflowInstance.Instances.Where(x => x.InstanceId == exists.InstanceId).FirstOrDefault();
-                                if (e == null)
-                                {
-                                    runpending = true;
-                                }
+                                //var e = WorkflowInstance.Instances.Where(x => x.InstanceId == exists.InstanceId).FirstOrDefault();
+                                //if (e == null)
+                                //{
+                                //    runpending = true;
+                                //}
                             }
                         }
                     }
@@ -800,7 +800,6 @@ namespace OpenRPA
                 {
                     await i.Save<WorkflowInstance>();
                 }
-                if (runpending) await WorkflowInstance.RunPendingInstances();
                 _ = Task.Run(async () =>
                   {
                       try

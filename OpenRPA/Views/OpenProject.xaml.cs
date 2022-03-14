@@ -101,6 +101,13 @@ namespace OpenRPA.Views
                 return new RelayCommand<object>(OnGetServerVersion, CanGetServerVersion);
             }
         }
+        public ICommand SerializableCommand
+        {
+            get
+            {
+                return new RelayCommand<object>(OnSerializable, CanSerializable);
+            }
+        }
         public ICommand DisableCachingCommand
         {
             get
@@ -145,6 +152,38 @@ namespace OpenRPA.Views
                 if (server_workflows.Length > 0)
                 {
                     await server_workflows[0].Save();
+                }
+            }
+        }
+        internal bool CanSerializable(object _item)
+        {
+            try
+            {
+                if (RobotInstance.instance.Window is AgentWindow) return false;
+                if (main.SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (view.listWorkflows.SelectedValue is Workflow f) return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnSerializable(object _item)
+        {
+            if (main.SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (view.listWorkflows.SelectedValue is Workflow f)
+                {
+                    f.Serializable = !f.Serializable;
+                    await f.Save();
                 }
             }
         }

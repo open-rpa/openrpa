@@ -585,6 +585,9 @@
   <data name="disable_local_caching" xml:space="preserve">
     <value>Disable local caching</value>
   </data>
+  <data name="disable_serializable" xml:space="preserve">
+    <value>Serializable ( save state )</value>
+  </data>
   <data name="dock_logging" xml:space="preserve">
     <value>Logging</value>
   </data>

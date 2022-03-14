@@ -245,7 +245,7 @@ namespace OpenRPA
                     //{
                     //    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
                     //}
-                    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
+                    if (!Config.local.disable_instance_store) wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
                 }
                 addwfApphandlers(wfApp);
             }
@@ -279,7 +279,7 @@ namespace OpenRPA
                     //{
                     //    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
                     //}
-                    wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
+                    if (!Config.local.disable_instance_store) wfApp.InstanceStore = new Store.OpenFlowInstanceStore();
                 }
                 wfApp.Load(new Guid(InstanceId));
             }
@@ -945,6 +945,7 @@ namespace OpenRPA
         public static async Task RunPendingInstances()
         {
             if (hasRanPending) return;
+            if (Config.local.disable_instance_store) return;
             // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
             try
@@ -962,6 +963,7 @@ namespace OpenRPA
                 if (results.Count > 0) Log.Information("Try running " + results.Count + " pending workflows");
                 foreach (WorkflowInstance i in results)
                 {
+                    if (i.Workflow != null && i.Workflow.Serializable == false) return;
                     try
                     {
                         if (!string.IsNullOrEmpty(i.InstanceId) && string.IsNullOrEmpty(i.xml))

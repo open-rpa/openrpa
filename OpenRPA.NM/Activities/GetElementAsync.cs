@@ -39,7 +39,7 @@ namespace OpenRPA.NM
             MinResults = 1;
             Timeout = new InArgument<TimeSpan>()
             {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
             };
         }
         private void DoWaitForReady(string browser)
@@ -79,6 +79,27 @@ namespace OpenRPA.NM
             }
             var allelements = context.GetValue(_allelements);
             if (allelements == null) allelements = new NMElement[] { };
+            if (timeout.Minutes > 5 || timeout.Hours > 1)
+            {
+                Activity _Activity = null;
+                try
+                {
+                    var strProperty = context.GetType().GetProperty("Activity", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    var strGetter = strProperty.GetGetMethod(nonPublic: true);
+                    _Activity = (Activity)strGetter.Invoke(context, null);
+                }
+                catch (Exception)
+                {
+                }
+                if (_Activity != null)
+                {
+                    Log.Warning("Timeout for Activity " + _Activity.Id + " is above 5 minutes, was this the intention ? calculated value " + timeout.ToString());
+                }
+                else
+                {
+                    Log.Warning("Timeout for on of your NM.GetElementAsync is above 5 minutes, was this the intention ? calculated value " + timeout.ToString());
+                }
+            }
 
             var s = new NMSelectorItem(sel[0]);
             if (!string.IsNullOrEmpty(s.url))

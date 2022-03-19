@@ -86,7 +86,7 @@ namespace OpenRPA.IE
                     });
                     ModelItem.Properties["Timeout"].SetValue(new InArgument<TimeSpan>()
                     {
-                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(0)")
+                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:00")
                     });
                 }
             }

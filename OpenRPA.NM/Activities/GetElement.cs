@@ -19,8 +19,6 @@ namespace OpenRPA.NM
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
     public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
-        //[RequiredArgument]
-        //public InArgument<string> XPath { get; set; }
 
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<NMElement> Body { get; set; }
@@ -45,7 +43,7 @@ namespace OpenRPA.NM
             MinResults = 1;
             Timeout = new InArgument<TimeSpan>()
             {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(3)")
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
             };
         }
         private void DoWaitForReady(string browser)
@@ -74,6 +72,27 @@ namespace OpenRPA.NM
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             if (maxresults < 1) maxresults = 1;
+            if(timeout.Minutes > 5 || timeout.Hours > 1)
+            {
+                Activity _Activity = null;
+                try
+                {
+                    var strProperty = context.GetType().GetProperty("Activity", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    var strGetter = strProperty.GetGetMethod(nonPublic: true);
+                    _Activity = (Activity)strGetter.Invoke(context, null);
+                }
+                catch (Exception)
+                {
+                }
+                if(_Activity != null)
+                {
+                    Log.Warning("Timeout for Activity " + _Activity.Id + " is above 5 minutes, was this the intention ? calculated value " + timeout.ToString());
+                }
+                else
+                {
+                    Log.Warning("Timeout for on of your NM.GetElements is above 5 minutes, was this the intention ? calculated value " + timeout.ToString());
+                }
+            }
             NMElement[] elements = { };
             var sw = new Stopwatch();
             sw.Start();

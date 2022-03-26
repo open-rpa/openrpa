@@ -160,6 +160,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to For Each.
+        /// </summary>
+        public static string activity_breakableforeachof {
+            get {
+                return ResourceManager.GetString("activity_breakableforeachof", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute body once per item in the list.
+        /// </summary>
+        public static string activity_breakableforeachof_tooltip {
+            get {
+                return ResourceManager.GetString("activity_breakableforeachof_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to While.
         /// </summary>
         public static string activity_breakablewhile {

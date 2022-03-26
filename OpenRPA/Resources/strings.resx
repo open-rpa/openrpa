@@ -147,6 +147,12 @@
   <data name="activity_Breakabledowhile_tooltip" xml:space="preserve">
     <value>Execute the contained workflow while condition is true</value>
   </data>
+  <data name="activity_breakableforeachof" xml:space="preserve">
+    <value>For Each</value>
+  </data>
+  <data name="activity_breakableforeachof_tooltip" xml:space="preserve">
+    <value>Execute body once per item in the list</value>
+  </data>
   <data name="activity_breakablewhile" xml:space="preserve">
     <value>While</value>
   </data>

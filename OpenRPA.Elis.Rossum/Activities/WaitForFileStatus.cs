@@ -25,7 +25,7 @@ namespace OpenRPA.Elis.Rossum
         {
             Timeout = new InArgument<TimeSpan>()
             {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromSeconds(10)")
+                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:10")
             };
         }
         [RequiredArgument]

@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.3.59</Version>
+		<Version>1.3.60</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>open_rpa128.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -90,6 +90,7 @@
 		<None Remove="Activities\FocusElementDesigner.xaml" />
 		<None Remove="Activities\ForEachDataRowDesigner.xaml" />
 		<None Remove="Activities\ForEachOfDesigner.xaml" />
+		<None Remove="Activities\GetWorkflowInstanceDesigner.xaml" />
 		<None Remove="Activities\HighlightElementDesigner.xaml" />
 		<None Remove="Activities\InsertClipboardDesigner.xaml" />
 		<None Remove="Activities\InvokeOpenFlowDesigner.xaml" />
@@ -184,6 +185,7 @@
 		<None Remove="Resources\designer\getjavaelement.png" />
 		<None Remove="Resources\designer\getuielement.png" />
 		<None Remove="Resources\designer\geturl.png" />
+		<None Remove="Resources\designer\getworkflowinstance.png" />
 		<None Remove="Resources\designer\highlight.png" />
 		<None Remove="Resources\designer\insertclipboard.png" />
 		<None Remove="Resources\designer\invokebrowserscript.png" />
@@ -291,6 +293,7 @@
 		<None Remove="Resources\toolbox\getjavaelement.png" />
 		<None Remove="Resources\toolbox\getuielement.png" />
 		<None Remove="Resources\toolbox\geturl.png" />
+		<None Remove="Resources\toolbox\getworkflowinstance.png" />
 		<None Remove="Resources\toolbox\highlight.png" />
 		<None Remove="Resources\toolbox\insertclipboard.png" />
 		<None Remove="Resources\toolbox\invokebrowserscript.png" />
@@ -351,6 +354,9 @@
 		</Page>
 		<Page Include="Activities\BreakDesigner.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\GetWorkflowInstanceDesigner.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Activities\MoveElementDesigner.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -471,6 +477,7 @@
 		<Resource Include="Resources\close.png" />
 		<Resource Include="Resources\designer\break.png" />
 		<Resource Include="Resources\designer\continue.png" />
+		<Resource Include="Resources\designer\getworkflowinstance.png" />
 		<Resource Include="Resources\designer\mouse.png" />
 		<Resource Include="Resources\designer\moveelement.png" />
 		<Resource Include="Resources\gears-1236578_1920.jpg" />
@@ -516,6 +523,7 @@
 		<EmbeddedResource Include="Resources\toolbox\getjavaelement.png" />
 		<EmbeddedResource Include="Resources\toolbox\getuielement.png" />
 		<EmbeddedResource Include="Resources\toolbox\geturl.png" />
+		<EmbeddedResource Include="Resources\toolbox\getworkflowinstance.png" />
 		<EmbeddedResource Include="Resources\toolbox\highlight.png" />
 		<EmbeddedResource Include="Resources\toolbox\insertclipboard.png" />
 		<EmbeddedResource Include="Resources\toolbox\invokebrowserscript.png" />

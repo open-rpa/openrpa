@@ -85,6 +85,7 @@ namespace OpenRPA
                     }
                 }
                 // WindowState = WindowState.Minimized;
+                LoadLayout();
             }
             catch (Exception ex)
             {
@@ -132,6 +133,7 @@ namespace OpenRPA
             {
                 try
                 {
+                    LoadLayout();
                     ReadyForAction?.Invoke();
                 }
                 catch (Exception ex)
@@ -214,6 +216,7 @@ namespace OpenRPA
         {
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.Dispose();
+            SaveLayout();
             if (RobotInstance.instance.db != null)
             {
                 try
@@ -451,7 +454,7 @@ namespace OpenRPA
         }
         private void OnReload(object _item)
         {
-            Log.Function("MainWindow", "OnReload");
+            Log.Function("AgentWindow", "OnReload");
             if (!global.isConnected)
             {
                 _ = RobotInstance.instance.Connect();
@@ -675,6 +678,125 @@ namespace OpenRPA
                 }
                 return;
             }
+        }
+        private void SaveLayout()
+        {
+            Log.FunctionIndent("MainWindow", "SaveLayout");
+            try
+            {
+                var workflows = new List<string>();
+                foreach (var designer in RobotInstance.instance.Designers)
+                {
+                    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
+                    {
+                        workflows.Add(designer.Workflow.RelativeFilename);
+                    }
+                    else if (!string.IsNullOrEmpty(designer.Workflow._id))
+                    {
+                        workflows.Add(designer.Workflow._id);
+
+                    }
+                }
+                Config.local.openworkflows = workflows.ToArray();
+                var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
+                if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
+                {
+                    Config.local.mainwindow_position = pos;
+                }
+                Config.Save();
+                try
+                {
+                    var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                    using (var stream = new System.IO.StreamWriter(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layoutagent.config")))
+                        serializer.Serialize(stream);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            Log.FunctionOutdent("MainWindow", "SaveLayout");
+        }
+        private void LoadLayout()
+        {
+            Log.FunctionIndent("MainWindow", "LoadLayout");
+            GenericTools.RunUI(() =>
+            {
+                try
+                {
+                    var fi = new System.IO.FileInfo("layoutagent.config");
+                    var di = fi.Directory;
+
+                    if (System.IO.File.Exists(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layoutagent.config")))
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader(System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "layoutagent.config")))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    else if (System.IO.File.Exists("layoutagent.config"))
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader("layoutagent.config"))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "layoutagent.config")))
+                    {
+                        var ds = DManager.Layout.Descendents();
+                        var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);
+                        using (var stream = new System.IO.StreamReader(System.IO.Path.Combine(di.Parent.FullName, "layoutagent.config")))
+                            serializer.Deserialize(stream);
+                        ds = DManager.Layout.Descendents();
+                    }
+                    else
+                    {
+                        var las = DManager.Layout.Descendents().OfType<LayoutAnchorable>().ToList();
+                        foreach (var dp in las)
+                        {
+                            if (dp.Title == "Toolbox")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                            if (dp.Title == "Properties")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                            if (dp.Title == "Snippets")
+                            {
+                                if (dp.IsAutoHidden) { dp.ToggleAutoHide(); }
+                            }
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            });
+            Task.Run(() =>
+            {
+                var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+                while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
+                {
+                    System.Threading.Thread.Sleep(200);
+                    if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
+                }
+                foreach (var id in Config.local.openworkflows)
+                {
+                    var wf = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(id);
+                    if (wf != null) OnOpenWorkflow(wf);
+                }
+            });
+            Log.FunctionOutdent("MainWindow", "LoadLayout");
         }
 
     }

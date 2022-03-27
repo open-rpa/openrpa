@@ -112,8 +112,8 @@ namespace OpenRPA.NM
             }
             return null;
         }
-        private static List<NativeMessagingMessageWindow> windows = new List<NativeMessagingMessageWindow>();
-        private static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();
+        public static List<NativeMessagingMessageWindow> windows = new List<NativeMessagingMessageWindow>();
+        public static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();
         public static NativeMessagingMessageWindow CurrentChromeWindow
         {
             get

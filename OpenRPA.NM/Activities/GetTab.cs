@@ -14,15 +14,17 @@ using System.Threading.Tasks;
 namespace OpenRPA.NM
 {
     [System.ComponentModel.Designer(typeof(GetTabDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetTab), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.gethtmlelement.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_gettab_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettab", typeof(Resources.strings))]
     public class GetTab : NativeActivity
     {
         public InArgument<string> Browser { get; set; }
-        [RequiredArgument]
+        [RequiredArgument, OverloadGroup("Result")]
         public OutArgument<NativeMessagingMessageTab> Result { get; set; }
+        [RequiredArgument, OverloadGroup("Results")]
+        public OutArgument<NativeMessagingMessageTab[]> Results { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             if (!NMHook.connected)
@@ -34,15 +36,35 @@ namespace OpenRPA.NM
             if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
             if (browser == "edge")
             {
-                Result.Set(context, NMHook.CurrentEdgeTab);
+                if(Result != null && !Result.GetIsEmpty())
+                {
+                    Result.Set(context, NMHook.CurrentEdgeTab);
+                } else
+                {
+                    Results.Set(context,NMHook.tabs.Where(x => x.browser == browser).ToArray());
+                }
             }
             else if (browser == "ff")
             {
-                Result.Set(context, NMHook.CurrentFFTab);
+                if (Result != null && !Result.GetIsEmpty())
+                {
+                    Result.Set(context, NMHook.CurrentFFTab);
+                }
+                else
+                {
+                    Results.Set(context, NMHook.tabs.Where(x => x.browser == browser).ToArray());
+                }
             }
             else
             {
-                Result.Set(context, NMHook.CurrentChromeTab);
+                if (Result != null && !Result.GetIsEmpty())
+                {
+                    Result.Set(context, NMHook.CurrentChromeTab);
+                }
+                else
+                {
+                    Results.Set(context, NMHook.tabs.Where(x => x.browser == browser).ToArray());
+                }
             }
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)

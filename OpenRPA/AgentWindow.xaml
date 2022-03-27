@@ -80,6 +80,11 @@
                                   Command="{Binding Data.StopCommand, Source={StaticResource proxy}}" 
                                   CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
                 </RibbonGroup>
+                <RibbonGroup Header="{x:Static or:strings.files}">
+                    <RibbonButton Label="{x:Static or:strings.main_reload}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
+                                  Command="{Binding Data.ReloadCommand, Source={StaticResource proxy}}" 
+                                  CommandParameter="{Binding ElementName=mainTabControl,Path=SelectedContent}" />
+                </RibbonGroup>
             </RibbonTab>
         </Ribbon>
 

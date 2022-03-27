@@ -911,7 +911,7 @@ namespace OpenRPA
         public ICommand ImportCommand { get { return new RelayCommand<object>(OnImport, CanImport); } }
         public ICommand ExportCommand { get { return new RelayCommand<object>(OnExport, CanExport); } }
         public ICommand PermissionsCommand { get { return new RelayCommand<object>(OnPermissions, CanPermissions); } }
-        public ICommand ReloadCommand { get { return new RelayCommand<object>(OnReload, CanReload); } }
+        public ICommand ReloadCommand { get { return new RelayCommand<object>(OnReload, (e) => true); } }
         public ICommand LinkOpenFlowCommand { get { return new RelayCommand<object>(OnlinkOpenFlow, CanlinkOpenFlow); } }
         public ICommand LinkNodeREDCommand { get { return new RelayCommand<object>(OnlinkNodeRED, CanlinkNodeRED); } }
         public ICommand OpenChromePageCommand { get { return new RelayCommand<object>(OnOpenChromePage, CanAllways); } }
@@ -1339,10 +1339,6 @@ namespace OpenRPA
                 Show();
             }
             Log.FunctionOutdent("MainWindow", "OnPermissions");
-        }
-        private bool CanReload(object _item)
-        {
-            return true;
         }
         private void OnReload(object _item)
         {

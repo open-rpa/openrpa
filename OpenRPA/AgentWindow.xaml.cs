@@ -152,6 +152,7 @@ namespace OpenRPA
         public ICommand PlayCommand { get { return new RelayCommand<object>(OnPlay, CanPlay); } }
         public ICommand StopCommand { get { return new RelayCommand<object>(OnStop, CanStop); } }
         public ICommand ExitAppCommand { get { return new RelayCommand<object>(OnExitApp, (e) => true); } }
+        public ICommand ReloadCommand { get { return new RelayCommand<object>(OnReload, (e) => true); } }
         public LayoutDocumentPane MainTabControl
         {
             get
@@ -447,6 +448,18 @@ namespace OpenRPA
         {
             AllowQuite = true;
             Close();
+        }
+        private void OnReload(object _item)
+        {
+            Log.Function("MainWindow", "OnReload");
+            if (!global.isConnected)
+            {
+                _ = RobotInstance.instance.Connect();
+            }
+            else
+            {
+                _ = RobotInstance.instance.LoadServerData();
+            }
         }
         private bool CanSignout(object _item)
         {

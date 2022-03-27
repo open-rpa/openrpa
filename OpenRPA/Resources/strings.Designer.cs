@@ -547,6 +547,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Workflow Instance.
+        /// </summary>
+        public static string activity_getworkflowinstance {
+            get {
+                return ResourceManager.GetString("activity_getworkflowinstance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Current Workflow instance of the current workflow.
+        /// </summary>
+        public static string activity_getworkflowinstance_tooltip {
+            get {
+                return ResourceManager.GetString("activity_getworkflowinstance_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height.
         /// </summary>
         public static string activity_height {

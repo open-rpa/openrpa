@@ -279,6 +279,12 @@
   <data name="activity_foreachdatarow_tooltip" xml:space="preserve">
     <value>Enumerate through each row inside a DataTable</value>
   </data>
+  <data name="activity_getworkflowinstance" xml:space="preserve">
+    <value>Get Workflow Instance</value>
+  </data>
+  <data name="activity_getworkflowinstance_tooltip" xml:space="preserve">
+    <value>Get Current Workflow instance of the current workflow</value>
+  </data>
   <data name="activity_height" xml:space="preserve">
     <value>Height</value>
   </data>

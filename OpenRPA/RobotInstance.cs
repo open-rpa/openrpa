@@ -1303,6 +1303,7 @@ namespace OpenRPA
                     await global.webSocketClient.Watch("openrpa", "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
                 }
                 _ = LoadServerData();
+                InitializeOTEL();
             }
             catch (Exception ex)
             {
@@ -1747,7 +1748,9 @@ namespace OpenRPA
         // public Tracer tracer = null;
         // private InstrumentationWithActivitySource Sampler = null;
         private TracerProvider StatsTracerProvider;
+        private TracerProvider LocalTracerProvider;
         private Object StatsMeterProvider;
+        private Object LocalMeterProvider;
         // private TracerProvider tracerProvider;
         private static readonly Meter OpenRPAMeter = new Meter("OpenRPA");
         private static PerformanceCounter process_cpu = null;
@@ -1797,7 +1800,21 @@ namespace OpenRPA
                     })
                     .Build();
                 }
-                if (Config.local.enable_analytics && StatsMeterProvider == null)
+                if(LocalTracerProvider == null && Config.local != null && !string.IsNullOrEmpty(Config.local.otel_trace_url))
+                {
+                    LocalTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
+                    .SetSampler(new AlwaysOnSampler())
+                    .AddSource("OpenRPA")
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
+                    .AddOtlpExporter(otlpOptions =>
+                    {
+                        otlpOptions.Endpoint = new Uri(Config.local.otel_trace_url);
+                        otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
+                    })
+                    .Build();
+
+                }
+                if ( (Config.local.enable_analytics && StatsMeterProvider == null) || (LocalMeterProvider == null && !string.IsNullOrEmpty(Config.local.otel_metric_url)) )
                 {
                     // Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
                     try
@@ -1912,6 +1929,9 @@ namespace OpenRPA
                         return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                     });
 
+                }
+                if (Config.local.enable_analytics && StatsMeterProvider == null)
+                {
                     StatsMeterProvider = OpenTelemetry.Sdk.CreateMeterProviderBuilder()
                         .AddMeter(OpenRPAMeter.Name)
                         .AddOtlpExporter(opt =>
@@ -1921,7 +1941,17 @@ namespace OpenRPA
                             opt.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                         })
                         .Build();
-
+                }
+                if (LocalMeterProvider == null && !string.IsNullOrEmpty(Config.local.otel_metric_url))
+                {
+                    LocalMeterProvider = OpenTelemetry.Sdk.CreateMeterProviderBuilder()
+                        .AddMeter(OpenRPAMeter.Name)
+                        .AddOtlpExporter(opt =>
+                        {
+                            opt.Endpoint = new Uri(Config.local.otel_metric_url);
+                            opt.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
+                        })
+                        .Build();
                 }
                 return true;
             }

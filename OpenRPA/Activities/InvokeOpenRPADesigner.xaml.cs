@@ -76,54 +76,55 @@ namespace OpenRPA.Activities
         }
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
-            if (ModelItem.Properties["workflow"].Value == null) return;
             string workflowid = ModelItem.GetValue<string>("workflow");
-            if (string.IsNullOrEmpty(workflowid)) throw new ArgumentException("workflow property is null");
-            var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
-            var designer = RobotInstance.instance.Window.Designer;
-            if (workflow == null) throw new ArgumentException("workflow is null, not found");
-            if (designer == null) throw new ArgumentException("designer is null, cannot find current designer");
             ModelItemDictionary dictionary = base.ModelItem.Properties["Arguments"].Dictionary;
-            try
+            if (!string.IsNullOrEmpty(workflowid))
             {
-                workflow.ParseParameters();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-                MessageBox.Show("Failed mapping arguments" + Environment.NewLine + ex.Message);
-            }
-            foreach (var p in workflow.Parameters)
-            {
-                bool exists = false;
-                foreach (var key in dictionary.Keys)
+                var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
+                var designer = RobotInstance.instance.Window.Designer;
+                if (workflow != null)
+                    try
+                    {
+                        workflow.ParseParameters();
+                    }
+                    catch (Exception ex)
+                    {
+                        workflow = null;
+                    }
+                if(workflow != null)
                 {
-                    if (key.ToString() == p.name) exists = true;
-                    if (key.GetValue<string>("AnnotationText") == p.name) exists = true;
-                    if (key.GetValue<string>("Name") == p.name) exists = true;
-                }
-                if (!exists)
-                {
+                    foreach (var p in workflow.Parameters)
+                    {
+                        bool exists = false;
+                        foreach (var key in dictionary.Keys)
+                        {
+                            if (key.ToString() == p.name) exists = true;
+                            if (key.GetValue<string>("AnnotationText") == p.name) exists = true;
+                            if (key.GetValue<string>("Name") == p.name) exists = true;
+                        }
+                        if (!exists)
+                        {
 
-                    Type t = OpenRPA.Interfaces.Extensions.FindType(p.type);
-                    if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
-                    if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
-                    Argument a = null;
-                    if (p.direction == workflowparameterdirection.@in) a = Argument.Create(t, ArgumentDirection.In);
-                    if (p.direction == workflowparameterdirection.inout) a = Argument.Create(t, ArgumentDirection.InOut);
-                    if (p.direction == workflowparameterdirection.@out) a = Argument.Create(t, ArgumentDirection.Out);
-                    // a.GetType().GetProperties().Where(x => x.Name == "Expression").Last().SetValue(a, o);
-                    //a.Expression = o as VisualBasicValue<>;
-                    dictionary.Add(p.name, a);
+                            Type t = OpenRPA.Interfaces.Extensions.FindType(p.type);
+                            if (p.type == "System.Data.DataTable") t = typeof(System.Data.DataTable);
+                            if (t == null) throw new ArgumentException("Failed resolving type '" + p.type + "'");
+                            Argument a = null;
+                            if (p.direction == workflowparameterdirection.@in) a = Argument.Create(t, ArgumentDirection.In);
+                            if (p.direction == workflowparameterdirection.inout) a = Argument.Create(t, ArgumentDirection.InOut);
+                            if (p.direction == workflowparameterdirection.@out) a = Argument.Create(t, ArgumentDirection.Out);
+                            // a.GetType().GetProperties().Where(x => x.Name == "Expression").Last().SetValue(a, o);
+                            //a.Expression = o as VisualBasicValue<>;
+                            dictionary.Add(p.name, a);
+                        }
+                    }
+                    foreach (var a in dictionary.ToList())
+                    {
+                        bool exists = workflow.Parameters.Where(x => x.name == a.Key.ToString()).Count() > 0;
+                        if (!exists) dictionary.Remove(a.Key);
+                    }
                 }
             }
-            foreach (var a in dictionary.ToList())
-            {
-                bool exists = workflow.Parameters.Where(x => x.name == a.Key.ToString()).Count() > 0;
-                if (!exists) dictionary.Remove(a.Key);
-            }
-
-            var options = new System.Activities.Presentation.DynamicArgumentDesignerOptions() { Title = "Map Arguments" };
+            var options = new System.Activities.Presentation.DynamicArgumentDesignerOptions() { Title = ModelItem.GetValue<string>("DisplayName") };
             using (ModelEditingScope modelEditingScope = dictionary.BeginEdit())
             {
                 if (System.Activities.Presentation.DynamicArgumentDialog.ShowDialog(base.ModelItem, dictionary, base.Context, base.ModelItem.View, options))

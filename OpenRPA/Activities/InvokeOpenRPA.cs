@@ -18,13 +18,22 @@ namespace OpenRPA.Activities
     [LocalizedDisplayName("activity_invokeopenrpa", typeof(Resources.strings))]
     public class InvokeOpenRPA : NativeActivity
     {
+        public InvokeOpenRPA()
+        {
+            var builder = new System.Activities.Presentation.Metadata.AttributeTableBuilder();
+            builder.AddCustomAttributes(typeof(InvokeOpenRPA), "Arguments",
+                new EditorAttribute(typeof(OpenRPA.Interfaces.Activities.ArgumentCollectionEditor),
+                typeof(System.Activities.Presentation.PropertyEditing.PropertyValueEditor)));
+            System.Activities.Presentation.Metadata.MetadataStore.AddAttributeTable(builder.CreateTable());
+            Arguments = new Dictionary<string, Argument>();
+        }
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         [RequiredArgument, LocalizedDisplayName("activity_killifrunning", typeof(Resources.strings)), LocalizedDescription("activity_killifrunning_help", typeof(Resources.strings))]
         public InArgument<bool> KillIfRunning { get; set; } = true;
-        [Category("Input")]
+        [LocalizedDisplayName("activity_arguments", typeof(Resources.strings)), LocalizedDescription("activity_arguments_help", typeof(Resources.strings)), Browsable(true), Category("Input")]
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected override void Execute(NativeActivityContext context)
         {

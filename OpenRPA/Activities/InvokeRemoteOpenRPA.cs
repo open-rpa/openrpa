@@ -18,6 +18,15 @@ namespace OpenRPA.Activities
     [LocalizedDisplayName("activity_invokeremoteopenrpa", typeof(Resources.strings))]
     public class InvokeRemoteOpenRPA : NativeActivity
     {
+        public InvokeRemoteOpenRPA()
+        {
+            var builder = new System.Activities.Presentation.Metadata.AttributeTableBuilder();
+            builder.AddCustomAttributes(typeof(InvokeRemoteOpenRPA), "Arguments",
+                new EditorAttribute(typeof(OpenRPA.Interfaces.Activities.ArgumentCollectionEditor),
+                typeof(System.Activities.Presentation.PropertyEditing.PropertyValueEditor)));
+            System.Activities.Presentation.Metadata.MetadataStore.AddAttributeTable(builder.CreateTable());
+            Arguments = new Dictionary<string, Argument>();
+        }
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_target", typeof(Resources.strings)), LocalizedDescription("activity_target_help", typeof(Resources.strings))]
@@ -25,7 +34,8 @@ namespace OpenRPA.Activities
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_waitforcompleted_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         public InArgument<int> Expiration { get; set; }
-        public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
+        [LocalizedDisplayName("activity_arguments", typeof(Resources.strings)), LocalizedDescription("activity_arguments_help", typeof(Resources.strings)), Browsable(true), Category("Input")]
+        public Dictionary<string, Argument> Arguments { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_killifrunning", typeof(Resources.strings)), LocalizedDescription("activity_killifrunning_help", typeof(Resources.strings))]
         public InArgument<bool> KillIfRunning { get; set; } = true;
         protected override void Execute(NativeActivityContext context)

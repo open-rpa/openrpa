@@ -132,6 +132,12 @@
   <data name="activity_animatemove_help" xml:space="preserve">
     <value>Visibly move the window, instead of instantly moving it to the destination</value>
   </data>
+  <data name="activity_arguments" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="activity_arguments_help" xml:space="preserve">
+    <value>Mapped Arguments</value>
+  </data>
   <data name="activity_blocking" xml:space="preserve">
     <value>Blocking</value>
   </data>
@@ -872,5 +878,8 @@
   </data>
   <data name="warning" xml:space="preserve">
     <value>Warning</value>
+  </data>
+  <data name="workitemqueues" xml:space="preserve">
+    <value>Work Item Queues</value>
   </data>
 </root>

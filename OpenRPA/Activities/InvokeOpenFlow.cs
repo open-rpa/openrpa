@@ -18,13 +18,23 @@ namespace OpenRPA.Activities
     [LocalizedDisplayName("activity_invokeopenflow", typeof(Resources.strings))]
     public class InvokeOpenFlow : NativeActivity
     {
+        public InvokeOpenFlow()
+        {
+            var builder = new System.Activities.Presentation.Metadata.AttributeTableBuilder();
+            builder.AddCustomAttributes(typeof(InvokeOpenFlow), "Arguments",
+                new EditorAttribute(typeof(OpenRPA.Interfaces.Activities.ArgumentCollectionEditor),
+                typeof(System.Activities.Presentation.PropertyEditing.PropertyValueEditor)));
+            System.Activities.Presentation.Metadata.MetadataStore.AddAttributeTable(builder.CreateTable());
+            Arguments = new Dictionary<string, Argument>();
+        }
+
         [RequiredArgument, LocalizedDisplayName("activity_workflow", typeof(Resources.strings)), LocalizedDescription("activity_workflow_help", typeof(Resources.strings))]
         public InArgument<string> workflow { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_waitforcompleted", typeof(Resources.strings)), LocalizedDescription("activity_ignoreerrors_help", typeof(Resources.strings))]
         public InArgument<bool> WaitForCompleted { get; set; } = true;
         public InArgument<int> Expiration { get; set; }
-        [Category("Input")]
-        public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
+        [LocalizedDisplayName("activity_arguments", typeof(Resources.strings)), LocalizedDescription("activity_arguments_help", typeof(Resources.strings)), Browsable(true), Category("Input")]
+        public Dictionary<string, Argument> Arguments { get; set; }
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();

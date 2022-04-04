@@ -106,6 +106,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arguments.
+        /// </summary>
+        public static string activity_arguments {
+            get {
+                return ResourceManager.GetString("activity_arguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mapped Arguments.
+        /// </summary>
+        public static string activity_arguments_help {
+            get {
+                return ResourceManager.GetString("activity_arguments_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blocking.
         /// </summary>
         public static string activity_blocking {
@@ -2325,6 +2343,15 @@ namespace OpenRPA.Resources {
         public static string warning {
             get {
                 return ResourceManager.GetString("warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Item Queues.
+        /// </summary>
+        public static string workitemqueues {
+            get {
+                return ResourceManager.GetString("workitemqueues", resourceCulture);
             }
         }
     }

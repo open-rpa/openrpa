@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenRPA.Interfaces;
+using System;
 using System.Activities;
 using System.ComponentModel;
 using System.Linq;
@@ -23,6 +24,10 @@ namespace OpenRPA.Utilities
             context.SetValue(Result, reader);
             var result = GetTextFromAllPages(reader);
             context.SetValue(AllText, result);
+            if (Result == null || Result.GetIsEmpty())
+            {
+                reader.Close();
+            }
         }
         public static string GetTextFromAllPages(iTextSharp.text.pdf.PdfReader reader)
         {

@@ -87,7 +87,7 @@ namespace OpenRPA.Activities
                     {
                         workflow.ParseParameters();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         workflow = null;
                     }

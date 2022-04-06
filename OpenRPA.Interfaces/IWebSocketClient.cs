@@ -95,6 +95,15 @@ namespace OpenRPA.Interfaces
         Task EnsureNoderedInstance(string _id);
         Task DeleteNoderedInstance(string _id);
         Task RestartNoderedInstance(string _id);
+
+        Task<T> AddWorkitem<T>(IWorkitem item, string[] files) where T : IWorkitem;
+        Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files) where T : IWorkitem;
+        Task<T> PopWorkitem<T>(string wiq, string wiqid) where T : IWorkitem;
+        Task DeleteWorkitem(string _id);
+        Task<T> AddWorkitemQueue<T>(T item) where T : IWorkitemQueue;
+        Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items);
+        Task<T> UpdateWorkitemQueue<T>(T item, bool purge) where T : IWorkitemQueue;
+        Task DeleteWorkitemQueue(IWorkitemQueue item, bool purge);
     }
     public class QueueMessageEventArgs : EventArgs
     {

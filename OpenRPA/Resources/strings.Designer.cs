@@ -70,6 +70,168 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Workitem.
+        /// </summary>
+        public static string activity_addworkitem {
+            get {
+                return ResourceManager.GetString("activity_addworkitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string activity_addworkitem_files {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add these files to new Workitem.
+        /// </summary>
+        public static string activity_addworkitem_files_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_files_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string activity_addworkitem_name {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set custom name of Workitem.
+        /// </summary>
+        public static string activity_addworkitem_name_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_name_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next Run.
+        /// </summary>
+        public static string activity_addworkitem_nextrun {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_nextrun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default Workitems run right away or with the number of seconds delay set in initial delay on the queue. Use this field to only run the Work Item after the given datetime.
+        /// </summary>
+        public static string activity_addworkitem_nextrun_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_nextrun_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payload.
+        /// </summary>
+        public static string activity_addworkitem_payload {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_payload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of values to add to Workitem payload, these can be read and updated as part of the processing using Update Workitem.
+        /// </summary>
+        public static string activity_addworkitem_payload_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_payload_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Priority.
+        /// </summary>
+        public static string activity_addworkitem_priority {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_priority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set priority to a non zero number for this item. The lower the number the higher the proirity.
+        /// </summary>
+        public static string activity_addworkitem_priority_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_priority_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add new Workitem to Queue.
+        /// </summary>
+        public static string activity_addworkitem_tooltip {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue Name.
+        /// </summary>
+        public static string activity_addworkitem_wiq {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_wiq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of queue to add Workitem too.
+        /// </summary>
+        public static string activity_addworkitem_wiq_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_wiq_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue ID.
+        /// </summary>
+        public static string activity_addworkitem_wiqid {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_wiqid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID of queue to add Workitem too.
+        /// </summary>
+        public static string activity_addworkitem_wiqid_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_wiqid_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workitem.
+        /// </summary>
+        public static string activity_addworkitem_workitem {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_workitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The added Workitem.
+        /// </summary>
+        public static string activity_addworkitem_workitem_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_workitem_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Animate Mouse.
         /// </summary>
         public static string activity_animatemouse {
@@ -214,6 +376,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bulk Add Workitems.
+        /// </summary>
+        public static string activity_bulkaddworkitems {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a new Workitem for each row in a DataTable.
+        /// </summary>
+        public static string activity_bulkaddworkitems_tooltip {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Running.
         /// </summary>
         public static string activity_checkrunning {
@@ -237,6 +417,15 @@ namespace OpenRPA.Resources {
         public static string activity_click_to_view {
             get {
                 return ResourceManager.GetString("activity_click_to_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double-click to view.
+        /// </summary>
+        public static string activity_click_to_view1 {
+            get {
+                return ResourceManager.GetString("activity_click_to_view1", resourceCulture);
             }
         }
         
@@ -403,6 +592,42 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Workitem.
+        /// </summary>
+        public static string activity_deleteworkitem {
+            get {
+                return ResourceManager.GetString("activity_deleteworkitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete specific Workitem and all associated files from queue. Generally this should never be used.
+        /// </summary>
+        public static string activity_deleteworkitem_tooltip {
+            get {
+                return ResourceManager.GetString("activity_deleteworkitem_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workitem.
+        /// </summary>
+        public static string activity_deleteworkitem_workitem {
+            get {
+                return ResourceManager.GetString("activity_deleteworkitem_workitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workitem to be deleted.
+        /// </summary>
+        public static string activity_deleteworkitem_workitem_help {
+            get {
+                return ResourceManager.GetString("activity_deleteworkitem_workitem_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detector.
         /// </summary>
         public static string activity_detector {
@@ -444,6 +669,24 @@ namespace OpenRPA.Resources {
         public static string activity_displayname_help {
             get {
                 return ResourceManager.GetString("activity_displayname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname inside the workflow designer.
+        /// </summary>
+        public static string activity_displayname_help1 {
+            get {
+                return ResourceManager.GetString("activity_displayname_help1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname1 {
+            get {
+                return ResourceManager.GetString("activity_displayname1", resourceCulture);
             }
         }
         
@@ -835,6 +1078,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map Variables.
+        /// </summary>
+        public static string activity_map_variables1 {
+            get {
+                return ResourceManager.GetString("activity_map_variables1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mouse Button.
         /// </summary>
         public static string activity_mousebutton {
@@ -948,6 +1200,78 @@ namespace OpenRPA.Resources {
         public static string activity_openapplication_tooltip {
             get {
                 return ResourceManager.GetString("activity_openapplication_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pop Workitem.
+        /// </summary>
+        public static string activity_popworkitem {
+            get {
+                return ResourceManager.GetString("activity_popworkitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetch and checkout next Workitem to work on, remember to update state with Update Workitem.
+        /// </summary>
+        public static string activity_popworkitem_tooltip {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue Name.
+        /// </summary>
+        public static string activity_popworkitem_wiq {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_wiq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of queue to pop an Workitem from.
+        /// </summary>
+        public static string activity_popworkitem_wiq_help {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_wiq_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue ID.
+        /// </summary>
+        public static string activity_popworkitem_wiqid {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_wiqid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID of queue to pop an Workitem from.
+        /// </summary>
+        public static string activity_popworkitem_wiqid_help {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_wiqid_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workitem.
+        /// </summary>
+        public static string activity_popworkitem_workitem {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_workitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Workitem checked out to you, returns nothing if no more items.
+        /// </summary>
+        public static string activity_popworkitem_workitem_help {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_workitem_help", resourceCulture);
             }
         }
         
@@ -1213,6 +1537,96 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update Workitem.
+        /// </summary>
+        public static string activity_updateworkitem {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception.
+        /// </summary>
+        public static string activity_updateworkitem_exception {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attach exception to Workitem in case of error.
+        /// </summary>
+        public static string activity_updateworkitem_exception_help {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_exception_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string activity_updateworkitem_files {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add or Update files associated with this Workitem.
+        /// </summary>
+        public static string activity_updateworkitem_files_help {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_files_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string activity_updateworkitem_state {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Workitem&apos;s state to this value.
+        /// </summary>
+        public static string activity_updateworkitem_state_help {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_state_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Workitem set set state, update files and/or update payload.
+        /// </summary>
+        public static string activity_updateworkitem_tooltip {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workitem.
+        /// </summary>
+        public static string activity_updateworkitem_workitem {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_workitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated Workitem, remember to set state.
+        /// </summary>
+        public static string activity_updateworkitem_workitem_help {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_workitem_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Virtual Click.
         /// </summary>
         public static string activity_virtualclick {
@@ -1335,6 +1749,15 @@ namespace OpenRPA.Resources {
         public static string activity_y_help {
             get {
                 return ResourceManager.GetString("activity_y_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add new Workitem Queue.
+        /// </summary>
+        public static string addnewworkitemqueue {
+            get {
+                return ResourceManager.GetString("addnewworkitemqueue", resourceCulture);
             }
         }
         
@@ -2023,6 +2446,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Project.
+        /// </summary>
+        public static string project {
+            get {
+                return ResourceManager.GetString("project", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record.
         /// </summary>
         public static string record {
@@ -2064,6 +2496,15 @@ namespace OpenRPA.Resources {
         public static string ribbon_search {
             get {
                 return ResourceManager.GetString("ribbon_search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Robot/Role.
+        /// </summary>
+        public static string robotorrole {
+            get {
+                return ResourceManager.GetString("robotorrole", resourceCulture);
             }
         }
         
@@ -2172,6 +2613,15 @@ namespace OpenRPA.Resources {
         public static string slowmotion {
             get {
                 return ResourceManager.GetString("slowmotion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string state {
+            get {
+                return ResourceManager.GetString("state", resourceCulture);
             }
         }
         
@@ -2343,6 +2793,15 @@ namespace OpenRPA.Resources {
         public static string warning {
             get {
                 return ResourceManager.GetString("warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow.
+        /// </summary>
+        public static string workflow {
+            get {
+                return ResourceManager.GetString("workflow", resourceCulture);
             }
         }
         

@@ -47,6 +47,7 @@ namespace OpenRPA
                 }
                 string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
+                if (_type == "workitemqueue") collectionname = "mq";
                 if (global.isConnected && !skipOnline)
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)

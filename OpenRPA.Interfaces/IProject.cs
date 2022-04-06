@@ -23,5 +23,6 @@ namespace OpenRPA.Interfaces
         Task InstallDependencies(bool LoadDlls);
         void UpdateWorkflowsList();
         void UpdateDetectorsList();
+        void UpdateWorkItemQueuesList();
     }
 }

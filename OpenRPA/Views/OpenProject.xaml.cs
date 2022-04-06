@@ -77,7 +77,7 @@ namespace OpenRPA.Views
                 return null;
             }
         }
-        // public ICommand DeleteCommand { get { return new RelayCommand<object>(MainWindow.instance.OnDelete, MainWindow.instance.CanDelete); } }
+        public ICommand AddWorkItemQueueCommand { get { return new RelayCommand<object>(OnAddWorkItemQueue, CanAddWorkItemQueue); } }
         public ICommand CopyIDCommand
         {
             get
@@ -246,6 +246,7 @@ namespace OpenRPA.Views
                         if (p.name.ToLower().Contains(FilterText)) return true;
                         p.UpdateFilteredWorkflows();
                         p.UpdateFilteredDetectors();
+                        p.UpdateFilteredWorkItemQueues();
                         if (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0) return true;
                         return false;
                     };
@@ -270,6 +271,7 @@ namespace OpenRPA.Views
                         {
                             p.NotifyPropertyChanged("FilteredWorkflows");
                             p.NotifyPropertyChanged("FilteredDetectors");
+                            p.NotifyPropertyChanged("FilteredWorkItemQueues");
                         }
                         return;
                     }
@@ -282,6 +284,7 @@ namespace OpenRPA.Views
                             {
                                 p.NotifyPropertyChanged("FilteredWorkflows");
                                 p.NotifyPropertyChanged("FilteredDetectors");
+                                p.NotifyPropertyChanged("FilteredWorkItemQueues");
                             }
                             Instance.NotifyPropertyChanged("FilteredProjects");
                             isUpdating = false;
@@ -296,6 +299,7 @@ namespace OpenRPA.Views
                         {
                             p.UpdateWorkflowsList();
                             p.UpdateDetectorsList();
+                            p.UpdateWorkItemQueuesList();
                             Instance._Projects.Add(p);
                         }
                     }
@@ -312,6 +316,7 @@ namespace OpenRPA.Views
                         {
                             p.UpdateDetectorsList();
                             p.UpdateWorkflowsList();
+                            p.UpdateWorkItemQueuesList();
                         }
                     }
                     isUpdating = true;
@@ -390,6 +395,7 @@ namespace OpenRPA.Views
                 {
                     p.NotifyPropertyChanged("FilteredWorkflows");
                     p.NotifyPropertyChanged("FilteredDetectors");
+                    p.NotifyPropertyChanged("FilteredWorkItemQueues");
                 }
                 NotifyPropertyChanged("FilterText");
                 NotifyPropertyChanged("Projects");
@@ -408,6 +414,7 @@ namespace OpenRPA.Views
                     {
                         p.NotifyPropertyChanged("FilteredWorkflows");
                         p.NotifyPropertyChanged("FilteredDetectors");
+                        p.NotifyPropertyChanged("FilteredWorkItemQueues");
                     }
                     NotifyPropertyChanged("FilterText");
                     NotifyPropertyChanged("Projects");
@@ -436,6 +443,22 @@ namespace OpenRPA.Views
                             foreach (IDetectorPlugin dd in op.lidtDetectors.Items)
                             {
                                 if (dd.Entity._id == d._id) op.lidtDetectors.SelectedItem = dd;
+                            }
+
+                        }
+                    }
+                    return;
+                }
+                if (listWorkflows.SelectedItem is OpenRPA.WorkitemQueue wiq)
+                {
+                    if (main is MainWindow m)
+                    {
+                        var op = await m.OpenWorkItemQueues();
+                        if (op != null)
+                        {
+                            foreach (OpenRPA.WorkitemQueue _wiq in op.listWorkItemQueues.Items)
+                            {
+                                if (_wiq._id == wiq._id) op.listWorkItemQueues.SelectedItem = _wiq;
                             }
 
                         }
@@ -834,5 +857,67 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
+
+        internal bool CanAddWorkItemQueue(object _item)
+        {
+            try
+            {
+                if (RobotInstance.instance.Window is AgentWindow) return false;
+                //if (global.webSocketClient == null || !global.webSocketClient.isConnected) return false;
+                if (main.SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null)
+                    {
+                        return false;
+                    }
+                    if (view.listWorkflows.SelectedValue is Project p)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnAddWorkItemQueue(object _item)
+        {
+            if (main.SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (view.listWorkflows.SelectedValue is Project p)
+                {
+                    try
+                    {
+                        var dia = new OpenRPA.Views.WorkitemQueue();
+                        dia.item = new OpenRPA.WorkitemQueue();
+                        dia.ShowDialog();
+                        if (dia.DialogResult == true)
+                        {
+                            dia.item._acl = p._acl;
+                            dia.item.projectid = p._id;
+                            var wiq = await global.webSocketClient.AddWorkitemQueue(dia.item as OpenRPA.WorkitemQueue);
+                            RobotInstance.instance.WorkItemQueues.Insert(wiq);
+                            RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
+                            p.UpdateFilteredWorkItemQueues();
+                            RobotInstance.instance.NotifyPropertyChanged("Projects");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        MessageBox.Show(ex.Message);
+                    }
+
+                }
+            }
+        }
+
+
     }
 }

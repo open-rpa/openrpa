@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net462</TargetFramework>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\debug</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>..\dist</OutputPath>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+		<OutputPath>..\dist</OutputPath>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Activities\AddWorkitemDesigner.xaml" />
+		<None Remove="Activities\DeleteWorkitemDesigner.xaml" />
+		<None Remove="Activities\PopWorkitemDesigner.xaml" />
+		<None Remove="Activities\UpdateWorkitemDesigner.xaml" />
+		<None Remove="Resources\designer\AddWorkitem.png" />
+		<None Remove="Resources\designer\deleteworkitem.png" />
+		<None Remove="Resources\designer\popworkitem.png" />
+		<None Remove="Resources\designer\updateworkitem.png" />
+		<None Remove="Resources\toolbox\AddWorkitem.png" />
+		<None Remove="Resources\toolbox\deleteworkitem.png" />
+		<None Remove="Resources\toolbox\popworkitem.png" />
+		<None Remove="Resources\toolbox\updateworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\toolbox\deleteworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\toolbox\addworkitem.png" />
+	  <EmbeddedResource Include="Resources\toolbox\popworkitem.png" />
+	  <EmbeddedResource Include="Resources\toolbox\updateworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Resources\designer\addworkitem.png" />
+	  <Resource Include="Resources\designer\deleteworkitem.png" />
+	  <Resource Include="Resources\designer\popworkitem.png" />
+	  <Resource Include="Resources\designer\updateworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Include="Activities\DeleteWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\UpdateWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\PopWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\AddWorkitemDesigner.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="System.Activities" />
+		<Reference Include="System.Activities.Core.Presentation" />
+		<Reference Include="System.Activities.Presentation" />
+		<Reference Include="System.Xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resources\strings.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>strings.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\strings.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>strings.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>

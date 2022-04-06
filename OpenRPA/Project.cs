@@ -18,6 +18,7 @@ namespace OpenRPA
         {
             FilteredWorkflowsSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Workflows);
             FilteredDetectorsSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Detectors);
+            FilteredWorkItemQueuesSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(WorkItemQueues);
         }
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
@@ -39,6 +40,47 @@ namespace OpenRPA
             _Workflows.UpdateCollection(list);
             NotifyPropertyChanged("FilteredWorkflows");
         }
+
+        private System.Collections.ObjectModel.ObservableCollection<WorkitemQueue> _WorkItemQueues = new System.Collections.ObjectModel.ObservableCollection<WorkitemQueue>();
+        [JsonIgnore, BsonIgnore]
+        public System.Collections.ObjectModel.ObservableCollection<WorkitemQueue> WorkItemQueues
+        {
+            get
+            {
+                return _WorkItemQueues;
+            }
+        }
+        public void UpdateWorkItemQueuesList()
+        {
+            var oldcount = _WorkItemQueues.Count;
+            var list = RobotInstance.instance.WorkItemQueues.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
+            _WorkItemQueues.UpdateCollection(list);
+            NotifyPropertyChanged("FilteredWorkItemQueues");
+        }
+        public void UpdateFilteredWorkItemQueues()
+        {
+            var FilterText = Views.OpenProject.Instance.FilterText;
+            if (string.IsNullOrEmpty(FilterText))
+            {
+                FilteredWorkItemQueuesSource.Filter = null;
+            }
+            FilteredWorkItemQueuesSource.Filter = p => ((WorkitemQueue)p).name.ToLower().Contains(FilterText.ToLower());
+        }
+        [JsonIgnore, BsonIgnore]
+        public System.ComponentModel.ICollectionView FilteredWorkItemQueues
+        {
+            get
+            {
+                UpdateFilteredWorkItemQueues();
+                return FilteredWorkItemQueuesSource;
+            }
+            set
+            {
+
+            }
+        }
+
+
         [JsonIgnore, BsonIgnore]
         public System.Windows.Data.ListCollectionView FilteredWorkflowsSource;
         [JsonIgnore, BsonIgnore]
@@ -75,8 +117,14 @@ namespace OpenRPA
             Detectors.UpdateCollection(list);
             NotifyPropertyChanged("FilteredDetectors");
         }
+
+
+
         [JsonIgnore, BsonIgnore]
         public System.Windows.Data.ListCollectionView FilteredDetectorsSource;
+        [JsonIgnore, BsonIgnore]
+        public System.Windows.Data.ListCollectionView FilteredWorkItemQueuesSource;
+
         [JsonIgnore, BsonIgnore]
         public System.ComponentModel.ICollectionView FilteredDetectors
         {
@@ -124,7 +172,7 @@ namespace OpenRPA
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             project._type = "project";
-            project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
+            await project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
             await project.InstallDependencies(true);
             return project;
         }
@@ -208,7 +256,7 @@ namespace OpenRPA
             Workflows.Add(w);
             return w;
         }
-        private void LoadFilesFromDisk(string folder)
+        private async Task LoadFilesFromDisk(string folder)
         {
             if (string.IsNullOrEmpty(folder)) folder = Path;
             var Files = System.IO.Directory.EnumerateFiles(folder, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
@@ -221,16 +269,40 @@ namespace OpenRPA
                 else if (System.IO.Path.GetExtension(file).ToLower() == ".json")
                 {
                     var json = System.IO.File.ReadAllText(file);
-                    Detector _d = JsonConvert.DeserializeObject<Detector>(json);
-                    if (!string.IsNullOrEmpty(_d._id))
+                    var o = JObject.Parse(json);
+                    var _type = o.Value<string>("_type");
+                    if (_type == "workitemqueue")
                     {
-                        var exists = RobotInstance.instance.Detectors.FindById(_d._id);
-                        if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                        var _d = JsonConvert.DeserializeObject<WorkitemQueue>(json);
+                        _d.isDirty = true;
+                        _d.projectid = null;
+                        //if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
+                        //{
+                        //    _d = await global.webSocketClient.AddWorkitemQueue(_d);
+                        //} else if(string.IsNullOrEmpty(Config.local.wsurl))
+                        //{
+                        //    if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
+                        //    await _d.Save();
+                        //} else
+                        //{
+                        //    // System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot import WorkItemQueue");
+                        //    throw new Exception("Not connected to " + Config.local.wsurl + " so cannot import WorkItemQueue");
+                        //}
+                        WorkItemQueues.Add(_d);
                     }
-                    if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
-                    _d.isDirty = true;
-                    _d.Start(true);
-                    Detectors.Add(_d);
+                    if (_type == "detector")
+                    {
+                        var _d = JsonConvert.DeserializeObject<Detector>(json);
+                        if (!string.IsNullOrEmpty(_d._id))
+                        {
+                            var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                            if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                        }
+                        if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
+                        _d.isDirty = true;
+                        _d.Start(true);
+                        Detectors.Add(_d);
+                    }
                 }
             }
         }
@@ -282,6 +354,12 @@ namespace OpenRPA
                 _name = r.Replace(_name, "");
                 (detector as Detector).ExportFile(System.IO.Path.Combine(projectpath, _name + ".json"));
             }
+            foreach (var wiq in WorkItemQueues)
+            {
+                var _name = wiq.name;
+                _name = r.Replace(_name, "");
+                (wiq as WorkitemQueue).ExportFile(System.IO.Path.Combine(projectpath, _name + ".json"));
+            }
         }
         public async Task Save()
         {
@@ -298,10 +376,61 @@ namespace OpenRPA
                 detector.projectid = _id;
                 await detector.Save();
             }
+            if (WorkItemQueues.Count > 0)
+            {
+                foreach (WorkitemQueue wiq in WorkItemQueues.ToList())
+                {
+                    wiq.projectid = _id;
+                    if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
+                    {
+                        WorkItemQueues.Remove(wiq);
+                        var _wiq = await global.webSocketClient.AddWorkitemQueue(wiq);
+                        WorkItemQueues.Add(_wiq);
+                        RobotInstance.instance.WorkItemQueues.Insert(_wiq);
+                    }
+                    else if (!string.IsNullOrEmpty(Config.local.wsurl))
+                    {
+                        System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot validate WorkItemQueue, removing queue from import");
+                        WorkItemQueues.Remove(wiq);
+                        RobotInstance.instance.WorkItemQueues.Insert(wiq);
+                    }
+                    else
+                    {
+                        await wiq.Save();
+                        RobotInstance.instance.WorkItemQueues.Insert(wiq);
+                    }                    
+                }
+                RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
+                UpdateFilteredWorkItemQueues();
+                UpdateWorkItemQueuesList();
+            }
         }
         public async Task Delete()
         {
+            foreach (var wiq in WorkItemQueues.ToList()) {
+                if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
+                {
+                    await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
+                    RobotInstance.instance.WorkItemQueues.Delete(wiq._id);
+                    RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
+                    UpdateFilteredWorkItemQueues();
+                    UpdateWorkItemQueuesList();
+                }
+                else if (!string.IsNullOrEmpty(Config.local.wsurl))
+                {
+                    System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot validate deletion of WorkItemQueue");
+                } else
+                {
+                    await wiq.Delete();
+                }                
+            }
             foreach (var wf in Workflows.ToList()) { await wf.Delete(); }
+            foreach (var d in Detectors.ToList()) { 
+                var _d = d as Detector;
+                _d.Stop();
+                await _d.Delete(); 
+            }
+            
             if (System.IO.Directory.Exists(Path))
             {
                 var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();

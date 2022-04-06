@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.3.60</Version>
+		<Version>1.4.1</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>open_rpa128.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -78,6 +78,7 @@
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Activities\AddWorkitemDesigner.xaml" />
 		<None Remove="Activities\BreakableDoWhileDesigner.xaml" />
 		<None Remove="Activities\BreakableWhileDesigner.xaml" />
 		<None Remove="Activities\BreakDesigner.xaml" />
@@ -86,6 +87,7 @@
 		<None Remove="Activities\CommentOutDesigner.xaml" />
 		<None Remove="Activities\ContinueDesigner.xaml" />
 		<None Remove="Activities\CopyClipboardDesigner.xaml" />
+		<None Remove="Activities\DeleteWorkitemDesigner.xaml" />
 		<None Remove="Activities\DetectorDesigner.xaml" />
 		<None Remove="Activities\FocusElementDesigner.xaml" />
 		<None Remove="Activities\ForEachDataRowDesigner.xaml" />
@@ -99,9 +101,12 @@
 		<None Remove="Activities\MoveElementDesigner.xaml" />
 		<None Remove="Activities\MoveMouseDesigner.xaml" />
 		<None Remove="Activities\OpenApplicationDesigner.xaml" />
+		<None Remove="Activities\PopWorkitemDesigner.xaml" />
 		<None Remove="Activities\ShowBalloonTipDesigner.xaml" />
 		<None Remove="Activities\StopOpenRPADesigner.xaml" />
 		<None Remove="Activities\TypeTextDesigner.xaml" />
+		<None Remove="Activities\UpdateWorkitemDesigner.xaml" />
+		<None Remove="Activities\Workitems\BulkAddWorkitemsDesigner.xaml" />
 		<None Remove="AgentWindow.xaml" />
 		<None Remove="App.xaml" />
 		<None Remove="Images\PinDocMenu_Black.png" />
@@ -157,14 +162,17 @@
 		<None Remove="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
 		<None Remove="Resources\close.png" />
 		<None Remove="Resources\designer\addentitypermission.png" />
+		<None Remove="Resources\designer\addworkitem.png" />
 		<None Remove="Resources\designer\ballon.png" />
 		<None Remove="Resources\designer\break.png" />
 		<None Remove="Resources\designer\breakpoint.png" />
+		<None Remove="Resources\designer\bulkaddworkitems.png" />
 		<None Remove="Resources\designer\comment.png" />
 		<None Remove="Resources\designer\commentout.png" />
 		<None Remove="Resources\designer\continue.png" />
 		<None Remove="Resources\designer\copyclipboard.png" />
 		<None Remove="Resources\designer\deleteentity.png" />
+		<None Remove="Resources\designer\deleteworkitem.png" />
 		<None Remove="Resources\designer\detector.png" />
 		<None Remove="Resources\designer\downloadfile.png" />
 		<None Remove="Resources\designer\elementclick.png" />
@@ -198,6 +206,7 @@
 		<None Remove="Resources\designer\mouse.png" />
 		<None Remove="Resources\designer\moveelement.png" />
 		<None Remove="Resources\designer\openurl.png" />
+		<None Remove="Resources\designer\popworkitem.png" />
 		<None Remove="Resources\designer\prompt.png" />
 		<None Remove="Resources\designer\readexcel.png" />
 		<None Remove="Resources\designer\readfile.png" />
@@ -205,6 +214,7 @@
 		<None Remove="Resources\designer\sleep.png" />
 		<None Remove="Resources\designer\typetext.png" />
 		<None Remove="Resources\designer\uiscraping.png" />
+		<None Remove="Resources\designer\updateworkitem.png" />
 		<None Remove="Resources\designer\webscraping.png" />
 		<None Remove="Resources\designer\writeexcel.png" />
 		<None Remove="Resources\designer\writefile.png" />
@@ -263,15 +273,19 @@
 		<None Remove="Resources\state\Running_green.png" />
 		<None Remove="Resources\state\sensor.png" />
 		<None Remove="Resources\state\unloaded.png" />
+		<None Remove="Resources\state\workitemqueue.png" />
 		<None Remove="Resources\toolbox\addentitypermission.png" />
+		<None Remove="Resources\toolbox\addworkitem.png" />
 		<None Remove="Resources\toolbox\ballon.png" />
 		<None Remove="Resources\toolbox\break.png" />
 		<None Remove="Resources\toolbox\breakpoint.png" />
+		<None Remove="Resources\toolbox\bulkaddworkitems.png" />
 		<None Remove="Resources\toolbox\comment.png" />
 		<None Remove="Resources\toolbox\commentout.png" />
 		<None Remove="Resources\toolbox\continue.png" />
 		<None Remove="Resources\toolbox\copyclipboard.png" />
 		<None Remove="Resources\toolbox\deleteentity.png" />
+		<None Remove="Resources\toolbox\deleteworkitem.png" />
 		<None Remove="Resources\toolbox\detector.png" />
 		<None Remove="Resources\toolbox\detector2.png" />
 		<None Remove="Resources\toolbox\downloadfile.png" />
@@ -306,6 +320,7 @@
 		<None Remove="Resources\toolbox\mouse.png" />
 		<None Remove="Resources\toolbox\moveelement.png" />
 		<None Remove="Resources\toolbox\openurl.png" />
+		<None Remove="Resources\toolbox\popworkitem.png" />
 		<None Remove="Resources\toolbox\prompt.png" />
 		<None Remove="Resources\toolbox\readexcel.png" />
 		<None Remove="Resources\toolbox\readfile.png" />
@@ -313,6 +328,7 @@
 		<None Remove="Resources\toolbox\sleep.png" />
 		<None Remove="Resources\toolbox\typetext.png" />
 		<None Remove="Resources\toolbox\uiscraping.png" />
+		<None Remove="Resources\toolbox\updateworkitem.png" />
 		<None Remove="Resources\toolbox\webscraping.png" />
 		<None Remove="Resources\toolbox\workflow.png" />
 		<None Remove="Resources\toolbox\writeexcel.png" />
@@ -339,11 +355,25 @@
 		<None Remove="Views\WFDesigner.xaml" />
 		<None Remove="Views\wfToolbox.xaml" />
 		<None Remove="Views\WorkflowInstances.xaml" />
+		<None Remove="Views\WorkitemQueue.xaml" />
+		<None Remove="Views\WorkItemQueuesView.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<Page Include="Activities\Workitems\BulkAddWorkitemsDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\Workitems\AddWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="Activities\BreakableDoWhileDesigner.xaml">
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\Workitems\DeleteWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Activities\ForEachOfDesigner.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -366,6 +396,10 @@
 		</Page>
 		<Page Include="Activities\BreakableWhileDesigner.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Activities\Workitems\PopWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Activities\ShowBalloonTipDesigner.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -415,6 +449,10 @@
 		<Page Include="Activities\TypeTextDesigner.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="Activities\Workitems\UpdateWorkitemDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="App.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -426,6 +464,12 @@
 		</Page>
 		<Page Include="Views\ChildSession.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\WorkitemQueue.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\WorkItemQueuesView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\PackageManager.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -475,11 +519,16 @@
 		<Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
 		<Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
 		<Resource Include="Resources\close.png" />
+		<Resource Include="Resources\designer\addworkitem.png" />
 		<Resource Include="Resources\designer\break.png" />
+		<Resource Include="Resources\designer\bulkaddworkitems.png" />
 		<Resource Include="Resources\designer\continue.png" />
+		<Resource Include="Resources\designer\deleteworkitem.png" />
 		<Resource Include="Resources\designer\getworkflowinstance.png" />
 		<Resource Include="Resources\designer\mouse.png" />
 		<Resource Include="Resources\designer\moveelement.png" />
+		<Resource Include="Resources\designer\popworkitem.png" />
+		<Resource Include="Resources\designer\updateworkitem.png" />
 		<Resource Include="Resources\gears-1236578_1920.jpg" />
 		<Resource Include="Resources\icons\activity.png" />
 		<Resource Include="Resources\icons\activity.svg" />
@@ -496,12 +545,15 @@
 		<Resource Include="Resources\open_rpa512.png" />
 		<Resource Include="Resources\designer\ballon.png" />
 		<EmbeddedResource Include="Resources\toolbox\addentitypermission.png" />
+		<EmbeddedResource Include="Resources\toolbox\addworkitem.png" />
 		<EmbeddedResource Include="Resources\toolbox\ballon.png" />
 		<EmbeddedResource Include="Resources\toolbox\breakpoint.png" />
+		<EmbeddedResource Include="Resources\toolbox\bulkaddworkitems.png" />
 		<EmbeddedResource Include="Resources\toolbox\comment.png" />
 		<EmbeddedResource Include="Resources\toolbox\commentout.png" />
 		<EmbeddedResource Include="Resources\toolbox\copyclipboard.png" />
 		<EmbeddedResource Include="Resources\toolbox\deleteentity.png" />
+		<EmbeddedResource Include="Resources\toolbox\deleteworkitem.png" />
 		<EmbeddedResource Include="Resources\toolbox\detector.png" />
 		<EmbeddedResource Include="Resources\toolbox\detector2.png" />
 		<EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
@@ -535,6 +587,7 @@
 		<EmbeddedResource Include="Resources\toolbox\messagebox.png" />
 		<EmbeddedResource Include="Resources\toolbox\moveelement.png" />
 		<EmbeddedResource Include="Resources\toolbox\openurl.png" />
+		<EmbeddedResource Include="Resources\toolbox\popworkitem.png" />
 		<EmbeddedResource Include="Resources\toolbox\prompt.png" />
 		<EmbeddedResource Include="Resources\toolbox\readexcel.png" />
 		<EmbeddedResource Include="Resources\toolbox\readfile.png" />
@@ -542,6 +595,7 @@
 		<EmbeddedResource Include="Resources\toolbox\sleep.png" />
 		<EmbeddedResource Include="Resources\toolbox\typetext.png" />
 		<EmbeddedResource Include="Resources\toolbox\uiscraping.png" />
+		<EmbeddedResource Include="Resources\toolbox\updateworkitem.png" />
 		<EmbeddedResource Include="Resources\toolbox\webscraping.png" />
 		<EmbeddedResource Include="Resources\toolbox\workflow.png" />
 		<EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
@@ -741,6 +795,7 @@
 		<Resource Include="Resources\state\Running_green.png" />
 		<Resource Include="Resources\state\sensor.png" />
 		<Resource Include="Resources\state\unloaded.png" />
+		<Resource Include="Resources\state\workitemqueue.png" />
 		<EmbeddedResource Include="Resources\toolbox\continue.png" />
 		<EmbeddedResource Include="Resources\toolbox\break.png" />
 		<EmbeddedResource Include="Resources\toolbox\mouse.png" />

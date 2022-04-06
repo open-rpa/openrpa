@@ -868,7 +868,12 @@ namespace OpenRPA
                     Exception = Exception.InnerException;
                 }
                 errormessage = Exception.Message;
-                if (e.ExceptionSource != null) errorsource = e.ExceptionSource.Id;
+
+                if (e.ExceptionSource != null)
+                {
+                    errorsource = e.ExceptionSource.Id;
+                    Exception.Source = errorsource;
+                }
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
                 isDirty = true;

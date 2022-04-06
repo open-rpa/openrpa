@@ -22,10 +22,6 @@ namespace OpenRPA.Java
         {
             MaxResults = 1;
             MinResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(3000)")
-            };
         }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<JavaElement> Body { get; set; }
@@ -34,10 +30,7 @@ namespace OpenRPA.Java
         [RequiredArgument]
         public InArgument<string> Selector { get; set; }
         public InArgument<JavaElement> From { get; set; }
-        public InArgument<TimeSpan> Timeout { get; set; } = new InArgument<TimeSpan>()
-        {
-            Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
-        };
+        public InArgument<TimeSpan> Timeout { get; set; }
         public OutArgument<JavaElement[]> Elements { get; set; }
         [Browsable(false)]
         public string Image { get; set; }
@@ -49,6 +42,7 @@ namespace OpenRPA.Java
             SelectorString = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(SelectorString, context.DataContext);
             var sel = new JavaSelector(SelectorString);
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             var from = From.Get(context);
@@ -136,6 +130,8 @@ namespace OpenRPA.Java
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new GetElement();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<JavaElement>();
             var da = new DelegateInArgument<JavaElement>();
             da.Name = "item";

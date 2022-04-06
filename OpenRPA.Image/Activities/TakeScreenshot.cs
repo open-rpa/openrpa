@@ -77,6 +77,8 @@ namespace OpenRPA.Image
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new TakeScreenshot();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<ImageElement>();
             var da = new DelegateInArgument<ImageElement>();
             da.Name = "item";

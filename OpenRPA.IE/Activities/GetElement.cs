@@ -39,10 +39,6 @@ namespace OpenRPA.IE
         public GetElement()
         {
             MaxResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
-            };
         }
         protected override void StartLoop(NativeActivityContext context)
         {
@@ -50,6 +46,7 @@ namespace OpenRPA.IE
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new IESelector(selector);
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
@@ -161,6 +158,8 @@ namespace OpenRPA.IE
             var wfdesigner = Plugin.client.Window.LastDesigner;
             WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetElement();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<IEElement>();
             var da = new DelegateInArgument<IEElement>();
             da.Name = "item";

@@ -20,15 +20,6 @@ namespace OpenRPA.Activities
         {
             InitializeComponent();
             DataContext = this;
-            Loaded += (sender, e) =>
-            {
-                var Variables = ModelItem.Properties[nameof(OpenApplication.Variables)].Collection;
-                if (Variables != null && Variables.Count == 0)
-                {
-                    Variables.Add(new Variable<int>("Index", 0));
-                    Variables.Add(new Variable<int>("Total", 0));
-                }
-            };
         }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {

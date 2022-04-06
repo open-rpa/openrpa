@@ -76,19 +76,8 @@ namespace OpenRPA.Interfaces
             var input = context.DataContext.GetProperties()[Variables[1].Name];
             if (input != null) input.SetValue(context.DataContext, Value);
         }
-        private System.Collections.ObjectModel.Collection<Variable> variables;
         [System.ComponentModel.Browsable(false)]
-        public System.Collections.ObjectModel.Collection<Variable> Variables
-        {
-            get
-            {
-                if (variables == null)
-                {
-                    variables = new System.Collections.ObjectModel.Collection<Variable>();
-                }
-                return variables;
-            }
-        }
+        public System.Collections.ObjectModel.Collection<Variable> Variables { get; set; } = new System.Collections.ObjectModel.Collection<Variable>();
         protected override bool CanInduceIdle
         {
             get

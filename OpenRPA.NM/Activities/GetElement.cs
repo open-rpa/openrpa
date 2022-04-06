@@ -19,7 +19,11 @@ namespace OpenRPA.NM
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
     public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
-
+        public GetElement()
+        {
+            MaxResults = 1;
+            MinResults = 1;
+        }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<NMElement> Body { get; set; }
         public InArgument<int> MaxResults { get; set; }
@@ -37,15 +41,6 @@ namespace OpenRPA.NM
         private Variable<NMElement[]> _allelements = new Variable<NMElement[]>("_allelements");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
-        public GetElement()
-        {
-            MaxResults = 1;
-            MinResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
-            };
-        }
         private void DoWaitForReady(string browser)
         {
             if (!string.IsNullOrEmpty(browser))
@@ -68,6 +63,7 @@ namespace OpenRPA.NM
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
@@ -238,6 +234,10 @@ namespace OpenRPA.NM
             var wfdesigner = Plugin.client.Window.LastDesigner;
             WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetElement();
+            // fef.Variables = new System.Collections.ObjectModel.Collection<Variable>();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
+
             var aa = new ActivityAction<NMElement>();
             var da = new DelegateInArgument<NMElement>();
             da.Name = "item";

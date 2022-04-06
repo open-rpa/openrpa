@@ -103,6 +103,8 @@ namespace OpenRPA.Utilities
             };
             var wl = new System.Activities.Statements.WriteLine() { Text = new Microsoft.VisualBasic.Activities.VisualBasicValue<string>("item.Value") };
             var fef = new Matches();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             fef.Body = new ActivityAction<System.Text.RegularExpressions.Match>
             {
                 Argument = da,

@@ -17,13 +17,6 @@ namespace OpenRPA.Activities
     [LocalizedDisplayName("activity_openapplication", typeof(Resources.strings))]
     public class OpenApplication : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
-        public OpenApplication()
-        {
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(1000)")
-            };
-        }
         [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
@@ -58,6 +51,7 @@ namespace OpenRPA.Activities
             var pluginname = selector.First().Selector;
             var Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var element = Plugin.LaunchBySelector(selector, checkrunning, timeout);
             Result.Set(context, element);
             _element.Set(context, element);
@@ -145,6 +139,8 @@ namespace OpenRPA.Activities
             // Type t = Type.GetType("OpenRPA.Activities.ClickElement, OpenRPA");
             // var instance = Activator.CreateInstance(t);
             var fef = new OpenApplication();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             fef.Body = new ActivityAction<IElement>
             {
                 Argument = da

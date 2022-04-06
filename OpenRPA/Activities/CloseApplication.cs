@@ -19,10 +19,6 @@ namespace OpenRPA.Activities
     {
         public CloseApplication()
         {
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(1000)")
-            };
             Force = true;
         }
         [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
@@ -39,6 +35,7 @@ namespace OpenRPA.Activities
             var pluginname = selector.First().Selector;
             var Plugin = Plugins.recordPlugins.Where(x => x.Name == pluginname).First();
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var force = Force.Get(context);
             Plugin.CloseBySelector(selector, timeout, force);
 

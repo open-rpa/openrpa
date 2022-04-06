@@ -28,10 +28,6 @@ namespace OpenRPA.Image
             Threshold = 0.8;
             MaxResults = 10;
             MinResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(3000)")
-            };
         }
         public InArgument<TimeSpan> Timeout { get; set; }
         public InArgument<string> Processname { get; set; }
@@ -97,6 +93,7 @@ namespace OpenRPA.Image
             if (Image == null) new ArgumentException("Image is null");
             //var timeout = TimeSpan.FromSeconds(3);
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
             var processname = Processname.Get(context);
             var comparegray = CompareGray.Get(context);
@@ -173,6 +170,8 @@ namespace OpenRPA.Image
             var wfdesigner = Plugin.client.Window.LastDesigner;
             WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetElement();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<ImageElement>();
             var da = new DelegateInArgument<ImageElement>();
             da.Name = "item";

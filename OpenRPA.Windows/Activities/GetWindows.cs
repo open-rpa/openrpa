@@ -129,6 +129,8 @@ namespace OpenRPA.Windows
             Type t = Type.GetType("OpenRPA.Activities.ClickElement, OpenRPA");
             var instance = Activator.CreateInstance(t);
             var fef = new GetWindows();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             fef.Body = new ActivityAction<UIElement>
             {
                 Argument = da,

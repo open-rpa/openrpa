@@ -186,6 +186,8 @@ namespace OpenRPA.Java
             {
                 Button = MouseButton.Left
             }; var a = new GetElement { DisplayName = foundElement.title };
+            a.Variables.Add(new Variable<int>("Index", 0));
+            a.Variables.Add(new Variable<int>("Total", 0));
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             // sel = new JavaSelector(e.Element.rawElement, null, true);
@@ -240,6 +242,8 @@ namespace OpenRPA.Java
 
             var selector = new JavaSelector(foundElement, null, true);
             var a = new GetElement { DisplayName = foundElement.id + " " + foundElement.role + " " + foundElement.Name };
+            a.Variables.Add(new Variable<int>("Index", 0));
+            a.Variables.Add(new Variable<int>("Total", 0));
             a.Selector = selector.ToString();
             a.Image = foundElement.ImageString();
             a.MaxResults = 1;

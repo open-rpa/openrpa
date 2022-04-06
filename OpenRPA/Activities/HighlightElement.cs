@@ -26,10 +26,6 @@ namespace OpenRPA.Activities
             };
             Blocking = false;
             //Duration = TimeSpan.FromMilliseconds(250);
-            Duration = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("TimeSpan.FromMilliseconds(2000)")
-            };
         }
         [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
         public InArgument<IElement> Element { get; set; }
@@ -42,6 +38,7 @@ namespace OpenRPA.Activities
             var el = Element.Get(context);
             var blocking = Blocking.Get(context);
             var duration = Duration.Get(context);
+            if (Duration == null || Duration.Expression == null) duration = TimeSpan.FromSeconds(3);
             await el.Highlight(blocking, System.Drawing.Color.Red, duration);
             return 13;
         }

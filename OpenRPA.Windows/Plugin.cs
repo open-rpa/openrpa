@@ -194,6 +194,8 @@ namespace OpenRPA.Windows
                     {
                         Button = e.Button
                     }; var a = new GetElement { DisplayName = e.Element.Name };
+                    a.Variables.Add(new Variable<int>("Index", 0));
+                    a.Variables.Add(new Variable<int>("Total", 0));
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     WindowsSelector sel = null;

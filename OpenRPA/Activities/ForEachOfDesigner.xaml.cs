@@ -19,16 +19,6 @@ namespace OpenRPA.Activities
         public ForEachOfDesigner()
         {
             InitializeComponent();
-            Loaded += (sender, e) =>
-            {
-                var Variables = ModelItem.Properties["Variables"].Collection;
-                if (Variables != null && Variables.Count == 0)
-                {
-                    Variables.Add(new Variable<int>("Index", 0));
-                    Variables.Add(new Variable<int>("Total", 0));
-                }
-            };
-
         }
         protected override void OnModelItemChanged(Object newItem)
         {
@@ -51,6 +41,5 @@ namespace OpenRPA.Activities
                 return _listType;
             }
         }
-
     }
 }

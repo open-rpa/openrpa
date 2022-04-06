@@ -3160,11 +3160,8 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if (_overlayWindow != null)
-                        {
-                            _overlayWindow.Visible = true;
-                            _overlayWindow.Bounds = e.Element.Rectangle;
-                        }
+                        if (_overlayWindow != null) _overlayWindow.Visible = true;
+                        if (_overlayWindow != null) _overlayWindow.Bounds = e.Element.Rectangle;
                     }
                     catch (Exception)
                     {
@@ -3177,7 +3174,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        _overlayWindow.Visible = false;
+                        if (_overlayWindow != null) _overlayWindow.Visible = false;
                     }
                     catch (Exception)
                     {

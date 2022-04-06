@@ -223,6 +223,22 @@ namespace OpenRPA
         /// <param name="collection">Collection.</param>
         /// <param name="newCollection">New collection.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
+        public static void UpdateCollectionById<T>(this ObservableCollection<T> collection, IEnumerable<T> newCollection) where T : IBase
+        {
+            var current = newCollection.ToArray();
+            for (var i = 0; i < current.Count(); i++)
+            {
+                var exists = collection.Where(x => x._id == current[i]._id);
+                if (exists.Count() == 0) collection.Add(current[i]);
+            }
+            var list = collection.ToArray();
+            for (var i = 0; i < list.Count(); i++)
+            {
+                var exists = current.Where(x => x._id == list[i]._id);
+                if (exists.Count() == 0) collection.Remove(list[i]);
+            }
+        }
+
         public static void UpdateCollection<T>(this ObservableCollection<T> collection, IEnumerable<T> newCollection)
         {
             IEnumerator<T> newCollectionEnumerator = newCollection.GetEnumerator();

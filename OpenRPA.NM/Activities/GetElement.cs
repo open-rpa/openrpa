@@ -41,10 +41,6 @@ namespace OpenRPA.NM
         {
             MaxResults = 1;
             MinResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
-            };
         }
         private void DoWaitForReady(string browser)
         {
@@ -68,6 +64,7 @@ namespace OpenRPA.NM
             selector = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(selector, context.DataContext);
             var sel = new NMSelector(selector);
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var from = From.Get(context);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);

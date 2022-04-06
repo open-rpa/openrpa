@@ -10,6 +10,7 @@
         Title="Select item" 
         d:DesignHeight="100" d:DesignWidth="600" Height="100" Width="600"
          Loaded="Window_Loaded" KeyDown="Window_KeyDown"
+        FocusManager.FocusedElement="{Binding ElementName=search}"
         LostFocus="Window_LostFocus">
     <Grid>
 

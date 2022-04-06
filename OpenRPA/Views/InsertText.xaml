@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         Title="InsertText" Height="61" Width="524"
          Loaded="Window_Loaded" Closed="Window_Closed" KeyDown="Window_KeyDown"
-        LostFocus="Window_LostFocus">
+        LostFocus="Window_LostFocus"
+        FocusManager.FocusedElement="{Binding ElementName=textbox}"
+        >
     <Grid>
         <TextBox x:Name="textbox" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
     </Grid>

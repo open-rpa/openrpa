@@ -194,8 +194,8 @@ namespace OpenRPA.Activities
                 if (workflow != null && !string.IsNullOrEmpty(workflow.name)) name = workflow.name;
                 if (workflow != null && !string.IsNullOrEmpty(workflow.ProjectAndName)) name = workflow.ProjectAndName;
 
-                if (instance.Exception != null) throw new Exception(name + " failed with " + instance.Exception.Message, instance.Exception);
-                if (instance.hasError) throw new Exception(name + " failed with " + instance.errormessage);
+                var _ex = new Exception(name + " failed with " + instance.errormessage, instance.Exception) { Source = instance.errorsource };
+                if (instance.hasError) throw _ex;
 
                 if (Arguments == null || Arguments.Count == 0)
                 {

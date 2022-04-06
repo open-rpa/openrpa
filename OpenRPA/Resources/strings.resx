@@ -117,6 +117,60 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_addworkitem" xml:space="preserve">
+    <value>Add Workitem</value>
+  </data>
+  <data name="activity_addworkitem_files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="activity_addworkitem_files_help" xml:space="preserve">
+    <value>Add these files to new Workitem</value>
+  </data>
+  <data name="activity_addworkitem_name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="activity_addworkitem_name_help" xml:space="preserve">
+    <value>Set custom name of Workitem</value>
+  </data>
+  <data name="activity_addworkitem_nextrun" xml:space="preserve">
+    <value>Next Run</value>
+  </data>
+  <data name="activity_addworkitem_nextrun_help" xml:space="preserve">
+    <value>By default Workitems run right away or with the number of seconds delay set in initial delay on the queue. Use this field to only run the Work Item after the given datetime</value>
+  </data>
+  <data name="activity_addworkitem_payload" xml:space="preserve">
+    <value>Payload</value>
+  </data>
+  <data name="activity_addworkitem_payload_help" xml:space="preserve">
+    <value>List of values to add to Workitem payload, these can be read and updated as part of the processing using Update Workitem</value>
+  </data>
+  <data name="activity_addworkitem_priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="activity_addworkitem_priority_help" xml:space="preserve">
+    <value>Set priority to a non zero number for this item. The lower the number the higher the proirity</value>
+  </data>
+  <data name="activity_addworkitem_tooltip" xml:space="preserve">
+    <value>Add new Workitem to Queue</value>
+  </data>
+  <data name="activity_addworkitem_wiq" xml:space="preserve">
+    <value>Queue Name</value>
+  </data>
+  <data name="activity_addworkitem_wiqid" xml:space="preserve">
+    <value>Queue ID</value>
+  </data>
+  <data name="activity_addworkitem_wiqid_help" xml:space="preserve">
+    <value>ID of queue to add Workitem too</value>
+  </data>
+  <data name="activity_addworkitem_wiq_help" xml:space="preserve">
+    <value>Name of queue to add Workitem too</value>
+  </data>
+  <data name="activity_addworkitem_workitem" xml:space="preserve">
+    <value>Workitem</value>
+  </data>
+  <data name="activity_addworkitem_workitem_help" xml:space="preserve">
+    <value>The added Workitem</value>
+  </data>
   <data name="activity_add_variables" xml:space="preserve">
     <value>Add variables</value>
   </data>
@@ -168,6 +222,12 @@
   <data name="activity_break_tooltip" xml:space="preserve">
     <value>Breaks out of a loop and continues execution after the loop</value>
   </data>
+  <data name="activity_bulkaddworkitems" xml:space="preserve">
+    <value>Bulk Add Workitems</value>
+  </data>
+  <data name="activity_bulkaddworkitems_tooltip" xml:space="preserve">
+    <value>Add a new Workitem for each row in a DataTable</value>
+  </data>
   <data name="activity_checkrunning" xml:space="preserve">
     <value>Check Running</value>
   </data>
@@ -187,6 +247,9 @@
     <value>Click on an element found with GetElement</value>
   </data>
   <data name="activity_click_to_view" xml:space="preserve">
+    <value>Double-click to view</value>
+  </data>
+  <data name="activity_click_to_view1" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
   <data name="activity_closeapplication" xml:space="preserve">
@@ -231,6 +294,18 @@
   <data name="activity_dataview_help" xml:space="preserve">
     <value>The DateView to work with</value>
   </data>
+  <data name="activity_deleteworkitem" xml:space="preserve">
+    <value>Delete Workitem</value>
+  </data>
+  <data name="activity_deleteworkitem_tooltip" xml:space="preserve">
+    <value>Delete specific Workitem and all associated files from queue. Generally this should never be used</value>
+  </data>
+  <data name="activity_deleteworkitem_workitem" xml:space="preserve">
+    <value>Workitem</value>
+  </data>
+  <data name="activity_deleteworkitem_workitem_help" xml:space="preserve">
+    <value>Workitem to be deleted</value>
+  </data>
   <data name="activity_detector" xml:space="preserve">
     <value>Detector</value>
   </data>
@@ -243,7 +318,13 @@
   <data name="activity_displayname" xml:space="preserve">
     <value>Displayname</value>
   </data>
+  <data name="activity_displayname1" xml:space="preserve">
+    <value>Displayname</value>
+  </data>
   <data name="activity_displayname_help" xml:space="preserve">
+    <value>Displayname inside the workflow designer</value>
+  </data>
+  <data name="activity_displayname_help1" xml:space="preserve">
     <value>Displayname inside the workflow designer</value>
   </data>
   <data name="activity_doubleclick" xml:space="preserve">
@@ -375,6 +456,9 @@
   <data name="activity_map_variables" xml:space="preserve">
     <value>Map Variables</value>
   </data>
+  <data name="activity_map_variables1" xml:space="preserve">
+    <value>Map Variables</value>
+  </data>
   <data name="activity_mousebutton" xml:space="preserve">
     <value>Mouse Button</value>
   </data>
@@ -413,6 +497,30 @@
   </data>
   <data name="activity_open_selector" xml:space="preserve">
     <value>Open Selector</value>
+  </data>
+  <data name="activity_popworkitem" xml:space="preserve">
+    <value>Pop Workitem</value>
+  </data>
+  <data name="activity_popworkitem_tooltip" xml:space="preserve">
+    <value>Fetch and checkout next Workitem to work on, remember to update state with Update Workitem</value>
+  </data>
+  <data name="activity_popworkitem_wiq" xml:space="preserve">
+    <value>Queue Name</value>
+  </data>
+  <data name="activity_popworkitem_wiqid" xml:space="preserve">
+    <value>Queue ID</value>
+  </data>
+  <data name="activity_popworkitem_wiqid_help" xml:space="preserve">
+    <value>ID of queue to pop an Workitem from</value>
+  </data>
+  <data name="activity_popworkitem_wiq_help" xml:space="preserve">
+    <value>Name of queue to pop an Workitem from</value>
+  </data>
+  <data name="activity_popworkitem_workitem" xml:space="preserve">
+    <value>Workitem</value>
+  </data>
+  <data name="activity_popworkitem_workitem_help" xml:space="preserve">
+    <value>The Workitem checked out to you, returns nothing if no more items</value>
   </data>
   <data name="activity_postwait" xml:space="preserve">
     <value>Post Wait</value>
@@ -501,6 +609,36 @@
   <data name="activity_typetext_tooltip" xml:space="preserve">
     <value>Send keyboard strokes to what ever that has focus, should only be used by recorder</value>
   </data>
+  <data name="activity_updateworkitem" xml:space="preserve">
+    <value>Update Workitem</value>
+  </data>
+  <data name="activity_updateworkitem_exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="activity_updateworkitem_exception_help" xml:space="preserve">
+    <value>Attach exception to Workitem in case of error</value>
+  </data>
+  <data name="activity_updateworkitem_files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="activity_updateworkitem_files_help" xml:space="preserve">
+    <value>Add or Update files associated with this Workitem</value>
+  </data>
+  <data name="activity_updateworkitem_state" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="activity_updateworkitem_state_help" xml:space="preserve">
+    <value>Set Workitem's state to this value</value>
+  </data>
+  <data name="activity_updateworkitem_tooltip" xml:space="preserve">
+    <value>Update Workitem set set state, update files and/or update payload</value>
+  </data>
+  <data name="activity_updateworkitem_workitem" xml:space="preserve">
+    <value>Workitem</value>
+  </data>
+  <data name="activity_updateworkitem_workitem_help" xml:space="preserve">
+    <value>Updated Workitem, remember to set state</value>
+  </data>
   <data name="activity_virtualclick" xml:space="preserve">
     <value>Virtual Click</value>
   </data>
@@ -542,6 +680,9 @@
   </data>
   <data name="activity_y_help" xml:space="preserve">
     <value>If set, will move the window to this location</value>
+  </data>
+  <data name="addnewworkitemqueue" xml:space="preserve">
+    <value>Add new Workitem Queue</value>
   </data>
   <data name="animatemouse" xml:space="preserve">
     <value>Use Animate Mouse</value>
@@ -771,6 +912,9 @@
   <data name="plugins" xml:space="preserve">
     <value>Plugins</value>
   </data>
+  <data name="project" xml:space="preserve">
+    <value>Project</value>
+  </data>
   <data name="record" xml:space="preserve">
     <value>Record</value>
   </data>
@@ -785,6 +929,9 @@
   </data>
   <data name="ribbon_search" xml:space="preserve">
     <value>Search</value>
+  </data>
+  <data name="robotorrole" xml:space="preserve">
+    <value>Robot/Role</value>
   </data>
   <data name="runplugins" xml:space="preserve">
     <value>Run plugins</value>
@@ -821,6 +968,9 @@
   </data>
   <data name="slowmotion" xml:space="preserve">
     <value>Slow Motion</value>
+  </data>
+  <data name="state" xml:space="preserve">
+    <value>State</value>
   </data>
   <data name="status_disconnected" xml:space="preserve">
     <value>Disconnected</value>
@@ -878,6 +1028,9 @@
   </data>
   <data name="warning" xml:space="preserve">
     <value>Warning</value>
+  </data>
+  <data name="workflow" xml:space="preserve">
+    <value>Workflow</value>
   </data>
   <data name="workitemqueues" xml:space="preserve">
     <value>Work Item Queues</value>

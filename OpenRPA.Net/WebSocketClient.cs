@@ -974,17 +974,44 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q;
         }
+        public class apifile : apibase  
+        {
+            public Interfaces.entity.metadata metadata { get; set; }
+        }
         public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath)
         {
-            var res = await DownloadFile(filename, id);
+            apifile file = null;
+            if(!string.IsNullOrEmpty(id))
+            {
+                var files = await Query<apifile>("fs.files", "{_id: '" + id + "'}", null, 1, 0, null, null);
+                if(files.Length > 0) file = files[0];
+            } else
+            {
+                var files = await Query<apifile>("fs.files", "{filename: '" + filename + "'}", null, 1, 0, null, null);
+                if (files.Length > 0) file = files[0];
+            }
+            if (file == null) throw new SocketException("File not found or access denied");
+
             var path = System.IO.Path.GetFullPath(filepath);
             if (!ignorepath)
             {
-                path = System.IO.Path.Combine(filepath, res.metadata.path);
+                path = System.IO.Path.Combine(filepath, file.metadata.path);
             }
             if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
-            filepath = System.IO.Path.Combine(filepath, res.metadata.filename);
+            filepath = System.IO.Path.Combine(filepath, file.metadata.filename);
+            if(System.IO.File.Exists(filepath))
+            {
+                var created = File.GetCreationTime(filepath);
+                var modified = File.GetLastWriteTime(filepath);
+                if(created == file.metadata._created && modified == file.metadata._modified)
+                {
+                    return;
+                }
+            }
+            var res = await DownloadFile(filename, id);
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
+            File.SetCreationTime(filepath, res.metadata._created);
+            File.SetLastWriteTime(filepath, res.metadata._modified);
         }
         public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath)
         {
@@ -996,7 +1023,18 @@ namespace OpenRPA.Net
             }
             if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
             filepath = System.IO.Path.Combine(filepath, filename);
+            if (System.IO.File.Exists(filepath))
+            {
+                var created = File.GetCreationTime(filepath);
+                var modified = File.GetLastWriteTime(filepath);
+                if (created == res.metadata._created && modified == res.metadata._modified)
+                {
+                    return;
+                }
+            }
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
+            File.SetCreationTime(filepath, res.metadata._created);
+            File.SetLastWriteTime(filepath, res.metadata._modified);
         }
         public async Task<string> CreateWorkflowInstance(string workflowid, string resultqueue, string targetid, object payload, bool initialrun, string correlationId = null, string parentid = null)
         {
@@ -1067,6 +1105,116 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             if (watches.ContainsKey(id)) watches.Remove(id);
         }
+
+
+
+        public async Task<T> AddWorkitem<T> (IWorkitem item, string[] files) where T : IWorkitem
+        {
+            var q = new AddWorkitemMessage<T>(); q.msg.command = "addworkitem";
+            q.wiqid = item.wiqid; q.wiq = item.wiq; q.name = item.name; q.nextrun = item.nextrun; q.priority = item.priority;
+            q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
+            var _files = new List<MessageWorkitemFile>();
+            if(files != null)
+                foreach(var f in files)
+                {
+                    if (!System.IO.File.Exists(f)) continue;
+                    var newf = new MessageWorkitemFile();
+                    newf.compressed = false;
+                    newf.filename = System.IO.Path.GetFileName(f);
+                    byte[] bytes = System.IO.File.ReadAllBytes(f);
+                    newf.file = Convert.ToBase64String(bytes);
+                    _files.Add(newf);
+                }
+            q.files = _files.ToArray();
+            q = await q.SendMessage<AddWorkitemMessage<T>>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.result;
+        }
+        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items)
+        {
+            var q = new AddWorkitemsMessage(); q.msg.command = "addworkitems";
+            q.wiqid = wiqid; q.wiq = wiq; 
+            q.items = items; 
+            q = await q.SendMessage<AddWorkitemsMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+        }
+        public async Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files) where T : IWorkitem
+        {
+            var q = new UpdateWorkitemMessage<T>(); q.msg.command = "updateworkitem";
+            q._id = item._id; q.name = item.name; q.state = item.state; q.nextrun = item.nextrun;
+            q.errormessage = item.errormessage; q.errorsource = item.errorsource;
+            q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
+            var _files = new List<MessageWorkitemFile>();
+            if (files != null)
+                foreach (var f in files)
+                {
+                    if (!System.IO.File.Exists(f)) continue;
+                    var newf = new MessageWorkitemFile();
+                    newf.compressed = false;
+                    newf.filename = System.IO.Path.GetFileName(f);
+                    byte[] bytes = System.IO.File.ReadAllBytes(f);
+                    newf.file = Convert.ToBase64String(bytes);
+                    _files.Add(newf);
+                }
+            q.files = _files.ToArray();
+            q = await q.SendMessage<UpdateWorkitemMessage<T>>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.result;
+        }
+        public async Task<T> PopWorkitem<T>(string wiq, string wiqid) where T : IWorkitem
+        {
+            var q = new PopWorkitemMessage<T>(); q.msg.command = "popworkitem";
+            q.wiqid = wiqid; q.wiq = wiq;
+            q = await q.SendMessage<PopWorkitemMessage<T>>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.result;
+        }
+        public async Task DeleteWorkitem(string _id)
+        {
+            var q = new DeleteWorkitemMessage(); q.msg.command = "deleteworkitem";
+            q._id = _id;
+            q = await q.SendMessage<DeleteWorkitemMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+        }
+        public async Task<T> AddWorkitemQueue<T>(T item) where T : IWorkitemQueue
+        {
+            var q = new AddWorkitemQueueMessage<T>(); q.msg.command = "addworkitemqueue";
+            q.skiprole = true; q._acl = item._acl;
+            q.name = item.name; q.workflowid = item.workflowid; q.robotqueue = item.robotqueue;
+            q.projectid = item.projectid; q.amqpqueue = item.amqpqueue;
+            q.maxretries = item.maxretries; q.retrydelay = item.retrydelay; q.initialdelay = item.initialdelay;
+            q = await q.SendMessage<AddWorkitemQueueMessage<T>>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.result;
+        }
+        public async Task<T> UpdateWorkitemQueue<T>(T item, bool purge) where T : IWorkitemQueue
+        {
+            var q = new UpdateWorkitemQueueMessage<T>(); q.msg.command = "updateworkitemqueue";
+            q._id = item._id; q._acl = item._acl; q.projectid = item.projectid;
+            q.name = item.name; q.workflowid = item.workflowid; q.robotqueue = item.robotqueue;
+            q.amqpqueue = item.amqpqueue; q.purge = purge;
+            q.maxretries = item.maxretries; q.retrydelay = item.retrydelay; q.initialdelay = item.initialdelay;
+            q = await q.SendMessage<UpdateWorkitemQueueMessage<T>>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.result;
+        }
+        public async Task DeleteWorkitemQueue(IWorkitemQueue item, bool purge)
+        {
+            var q = new DeleteWorkitemQueueMessage(); q.msg.command = "deleteworkitemqueue";
+            q._id = item._id; q.name = item.name; q.purge = purge;
+            q = await q.SendMessage<DeleteWorkitemQueueMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+        }
+
     }
+
 
 }

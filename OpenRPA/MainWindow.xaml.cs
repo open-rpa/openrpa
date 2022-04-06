@@ -898,6 +898,7 @@ namespace OpenRPA
         public ICommand OpenCommand { get { return new RelayCommand<object>(OnOpen, CanOpen); } }
         public ICommand ManagePackagesCommand { get { return new RelayCommand<object>(OnManagePackages, CanManagePackages); } }
         public ICommand DetectorsCommand { get { return new RelayCommand<object>(OnDetectors, CanDetectors); } }
+        public ICommand WorkItemQueuesCommand { get { return new RelayCommand<object>(OnWorkItemQueues, CanWorkItemQueues); } }        
         public ICommand RunPluginsCommand { get { return new RelayCommand<object>(OnRunPlugins, CanRunPlugins); } }
         public ICommand RecorderPluginsCommand { get { return new RelayCommand<object>(OnRecorderPluginsCommand, CanRecorderPluginsCommand); } }
         public ICommand SaveCommand { get { return new RelayCommand<object>(OnSave, CanSave); } }
@@ -1311,6 +1312,12 @@ namespace OpenRPA
                     {
                         _wf._acl = p._acl;
                         _wf.isDirty = true;
+                    }
+                    if (p.WorkItemQueues.Count == 0) p.UpdateWorkItemQueuesList();
+                    foreach (WorkitemQueue _wiq in p.WorkItemQueues)
+                    {
+                        _wiq._acl = p._acl;
+                        _wiq.isDirty = true;
                     }
                     await p.Save();
                 }
@@ -1807,6 +1814,23 @@ namespace OpenRPA
                 return false;
             }
         }
+        private bool CanWorkItemQueues(object _item)
+        {
+            try
+            {
+                var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+                foreach (var document in ld)
+                {
+                    if (document.Content is Views.WorkItemQueuesView op) return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
         private bool CanRunPlugins(object _item)
         {
             try
@@ -1897,6 +1921,49 @@ namespace OpenRPA
                 }
             }
             return null;
+        }
+        public void OnWorkItemQueues(object _item)
+        {
+            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+            foreach (var document in ld)
+            {
+                if (document.Content is Views.WorkItemQueuesView op)
+                {
+                    document.IsSelected = true;
+                    Log.FunctionOutdent("MainWindow", "OnWorkItemQueues", "allready open");
+                    return;
+                }
+            }
+            var view = new Views.WorkItemQueuesView(this);
+            LayoutDocument layoutDocument = new LayoutDocument { Title = "Work Item Queues" };
+            layoutDocument.ContentId = "workitemqueues";
+            layoutDocument.Content = view;
+            MainTabControl.Children.Add(layoutDocument);
+            layoutDocument.IsSelected = true;
+            layoutDocument.IsSelectedChanged += view.LayoutDocument_IsSelectedChanged;
+            return;
+        }
+        public async Task<WorkItemQueuesView> OpenWorkItemQueues()
+        {
+            var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
+            foreach (var document in ld)
+            {
+                if (document.Content is Views.WorkItemQueuesView op)
+                {
+                    document.IsSelected = true;
+                    Log.FunctionOutdent("MainWindow", "OnWorkItemQueues", "allready open");
+                    return op;
+                }
+            }
+            var view = new Views.WorkItemQueuesView(this);
+            LayoutDocument layoutDocument = new LayoutDocument { Title = "Work Item Queues" };
+            layoutDocument.ContentId = "workitemqueues";
+            layoutDocument.Content = view;
+            MainTabControl.Children.Add(layoutDocument);
+            layoutDocument.IsSelected = true;
+            layoutDocument.IsSelectedChanged += view.LayoutDocument_IsSelectedChanged;
+
+            return view;
         }
         private async Task _OnDetectors()
         {

@@ -209,6 +209,8 @@
                 <RibbonGroup Header="{x:Static or:strings.plugins}">
                     <RibbonButton Label="{x:Static or:strings.detectors}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.DetectorsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                    <RibbonButton Label="{x:Static or:strings.workitemqueues}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
+                                  Command="{Binding Data.WorkItemQueuesCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                     <RibbonButton Label="{x:Static or:strings.runplugins}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                   Command="{Binding Data.RunPluginsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                     <RibbonButton Label="{x:Static or:strings.recorderplugins}" LargeImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 

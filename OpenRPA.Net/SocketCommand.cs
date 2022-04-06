@@ -36,6 +36,7 @@ namespace OpenRPA.Net
                 var result = JsonConvert.DeserializeObject<T>(reply.data, new JsonSerializerSettings
                 {
                     DateTimeZoneHandling = DateTimeZoneHandling.Local
+                    //, TypeNameHandling = TypeNameHandling.Auto
                 });
                 if (result == null)
                 {

@@ -59,7 +59,10 @@ namespace OpenRPA
         public LiteDB.ILiteCollection<Project> Projects;
         public LiteDB.ILiteCollection<Workflow> Workflows;
         public LiteDB.ILiteCollection<Detector> Detectors;
+        public LiteDB.ILiteCollection<WorkitemQueue> WorkItemQueues;        
         public LiteDB.ILiteCollection<WorkflowInstance> dbWorkflowInstances;
+        public System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue> WorkItemQueuesSource { get; set; }
+        = new System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue>();
         public int ProjectCount
         {
             get
@@ -167,6 +170,11 @@ namespace OpenRPA
 
                     _instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
                     _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
+
+                    _instance.WorkItemQueues = _instance.db.GetCollection<WorkitemQueue>("workitemqueues");
+                    _instance.WorkItemQueues.EnsureIndex(x => x._id, true);
+
+                    
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -716,6 +724,87 @@ namespace OpenRPA
                         }
                     }
                 }
+
+
+
+
+                Log.Debug("LoadServerData::query workitemqueues versions");
+                SetStatus("query updated workitemqueues");
+                var server_workitemqueues = await global.webSocketClient.Query<WorkitemQueue>("mq", "{\"_type\": 'workitemqueue'}", "{\"_version\": 1}");
+                var local_workitemqueues = WorkItemQueues.FindAll().ToList();
+                reload_ids = new List<string>();
+                foreach (var WorkItemQueue in server_workitemqueues)
+                {
+                    try
+                    {
+                        var exists = local_workitemqueues.Where(x => x._id == WorkItemQueue._id).FirstOrDefault();
+                        if (exists != null)
+                        {
+                            if (exists._version < WorkItemQueue._version) reload_ids.Add(WorkItemQueue._id);
+                            if (exists._version > WorkItemQueue._version && WorkItemQueue.isDirty) await WorkItemQueue.Save();
+                        }
+                        else
+                        {
+                            reload_ids.Add(WorkItemQueue._id);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.Message);
+                    }
+                }
+                foreach (var WorkItemQueue in local_workitemqueues)
+                {
+                    try
+                    {
+                        var exists = server_workitemqueues.Where(x => x._id == WorkItemQueue._id).FirstOrDefault();
+                        if (exists == null && !WorkItemQueue.isDirty)
+                        {
+                            var _id = WorkItemQueue._id;
+                            Log.Debug("Removing local WorkItemQueue " + WorkItemQueue.name);
+                            WorkItemQueues.Delete(_id);
+                        }
+                        else if (WorkItemQueue.isDirty)
+                        {
+                            if (WorkItemQueue.isDeleted) await WorkItemQueue.Delete();
+                            if (!WorkItemQueue.isDeleted) await WorkItemQueue.Save();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.Message);
+                    }
+                }
+                if (reload_ids.Count > 0)
+                {
+                    for (var i = 0; i < reload_ids.Count; i++) reload_ids[i] = "'" + reload_ids[i] + "'";
+                    var q = "{ _type: 'workitemqueue', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
+                    Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " workitemqueues");
+                    SetStatus("Fetch " + reload_ids.Count + "updated workitemqueues");
+                    server_workitemqueues = await global.webSocketClient.Query<WorkitemQueue>("mq", q, orderby: "{\"name\":-1}");
+                    foreach (var workitemqueue in server_workitemqueues)
+                    {
+                        workitemqueue.isDirty = false;
+                        try
+                        {
+                            var dexists = WorkItemQueues.FindById(workitemqueue._id);
+                            if (dexists == null)
+                            {
+                                Log.Debug("LoadServerData::Adding WorkItemQueue " + workitemqueue.name);
+                                WorkItemQueues.Insert(workitemqueue);
+                            }
+                            if (dexists != null)
+                            {
+                                Log.Debug("LoadServerData::Updating WorkItemQueue " + workitemqueue.name);
+                                WorkItemQueues.Update(workitemqueue);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    }
+                }
                 var LocalOnlyProjects = _instance.Projects.Find(x => x.isLocalOnly);
                 foreach (var i in LocalOnlyProjects) await i.Save<Project>();
                 var LocalOnlyWorkflws = _instance.Workflows.Find(x => x.isLocalOnly);
@@ -724,10 +813,12 @@ namespace OpenRPA
                 //_instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
 
+
                 if (Projects.Count() == 0)
                 {
                     GenericTools.RunUIAsync(async () =>
                     {
+                        WorkItemQueuesSource.UpdateCollectionById(WorkItemQueues.FindAll());
                         string Name = "New Project";
                         try
                         {
@@ -741,6 +832,12 @@ namespace OpenRPA
                             Log.Error(ex.ToString());
                         }
                     }).Wait();
+                } else
+                {
+                    GenericTools.RunUI(() =>
+                    {
+                        WorkItemQueuesSource.UpdateCollectionById(WorkItemQueues.FindAll());
+                    });
                 }
                 NotifyPropertyChanged("Projects");
 

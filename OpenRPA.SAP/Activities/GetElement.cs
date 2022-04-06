@@ -22,10 +22,6 @@ namespace OpenRPA.SAP
         {
             MaxResults = 1;
             MinResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03")
-            };
         }
         [System.ComponentModel.Browsable(false)]
         public ActivityAction<SAPElement> Body { get; set; }
@@ -48,6 +44,7 @@ namespace OpenRPA.SAP
             SelectorString = OpenRPA.Interfaces.Selector.Selector.ReplaceVariables(SelectorString, context.DataContext);
             var sel = new SAPSelector(SelectorString);
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(3);
             var maxresults = MaxResults.Get(context);
             var minresults = MinResults.Get(context);
             var flatternguitree = FlatternGuiTree.Get(context);

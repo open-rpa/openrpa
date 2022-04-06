@@ -18,6 +18,7 @@
         <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}">
             <HierarchicalDataTemplate.ItemsSource>
                 <MultiBinding Converter="{StaticResource bindingConverter}">
+                    <Binding Path="FilteredWorkItemQueues" />
                     <Binding Path="FilteredDetectors" />
                     <Binding Path="FilteredWorkflows" />
                 </MultiBinding>
@@ -28,6 +29,7 @@
                     <ContextMenu>
                         <MenuItem Header="{x:Static or:strings.export}" Command="{Binding Data.ExportCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                         <MenuItem Header="{x:Static or:strings.delete}" Command="{Binding Data.DeleteCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
+                        <MenuItem Header="{x:Static or:strings.addnewworkitemqueue}" Command="{Binding Data.AddWorkItemQueueCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
                     </ContextMenu>
                 </StackPanel.ContextMenu>
             </StackPanel>
@@ -57,7 +59,13 @@
                 <TextBlock Text="{Binding name}"/>
             </StackPanel>
         </HierarchicalDataTemplate>
-
+        <HierarchicalDataTemplate DataType="{x:Type projectbase:WorkitemQueue}" ItemsSource="{Binding FilteredWorkItemQueues}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/OpenRPA;component/Resources/state/workitemqueue.png" Width="16" Height="16" />
+                <TextBlock Text="{Binding name}"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        
 
     </UserControl.Resources>
 

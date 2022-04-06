@@ -60,6 +60,7 @@ namespace OpenRPA
             get
             {
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
+                if (asm == null) asm = System.Reflection.Assembly.GetCallingAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
                 var path = System.IO.Path.GetDirectoryName(filepath);
                 return path;
@@ -70,9 +71,18 @@ namespace OpenRPA
         {
             get
             {
-                var _v = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
-                var _version = _v.Major + "." + _v.Minor + "." + _v.Build;
-                return _version;
+                try
+                {
+                    var asm = System.Reflection.Assembly.GetEntryAssembly();
+                    if (asm == null) asm = System.Reflection.Assembly.GetCallingAssembly();
+                    var _v = asm.GetName().Version;
+                    var _version = _v.Major + "." + _v.Minor + "." + _v.Build;
+                    return _version;
+                }
+                catch (Exception)
+                {
+                }
+                return "0.0.1";
             }
         }
     }

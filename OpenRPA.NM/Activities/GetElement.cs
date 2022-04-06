@@ -41,11 +41,6 @@ namespace OpenRPA.NM
         private Variable<NMElement[]> _allelements = new Variable<NMElement[]>("_allelements");
         [System.ComponentModel.Browsable(false)]
         public Activity LoopAction { get; set; }
-        public GetElement()
-        {
-            MaxResults = 1;
-            MinResults = 1;
-        }
         private void DoWaitForReady(string browser)
         {
             if (!string.IsNullOrEmpty(browser))

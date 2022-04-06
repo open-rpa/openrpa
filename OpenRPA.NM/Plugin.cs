@@ -208,6 +208,8 @@ namespace OpenRPA.NM
                         {
                             Button = Input.MouseButton.Left
                         }; var a = new GetElement { DisplayName = LastElement.ToString() };
+                        a.Variables.Add(new Variable<int>("Index", 0));
+                        a.Variables.Add(new Variable<int>("Total", 0));
 
                         message.tab = NMHook.FindTabById(message.browser, message.tabid);
 
@@ -327,6 +329,8 @@ namespace OpenRPA.NM
             }
             var selector = new NMSelector(LastElement, null, true, null);
             var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };
+            a.Variables.Add(new Variable<int>("Index", 0));
+            a.Variables.Add(new Variable<int>("Total", 0));
             a.Selector = selector.ToString();
             a.Image = LastElement.ImageString();
             a.MaxResults = 1;

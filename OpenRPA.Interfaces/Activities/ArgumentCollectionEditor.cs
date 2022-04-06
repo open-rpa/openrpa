@@ -46,7 +46,7 @@ namespace OpenRPA.Interfaces.Activities
             DynamicArgumentDesignerOptions options1 = new DynamicArgumentDesignerOptions();
             options1.Title = activity.GetValue<string>("DisplayName");
             DynamicArgumentDesignerOptions options = options1;
-            if(!activity.Properties[PropertyName].IsSet)
+            if (!activity.Properties[PropertyName].IsSet)
             {
                 Log.Output(PropertyName + " is not set");
                 return;

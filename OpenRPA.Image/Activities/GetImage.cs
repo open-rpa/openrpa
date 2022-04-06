@@ -105,6 +105,8 @@ namespace OpenRPA.Image
             var wfdesigner = Plugin.client.Window.LastDesigner;
             WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetImage();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<ImageElement>();
             var da = new DelegateInArgument<ImageElement>();
             da.Name = "item";

@@ -70,6 +70,8 @@ namespace OpenRPA.Activities
         public System.Activities.Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new ForEachDataRow();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<System.Data.DataRowView>();
             var da = new DelegateInArgument<System.Data.DataRowView>();
             da.Name = "row";

@@ -21,13 +21,6 @@ namespace OpenRPA.Elis.Rossum
     [LocalizedDisplayName("activity_waitforfilestatus", typeof(Resources.strings))]
     public class WaitForFileStatus : CodeActivity
     {
-        public WaitForFileStatus()
-        {
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:10")
-            };
-        }
         [RequiredArgument]
         public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument]
@@ -40,6 +33,7 @@ namespace OpenRPA.Elis.Rossum
         protected override void Execute(CodeActivityContext context)
         {
             var timeout = Timeout.Get(context);
+            if (Timeout == null || Timeout.Expression == null) timeout = TimeSpan.FromSeconds(10);
             var key = Key.Get(context);
             var fileurl = Fileurl.Get(context);
             var desiredstatus = Status.Get(context).ToLower();

@@ -63,6 +63,8 @@ namespace OpenRPA.Database
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new DatabaseScope();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<Connection>();
             var da = new DelegateInArgument<Connection>();
             da.Name = "conn";

@@ -19,15 +19,6 @@ namespace OpenRPA.Windows
         public GetWindowsDesigner()
         {
             InitializeComponent();
-            Loaded += (sender, e) =>
-            {
-                var Variables = ModelItem.Properties[nameof(GetWindows.Variables)].Collection;
-                if (Variables != null && Variables.Count == 0)
-                {
-                    Variables.Add(new Variable<int>("Index", 0));
-                    Variables.Add(new Variable<int>("Total", 0));
-                }
-            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -40,7 +31,6 @@ namespace OpenRPA.Windows
             ShowLoopExpanded = !ShowLoopExpanded;
             NotifyPropertyChanged("ShowLoopExpanded");
         }
-
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
             Activity loopaction = ModelItem.GetValue<Activity>("LoopAction");

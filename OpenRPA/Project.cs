@@ -383,15 +383,29 @@ namespace OpenRPA
                     wiq.projectid = _id;
                     if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
                     {
-                        WorkItemQueues.Remove(wiq);
-                        var _wiq = await global.webSocketClient.AddWorkitemQueue(wiq);
-                        WorkItemQueues.Add(_wiq);
-                        RobotInstance.instance.WorkItemQueues.Insert(_wiq);
+                        WorkitemQueue _wiq;
+                        if (wiq.isLocalOnly || string.IsNullOrEmpty(wiq._id))
+                        {
+                            _wiq = await global.webSocketClient.AddWorkitemQueue(wiq);
+                            RobotInstance.instance.WorkItemQueues.Insert(_wiq);
+                        } else
+                        {
+                            _wiq = await global.webSocketClient.UpdateWorkitemQueue(wiq, false);
+                            RobotInstance.instance.WorkItemQueues.Update(_wiq);
+                        }
+                        GenericTools.RunUI(() =>
+                        {
+                            WorkItemQueues.Remove(wiq);
+                            WorkItemQueues.Add(_wiq);
+                        });
                     }
                     else if (!string.IsNullOrEmpty(Config.local.wsurl))
                     {
                         System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot validate WorkItemQueue, removing queue from import");
-                        WorkItemQueues.Remove(wiq);
+                        GenericTools.RunUI(() =>
+                        {
+                            WorkItemQueues.Remove(wiq);
+                        });
                         RobotInstance.instance.WorkItemQueues.Insert(wiq);
                     }
                     else
@@ -400,9 +414,12 @@ namespace OpenRPA
                         RobotInstance.instance.WorkItemQueues.Insert(wiq);
                     }                    
                 }
-                RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
-                UpdateFilteredWorkItemQueues();
-                UpdateWorkItemQueuesList();
+                GenericTools.RunUI(() =>
+                {
+                    RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
+                    UpdateFilteredWorkItemQueues();
+                    UpdateWorkItemQueuesList();
+                });
             }
         }
         public async Task Delete()

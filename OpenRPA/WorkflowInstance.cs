@@ -176,8 +176,21 @@ namespace OpenRPA
             }
             result.host = Environment.MachineName.ToLower();
             result.fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-            // lock (Instances) Instances.Add(result);
-            Instances.Add(result);
+            if (System.Threading.Monitor.TryEnter(Instances, 1000))
+            {
+                try
+                {
+                    Instances.Add(result);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(Instances);
+                }
+            }
+            else
+            {
+                throw new Exception("Failed running workflow, due to theading deadlock");
+            }
             result.createApp(Workflow.Activity());
             CleanUp();
             CleanUp();
@@ -714,13 +727,24 @@ namespace OpenRPA
                 runWatch.Start();
                 if (string.IsNullOrEmpty(InstanceId))
                 {
-                    lock (WorkflowInstance.Instances)
+                    if (System.Threading.Monitor.TryEnter(Instances, 1000))
                     {
-                        wfApp.Run();
-                        Log.Information(name + " started in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
-                        InstanceId = wfApp.Id.ToString();
+                        try
+                        {
+                            wfApp.Run();
+                            Log.Information(name + " started in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
+                            InstanceId = wfApp.Id.ToString();
+                            state = "running";
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(Instances);
+                        }
                     }
-                    state = "running";
+                    else
+                    {
+                        throw new Exception("Failed running workflow, due to theading deadlock");
+                    }
                     // Save();
                 }
                 else
@@ -1000,7 +1024,21 @@ namespace OpenRPA
                         i.Workflow = workflow;
                         if (RobotInstance.instance.Window != null) i.OnIdleOrComplete += RobotInstance.instance.Window.IdleOrComplete;
                         //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
-                        lock (Instances) Instances.Add(i);
+                        if (System.Threading.Monitor.TryEnter(Instances, 1000))
+                        {
+                            try
+                            {
+                                Instances.Add(i);
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(Instances);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Failed running workflow, due to theading deadlock");
+                        }
                         var _ref = (i as IWorkflowInstance);
                         foreach (var runner in Plugins.runPlugins)
                         {
@@ -1040,18 +1078,42 @@ namespace OpenRPA
         }
         public static void CleanUp()
         {
-            lock (Instances)
+            if (System.Threading.Monitor.TryEnter(Instances, 1000))
             {
-                foreach (var i in Instances.ToList())
+                try
                 {
-                    // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
-                    if (i.isCompleted && i._modified < DateTime.Now.AddMinutes(-15) && !i.isDirty)
+                    foreach (var i in Instances.ToList())
                     {
-                        Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
-                        lock (Instances) Instances.Remove(i);
+                        // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
+                        if (i.isCompleted && i._modified < DateTime.Now.AddMinutes(-15) && !i.isDirty)
+                        {
+                            Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
+                            if (System.Threading.Monitor.TryEnter(Instances, 1000))
+                            {
+                                try
+                                {
+                                    Instances.Remove(i);
+                                }
+                                finally
+                                {
+                                    System.Threading.Monitor.Exit(Instances);
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception("Failed running workflow, due to theading deadlock");
+                            }
+                        }
                     }
                 }
-
+                finally
+                {
+                    System.Threading.Monitor.Exit(Instances);
+                }
+            }
+            else
+            {
+                throw new Exception("Failed running workflow, due to theading deadlock");
             }
         }
         public override string ToString()

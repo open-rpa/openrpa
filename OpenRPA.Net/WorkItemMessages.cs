@@ -47,6 +47,7 @@ namespace OpenRPA.Net
         public MessageWorkitemFile[] files { get; set; }
         public T result { get; set; }
         public DateTime? nextrun { get; set; }
+        public bool ignoremaxretries { get; set; }
         public string errormessage { get; set; }
         public string errorsource { get; set; }
 

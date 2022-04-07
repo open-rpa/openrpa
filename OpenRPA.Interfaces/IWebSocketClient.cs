@@ -97,7 +97,7 @@ namespace OpenRPA.Interfaces
         Task RestartNoderedInstance(string _id);
 
         Task<T> AddWorkitem<T>(IWorkitem item, string[] files) where T : IWorkitem;
-        Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files) where T : IWorkitem;
+        Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files, bool ignoremaxretries) where T : IWorkitem;
         Task<T> PopWorkitem<T>(string wiq, string wiqid) where T : IWorkitem;
         Task DeleteWorkitem(string _id);
         Task<T> AddWorkitemQueue<T>(T item) where T : IWorkitemQueue;

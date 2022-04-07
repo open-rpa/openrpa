@@ -1306,21 +1306,32 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                         var sw = new System.Diagnostics.Stopwatch(); sw.Start();
                         while (sw.Elapsed < TimeSpan.FromSeconds(1))
                         {
-                            lock (WorkflowInstance.Instances)
+                            if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
                             {
-                                foreach (var wi in WorkflowInstance.Instances.ToList())
+                                try
                                 {
-                                    if (wi.isCompleted) continue;
-                                    if (wi.Bookmarks == null) continue;
-                                    foreach (var b in wi.Bookmarks)
+                                    foreach (var wi in WorkflowInstance.Instances.ToList())
                                     {
-                                        if (b.Key == instance._id)
+                                        if (wi.isCompleted) continue;
+                                        if (wi.Bookmarks == null) continue;
+                                        foreach (var b in wi.Bookmarks)
                                         {
-                                            wi.ResumeBookmark(b.Key, instance);
-                                            return;
+                                            if (b.Key == instance._id)
+                                            {
+                                                wi.ResumeBookmark(b.Key, instance);
+                                                return;
+                                            }
                                         }
                                     }
                                 }
+                                finally
+                                {
+                                    System.Threading.Monitor.Exit(WorkflowInstance.Instances);
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception("Failed running workflow, due to theading deadlock");
                             }
                         }
                     });

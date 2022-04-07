@@ -47,7 +47,12 @@ namespace OpenRPA.Views
             // PopulateComplete as necessary.
             e.Cancel = true;
 
-            usergroups = await global.webSocketClient.Query<apiuser>("users", @"{ name: {$regex: '" + source.Text.Replace("\\", "\\\\") + "', $options: 'i'} }");
+            var result = new List<apiuser>();
+            usergroups = await global.webSocketClient.Query<apiuser>("users", @"{ name: '" + source.Text.Replace("\\", "\\\\") + "' }");
+            result.AddRange(usergroups);
+            var _usergroups = await global.webSocketClient.Query<apiuser>("users", @"{ name: {$regex: '" + source.Text.Replace("\\", "\\\\") + "', $options: 'i'} }");
+            result.AddRange(_usergroups);
+            usergroups = result.ToArray();
 
 
             //TestItems.Clear();

@@ -27,12 +27,15 @@ namespace OpenRPA.WorkItems
         public InArgument<Exception> Exception { get; set; }
         [LocalizedDisplayName("activity_updateworkitem_files", typeof(Resources.strings)), LocalizedDescription("activity_updateworkitem_files_help", typeof(Resources.strings))]
         public InArgument<string[]> Files { get; set; }
+        [LocalizedDisplayName("activity_updateworkitem_ignoremaxretries", typeof(Resources.strings)), LocalizedDescription("activity_updateworkitem_ignoremaxretries_help", typeof(Resources.strings))]
+        public InArgument<bool> IgnoreMaxretries { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var status = new string[] { "failed", "successful", "abandoned", "retry", "processing" };
             var files = Files.Get<string[]>(context);
             var t = Workitem.Get(context);
             var ex = Exception.Get(context);
+            var ignoremaxretries = IgnoreMaxretries.Get(context);
             if (t == null) throw new Exception("Missing Workitem");
             if(State != null && State.Expression != null)
             {
@@ -43,7 +46,7 @@ namespace OpenRPA.WorkItems
             if (ex != null) t.errorsource = ex.Source;
             t.state = t.state.ToLower();
             if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be failed, successful, abandoned or retry");
-            var result = await global.webSocketClient.UpdateWorkitem<Workitem>(t, files);
+            var result = await global.webSocketClient.UpdateWorkitem<Workitem>(t, files, ignoremaxretries);
             return result;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

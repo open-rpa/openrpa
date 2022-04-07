@@ -225,8 +225,38 @@
   <data name="activity_bulkaddworkitems" xml:space="preserve">
     <value>Bulk Add Workitems</value>
   </data>
+  <data name="activity_bulkaddworkitems_datatable" xml:space="preserve">
+    <value>DataTable</value>
+  </data>
+  <data name="activity_bulkaddworkitems_datatable_help" xml:space="preserve">
+    <value>DataTable containing the data to be used for creating the Workitems.</value>
+  </data>
+  <data name="activity_bulkaddworkitems_nextrun" xml:space="preserve">
+    <value>Next Run</value>
+  </data>
+  <data name="activity_bulkaddworkitems_nextrun_help" xml:space="preserve">
+    <value>By default Workitems run right away or with the number of seconds delay set in initial delay on the queue. Use this field to only run the Work Item after the given datetime</value>
+  </data>
+  <data name="activity_bulkaddworkitems_priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="activity_bulkaddworkitems_priority_help" xml:space="preserve">
+    <value>Set priority to a non zero number for this item. The lower the number the higher the proirity</value>
+  </data>
   <data name="activity_bulkaddworkitems_tooltip" xml:space="preserve">
     <value>Add a new Workitem for each row in a DataTable</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiq" xml:space="preserve">
+    <value>Queue Name</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiqid" xml:space="preserve">
+    <value>Queue ID</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiqid_help" xml:space="preserve">
+    <value>ID of queue to add Workitem too</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiq_help" xml:space="preserve">
+    <value>Name of queue to add Workitem too</value>
   </data>
   <data name="activity_checkrunning" xml:space="preserve">
     <value>Check Running</value>
@@ -623,6 +653,12 @@
   </data>
   <data name="activity_updateworkitem_files_help" xml:space="preserve">
     <value>Add or Update files associated with this Workitem</value>
+  </data>
+  <data name="activity_updateworkitem_ignoremaxretries" xml:space="preserve">
+    <value>Ignore Max Retries</value>
+  </data>
+  <data name="activity_updateworkitem_ignoremaxretries_help" xml:space="preserve">
+    <value>By default a Workitem will fail, once max retries has been reached. Set this to true to resubmit even if max retries have been reached</value>
   </data>
   <data name="activity_updateworkitem_state" xml:space="preserve">
     <value>State</value>

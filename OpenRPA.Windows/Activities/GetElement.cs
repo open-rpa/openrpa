@@ -25,10 +25,6 @@ namespace OpenRPA.Windows
         {
             MaxResults = 1;
             MinResults = 1;
-            Timeout = new InArgument<TimeSpan>()
-            {
-                Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:03)")
-            };
         }
         [Browsable(false)]
         public ActivityAction<UIElement> Body { get; set; }
@@ -224,6 +220,8 @@ namespace OpenRPA.Windows
             Type t = Type.GetType("OpenRPA.Activities.ClickElement, OpenRPA");
             var instance = Activator.CreateInstance(t);
             var fef = new GetElement();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             fef.Body = new ActivityAction<UIElement>
             {
                 Argument = da,

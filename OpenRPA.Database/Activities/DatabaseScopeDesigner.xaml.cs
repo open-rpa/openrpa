@@ -20,15 +20,6 @@ namespace OpenRPA.Database
         public DatabaseScopeDesigner()
         {
             InitializeComponent();
-            Loaded += (sender, e) =>
-            {
-                var Variables = ModelItem.Properties[nameof(DatabaseScope.Variables)].Collection;
-                if (Variables != null && Variables.Count == 0)
-                {
-                    Variables.Add(new Variable<int>("Index", 0));
-                    Variables.Add(new Variable<int>("Total", 0));
-                }
-            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -90,50 +81,5 @@ namespace OpenRPA.Database
             }
             return null;
         }
-
-        //public static string GetConnectionString(string connectionString)
-        //{
-        //    if (string.IsNullOrEmpty(connectionString)) return GetConnectionString();
-        //    try
-        //    {
-        //        // C:\Program Files\Common Files\System\Ole DB\OLEDB32.DLL
-        //        MSDASC.DataLinks dataLinks = new MSDASC.DataLinks();
-
-        //        // C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\PublicAssemblies\adodb.dll
-        //        ADODB._Connection connection;
-
-        //        connection = new ADODB.Connection();
-        //        connection.ConnectionString = connectionString;
-
-        //        object oConnection = connection;
-
-        //        if (dataLinks.PromptEdit(ref oConnection))
-        //        {
-        //            return connection.ConnectionString;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //    return null;
-        //}
-        //public static string GetConnectionString()
-        //{
-        //    try
-        //    {
-        //        dynamic _con = null;
-        //        MSDASC.DataLinks _link = new MSDASC.DataLinks();
-        //        _con = _link.PromptNew();
-        //        if (_con != null)
-        //        {
-        //            // sourceConnectionString = ((ADODB.Connection)_con).ConnectionString;
-        //            return _con.ConnectionString;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //    return null;
-        //}
     }
 }

@@ -19,15 +19,6 @@ namespace OpenRPA.IE
         {
             InitializeComponent();
             HighlightImage = IEExtensions.GetImageSourceFromResource("search.png");
-            Loaded += (sender, e) =>
-            {
-                var Variables = ModelItem.Properties[nameof(GetElement.Variables)].Collection;
-                if (Variables != null && Variables.Count == 0)
-                {
-                    Variables.Add(new Variable<int>("Index", 0));
-                    Variables.Add(new Variable<int>("Total", 0));
-                }
-            };
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public BitmapFrame HighlightImage { get; set; }
@@ -84,10 +75,10 @@ namespace OpenRPA.IE
                     {
                         Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<int>("0")
                     });
-                    ModelItem.Properties["Timeout"].SetValue(new InArgument<TimeSpan>()
-                    {
-                        Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<TimeSpan>("00:00:00")
-                    });
+                    //ModelItem.Properties["Timeout"].SetValue(new InArgument<TimeSpan>()
+                    //{
+                    //    Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue< TimeSpan>("00:00:00")
+                    //});
                 }
             }
         }

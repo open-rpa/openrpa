@@ -119,7 +119,7 @@
 		<Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
 			<ComponentGroupRef Id="ScriptComponents" />
 		</Feature>
-		<Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+		<Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
 			<ComponentGroupRef Id="DatabaseComponents" />
 		</Feature>
 		<Feature Id="MSSpeechFeature" Title="Microsoft speech recognition and speech synthesis" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
@@ -128,7 +128,7 @@
 		<Feature Id="SAPFeature" Title="SAP NetWeaver Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
 			<ComponentGroupRef Id="SAPComponents" />
 		</Feature>
-		<Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+		<Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
 			<ComponentGroupRef Id="FileWatcherComponents" />
 		</Feature>
 		<Feature Id="AviRecorderFeature" Title="AviRecord activities and Run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
@@ -140,9 +140,9 @@
 		<Feature Id="RDServicePluginFeature" Title="High Density robots using Remote Desktop" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
 			<ComponentGroupRef Id="RDServicePluginComponents" />
 		</Feature>
-		<Feature Id="PDPluginFeature" Title="Process Discovery Harvesting Run Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+		<!--<Feature Id="PDPluginFeature" Title="Process Discovery Harvesting Run Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
 			<ComponentGroupRef Id="PDPluginComponents" />
-		</Feature>
+		</Feature>-->
 
 		<!--<Property Id="ALLUSERS" Value="2" />-->
 		<!--<Property Id="InstallFolder" Value="0" />

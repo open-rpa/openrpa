@@ -1,6 +1,7 @@
 ﻿using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
 using System;
+using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -137,6 +138,8 @@ namespace OpenRPA.Image
                 Threshold = 0.9,
                 Processname = Processname
             };
+            a.Variables.Add(new Variable<int>("Index", 0));
+            a.Variables.Add(new Variable<int>("Total", 0));
             e.SupportInput = false;
             e.SupportSelect = false;
             var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);

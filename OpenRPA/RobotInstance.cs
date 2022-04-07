@@ -230,8 +230,21 @@ namespace OpenRPA
             get
             {
                 var result = new List<IWorkflowInstance>();
-                lock (WorkflowInstance.Instances)
-                    foreach (var wi in WorkflowInstance.Instances) result.Add(wi);
+                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
+                {
+                    try
+                    {
+                        foreach (var wi in WorkflowInstance.Instances) result.Add(wi);
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(WorkflowInstance.Instances);
+                    }
+                }
+                else
+                {
+                    throw new Exception("Failed running workflow, due to theading deadlock");
+                }
                 return result;
             }
         }
@@ -543,7 +556,7 @@ namespace OpenRPA
                             if (exists._version < wf._version) reload_ids.Add(wf._id);
                             if (exists._version > wf._version && exists.isDirty) // Do NOT save offline changes. Let user do that using the right click menu
                             {
-                                Log.Warning(exists.RelativeFilename + " has a newer version on the server! Open and save it, to preserve local changes, or right ciick and select \"get server version\" to fix mitch match");
+                                Log.Warning(exists.ProjectAndName + " exists on server with version " + wf._version  + ", but local version is newer " + exists._version  + "! Open and save it, to preserve local changes, or right ciick and select \"get server version\" to fix mitch match");
                                 var state = exists.State;
                                 exists.SetLastState("warning");
                                 await exists.Save(true);
@@ -910,40 +923,51 @@ namespace OpenRPA
                           Log.Debug("RunPendingInstances::begin ");
                           await WorkflowInstance.RunPendingInstances();
                           Log.Debug("RunPendingInstances::end ");
-                          lock (WorkflowInstance.Instances)
+                          if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
                           {
-                              foreach (var i in WorkflowInstance.Instances)
+                              try
                               {
-                                  if (i.Bookmarks != null && i.Bookmarks.Count > 0)
+                                  foreach (var i in WorkflowInstance.Instances)
                                   {
-                                      foreach (var b in i.Bookmarks)
+                                      if (i.Bookmarks != null && i.Bookmarks.Count > 0)
                                       {
-                                          var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
-                                          if (instance != null)
+                                          foreach (var b in i.Bookmarks)
                                           {
-                                              if (instance.isCompleted)
+                                              var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
+                                              if (instance != null)
                                               {
-                                                  try
+                                                  if (instance.isCompleted)
                                                   {
-                                                      i.ResumeBookmark(b.Key, instance);
-                                                  }
-                                                  catch (System.ArgumentException ex)
-                                                  {
-                                                      if (i.state == "idle" || i.state == "running")
+                                                      try
                                                       {
-                                                          i.Abort(ex.Message);
+                                                          i.ResumeBookmark(b.Key, instance);
                                                       }
-                                                  }
-                                                  catch (Exception ex)
-                                                  {
-                                                      Log.Error(ex.ToString());
+                                                      catch (System.ArgumentException ex)
+                                                      {
+                                                          if (i.state == "idle" || i.state == "running")
+                                                          {
+                                                              i.Abort(ex.Message);
+                                                          }
+                                                      }
+                                                      catch (Exception ex)
+                                                      {
+                                                          Log.Error(ex.ToString());
+                                                      }
                                                   }
                                               }
                                           }
-                                      }
 
+                                      }
                                   }
                               }
+                              finally
+                              {
+                                  System.Threading.Monitor.Exit(WorkflowInstance.Instances);
+                              }
+                          }
+                          else
+                          {
+                              throw new Exception("Failed running workflow, due to theading deadlock");
                           }
                       }
                       catch (Exception ex)

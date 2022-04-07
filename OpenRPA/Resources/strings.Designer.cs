@@ -385,11 +385,101 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DataTable.
+        /// </summary>
+        public static string activity_bulkaddworkitems_datatable {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_datatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataTable containing the data to be used for creating the Workitems..
+        /// </summary>
+        public static string activity_bulkaddworkitems_datatable_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_datatable_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next Run.
+        /// </summary>
+        public static string activity_bulkaddworkitems_nextrun {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_nextrun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default Workitems run right away or with the number of seconds delay set in initial delay on the queue. Use this field to only run the Work Item after the given datetime.
+        /// </summary>
+        public static string activity_bulkaddworkitems_nextrun_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_nextrun_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Priority.
+        /// </summary>
+        public static string activity_bulkaddworkitems_priority {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_priority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set priority to a non zero number for this item. The lower the number the higher the proirity.
+        /// </summary>
+        public static string activity_bulkaddworkitems_priority_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_priority_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add a new Workitem for each row in a DataTable.
         /// </summary>
         public static string activity_bulkaddworkitems_tooltip {
             get {
                 return ResourceManager.GetString("activity_bulkaddworkitems_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue Name.
+        /// </summary>
+        public static string activity_bulkaddworkitems_wiq {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_wiq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of queue to add Workitem too.
+        /// </summary>
+        public static string activity_bulkaddworkitems_wiq_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_wiq_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue ID.
+        /// </summary>
+        public static string activity_bulkaddworkitems_wiqid {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_wiqid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID of queue to add Workitem too.
+        /// </summary>
+        public static string activity_bulkaddworkitems_wiqid_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_wiqid_help", resourceCulture);
             }
         }
         
@@ -1578,6 +1668,24 @@ namespace OpenRPA.Resources {
         public static string activity_updateworkitem_files_help {
             get {
                 return ResourceManager.GetString("activity_updateworkitem_files_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore Max Retries.
+        /// </summary>
+        public static string activity_updateworkitem_ignoremaxretries {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_ignoremaxretries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default a Workitem will fail, once max retries has been reached. Set this to true to resubmit even if max retries have been reached.
+        /// </summary>
+        public static string activity_updateworkitem_ignoremaxretries_help {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_ignoremaxretries_help", resourceCulture);
             }
         }
         

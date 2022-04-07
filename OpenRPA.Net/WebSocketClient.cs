@@ -1140,11 +1140,11 @@ namespace OpenRPA.Net
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
-        public async Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files) where T : IWorkitem
+        public async Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files, bool ignoremaxretries) where T : IWorkitem
         {
             var q = new UpdateWorkitemMessage<T>(); q.msg.command = "updateworkitem";
             q._id = item._id; q.name = item.name; q.state = item.state; q.nextrun = item.nextrun;
-            q.errormessage = item.errormessage; q.errorsource = item.errorsource;
+            q.errormessage = item.errormessage; q.errorsource = item.errorsource; q.ignoremaxretries = ignoremaxretries;
             q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
             var _files = new List<MessageWorkitemFile>();
             if (files != null)

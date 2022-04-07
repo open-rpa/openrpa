@@ -158,6 +158,8 @@ namespace OpenRPA.IE
             var wfdesigner = Plugin.client.Window.LastDesigner;
             WFHelper.DynamicAssemblyMonitor(wfdesigner.WorkflowDesigner, t.Assembly.GetName().Name, t.Assembly, true);
             var fef = new GetElement();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<IEElement>();
             var da = new DelegateInArgument<IEElement>();
             da.Name = "item";

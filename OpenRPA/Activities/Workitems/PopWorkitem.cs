@@ -31,7 +31,7 @@ namespace OpenRPA.WorkItems
             {
                 foreach (var file in result.files)
                 {
-                    await global.webSocketClient.DownloadFileAndSave(null, file._id, global.CurrentDirectory, false);
+                    await global.webSocketClient.DownloadFileAndSave(null, file._id, Interfaces.Extensions.ProjectsDirectory, false);
                 }
             }
             return result;

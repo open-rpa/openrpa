@@ -1298,28 +1298,42 @@ namespace OpenRPA
                 pw.ShowDialog();
                 if (result is Project p)
                 {
-                    p.isDirty = true;
-                    Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
-                    if (p.Workflows.Count == 0) p.UpdateWorkflowsList();
-                    foreach (Workflow _wf in p.Workflows)
+                    Show();
+                    await Task.Run(async () =>
                     {
-                        _wf._acl = p._acl;
-                        _wf.isDirty = true;
-                        await ((Workflow)_wf).UpdateImagePermissions();
-                    }
-                    if (p.Detectors.Count == 0) p.UpdateDetectorsList();
-                    foreach (Detector _wf in p.Detectors)
-                    {
-                        _wf._acl = p._acl;
-                        _wf.isDirty = true;
-                    }
-                    if (p.WorkItemQueues.Count == 0) p.UpdateWorkItemQueuesList();
-                    foreach (WorkitemQueue _wiq in p.WorkItemQueues)
-                    {
-                        _wiq._acl = p._acl;
-                        _wiq.isDirty = true;
-                    }
-                    await p.Save();
+                        try
+                        {
+                            p.isDirty = true;
+                            Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
+                            if (p.Workflows.Count == 0) p.UpdateWorkflowsList();
+                            foreach (Workflow _wf in p.Workflows)
+                            {
+                                _wf._acl = p._acl;
+                                _wf.isDirty = true;
+                                await ((Workflow)_wf).UpdateImagePermissions();
+                            }
+                            if (p.Detectors.Count == 0) p.UpdateDetectorsList();
+                            foreach (Detector _wf in p.Detectors)
+                            {
+                                _wf._acl = p._acl;
+                                _wf.isDirty = true;
+                            }
+                            if (p.WorkItemQueues.Count == 0) p.UpdateWorkItemQueuesList();
+                            foreach (WorkitemQueue _wiq in p.WorkItemQueues)
+                            {
+                                _wiq._acl = p._acl;
+                                _wiq.isDirty = true;
+                                RobotInstance.instance.WorkItemQueues.Update(_wiq);
+                            }
+                            await p.Save();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                            System.Windows.MessageBox.Show("CmdTest: " + ex.Message);
+                        }
+                    });
+
                 }
                 Log.Function("MainWindow", "OnPermissions", "save Entity");
                 if (result is Workflow wf)
@@ -3227,11 +3241,8 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if (_overlayWindow != null)
-                        {
-                            _overlayWindow.Visible = true;
-                            _overlayWindow.Bounds = e.Element.Rectangle;
-                        }
+                        if (_overlayWindow != null) _overlayWindow.Visible = true;
+                        if (_overlayWindow != null) _overlayWindow.Bounds = e.Element.Rectangle;
                     }
                     catch (Exception)
                     {
@@ -3244,7 +3255,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        _overlayWindow.Visible = false;
+                        if (_overlayWindow != null) _overlayWindow.Visible = false;
                     }
                     catch (Exception)
                     {
@@ -3550,22 +3561,32 @@ namespace OpenRPA
                         {
                             while (sw.Elapsed < TimeSpan.FromSeconds(1))
                             {
-
-                                lock (WorkflowInstance.Instances)
+                                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
                                 {
-                                    foreach (var wi in WorkflowInstance.Instances.ToList())
+                                    try
                                     {
-                                        if (wi.isCompleted) continue;
-                                        if (wi.Bookmarks == null) continue;
-                                        foreach (var b in wi.Bookmarks)
+                                        foreach (var wi in WorkflowInstance.Instances.ToList())
                                         {
-                                            if (b.Key == instance._id)
+                                            if (wi.isCompleted) continue;
+                                            if (wi.Bookmarks == null) continue;
+                                            foreach (var b in wi.Bookmarks)
                                             {
-                                                wi.ResumeBookmark(b.Key, instance);
-                                                return;
+                                                if (b.Key == instance._id)
+                                                {
+                                                    wi.ResumeBookmark(b.Key, instance);
+                                                    return;
+                                                }
                                             }
                                         }
                                     }
+                                    finally
+                                    {
+                                        System.Threading.Monitor.Exit(WorkflowInstance.Instances);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Failed running workflow, due to theading deadlock");
                                 }
                             }
                         }

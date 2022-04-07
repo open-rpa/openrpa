@@ -134,6 +134,8 @@ namespace OpenRPA.SAP
         public Activity Create(System.Windows.DependencyObject target)
         {
             var fef = new GetElement();
+            fef.Variables.Add(new Variable<int>("Index", 0));
+            fef.Variables.Add(new Variable<int>("Total", 0));
             var aa = new ActivityAction<SAPElement>();
             var da = new DelegateInArgument<SAPElement>();
             da.Name = "item";

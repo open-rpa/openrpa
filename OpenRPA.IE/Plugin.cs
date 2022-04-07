@@ -100,6 +100,8 @@ namespace OpenRPA.IE
                 {
                     Button = e.Button
                 }; var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
+                a.Variables.Add(new Variable<int>("Index", 0));
+                a.Variables.Add(new Variable<int>("Total", 0));
 
                 using (var p = System.Diagnostics.Process.GetProcessById(e.Element.ProcessId))
                 {
@@ -178,6 +180,8 @@ namespace OpenRPA.IE
             e.Element = new IEElement(browser, htmlelement);
 
             var a = new GetElement { DisplayName = (htmlelement.id + "-" + htmlelement.tagName + "-" + htmlelement.className).Replace(Environment.NewLine, "").Trim() };
+            a.Variables.Add(new Variable<int>("Index", 0));
+            a.Variables.Add(new Variable<int>("Total", 0));
             a.Selector = selector.ToString();
 
             var last = selector.Last() as IESelectorItem;

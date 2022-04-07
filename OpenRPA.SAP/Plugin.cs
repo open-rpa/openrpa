@@ -167,6 +167,8 @@ namespace OpenRPA.SAP
                 }
                 var selector = new SAPSelector(LastElement, null, true);
                 var a = new GetElement { DisplayName = LastElement.Role + " " + LastElement.Name };
+                a.Variables.Add(new Variable<int>("Index", 0));
+                a.Variables.Add(new Variable<int>("Total", 0));
                 a.Selector = selector.ToString();
                 a.Image = LastElement.ImageString();
                 a.MaxResults = 1;

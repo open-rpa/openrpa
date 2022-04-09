@@ -358,7 +358,14 @@ namespace OpenRPA.Views
                 if (modelService != null)
                 {
                     var modelItem = modelService.Root;
-                    Workflow.name = modelItem.GetValue<string>("Name");
+                    var oldname = Workflow.name;
+                    Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
+                    if (oldname != workflow.name)
+                    {
+                        Workflow.Filename = "";
+                        Workflow.Filename = workflow.UniqueFilename();
+
+                    }
                 }
             }
             catch (Exception ex)
@@ -491,6 +498,9 @@ namespace OpenRPA.Views
                 WorkflowDesigner.Flush();
                 var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
                 Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
+                Workflow.Filename = "";
+                Workflow.Filename = Workflow.UniqueFilename();
+
                 Workflow.Xaml = WorkflowDesigner.Text;
                 var _hasChanged = HasChanged;
                 HasChanged = false;
@@ -516,9 +526,7 @@ namespace OpenRPA.Views
             var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
             ModelProperty property = modelItem.Properties["Name"];
             property.SetValue(name.Replace(" ", "_"));
-            //Workflow.name = name;
             tab.IsSelected = true;
-            // Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
         }
         public bool Save()
         {

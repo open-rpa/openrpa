@@ -276,18 +276,11 @@ namespace OpenRPA
                         var _d = JsonConvert.DeserializeObject<WorkitemQueue>(json);
                         _d.isDirty = true;
                         _d.projectid = null;
-                        //if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
-                        //{
-                        //    _d = await global.webSocketClient.AddWorkitemQueue(_d);
-                        //} else if(string.IsNullOrEmpty(Config.local.wsurl))
-                        //{
-                        //    if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
-                        //    await _d.Save();
-                        //} else
-                        //{
-                        //    // System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot import WorkItemQueue");
-                        //    throw new Exception("Not connected to " + Config.local.wsurl + " so cannot import WorkItemQueue");
-                        //}
+                        if (!string.IsNullOrEmpty(_d._id))
+                        {
+                            var exists = RobotInstance.instance.WorkItemQueues.FindById(_d._id);
+                            if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                        }
                         WorkItemQueues.Add(_d);
                     }
                     if (_type == "detector")

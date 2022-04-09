@@ -403,6 +403,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Columns.
+        /// </summary>
+        public static string activity_bulkaddworkitems_filefields {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_filefields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Array of Column names that contains full path and filename to be attached to that workitem.
+        /// </summary>
+        public static string activity_bulkaddworkitems_filefields_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_filefields_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next Run.
         /// </summary>
         public static string activity_bulkaddworkitems_nextrun {

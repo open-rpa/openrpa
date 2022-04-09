@@ -231,6 +231,12 @@
   <data name="activity_bulkaddworkitems_datatable_help" xml:space="preserve">
     <value>DataTable containing the data to be used for creating the Workitems.</value>
   </data>
+  <data name="activity_bulkaddworkitems_filefields" xml:space="preserve">
+    <value>File Columns</value>
+  </data>
+  <data name="activity_bulkaddworkitems_filefields_help" xml:space="preserve">
+    <value>Array of Column names that contains full path and filename to be attached to that workitem</value>
+  </data>
   <data name="activity_bulkaddworkitems_nextrun" xml:space="preserve">
     <value>Next Run</value>
   </data>

@@ -29,6 +29,8 @@ namespace OpenRPA.WorkItems
         public InArgument<int> Priority { get; set; }
         [LocalizedDisplayName("activity_bulkaddworkitems_nextrun", typeof(Resources.strings)), LocalizedDescription("activity_bulkaddworkitems_nextrun_help", typeof(Resources.strings))]
         public InArgument<DateTime?> NextRun { get; set; }
+        [LocalizedDisplayName("activity_bulkaddworkitems_filefields", typeof(Resources.strings)), LocalizedDescription("activity_bulkaddworkitems_filefields_help", typeof(Resources.strings))]
+        public InArgument<string[]> Filefields { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var _wiqid = wiqid.Get(context);
@@ -37,6 +39,9 @@ namespace OpenRPA.WorkItems
             var priority = Priority.Get<int>(context);
             var nextrun = NextRun.Get<DateTime?>(context);
             var items = new List<OpenRPA.Interfaces.AddWorkitem>();
+            var filefields = Filefields.Get<string[]>(context);
+            if (filefields == null) filefields = new string[] { };
+            for (var i = 0; i < filefields.Length; i++) filefields[i] = filefields[i].ToLower();
             var counter = 0;
             foreach (DataRow row in dt.Rows)
             {
@@ -46,12 +51,22 @@ namespace OpenRPA.WorkItems
                 wi.priority = priority;
                 wi.nextrun = nextrun;
                 wi.payload = new Dictionary<string, object>();
+                var _files = new List<MessageWorkitemFile>();
                 foreach (DataColumn field in dt.Columns)
                 {
                     if (string.IsNullOrEmpty(field.ColumnName)) continue;
-                    wi.payload.Add(field.ColumnName, row[field.ColumnName]);
-                    if (field.ColumnName.ToLower() == "name") wi.name = row[field.ColumnName].ToString();
+                    var columnname = field.ColumnName.ToLower();
+                    wi.payload.Add(columnname, row[field.ColumnName]);
+                    if (columnname == "name") wi.name = row[field.ColumnName].ToString();
+                    if(filefields.Contains(columnname))
+                    {
+                        if(field.DataType == typeof(string))
+                        {
+                            _files.Add(new MessageWorkitemFile() { filename = row[field.ColumnName].ToString() });
+                        }
+                    }
                 }
+                wi.files = _files.ToArray();
                 items.Add(wi);
             }
             //if (t.payload == null) t.payload = new Dictionary<string, object>();

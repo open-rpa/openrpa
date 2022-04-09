@@ -172,7 +172,7 @@ namespace OpenRPA
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             project._type = "project";
-            await project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
+            project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
             await project.InstallDependencies(true);
             return project;
         }
@@ -256,74 +256,78 @@ namespace OpenRPA
             Workflows.Add(w);
             return w;
         }
-        private async Task LoadFilesFromDisk(string folder)
+        public void LoadFileFromDisk(string file)
+        {
+            if (System.IO.Path.GetExtension(file).ToLower() == ".xaml")
+            {
+                Workflows.Add(Workflow.FromFile(this, file));
+            }
+            else if (System.IO.Path.GetExtension(file).ToLower() == ".json")
+            {
+                var json = System.IO.File.ReadAllText(file);
+                JObject o = null;
+                try
+                {
+                    o = JObject.Parse(json);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("Error parsing " + file);
+                    Log.Error(ex.Message);
+                    return;
+                }
+                if (!o.ContainsKey("_type"))
+                {
+                    Log.Warning("skipping " + file + " missing _type field");
+                    return;
+                }
+                var _type = o.Value<string>("_type");
+                if (_type == "workitemqueue")
+                {
+                    var _d = JsonConvert.DeserializeObject<WorkitemQueue>(json);
+                    _d.isDirty = true;
+                    _d.projectid = null;
+                    if (!string.IsNullOrEmpty(_d._id))
+                    {
+                        var exists = RobotInstance.instance.WorkItemQueues.FindById(_d._id);
+                        if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                    }
+                    WorkItemQueues.Add(_d);
+                }
+                if (_type == "detector")
+                {
+                    var _d = JsonConvert.DeserializeObject<Detector>(json);
+                    if (!string.IsNullOrEmpty(_d._id))
+                    {
+                        var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                        if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                    }
+                    if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
+                    _d.isDirty = true;
+                    _d.Start(true);
+                    Detectors.Add(_d);
+                }
+                if (_type == "workflow")
+                {
+                    var _wf = JsonConvert.DeserializeObject<Workflow>(json);
+                    if (!string.IsNullOrEmpty(_wf._id))
+                    {
+                        var exists = RobotInstance.instance.Workflows.FindById(_wf._id);
+                        if (exists != null) { _wf._id = null; } else { _wf.isLocalOnly = true; }
+                    }
+                    if (string.IsNullOrEmpty(_wf._id)) _wf._id = Guid.NewGuid().ToString();
+                    _wf.isDirty = true;
+                    Workflows.Add(_wf);
+                }
+            }
+        }
+        private void LoadFilesFromDisk(string folder)
         {
             if (string.IsNullOrEmpty(folder)) folder = Path;
             var Files = System.IO.Directory.EnumerateFiles(folder, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             foreach (string file in Files)
             {
-                if (System.IO.Path.GetExtension(file).ToLower() == ".xaml")
-                {
-                    Workflows.Add(Workflow.FromFile(this, file));
-                }
-                else if (System.IO.Path.GetExtension(file).ToLower() == ".json")
-                {
-                    var json = System.IO.File.ReadAllText(file);
-                    JObject o = null;
-                    try
-                    {
-                        o = JObject.Parse(json);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warning("Error parsing " + file);
-                        Log.Error(ex.Message);
-                        continue;
-                    }
-                    if (!o.ContainsKey("_type"))
-                    {
-                        Log.Warning("skipping " + file + " missing _type field");
-                        continue;
-                    }
-                    var _type = o.Value<string>("_type");
-                    if (_type == "workitemqueue")
-                    {
-                        var _d = JsonConvert.DeserializeObject<WorkitemQueue>(json);
-                        _d.isDirty = true;
-                        _d.projectid = null;
-                        if (!string.IsNullOrEmpty(_d._id))
-                        {
-                            var exists = RobotInstance.instance.WorkItemQueues.FindById(_d._id);
-                            if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
-                        }
-                        WorkItemQueues.Add(_d);
-                    }
-                    if (_type == "detector")
-                    {
-                        var _d = JsonConvert.DeserializeObject<Detector>(json);
-                        if (!string.IsNullOrEmpty(_d._id))
-                        {
-                            var exists = RobotInstance.instance.Detectors.FindById(_d._id);
-                            if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
-                        }
-                        if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
-                        _d.isDirty = true;
-                        _d.Start(true);
-                        Detectors.Add(_d);
-                    }
-                    if (_type == "workflow")
-                    {
-                        var _wf = JsonConvert.DeserializeObject<Workflow>(json);
-                        if (!string.IsNullOrEmpty(_wf._id))
-                        {
-                            var exists = RobotInstance.instance.Workflows.FindById(_wf._id);
-                            if (exists != null) { _wf._id = null; } else { _wf.isLocalOnly = true; }
-                        }
-                        if (string.IsNullOrEmpty(_wf._id)) _wf._id = Guid.NewGuid().ToString();
-                        _wf.isDirty = true;
-                        Workflows.Add(_wf);
-                    }
-                }
+                LoadFileFromDisk(file);
             }
         }
         public static string UniqueName(string name, string _id = null)

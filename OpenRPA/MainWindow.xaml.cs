@@ -2798,6 +2798,8 @@ namespace OpenRPA
                         string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", designer.Workflow.name);
                         if (string.IsNullOrEmpty(Name) || designer.Workflow.name == Name) return;
                         designer.RenameWorkflow(Name);
+                        workflow.Filename = "";
+                        workflow.Filename = workflow.UniqueFilename();
                     }
                     else
                     {
@@ -2805,6 +2807,8 @@ namespace OpenRPA
                         if (string.IsNullOrEmpty(Name) || workflow.name == Name) return;
                         workflow.Xaml = Views.WFDesigner.SetWorkflowName(workflow.Xaml, Name);
                         workflow.name = Name;
+                        workflow.Filename = "";
+                        workflow.Filename = workflow.UniqueFilename();
                         await workflow.Save();
                     }
                 }

@@ -99,11 +99,5 @@ namespace OpenRPA.Views
             }
             Log.FunctionOutdent("AgentViewProjects", "ButtonEditXAML");
         }
-        private void UserControl_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.F2)
-            {
-            }
-        }
     }
 }

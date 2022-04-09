@@ -43,12 +43,6 @@ namespace OpenRPA
             {
                 var value = GetProperty<string>();
                 if (string.IsNullOrEmpty(value)) value = "";
-                //if(string.IsNullOrEmpty(value))
-                //{
-                //    _backingFieldValues["Filename"] = UniqueFilename();
-                //    _backingFieldValues["isDirty"] = true;
-                //    return _backingFieldValues["Filename"] as string;
-                //}
                 return value;
             }
             set { SetProperty(value); }
@@ -354,7 +348,7 @@ namespace OpenRPA
             result._type = "workflow";
             result.projectid = project._id;
             result.Filename = System.IO.Path.GetFileName(Filename);
-            result.name = System.IO.Path.GetFileNameWithoutExtension(Filename);
+            result.name = System.IO.Path.GetFileNameWithoutExtension(Filename).Replace("_", " ");
             result.Xaml = System.IO.File.ReadAllText(Filename);
             result.Parameters = new List<workflowparameter>();
             //sresult.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();

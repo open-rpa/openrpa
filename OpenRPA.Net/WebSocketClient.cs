@@ -1135,7 +1135,17 @@ namespace OpenRPA.Net
         {
             var q = new AddWorkitemsMessage(); q.msg.command = "addworkitems";
             q.wiqid = wiqid; q.wiq = wiq; 
-            q.items = items; 
+            q.items = items;
+            foreach(var item in q.items)
+                if (item.files != null)
+                    foreach (var f in item.files)
+                    {
+                        if (!System.IO.File.Exists(f.filename)) continue;
+                        f.compressed = false;
+                        byte[] bytes = System.IO.File.ReadAllBytes(f.filename);
+                        f.file = Convert.ToBase64String(bytes);
+                        f.filename = System.IO.Path.GetFileName(f.filename);
+                    }
             q = await q.SendMessage<AddWorkitemsMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);

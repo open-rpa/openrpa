@@ -1433,15 +1433,8 @@ namespace OpenRPA
                 }
                 if (System.IO.Path.GetExtension(filename) == ".json")
                 {
-                    var json = System.IO.File.ReadAllText(dialogOpen.FileName);
-                    Detector _d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(json);
-                    _d._acl = p._acl;
-                    var exists = RobotInstance.instance.Detectors.FindById(_d._id);
-                    if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
-                    _d.isDirty = true;
-                    _d.projectid = p._id;
-                    await _d.Save();
-                    _d.Start(true);
+                    p.LoadFileFromDisk(filename);
+                    await p.Save();
                     OpenProject.UpdateProjectsList(false, true);
                     return;
                 }
@@ -1963,7 +1956,7 @@ namespace OpenRPA
             layoutDocument.IsSelectedChanged += view.LayoutDocument_IsSelectedChanged;
             return;
         }
-        public async Task<WorkItemQueuesView> OpenWorkItemQueues()
+        public WorkItemQueuesView OpenWorkItemQueues()
         {
             var ld = DManager.Layout.Descendents().OfType<LayoutDocument>().ToList();
             foreach (var document in ld)

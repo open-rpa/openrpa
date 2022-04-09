@@ -453,7 +453,7 @@ namespace OpenRPA.Views
                 {
                     if (main is MainWindow m)
                     {
-                        var op = await m.OpenWorkItemQueues();
+                        var op = m.OpenWorkItemQueues();
                         if (op != null)
                         {
                             foreach (OpenRPA.WorkitemQueue _wiq in op.listWorkItemQueues.Items)

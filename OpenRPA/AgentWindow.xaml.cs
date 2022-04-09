@@ -695,20 +695,20 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "SaveLayout");
             try
             {
-                var workflows = new List<string>();
-                foreach (var designer in RobotInstance.instance.Designers)
-                {
-                    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
-                    {
-                        workflows.Add(designer.Workflow.RelativeFilename);
-                    }
-                    else if (!string.IsNullOrEmpty(designer.Workflow._id))
-                    {
-                        workflows.Add(designer.Workflow._id);
+                //var workflows = new List<string>();
+                //foreach (var designer in RobotInstance.instance.Designers)
+                //{
+                //    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
+                //    {
+                //        workflows.Add(designer.Workflow.RelativeFilename);
+                //    }
+                //    else if (!string.IsNullOrEmpty(designer.Workflow._id))
+                //    {
+                //        workflows.Add(designer.Workflow._id);
 
-                    }
-                }
-                Config.local.openworkflows = workflows.ToArray();
+                //    }
+                //}
+                //Config.local.openworkflows = workflows.ToArray();
                 var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
                 if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
                 {
@@ -793,20 +793,20 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
-            Task.Run(() =>
-            {
-                var sw = new System.Diagnostics.Stopwatch(); sw.Start();
-                while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
-                {
-                    System.Threading.Thread.Sleep(200);
-                    if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
-                }
-                foreach (var id in Config.local.openworkflows)
-                {
-                    var wf = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(id);
-                    if (wf != null) OnOpenWorkflow(wf);
-                }
-            });
+            //Task.Run(() =>
+            //{
+            //    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+            //    while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
+            //    {
+            //        System.Threading.Thread.Sleep(200);
+            //        if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
+            //    }
+            //    foreach (var id in Config.local.openworkflows)
+            //    {
+            //        var wf = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(id);
+            //        if (wf != null) OnOpenWorkflow(wf);
+            //    }
+            //});
             Log.FunctionOutdent("MainWindow", "LoadLayout");
         }
 

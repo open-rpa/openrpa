@@ -1447,14 +1447,16 @@ namespace OpenRPA
                 }
                 if (System.IO.Path.GetExtension(filename) == ".rpaproj")
                 {
+                    Log.Output("*** Begin Importing project");
                     var project = await Project.FromFile(filename);
                     project.isDirty = true;
                     project._id = null;
                     await project.Save();
-                    IWorkflow workflow = project.Workflows.First();
-                    workflow.projectid = project._id;
+                    //IWorkflow workflow = project.Workflows.First();
+                    //workflow.projectid = project._id;
                     RobotInstance.instance.NotifyPropertyChanged("Projects");
-                    OnOpenWorkflow(workflow);
+                    // OnOpenWorkflow(workflow);
+                    Log.Output("*** Done Importing project");
                     return;
                 }
             }
@@ -1513,8 +1515,10 @@ namespace OpenRPA
                     var dialogSave = new Microsoft.Win32.SaveFileDialog
                     {
                         Title = "Save Workflow",
-                        Filter = "Workflows (.xaml)|*.xaml",
-                        FileName = designer.Workflow.name + ".xaml"
+                        Filter = "Workflows (.json)|*.json",
+                        FileName = designer.Workflow.name + ".json"
+                        //Filter = "Workflows (.xaml)|*.xaml",
+                        //FileName = designer.Workflow.name + ".xaml"
                     };
                     if (dialogSave.ShowDialog() == true)
                     {
@@ -1543,8 +1547,10 @@ namespace OpenRPA
                         var dialogSave = new Microsoft.Win32.SaveFileDialog
                         {
                             Title = "Save Workflow",
-                            Filter = "Workflows (.xaml)|*.xaml",
-                            FileName = wf.name + ".xaml"
+                            //Filter = "Workflows (.xaml)|*.xaml",
+                            //FileName = wf.name + ".xaml"
+                            Filter = "Workflows (.json)|*.json",
+                            FileName = wf.name + ".json"
                         };
                         if (dialogSave.ShowDialog() == true)
                         {
@@ -2159,20 +2165,20 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "SaveLayout");
             try
             {
-                var workflows = new List<string>();
-                foreach (var designer in RobotInstance.instance.Designers)
-                {
-                    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
-                    {
-                        workflows.Add(designer.Workflow.RelativeFilename);
-                    }
-                    else if (!string.IsNullOrEmpty(designer.Workflow._id))
-                    {
-                        workflows.Add(designer.Workflow._id);
+                //var workflows = new List<string>();
+                //foreach (var designer in RobotInstance.instance.Designers)
+                //{
+                //    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
+                //    {
+                //        workflows.Add(designer.Workflow.RelativeFilename);
+                //    }
+                //    else if (!string.IsNullOrEmpty(designer.Workflow._id))
+                //    {
+                //        workflows.Add(designer.Workflow._id);
 
-                    }
-                }
-                Config.local.openworkflows = workflows.ToArray();
+                //    }
+                //}
+                //Config.local.openworkflows = workflows.ToArray();
                 var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
                 if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
                 {
@@ -2262,20 +2268,20 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
-            Task.Run(() =>
-            {
-                var sw = new System.Diagnostics.Stopwatch(); sw.Start();
-                while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
-                {
-                    System.Threading.Thread.Sleep(200);
-                    if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
-                }
-                foreach (var id in Config.local.openworkflows)
-                {
-                    var wf = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(id);
-                    if (wf != null) OnOpenWorkflow(wf);
-                }
-            });
+            //Task.Run(() =>
+            //{
+            //    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+            //    while (true && sw.Elapsed < TimeSpan.FromSeconds(10))
+            //    {
+            //        System.Threading.Thread.Sleep(200);
+            //        if (Views.OpenProject.Instance != null && Views.OpenProject.Instance.Projects.Count > 0) break;
+            //    }
+            //    foreach (var id in Config.local.openworkflows)
+            //    {
+            //        var wf = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(id);
+            //        if (wf != null) OnOpenWorkflow(wf);
+            //    }
+            //});
             Log.FunctionOutdent("MainWindow", "LoadLayout");
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
@@ -2798,8 +2804,6 @@ namespace OpenRPA
                         string Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "New name", designer.Workflow.name);
                         if (string.IsNullOrEmpty(Name) || designer.Workflow.name == Name) return;
                         designer.RenameWorkflow(Name);
-                        workflow.Filename = "";
-                        workflow.Filename = workflow.UniqueFilename();
                     }
                     else
                     {
@@ -2807,8 +2811,6 @@ namespace OpenRPA
                         if (string.IsNullOrEmpty(Name) || workflow.name == Name) return;
                         workflow.Xaml = Views.WFDesigner.SetWorkflowName(workflow.Xaml, Name);
                         workflow.name = Name;
-                        workflow.Filename = "";
-                        workflow.Filename = workflow.UniqueFilename();
                         await workflow.Save();
                     }
                 }

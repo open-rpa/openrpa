@@ -375,8 +375,11 @@ namespace OpenRPA
         }
         public async Task ExportFile(string filepath)
         {
-            string xaml = await Views.WFDesigner.LoadImages(Xaml);
-            System.IO.File.WriteAllText(filepath, xaml);
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            var exportedwf = JsonConvert.DeserializeObject<Workflow>(json);
+            exportedwf.Xaml = await Views.WFDesigner.LoadImages(Xaml);
+            json = Newtonsoft.Json.JsonConvert.SerializeObject(exportedwf);
+            System.IO.File.WriteAllText(filepath, json);
         }
         public async Task Save()
         {

@@ -25,7 +25,7 @@ namespace OpenRPA
         public bool showloadingscreen { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public string culture { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public string ocrlanguage { get { return GetProperty(null, "eng"); } set { SetProperty(null, value); } }
-        public string[] openworkflows { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
+        // public string[] openworkflows { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public string[] files_pending_deletion { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public System.Drawing.Rectangle mainwindow_position { get { return GetProperty(null, System.Drawing.Rectangle.Empty); } set { SetProperty(null, value); } }
         public string designerlayout { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
@@ -200,7 +200,7 @@ namespace OpenRPA
                 _ = showloadingscreen;
                 _ = culture;
                 _ = ocrlanguage;
-                _ = openworkflows;
+                //_ = openworkflows;
                 _ = mainwindow_position;
                 _ = designerlayout;
                 _ = record_overlay;

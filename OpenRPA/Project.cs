@@ -269,7 +269,22 @@ namespace OpenRPA
                 else if (System.IO.Path.GetExtension(file).ToLower() == ".json")
                 {
                     var json = System.IO.File.ReadAllText(file);
-                    var o = JObject.Parse(json);
+                    JObject o = null;
+                    try
+                    {
+                        o = JObject.Parse(json);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning("Error parsing " + file);
+                        Log.Error(ex.Message);
+                        continue;
+                    }
+                    if (!o.ContainsKey("_type"))
+                    {
+                        Log.Warning("skipping " + file + " missing _type field");
+                        continue;
+                    }
                     var _type = o.Value<string>("_type");
                     if (_type == "workitemqueue")
                     {
@@ -295,6 +310,18 @@ namespace OpenRPA
                         _d.isDirty = true;
                         _d.Start(true);
                         Detectors.Add(_d);
+                    }
+                    if (_type == "workflow")
+                    {
+                        var _wf = JsonConvert.DeserializeObject<Workflow>(json);
+                        if (!string.IsNullOrEmpty(_wf._id))
+                        {
+                            var exists = RobotInstance.instance.Workflows.FindById(_wf._id);
+                            if (exists != null) { _wf._id = null; } else { _wf.isLocalOnly = true; }
+                        }
+                        if (string.IsNullOrEmpty(_wf._id)) _wf._id = Guid.NewGuid().ToString();
+                        _wf.isDirty = true;
+                        Workflows.Add(_wf);
                     }
                 }
             }
@@ -334,24 +361,15 @@ namespace OpenRPA
             var filenames = new List<string>();
             foreach (var workflow in Workflows)
             {
-                if (filenames.Contains(workflow.Filename))
-                {
-                    workflow.Filename = workflow.UniqueFilename();
-                }
-                filenames.Add(workflow.Filename);
-                workflow.ExportFile(System.IO.Path.Combine(projectpath, workflow.Filename));
+                _ = ((Workflow)workflow).ExportFile(System.IO.Path.Combine(projectpath, workflow._id + ".json"));
             }
             foreach (var detector in Detectors)
             {
-                var _name = detector.name;
-                _name = r.Replace(_name, "");
-                (detector as Detector).ExportFile(System.IO.Path.Combine(projectpath, _name + ".json"));
+                (detector as Detector).ExportFile(System.IO.Path.Combine(projectpath, detector._id + ".json"));
             }
             foreach (var wiq in WorkItemQueues)
             {
-                var _name = wiq.name;
-                _name = r.Replace(_name, "");
-                (wiq as WorkitemQueue).ExportFile(System.IO.Path.Combine(projectpath, _name + ".json"));
+                (wiq as WorkitemQueue).ExportFile(System.IO.Path.Combine(projectpath, wiq._id + ".json"));
             }
         }
         public async Task Save()

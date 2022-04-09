@@ -32,7 +32,7 @@ namespace OpenRPA.Interfaces
         string UniqueFilename();
         Task Save();
         Task UpdateImagePermissions();
-        Task ExportFile(string filepath);
+        // Task ExportFile(string filepath);
         void ParseParameters();
         void NotifyUIState();
     }

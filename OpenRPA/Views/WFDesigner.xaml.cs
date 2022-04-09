@@ -358,14 +358,7 @@ namespace OpenRPA.Views
                 if (modelService != null)
                 {
                     var modelItem = modelService.Root;
-                    var oldname = Workflow.name;
                     Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
-                    if (oldname != workflow.name)
-                    {
-                        Workflow.Filename = "";
-                        Workflow.Filename = workflow.UniqueFilename();
-
-                    }
                 }
             }
             catch (Exception ex)
@@ -498,8 +491,6 @@ namespace OpenRPA.Views
                 WorkflowDesigner.Flush();
                 var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
                 Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
-                Workflow.Filename = "";
-                Workflow.Filename = Workflow.UniqueFilename();
 
                 Workflow.Xaml = WorkflowDesigner.Text;
                 var _hasChanged = HasChanged;

@@ -75,6 +75,7 @@ namespace OpenRPA.Activities
                     }
                     else
                     {
+                        Log.Debug("Recived property value of " + a.Key + " is null);
                         param[v.DisplayName] = value;
                     }
                 }

@@ -187,10 +187,7 @@ namespace OpenRPA
                     System.Threading.Monitor.Exit(Instances);
                 }
             }
-            else
-            {
-                throw new Exception("Failed running workflow, due to theading deadlock");
-            }
+            else { throw new LockNotReceivedException("Failed adding new workflow instance in Create"); }
             result.createApp(Workflow.Activity());
             CleanUp();
             CleanUp();
@@ -741,10 +738,7 @@ namespace OpenRPA
                             System.Threading.Monitor.Exit(Instances);
                         }
                     }
-                    else
-                    {
-                        throw new Exception("Failed running workflow, due to theading deadlock");
-                    }
+                    else { throw new LockNotReceivedException("Failed running workflow instance"); }
                     // Save();
                 }
                 else
@@ -907,33 +901,41 @@ namespace OpenRPA
             };
         }
         private object filelock = new object();
-        public void SaveFile()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(InstanceId)) return;
-                if (string.IsNullOrEmpty(Path)) return;
-                if (isCompleted || hasError) return;
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
-                var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-                string json = "";
-                try
-                {
-                    json = JsonConvert.SerializeObject(this);
-                }
-                catch (Exception)
-                {
-                }
-                lock (filelock)
-                {
-                    if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
+        //public void SaveFile()
+        //{
+        //    try
+        //    {
+        //        if (string.IsNullOrEmpty(InstanceId)) return;
+        //        if (string.IsNullOrEmpty(Path)) return;
+        //        if (isCompleted || hasError) return;
+        //        if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
+        //        var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+        //        string json = "";
+        //        try
+        //        {
+        //            json = JsonConvert.SerializeObject(this);
+        //        }
+        //        catch (Exception)
+        //        {
+        //        }
+        //        if (System.Threading.Monitor.TryEnter(filelock, 1000))
+        //        {
+        //            try
+        //            {
+        //                if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
+        //            }
+        //            finally
+        //            {
+        //                System.Threading.Monitor.Exit(filelock);
+        //            }
+        //        }
+        //        else { throw new LockNotReceivedException("Failed saving workflow instance"); }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(ex.ToString());
+        //    }
+        //}
         public void DeleteFile()
         {
             if (string.IsNullOrEmpty(InstanceId)) return;
@@ -1035,10 +1037,7 @@ namespace OpenRPA
                                 System.Threading.Monitor.Exit(Instances);
                             }
                         }
-                        else
-                        {
-                            throw new Exception("Failed running workflow, due to theading deadlock");
-                        }
+                        else { throw new LockNotReceivedException("Failed adding workflow instance in running pending"); }
                         var _ref = (i as IWorkflowInstance);
                         foreach (var runner in Plugins.runPlugins)
                         {
@@ -1088,21 +1087,7 @@ namespace OpenRPA
                         if (i.isCompleted && i._modified < DateTime.Now.AddMinutes(-15) && !i.isDirty)
                         {
                             Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
-                            if (System.Threading.Monitor.TryEnter(Instances, 1000))
-                            {
-                                try
-                                {
-                                    Instances.Remove(i);
-                                }
-                                finally
-                                {
-                                    System.Threading.Monitor.Exit(Instances);
-                                }
-                            }
-                            else
-                            {
-                                throw new Exception("Failed running workflow, due to theading deadlock");
-                            }
+                            Instances.Remove(i);
                         }
                     }
                 }
@@ -1111,10 +1096,7 @@ namespace OpenRPA
                     System.Threading.Monitor.Exit(Instances);
                 }
             }
-            else
-            {
-                throw new Exception("Failed running workflow, due to theading deadlock");
-            }
+            else { throw new LockNotReceivedException("Failed cleaning up old workflow instance"); }
         }
         public override string ToString()
         {

@@ -633,6 +633,18 @@
   <data name="activity_text_help" xml:space="preserve">
     <value>Text to add to clipboard</value>
   </data>
+  <data name="activity_throwbusinessruleexception" xml:space="preserve">
+    <value>Throw Business Rule Exception</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_message_help" xml:space="preserve">
+    <value>Short describtion of why this workflow failed due to an Business Rule Exception. What data was missing, incomplete or invalid ? We recommend using payload for more detailed information</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_tooltip" xml:space="preserve">
+    <value>Throw a Business Rule Exception. The workflow is failing due to missing, incomplete or invalid data</value>
+  </data>
   <data name="activity_timeout" xml:space="preserve">
     <value>Timeout</value>
   </data>
@@ -734,6 +746,12 @@
   </data>
   <data name="browseraddons" xml:space="preserve">
     <value>Browser addons</value>
+  </data>
+  <data name="button_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="button_close" xml:space="preserve">
+    <value>Close</value>
   </data>
   <data name="button_ok" xml:space="preserve">
     <value>Ok</value>

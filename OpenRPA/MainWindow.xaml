@@ -13,6 +13,7 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" StateChanged="Window_StateChanged" PreviewMouseWheel="SearchBox_PreviewMouseWheel"
         KeyDown="Window_KeyDown" Name="TheMainWindow"
+        KeyUp="Window_KeyUp"
         Title="OpenRPA"
         x:Uid="title"
          Height="750" Width="1200">

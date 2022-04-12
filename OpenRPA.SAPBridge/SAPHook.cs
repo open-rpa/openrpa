@@ -59,6 +59,7 @@ namespace OpenRPA.SAPBridge
             {
                 System.Diagnostics.Trace.WriteLine(ele.ToString() + " " + ele.Rectangle);
             }
+            // session.FindByPosition
             if (ele.Children == null) ele.Load(session, VisibleOnly);
             if (ele.Children != null)
                 foreach (var child in ele.Children)
@@ -113,9 +114,16 @@ namespace OpenRPA.SAPBridge
                 return;
             }
             // Stop highlighing "old" UI ???
-            lock (UIElements)
+            if (System.Threading.Monitor.TryEnter(UIElements, 1000))
             {
-                UIElements = new SAPEventElement[] { };
+                try
+                {
+                    UIElements = new SAPEventElement[] { };
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(UIElements);
+                }
             }
             try
             {
@@ -147,9 +155,16 @@ namespace OpenRPA.SAPBridge
                 {
                     Program.log(ex.ToString());
                 }
-                lock (UIElements)
+                if (System.Threading.Monitor.TryEnter(UIElements, 1000))
                 {
-                    UIElements = result.ToArray();
+                    try
+                    {
+                        UIElements = result.ToArray();
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(UIElements);
+                    }
                 }
             }
             catch (Exception)

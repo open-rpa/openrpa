@@ -35,9 +35,16 @@ namespace OpenRPA.RDService
                 {
                     try
                     {
-                        lock (mylock)
+                        if (System.Threading.Monitor.TryEnter(mylock, 1000))
                         {
-                            DoWork();
+                            try
+                            {
+                                DoWork();
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(mylock);
+                            }
                         }
                         System.Threading.Thread.Sleep(1000);
                     }

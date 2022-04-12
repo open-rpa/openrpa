@@ -84,15 +84,29 @@ namespace OpenRPA.Image
                 }
             }
             e.Element = lastelement;
-            lock (_lock)
+            if (System.Threading.Monitor.TryEnter(_lock, 1000))
             {
-                if (_processing) { return true; }
-                _processing = true;
+                try
+                {
+                    if (_processing) { return true; }
+                    _processing = true;
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_lock);
+                }
             }
             var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
-            lock (_lock)
+            if (System.Threading.Monitor.TryEnter(_lock, 1000))
             {
-                _processing = false;
+                try
+                {
+                    _processing = false;
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_lock);
+                }
             }
             if (image == null)
             {

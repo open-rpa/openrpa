@@ -4,18 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.Views"
+        xmlns:or="clr-namespace:OpenRPA.Resources"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=txtName}"
 
         Title="Workitem Queue" Height="120" Width="300">
-    <StackPanel>
+    <StackPanel Margin="10">
         <StackPanel>
-            <TextBlock>Name</TextBlock>
+            <TextBlock Text="{x:Static or:strings.name}"></TextBlock>
             <TextBox x:Name="txtName" Text="{Binding item.name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyUp="txtName_KeyUp"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Click="OkButton_Click">Ok</Button>
-            <Button Click="CancelButton_Click">Cancel</Button>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,7,0,0">
+            <Button Click="OkButton_Click" MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="{x:Static or:strings.button_ok}"></Button>
+            <Button Click="CancelButton_Click" MinWidth="50" Background="White" Padding="5,0,5,0" Content="{x:Static or:strings.button_cancel}"></Button>
         </StackPanel>
     </StackPanel>
 </Window>

@@ -25,7 +25,7 @@ namespace OpenRPA.WorkItems
             InitializeComponent();
             DataContext = this;
         }
-        public ObservableCollection<IWorkitemQueue> WorkItemQueues { get { return global.OpenRPAClient.WorkItemQueuesSource;  } }
+        public ObservableCollection<IWorkitemQueue> WorkItemQueues { get { return global.OpenRPAClient.WorkItemQueues;  } }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
         }

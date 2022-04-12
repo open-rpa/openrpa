@@ -114,18 +114,32 @@ namespace OpenRPA.SAPBridge
         private static object _lock = new object();
         private static void OnMouseMove(InputEventArgs e)
         {
-            lock (_lock)
+            if (System.Threading.Monitor.TryEnter(_lock, 1000))
             {
-                if (isMoving) return;
-                isMoving = true;
+                try
+                {
+                    if (isMoving) return;
+                    isMoving = true;
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_lock);
+                }
             }
             try
             {
                 if (SAPHook.Instance.Connections.Count() == 0 || SAPHook.Instance.UIElements.Count() == 0)
                 {
-                    lock (_lock)
+                    if (System.Threading.Monitor.TryEnter(_lock, 1000))
                     {
-                        isMoving = false;
+                        try
+                        {
+                            isMoving = false;
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(_lock);
+                        }
                     }
                     return;
                 }
@@ -135,17 +149,31 @@ namespace OpenRPA.SAPBridge
                     var ProcessId = Element.Current.ProcessId;
                     if (ProcessId < 1)
                     {
-                        lock (_lock)
+                        if (System.Threading.Monitor.TryEnter(_lock, 1000))
                         {
-                            isMoving = false;
+                            try
+                            {
+                                isMoving = false;
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(_lock);
+                            }
                         }
                         return;
                     }
                     if (SAPProcessId > 0 && SAPProcessId != ProcessId)
                     {
-                        lock (_lock)
+                        if (System.Threading.Monitor.TryEnter(_lock, 1000))
                         {
-                            isMoving = false;
+                            try
+                            {
+                                isMoving = false;
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(_lock);
+                            }
                         }
                         return;
                     }
@@ -156,9 +184,16 @@ namespace OpenRPA.SAPBridge
                             if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
                             if (p.ProcessName.ToLower() != "saplogon")
                             {
-                                lock (_lock)
+                                if (System.Threading.Monitor.TryEnter(_lock, 1000))
                                 {
-                                    isMoving = false;
+                                    try
+                                    {
+                                        isMoving = false;
+                                    }
+                                    finally
+                                    {
+                                        System.Threading.Monitor.Exit(_lock);
+                                    }
                                 }
                                 return;
                             }
@@ -167,9 +202,16 @@ namespace OpenRPA.SAPBridge
                     if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
                     if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements(true);
                     SAPEventElement[] elements = new SAPEventElement[] { };
-                    lock (SAPHook.Instance.UIElements)
+                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 1000))
                     {
-                        elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                        try
+                        {
+                            elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(SAPHook.Instance.UIElements);
+                        }
                     }
                     if (elements.Count() > 0)
                     {
@@ -199,9 +241,16 @@ namespace OpenRPA.SAPBridge
                         if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
                         {
                             // form.AddText("[SKIP] mousemove " + LastElement.ToString());
-                            lock (_lock)
+                            if (System.Threading.Monitor.TryEnter(_lock, 1000))
                             {
-                                isMoving = false;
+                                try
+                                {
+                                    isMoving = false;
+                                }
+                                finally
+                                {
+                                    System.Threading.Monitor.Exit(_lock);
+                                }
                             }
                             return;
                         }
@@ -220,9 +269,16 @@ namespace OpenRPA.SAPBridge
             catch (Exception)
             {
             }
-            lock (_lock)
+            if (System.Threading.Monitor.TryEnter(_lock, 1000))
             {
-                isMoving = false;
+                try
+                {
+                    isMoving = false;
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_lock);
+                }
             }
         }
         private static void OnMouseDown(InputEventArgs e)
@@ -246,9 +302,16 @@ namespace OpenRPA.SAPBridge
                         }
                     }
                     SAPEventElement[] elements = new SAPEventElement[] { };
-                    lock (SAPHook.Instance.UIElements)
+                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 1000))
                     {
-                        elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                        try
+                        {
+                            elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(SAPHook.Instance.UIElements);
+                        }
                     }
                     if (elements.Count() > 0)
                     {

@@ -20,7 +20,17 @@ namespace OpenRPA.NM.pipe
         public event Action<Exception> Error;
         public NamedPipeClient(string pipeName)
         {
-            lock (lockobj) replyqueue = new List<queuemsg<T>>();
+            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            {
+                try
+                {
+                    replyqueue = new List<queuemsg<T>>();
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(lockobj);
+                }
+            }
             pipe = new NamedPipeWrapper.NamedPipeClient<T>(pipeName);
             pipe.AutoReconnect = true;
             pipe.Disconnected += (sender) => { Disconnected?.Invoke(); };
@@ -28,8 +38,20 @@ namespace OpenRPA.NM.pipe
             pipe.Error += (e) => { Error?.Invoke(e); };
             pipe.ServerMessage += (sender, message) =>
             {
-                queuemsg<T> queue;
-                lock (lockobj) queue = replyqueue.Where(x => x != null && x.messageid == message.messageid).FirstOrDefault();
+                queuemsg<T> queue = null;
+                if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+                {
+                    try
+                    {
+                        queue = replyqueue.Where(x => x != null && x.messageid == message.messageid).FirstOrDefault();
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(lockobj);
+                    }
+                }
+
+                
                 if (queue != null)
                 {
                     // Log.Information("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
@@ -60,7 +82,17 @@ namespace OpenRPA.NM.pipe
             if (pipe == null || !pipe.isConnected) return result;
 
             var queue = new queuemsg<T>(message);
-            lock (lockobj) replyqueue.Add(queue);
+            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            {
+                try
+                {
+                    replyqueue.Add(queue);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(lockobj);
+                }
+            }
             // Log.Information("Send and queue message " + message.messageid);
             using (queue.autoReset = new AutoResetEvent(false))
             {
@@ -69,7 +101,18 @@ namespace OpenRPA.NM.pipe
                 queue.sw.Stop();
             }
             // Log.Debug("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
-            lock (lockobj) replyqueue.Remove(queue);
+            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            {
+                try
+                {
+                    replyqueue.Remove(queue);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(lockobj);
+                }
+            }
+           
             result = queue.result;
             if (result != null && result.error != null)
             {

@@ -1,12 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public interface IBase
+    public interface IProjectableBase : IBase
+    {
+        string projectid { get; set; }
+    }
+    public interface IBase : INotifyPropertyChanged
     {
         string _id { get; set; }
         string _type { get; set; }
@@ -24,6 +30,11 @@ namespace OpenRPA.Interfaces
         bool hasRight(entity.TokenUser user, entity.ace_right bit);
         void AddRight(entity.TokenUser user, entity.ace_right[] rights);
         void AddRight(string _id, string name, entity.ace_right[] rights);
-
+        [JsonIgnore]
+        bool isLocalOnly { get; set; }
+        [JsonIgnore]
+        bool isDirty { get; set; }
+        [JsonIgnore]
+        bool isDeleted { get; set; }
     }
 }

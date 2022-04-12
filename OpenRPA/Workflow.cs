@@ -122,18 +122,23 @@ namespace OpenRPA
                 if (!_backingFieldValues.ContainsKey("IsExpanded")) return;
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                 {
-                    var wf = RobotInstance.instance.Workflows.FindById(_id);
+                    var wf = RobotInstance.instance.dbWorkflows.FindById(_id);
+                    if (wf == null)
+                    {
+                        RobotInstance.instance.Workflows.Remove(wf);
+                        return;
+                    }
                     if (wf._version == _version)
                     {
                         Log.Verbose("Saving " + this.name + " with version " + this._version);
-                        RobotInstance.instance.Workflows.Update(this);
+                        RobotInstance.instance.dbWorkflows.Update(this);
                     }
                     else
                     {
                         Log.Verbose("Setting " + this.name + " with version " + this._version);
                         wf.IsExpanded = value;
                     }
-                    RobotInstance.instance.Workflows.Update(this);
+                    RobotInstance.instance.dbWorkflows.Update(this);
                 }
             }
         }
@@ -151,19 +156,23 @@ namespace OpenRPA
                 {
                     if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                     {
-                        var wf = RobotInstance.instance.Workflows.FindById(_id);
-                        if (wf == null) return;
+                        var wf = RobotInstance.instance.dbWorkflows.FindById(_id);
+                        if (wf == null)
+                        {
+                            RobotInstance.instance.Workflows.Remove(wf);
+                            return;
+                        }
                         if (wf._version == _version)
                         {
                             Log.Verbose("Saving " + this.name + " with version " + this._version);
-                            RobotInstance.instance.Workflows.Update(this);
+                            RobotInstance.instance.dbWorkflows.Update(this);
                         }
                         else
                         {
                             Log.Verbose("Setting " + this.name + " with version " + this._version);
                             wf.IsSelected = value;
                         }
-                        RobotInstance.instance.Workflows.Update(this);
+                        RobotInstance.instance.dbWorkflows.Update(this);
                     }
                 }
             }
@@ -352,12 +361,12 @@ namespace OpenRPA
             result.Xaml = System.IO.File.ReadAllText(Filename);
             result.Parameters = new List<workflowparameter>();
             //sresult.Instances = new System.Collections.ObjectModel.ObservableCollection<WorkflowInstance>();
+            result.isDirty = true;
             return result;
         }
         public async static Task<Workflow> Create(IProject Project, string Name)
         {
             Workflow workflow = new Workflow { projectid = Project._id, name = Name, _acl = Project._acl };
-            var exists = RobotInstance.instance.Workflows.Find(x => x.name == workflow.name && x.projectid == workflow.projectid).FirstOrDefault();
             workflow.name = workflow.UniqueName();
             workflow.Filename = workflow.UniqueFilename();
             _ = workflow.RelativeFilename;
@@ -368,9 +377,9 @@ namespace OpenRPA
             workflow._id = Guid.NewGuid().ToString();
             workflow.isDirty = true;
             workflow.isLocalOnly = true;
-            RobotInstance.instance.Workflows.Insert(workflow);
+            RobotInstance.instance.dbWorkflows.Insert(workflow);
             // await workflow.Save();
-            await workflow.Save<Workflow>();
+            await workflow.Save();
             return workflow;
         }
         public async Task ExportFile(string filepath)
@@ -380,10 +389,6 @@ namespace OpenRPA
             exportedwf.Xaml = await Views.WFDesigner.LoadImages(Xaml);
             json = Newtonsoft.Json.JsonConvert.SerializeObject(exportedwf);
             System.IO.File.WriteAllText(filepath, json);
-        }
-        public async Task Save()
-        {
-            await Save(false);
         }
         public async Task Save(bool skipOnline = false)
         {
@@ -401,7 +406,25 @@ namespace OpenRPA
                 }
             }
             await Save<Workflow>(skipOnline);
-            RobotInstance.instance.UpdateWorkflow(this, false);
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Workflows, 1000))
+            {
+                try
+                {
+                    var exists = RobotInstance.instance.Workflows.FindById(_id);
+                    if(exists == null) RobotInstance.instance.Workflows.Add(this);
+                    if (exists != null) RobotInstance.instance.Workflows.UpdateItem(exists, this);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(RobotInstance.instance.Workflows);
+                }
+            }
+            else { throw new LockNotReceivedException("Failed saving workflow"); }
+        }
+        public async Task Update(IWorkflow item, bool skipOnline = false)
+        {
+            RobotInstance.instance.Workflows.UpdateItem(this, item);
+            await Save<Workflow>(skipOnline);
         }
         public async Task UpdateImagePermissions()
         {
@@ -417,11 +440,11 @@ namespace OpenRPA
                 }
             }
         }
-        public async Task Delete()
+        public async Task Delete(bool skipOnline = false)
         {
             try
             {
-                await Delete<Workflow>();
+                if(!skipOnline) await Delete<Workflow>();
                 if (!string.IsNullOrEmpty(_id) && global.isConnected)
                 {
                     var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
@@ -435,6 +458,18 @@ namespace OpenRPA
                     }
                     await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
+                if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Workflows, 1000))
+                {
+                    try
+                    {
+                        RobotInstance.instance.Workflows.Remove(this);
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(RobotInstance.instance.Workflows);
+                    }
+                }
+                else { throw new LockNotReceivedException("Failed deleting workflow"); }
             }
             catch (Exception ex)
             {
@@ -445,7 +480,7 @@ namespace OpenRPA
         public string UniqueName()
         {
             string Name = name;
-            Workflow exists = null;
+            IWorkflow exists = null;
             bool isUnique = false; int counter = 1;
             while (!isUnique)
             {
@@ -456,7 +491,7 @@ namespace OpenRPA
                 {
                     Name = name + counter.ToString();
                 }
-                exists = RobotInstance.instance.Workflows.Find(x => x.name == Name && x.projectid == projectid && x._id != _id).FirstOrDefault();
+                exists = RobotInstance.instance.Workflows.Where(x => x.name == Name && x.projectid == projectid && x._id != _id).FirstOrDefault();
                 isUnique = (exists == null);
                 counter++;
             }
@@ -477,7 +512,7 @@ namespace OpenRPA
                 {
                     Filename = name.Replace(" ", "_").Replace(".", "") + counter.ToString() + ".xaml";
                 }
-                var exists = RobotInstance.instance.Workflows.Find(x => x.Filename == Filename && x.projectid == projectid && x._id != _id).FirstOrDefault();
+                var exists = RobotInstance.instance.Workflows.Where(x => x.Filename == Filename && x.projectid == projectid && x._id != _id).FirstOrDefault();
                 isUnique = (exists == null);
                 counter++;
             }

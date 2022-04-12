@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
-    public interface IWorkflowInstance : INotifyPropertyChanged, IBase
+    public interface IWorkflowInstance : IBase
     {
         IWorkflow Workflow { get; set; }
         Dictionary<string, object> Parameters { get; set; }

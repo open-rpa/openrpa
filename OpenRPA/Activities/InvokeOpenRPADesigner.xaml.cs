@@ -40,15 +40,15 @@ namespace OpenRPA.Activities
                 if (RobotInstance.instance.Projects.Count() == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
                 var result = new List<Workflow>();
                 var designer = RobotInstance.instance.Window.Designer;
-                foreach (var w in RobotInstance.instance.Workflows.FindAll())
+                foreach (var w in RobotInstance.instance.Workflows)
                 {
                     if (designer != null && designer.Workflow != null)
                     {
-                        if (designer.Workflow._id != w._id || w._id == null) result.Add(w);
+                        if (designer.Workflow._id != w._id || w._id == null) result.Add(w as Workflow);
                     }
                     else
                     {
-                        result.Add(w);
+                        result.Add(w as Workflow);
                     }
                 }
                 var workflow = ModelItem.GetValue<string>("workflow");

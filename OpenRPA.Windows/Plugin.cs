@@ -135,10 +135,17 @@ namespace OpenRPA.Windows
             {
                 try
                 {
-                    lock (_lock)
+                    if (System.Threading.Monitor.TryEnter(_lock, 1000))
                     {
-                        if (_processing) return;
-                        _processing = true;
+                        try
+                        {
+                            if (_processing) return;
+                            _processing = true;
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(_lock);
+                        }
                     }
                     try
                     {
@@ -152,9 +159,16 @@ namespace OpenRPA.Windows
                     {
                         Log.Error(ex.ToString());
                     }
-                    lock (_lock)
+                    if (System.Threading.Monitor.TryEnter(_lock, 1000))
                     {
-                        _processing = false;
+                        try
+                        {
+                            _processing = false;
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(_lock);
+                        }
                     }
                     if (e.Element == null) return;
 

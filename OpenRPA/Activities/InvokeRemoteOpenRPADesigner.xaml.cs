@@ -38,7 +38,7 @@ namespace OpenRPA.Activities
         {
             workflows.Clear();
             var result = new List<IWorkflow>();
-            foreach (var w in RobotInstance.instance.Workflows.FindAll()) result.Add(w);
+            foreach (var w in RobotInstance.instance.Workflows) result.Add(w);
             // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
             result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
             foreach (var w in result) workflows.Add(w);

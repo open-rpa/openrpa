@@ -67,13 +67,20 @@ namespace OpenRPA.SAP
             {
                 if (replyqueue.ContainsKey(message.messageid))
                 {
-                    lock (replyqueue)
+                    if (System.Threading.Monitor.TryEnter(replyqueue, 1000))
                     {
-                        var e = replyqueue[message.messageid];
-                        e.reply = message;
-                        if (e.reset != null) e.reset.Set();
-                        replyqueue.Remove(message.messageid);
-                        return;
+                        try
+                        {
+                            var e = replyqueue[message.messageid];
+                            e.reply = message;
+                            if (e.reset != null) e.reset.Set();
+                            replyqueue.Remove(message.messageid);
+                            return;
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(replyqueue);
+                        }
                     }
                 }
 
@@ -225,9 +232,16 @@ namespace OpenRPA.SAP
             if (string.IsNullOrEmpty(message.messageid)) throw new ArgumentException("message id is mandatory", "messageid");
             if (replyqueue.ContainsKey(message.messageid)) throw new Exception("Already waiting on message with id " + message.messageid);
             var e = new replyqueueitem(message);
-            lock (replyqueue)
+            if (System.Threading.Monitor.TryEnter(replyqueue, 1000))
             {
-                replyqueue.Add(message.messageid, e);
+                try
+                {
+                    replyqueue.Add(message.messageid, e);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(replyqueue);
+                }
             }
             Log.Debug("Sending: " + message.messageid + " " + message.action);
             pipeclient.PushMessage(message);

@@ -14,139 +14,57 @@ namespace OpenRPA
 {
     public class Project : LocallyCached, IProject
     {
-        public Project()
+        Project()
         {
-            FilteredWorkflowsSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Workflows);
-            FilteredDetectorsSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Detectors);
-            FilteredWorkItemQueuesSource = (System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(WorkItemQueues);
+            Workflows = new FilteredObservableCollection<IWorkflow>(RobotInstance.instance.Workflows, wffilter);
+            WorkItemQueues = new FilteredObservableCollection<IWorkitemQueue>(RobotInstance.instance.WorkItemQueues, wiqfilter);
+            Detectors = new FilteredObservableCollection<IDetector>(RobotInstance.instance.Detectors, detectorfilter);
+            Children = new CompositionObservableCollection(WorkItemQueues, Detectors, Workflows);
+
         }
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        // [JsonIgnore, BsonRef("workflows")]
-        private System.Collections.ObjectModel.ObservableCollection<IWorkflow> _Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
         [JsonIgnore, BsonIgnore]
-        public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows
+        public FilteredObservableCollection<IWorkflow> Workflows { get; set; } 
+        public bool wffilter(IWorkflow item)
         {
-            get
-            {
-                return _Workflows;
-            }
-        }
-        public void UpdateWorkflowsList()
-        {
-            var oldcount = _Workflows.Count;
-            var list = RobotInstance.instance.Workflows.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
-            _Workflows.UpdateCollection(list);
-            NotifyPropertyChanged("FilteredWorkflows");
-        }
-
-        private System.Collections.ObjectModel.ObservableCollection<WorkitemQueue> _WorkItemQueues = new System.Collections.ObjectModel.ObservableCollection<WorkitemQueue>();
-        [JsonIgnore, BsonIgnore]
-        public System.Collections.ObjectModel.ObservableCollection<WorkitemQueue> WorkItemQueues
-        {
-            get
-            {
-                return _WorkItemQueues;
-            }
-        }
-        public void UpdateWorkItemQueuesList()
-        {
-            var oldcount = _WorkItemQueues.Count;
-            var list = RobotInstance.instance.WorkItemQueues.Find(x => x.projectid == _id && !x.isDeleted).OrderBy(x => x.name).ToList();
-            _WorkItemQueues.UpdateCollection(list);
-            NotifyPropertyChanged("FilteredWorkItemQueues");
-        }
-        public void UpdateFilteredWorkItemQueues()
-        {
-            var FilterText = Views.OpenProject.Instance.FilterText;
-            if (string.IsNullOrEmpty(FilterText))
-            {
-                FilteredWorkItemQueuesSource.Filter = null;
-            }
-            FilteredWorkItemQueuesSource.Filter = p => ((WorkitemQueue)p).name.ToLower().Contains(FilterText.ToLower());
+            if (item == null) return false;
+            if (string.IsNullOrEmpty(_id)) return false;
+            string FilterText = "";
+            if (Views.OpenProject.Instance != null) FilterText = Views.OpenProject.Instance.FilterText;
+            if (string.IsNullOrEmpty(FilterText)) return item.projectid == _id;
+            FilterText = FilterText.ToLower();
+            return item.projectid == _id && item.name.ToLower().Contains(FilterText);
         }
         [JsonIgnore, BsonIgnore]
-        public System.ComponentModel.ICollectionView FilteredWorkItemQueues
+        public FilteredObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
+        public bool wiqfilter(IWorkitemQueue item)
         {
-            get
-            {
-                UpdateFilteredWorkItemQueues();
-                return FilteredWorkItemQueuesSource;
-            }
-            set
-            {
-
-            }
+            if (item == null) return false;
+            if (string.IsNullOrEmpty(_id)) return false;
+            string FilterText = "";
+            if (Views.OpenProject.Instance != null) FilterText = Views.OpenProject.Instance.FilterText;
+            if (string.IsNullOrEmpty(FilterText)) return item.projectid == _id;
+            FilterText = FilterText.ToLower();
+            return item.projectid == _id && item.name.ToLower().Contains(FilterText);
         }
-
+        [JsonIgnore, BsonIgnore]
+        public FilteredObservableCollection<IDetector> Detectors { get; set; }
+        public bool detectorfilter(IDetector item)
+        {
+            if (item == null) return false;
+            if (string.IsNullOrEmpty(_id)) return false;
+            string FilterText = "";
+            if (Views.OpenProject.Instance != null) FilterText = Views.OpenProject.Instance.FilterText;
+            if (string.IsNullOrEmpty(FilterText)) return item.projectid == _id;
+            FilterText = FilterText.ToLower();
+            return item.projectid == _id && item.name.ToLower().Contains(FilterText);
+        }
 
         [JsonIgnore, BsonIgnore]
-        public System.Windows.Data.ListCollectionView FilteredWorkflowsSource;
-        [JsonIgnore, BsonIgnore]
-        public System.ComponentModel.ICollectionView FilteredWorkflows
-        {
-            get
-            {
-                UpdateFilteredWorkflows();
-                return FilteredWorkflowsSource;
-            }
-        }
-        public void UpdateFilteredWorkflows()
-        {
-            var FilterText = Views.OpenProject.Instance.FilterText;
-            if (string.IsNullOrEmpty(FilterText))
-            {
-                FilteredWorkflowsSource.Filter = null;
-            }
-            FilteredWorkflowsSource.Filter = p => ((IWorkflow)p).name.ToLower().Contains(FilterText.ToLower());
-        }
-        private System.Collections.ObjectModel.ObservableCollection<IDetector> _Detectors = new System.Collections.ObjectModel.ObservableCollection<IDetector>();
-        [JsonIgnore, BsonIgnore]
-        public System.Collections.ObjectModel.ObservableCollection<IDetector> Detectors
-        {
-            get
-            {
-                return _Detectors;
-            }
-        }
-        public void UpdateDetectorsList()
-        {
-            var oldcount = _Detectors.Count;
-            var list = Plugins.detectorPlugins.Where(x => x.Entity.projectid == _id).OrderBy(x => x.Entity.name).Select(x => x.Entity).ToList();
-            Detectors.UpdateCollection(list);
-            NotifyPropertyChanged("FilteredDetectors");
-        }
+        public CompositionObservableCollection Children { get; set; }
 
-
-
-        [JsonIgnore, BsonIgnore]
-        public System.Windows.Data.ListCollectionView FilteredDetectorsSource;
-        [JsonIgnore, BsonIgnore]
-        public System.Windows.Data.ListCollectionView FilteredWorkItemQueuesSource;
-
-        [JsonIgnore, BsonIgnore]
-        public System.ComponentModel.ICollectionView FilteredDetectors
-        {
-            get
-            {
-                UpdateFilteredDetectors();
-                return FilteredDetectorsSource;
-            }
-            set
-            {
-
-            }
-        }
-        public void UpdateFilteredDetectors()
-        {
-            var FilterText = Views.OpenProject.Instance.FilterText;
-            if (string.IsNullOrEmpty(FilterText))
-            {
-                FilteredDetectorsSource.Filter = null;
-            }
-            FilteredDetectorsSource.Filter = p => ((IDetector)p).name.ToLower().Contains(FilterText.ToLower());
-        }
         [JsonIgnore, BsonIgnore]
         public string Path
         {
@@ -160,7 +78,7 @@ namespace OpenRPA
             Project project = JsonConvert.DeserializeObject<Project>(System.IO.File.ReadAllText(Filepath));
             if(!string.IsNullOrEmpty(project._id))
             {
-                var exists = RobotInstance.instance.Projects.FindById(project._id);
+                var exists = RobotInstance.instance.Projects.Where(x => x._id == project._id).FirstOrDefault() as Project;
                 if (exists != null) { project._id = null; } else { project.isLocalOnly = true; }
             }
             if (string.IsNullOrEmpty(project._id))
@@ -172,7 +90,10 @@ namespace OpenRPA
             project.Filename = System.IO.Path.GetFileName(Filepath);
             if (string.IsNullOrEmpty(project.name)) { project.name = System.IO.Path.GetFileNameWithoutExtension(Filepath); }
             project._type = "project";
-            project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
+            await project.Save();
+
+            await project.LoadFilesFromDisk(System.IO.Path.GetDirectoryName(Filepath));
+            await project.Save();
             await project.InstallDependencies(true);
             return project;
         }
@@ -190,18 +111,18 @@ namespace OpenRPA
                 //if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                 {
-                    var wf = RobotInstance.instance.Projects.FindById(_id);
+                    var wf = RobotInstance.instance.dbProjects.FindById(_id);
                     if (wf._version == _version)
                     {
                         Log.Verbose("Saving " + this.name + " with version " + this._version);
-                        RobotInstance.instance.Projects.Update(this);
+                        RobotInstance.instance.dbProjects.Update(this);
                     }
                     else
                     {
                         Log.Verbose("Setting " + this.name + " with version " + this._version);
                         wf.IsExpanded = value;
                     }
-                    RobotInstance.instance.Projects.Update(this);
+                    RobotInstance.instance.dbProjects.Update(this);
                 }
             }
         }
@@ -219,19 +140,19 @@ namespace OpenRPA
                 {
                     if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                     {
-                        var wf = RobotInstance.instance.Projects.FindById(_id);
+                        var wf = RobotInstance.instance.dbProjects.FindById(_id);
                         if (wf == null) return;
                         if (wf._version == _version)
                         {
                             Log.Verbose("Saving " + this.name + " with version " + this._version);
-                            RobotInstance.instance.Projects.Update(this);
+                            RobotInstance.instance.dbProjects.Update(this);
                         }
                         else
                         {
                             Log.Verbose("Setting " + this.name + " with version " + this._version);
                             wf.IsSelected = value;
                         }
-                        RobotInstance.instance.Projects.Update(this);
+                        RobotInstance.instance.dbProjects.Update(this);
                     }
                 }
 
@@ -256,11 +177,14 @@ namespace OpenRPA
             Workflows.Add(w);
             return w;
         }
-        public void LoadFileFromDisk(string file)
+        public async Task LoadFileFromDisk(string file)
         {
             if (System.IO.Path.GetExtension(file).ToLower() == ".xaml")
             {
-                Workflows.Add(Workflow.FromFile(this, file));
+                var wf = Workflow.FromFile(this, file);
+                wf.projectid = _id;
+                wf._acl = _acl;
+                await wf.Save();
             }
             else if (System.IO.Path.GetExtension(file).ToLower() == ".json")
             {
@@ -284,56 +208,93 @@ namespace OpenRPA
                 var _type = o.Value<string>("_type");
                 if (_type == "workitemqueue")
                 {
-                    var _d = JsonConvert.DeserializeObject<WorkitemQueue>(json);
-                    _d.isDirty = true;
-                    _d.projectid = null;
-                    if (!string.IsNullOrEmpty(_d._id))
+                    var _wiq = JsonConvert.DeserializeObject<WorkitemQueue>(json);
+                    _wiq.projectid = _id;
+                    _wiq._acl = _acl;
+                    _wiq.isDirty = true;
+                    _wiq.projectid = _id;
+                    if (!string.IsNullOrEmpty(_wiq._id))
                     {
-                        var exists = RobotInstance.instance.WorkItemQueues.FindById(_d._id);
-                        if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
+                        var exists = RobotInstance.instance.dbWorkItemQueues.FindById(_wiq._id);
+                        if (exists != null) { _wiq._id = null; } else { _wiq.isLocalOnly = true; }
                     }
-                    WorkItemQueues.Add(_d);
+                    if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
+                    {
+                        if (_wiq.isLocalOnly || string.IsNullOrEmpty(_wiq._id))
+                        {
+                            await _wiq.Save(true);
+                        }
+                        else
+                        {
+                            await _wiq.Save();
+                        }
+                    }
+                    else if (!string.IsNullOrEmpty(Config.local.wsurl))
+                    {
+                        System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot validate WorkItemQueue, removing queue from import");
+                    }
+                    else
+                    {
+                        await _wiq.Save(true);
+                    }
+                    Log.Output("Adding workitem queue " + _wiq.name);
                 }
                 if (_type == "detector")
                 {
                     var _d = JsonConvert.DeserializeObject<Detector>(json);
                     if (!string.IsNullOrEmpty(_d._id))
                     {
-                        var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                        var exists = RobotInstance.instance.dbDetectors.FindById(_d._id);
                         if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
                     }
                     if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
+                    _d.projectid = _id;
+                    _d._acl = _acl;
                     _d.isDirty = true;
+                    _d.projectid = _id;
                     _d.Start(true);
                     Detectors.Add(_d);
+                    Log.Output("Adding detector " + _d.name);
                 }
                 if (_type == "workflow")
                 {
                     var _wf = JsonConvert.DeserializeObject<Workflow>(json);
                     if (!string.IsNullOrEmpty(_wf._id))
                     {
-                        var exists = RobotInstance.instance.Workflows.FindById(_wf._id);
+                        var exists = RobotInstance.instance.Workflows.Where(x => x._id == _wf._id).FirstOrDefault();
                         if (exists != null) { _wf._id = null; } else { _wf.isLocalOnly = true; }
                     }
                     if (string.IsNullOrEmpty(_wf._id)) _wf._id = Guid.NewGuid().ToString();
                     _wf.isDirty = true;
-                    Workflows.Add(_wf);
+                    _wf.projectid = _id;
+                    _wf.projectid = _id;
+                    _wf._acl = _acl;
+                    await _wf.Save();
+                    Log.Output("Adding workflow " + _wf.name);
                 }
             }
         }
-        private void LoadFilesFromDisk(string folder)
+        private async Task LoadFilesFromDisk(string folder)
         {
             if (string.IsNullOrEmpty(folder)) folder = Path;
             var Files = System.IO.Directory.EnumerateFiles(folder, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
             foreach (string file in Files)
             {
-                LoadFileFromDisk(file);
+                try
+                {
+                    await LoadFileFromDisk(file);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    Log.Output(ex.Message);
+                }
             }
         }
         public static string UniqueName(string name, string _id = null)
         {
             string Name = name;
-            Project exists = null;
+            IProject exists = null;
             bool isUnique = false; int counter = 1;
             while (!isUnique)
             {
@@ -344,7 +305,7 @@ namespace OpenRPA
                 {
                     Name = name + counter.ToString();
                 }
-                exists = RobotInstance.instance.Projects.Find(x => x.name == Name && x._id != _id).FirstOrDefault();
+                exists = RobotInstance.instance.Projects.Where(x => x.name == Name && x._id != _id).FirstOrDefault();
                 isUnique = (exists == null);
                 counter++;
             }
@@ -376,77 +337,52 @@ namespace OpenRPA
                 (wiq as WorkitemQueue).ExportFile(System.IO.Path.Combine(projectpath, wiq._id + ".json"));
             }
         }
-        public async Task Save()
+        public async Task Save(bool skipOnline = false)
         {
-            await Save<Project>();
-            var wfs = Workflows.ToList();
-            var dts = Detectors.ToList();
-            foreach (var workflow in wfs)
+            await Save<Project>(skipOnline);
+            foreach (var workflow in Workflows.ToList())
             {
-                workflow.projectid = _id;
-                await workflow.Save();
+                if (workflow.projectid != _id) workflow.projectid = _id;
+                await workflow.Save(skipOnline);
             }
-            foreach (Detector detector in dts)
+            foreach (Detector detector in Detectors.ToList())
             {
-                detector.projectid = _id;
-                await detector.Save();
+                if (detector.projectid != _id) detector.projectid = _id;
+                await detector.Save(skipOnline);
             }
-            if (WorkItemQueues.Count > 0)
+            foreach (WorkitemQueue wiq in WorkItemQueues.ToList())
             {
-                foreach (WorkitemQueue wiq in WorkItemQueues.ToList())
+                if (wiq.projectid != _id) wiq.projectid = _id;
+                await wiq.Save(skipOnline);
+            }
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, 1000))
+            {
+                try
                 {
-                    wiq.projectid = _id;
-                    if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
-                    {
-                        WorkitemQueue _wiq;
-                        if (wiq.isLocalOnly || string.IsNullOrEmpty(wiq._id))
-                        {
-                            _wiq = await global.webSocketClient.AddWorkitemQueue(wiq);
-                            RobotInstance.instance.WorkItemQueues.Insert(_wiq);
-                        } else
-                        {
-                            _wiq = await global.webSocketClient.UpdateWorkitemQueue(wiq, false);
-                            RobotInstance.instance.WorkItemQueues.Update(_wiq);
-                        }
-                        GenericTools.RunUI(() =>
-                        {
-                            WorkItemQueues.Remove(wiq);
-                            WorkItemQueues.Add(_wiq);
-                        });
-                    }
-                    else if (!string.IsNullOrEmpty(Config.local.wsurl))
-                    {
-                        System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot validate WorkItemQueue, removing queue from import");
-                        GenericTools.RunUI(() =>
-                        {
-                            WorkItemQueues.Remove(wiq);
-                        });
-                        RobotInstance.instance.WorkItemQueues.Insert(wiq);
-                    }
-                    else
-                    {
-                        await wiq.Save();
-                        RobotInstance.instance.WorkItemQueues.Insert(wiq);
-                    }                    
+                    var exists = RobotInstance.instance.Projects.FindById(_id);
+                    if (exists == null) RobotInstance.instance.Projects.Add(this);
+                    if (exists != null) RobotInstance.instance.Projects.UpdateItem(exists, this);
                 }
-                GenericTools.RunUI(() =>
+                finally
                 {
-                    RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
-                    UpdateFilteredWorkItemQueues();
-                    UpdateWorkItemQueuesList();
-                });
+                    System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
+                }
             }
+            else { throw new LockNotReceivedException("Saving Project"); }
         }
-        public async Task Delete()
+        public async Task Update(IProject item, bool skipOnline = false)
+        {
+            RobotInstance.instance.Projects.UpdateItem(this, item);
+            await Save<Project>(skipOnline);
+        }
+        public async Task Delete(bool skipOnline = false)
         {
             foreach (var wiq in WorkItemQueues.ToList()) {
                 if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
                 {
                     await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
-                    RobotInstance.instance.WorkItemQueues.Delete(wiq._id);
-                    RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
-                    UpdateFilteredWorkItemQueues();
-                    UpdateWorkItemQueuesList();
+                    RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
+                    RobotInstance.instance.WorkItemQueues.Remove(wiq);
                 }
                 else if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
@@ -456,7 +392,9 @@ namespace OpenRPA
                     await wiq.Delete();
                 }                
             }
-            foreach (var wf in Workflows.ToList()) { await wf.Delete(); }
+            foreach (var wf in Workflows.ToList()) { 
+                await wf.Delete(); 
+            }
             foreach (var d in Detectors.ToList()) { 
                 var _d = d as Detector;
                 _d.Stop();
@@ -468,7 +406,7 @@ namespace OpenRPA
                 var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
                 foreach (var f in Files) System.IO.File.Delete(f);
             }
-            if (global.isConnected)
+            if (global.isConnected && !skipOnline)
             {
                 if (!string.IsNullOrEmpty(_id))
                 {
@@ -483,8 +421,23 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            var exists = RobotInstance.instance.Projects.FindById(_id);
-            if (exists != null) RobotInstance.instance.Projects.Delete(_id);
+            var exists = RobotInstance.instance.dbProjects.FindById(_id);
+            if (exists != null)
+            {
+                RobotInstance.instance.dbProjects.Delete(_id);
+            }
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, 1000))
+            {
+                try
+                {
+                    RobotInstance.instance.Projects.Remove(this);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
+                }
+            }
+            else { throw new LockNotReceivedException("Delete Project"); }
         }
         public override string ToString()
         {

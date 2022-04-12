@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,15 +23,17 @@ namespace OpenRPA.Interfaces
         string errormessage { get; set; }
         string errorsource { get; set; }
     }
-    public interface IWorkitemQueue : IBase
+    public interface IWorkitemQueue : IProjectableBase
     {
         string workflowid { get; set; }
         string robotqueue { get; set; }
         string amqpqueue { get; set; }
-        string projectid { get; set; }
         int maxretries { get; set; }
         int retrydelay { get; set; }
         int initialdelay { get; set; }
+        Task Delete(bool skipOnline = false);
+        Task Save(bool skipOnline = false);
+        Task Update(IWorkitemQueue item, bool skipOnline = false);
     }
     public class MessageWorkitemFile
     {

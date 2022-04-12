@@ -31,38 +31,37 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue> WorkItemQueues
+        public ExtendedObservableCollection<IWorkitemQueue> WorkItemQueues
         {
             get
             {
-                return RobotInstance.instance.WorkItemQueuesSource;
+                return RobotInstance.instance.WorkItemQueues;
             }
         }
-        private System.Collections.ObjectModel.ObservableCollection<Workflow> _Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
-        public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows
+        private ExtendedObservableCollection<Workflow> _Workflows = new ExtendedObservableCollection<Workflow>();
+        public ExtendedObservableCollection<Workflow> Workflows
         {
             get
             {
                 return _Workflows;
             }
         }
-        private System.Collections.ObjectModel.ObservableCollection<Workitem> _WorkItems = new System.Collections.ObjectModel.ObservableCollection<Workitem>();
-        public System.Collections.ObjectModel.ObservableCollection<Workitem> WorkItems
+        private ExtendedObservableCollection<Workitem> _WorkItems = new ExtendedObservableCollection<Workitem>();
+        public ExtendedObservableCollection<Workitem> WorkItems
         {
             get
             {
                 return _WorkItems;
             }
         }
-
-        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects
+        public ExtendedObservableCollection<IProject> Projects
         {
             get
             {
                 return OpenProject.Instance.Projects;
             }
         }
-        public System.Collections.ObjectModel.ObservableCollection<IBase> Robots { get; set; } = new System.Collections.ObjectModel.ObservableCollection<IBase>();
+        public ExtendedObservableCollection<apiuser> Robots { get; set; } = new ExtendedObservableCollection<apiuser>();
         public WorkItemQueuesView(MainWindow main)
         {
             Log.FunctionIndent("WorkItemQueuesView", "WorkItemQueuesView");
@@ -96,9 +95,9 @@ namespace OpenRPA.Views
                     d.isLocalOnly = true;
                 }
                 d.Start(true);
-                var dexists = RobotInstance.instance.Detectors.FindById(d._id);
-                if (dexists == null) RobotInstance.instance.Detectors.Insert(d);
-                if (dexists != null) RobotInstance.instance.Detectors.Update(d);
+                var dexists = RobotInstance.instance.dbDetectors.FindById(d._id);
+                if (dexists == null) RobotInstance.instance.dbDetectors.Insert(d);
+                if (dexists != null) RobotInstance.instance.dbDetectors.Update(d);
             }
             catch (Exception ex)
             {
@@ -122,10 +121,9 @@ namespace OpenRPA.Views
                         if (wiq != null)
                         {
                             await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
-                            RobotInstance.instance.WorkItemQueues.Delete(wiq._id);
+                            RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
                             WorkItemQueues.Remove(wiq);
                             var p = OpenProject.Instance.Projects.Where(x => x._id == wiq.projectid).FirstOrDefault() as Project;
-                            p?.UpdateFilteredWorkItemQueues();
                             reloadOpenProjects = true;
                         }
                     }
@@ -168,7 +166,6 @@ namespace OpenRPA.Views
                 }
                 if(reloadOpenProjects)
                 {
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     reloadOpenProjects = false;
                 }                
             }
@@ -189,19 +186,17 @@ namespace OpenRPA.Views
                     foreach (var w in _p.Workflows) Workflows.Add(w as Workflow);
                 }
                 _Workflows.UpdateCollection(Workflows.ToList());
-                oldp?.UpdateFilteredWorkItemQueues();
                 reloadOpenProjects = true;
                 return;
             }
-            WorkItemQueue._acl = p._acl;
-            WorkItemQueue.isDirty = true;
+            if(WorkItemQueue.projectid != p._id)
+            {
+                WorkItemQueue._acl = p._acl;
+            }
             foreach (var w in p.Workflows) Workflows.Add(w as Workflow);
             _Workflows.UpdateCollection(Workflows.ToList());
-            p.UpdateFilteredWorkItemQueues();
-            oldp?.UpdateFilteredWorkItemQueues();
             reloadOpenProjects = true;
         }
-
         async private void listWorkItemQueues_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
@@ -222,9 +217,7 @@ namespace OpenRPA.Views
                 dia.ShowDialog();
                 if (dia.DialogResult == true)
                 {
-                    var wiq = await global.webSocketClient.AddWorkitemQueue(dia.item as OpenRPA.WorkitemQueue);
-                    RobotInstance.instance.WorkItemQueues.Insert(wiq);
-                    RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
+                    await dia.item.Save(true);
                     reloadOpenProjects = true;
                 }
             }
@@ -234,7 +227,6 @@ namespace OpenRPA.Views
                 MessageBox.Show(ex.Message);
             }
         }
-
         async private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             try

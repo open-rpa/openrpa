@@ -1269,7 +1269,7 @@ namespace OpenRPA
                 if (val == null) return;
                 if (val is Workflow wf) { result = wf.Project() as Project; } // Avoid confusion, disallow setting permission on workflows
                 if (val is Project p) { result = p; }
-                if (val is Detector d) { result = RobotInstance.instance.Projects.FindById(d.projectid); }
+                if (val is Detector d) { result = RobotInstance.instance.Projects.Where(x => x._id == d.projectid).FirstOrDefault() as apibase; }
             }
             Log.FunctionIndent("MainWindow", "OnPermissions");
             if (SelectedContent is Views.WFDesigner designer)
@@ -1305,25 +1305,22 @@ namespace OpenRPA
                         {
                             p.isDirty = true;
                             Log.Function("MainWindow", "OnPermissions", "Update permissions on each workflow in project");
-                            if (p.Workflows.Count == 0) p.UpdateWorkflowsList();
                             foreach (Workflow _wf in p.Workflows)
                             {
                                 _wf._acl = p._acl;
                                 _wf.isDirty = true;
                                 await ((Workflow)_wf).UpdateImagePermissions();
                             }
-                            if (p.Detectors.Count == 0) p.UpdateDetectorsList();
                             foreach (Detector _wf in p.Detectors)
                             {
                                 _wf._acl = p._acl;
                                 _wf.isDirty = true;
                             }
-                            if (p.WorkItemQueues.Count == 0) p.UpdateWorkItemQueuesList();
                             foreach (WorkitemQueue _wiq in p.WorkItemQueues)
                             {
                                 _wiq._acl = p._acl;
                                 _wiq.isDirty = true;
-                                RobotInstance.instance.WorkItemQueues.Update(_wiq);
+                                RobotInstance.instance.dbWorkItemQueues.Update(_wiq);
                             }
                             await p.Save();
                         }
@@ -1405,7 +1402,7 @@ namespace OpenRPA
                     if (wf != null) p = wf.Project() as Project;
                     if (d != null)
                     {
-                        p = RobotInstance.instance.Projects.FindById(d.projectid);
+                        p = RobotInstance.instance.Projects.Where(x => x._id == d.projectid).FirstOrDefault() as Project;
                     }
                 }
                 else if (SelectedContent is Views.WFDesigner)
@@ -1433,22 +1430,14 @@ namespace OpenRPA
                 }
                 if (System.IO.Path.GetExtension(filename) == ".json")
                 {
-                    p.LoadFileFromDisk(filename);
+                    await p.LoadFileFromDisk(filename);
                     await p.Save();
-                    OpenProject.UpdateProjectsList(false, true);
                     return;
                 }
                 if (System.IO.Path.GetExtension(filename) == ".rpaproj")
                 {
                     Log.Output("*** Begin Importing project");
                     var project = await Project.FromFile(filename);
-                    project.isDirty = true;
-                    project._id = null;
-                    await project.Save();
-                    //IWorkflow workflow = project.Workflows.First();
-                    //workflow.projectid = project._id;
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
-                    // OnOpenWorkflow(workflow);
                     Log.Output("*** Done Importing project");
                     return;
                 }
@@ -2158,26 +2147,18 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "SaveLayout");
             try
             {
-                //var workflows = new List<string>();
-                //foreach (var designer in RobotInstance.instance.Designers)
-                //{
-                //    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
-                //    {
-                //        workflows.Add(designer.Workflow.RelativeFilename);
-                //    }
-                //    else if (!string.IsNullOrEmpty(designer.Workflow._id))
-                //    {
-                //        workflows.Add(designer.Workflow._id);
-
-                //    }
-                //}
                 //Config.local.openworkflows = workflows.ToArray();
                 var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
                 if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
                 {
-                    Config.local.mainwindow_position = pos;
+                    var newpos = pos.ToString();
+                    var oldpos = Config.local.mainwindow_position.ToString();
+                    if (newpos != oldpos)
+                    {
+                        Config.local.mainwindow_position = pos;
+                        Config.Save();
+                    }
                 }
-                Config.Save();
                 if (SkipLayoutSaving)
                 {
                     Log.FunctionOutdent("MainWindow", "SaveLayout", "SkipLayoutSaving");
@@ -2281,7 +2262,7 @@ namespace OpenRPA
         public void _onOpenWorkflow(IWorkflow workflow, bool HasChanged = false)
         {
             Log.FunctionIndent("MainWindow", "_onOpenWorkflow");
-            if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow.RelativeFilename) is Views.WFDesigner designer)
+            if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(workflow._id) is Views.WFDesigner designer)
             {
                 designer.tab.IsSelected = true;
                 Log.FunctionOutdent("MainWindow", "_onOpenWorkflow", "Already open");
@@ -2422,7 +2403,6 @@ namespace OpenRPA
                 {
                     Workflow workflow = await Workflow.Create(designer.Workflow.Project(), "New Workflow");
                     OnOpenWorkflow(workflow);
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Designer selected");
                     return;
                 }
@@ -2430,10 +2410,9 @@ namespace OpenRPA
                 var val = view.listWorkflows.SelectedValue;
                 if (val is Detector d)
                 {
-                    var project = RobotInstance.instance.Projects.FindById(d.projectid);
+                    var project = RobotInstance.instance.Projects.Where(x => x._id == d.projectid).FirstOrDefault() as Project;
                     Workflow workflow = await Workflow.Create(project, "New Workflow");
                     OnOpenWorkflow(workflow);
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
                     return;
                 }
@@ -2441,7 +2420,6 @@ namespace OpenRPA
                 {
                     Workflow workflow = await Workflow.Create(wf.Project(), "New Workflow");
                     OnOpenWorkflow(workflow);
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
                     return;
                 }
@@ -2449,7 +2427,6 @@ namespace OpenRPA
                 {
                     Workflow workflow = await Workflow.Create(p, "New Workflow");
                     OnOpenWorkflow(workflow);
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Project selected");
                     return;
                 }
@@ -2490,7 +2467,6 @@ namespace OpenRPA
                 }
                 Project project = await Project.Create(Interfaces.Extensions.ProjectsDirectory, Name);
                 IWorkflow workflow = await project.AddDefaultWorkflow();
-                RobotInstance.instance.NotifyPropertyChanged("Projects");
                 OnOpenWorkflow(workflow);
             }
             catch (Exception ex)
@@ -2587,7 +2563,6 @@ namespace OpenRPA
                         return;
                     }
                     await wf.Delete();
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                 }
                 if (val is Detector d)
                 {
@@ -2599,7 +2574,7 @@ namespace OpenRPA
                     }
                     d.Stop();
                     await d.Delete();
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
+                    RobotInstance.instance.Detectors.Remove(d);
                 }
                 if (val is Project p)
                 {
@@ -2611,16 +2586,9 @@ namespace OpenRPA
                             Log.FunctionOutdent("MainWindow", "OnDelete", "User canceled");
                             return;
                         }
-                        foreach (var _wf in p.Workflows.ToList())
-                        {
-                            var designer = RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(_wf.RelativeFilename) as Views.WFDesigner;
-                            if (designer == null && !string.IsNullOrEmpty(_wf._id)) { }
-                            if (designer != null) { designer.tab.Close(); }
-                            await _wf.Delete();
-                        }
                     }
                     await p.Delete();
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
+                    RobotInstance.instance.Projects.Remove(p);
                 }
             }
             catch (Exception ex)
@@ -3583,10 +3551,7 @@ namespace OpenRPA
                                         System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                                     }
                                 }
-                                else
-                                {
-                                    throw new Exception("Failed running workflow, due to theading deadlock");
-                                }
+                                // else { throw new LockNotReceivedException("Resume bookmark on idle"); }
                             }
                         }
                         catch (Exception ex)
@@ -3787,6 +3752,18 @@ namespace OpenRPA
                 //searchTab.Focus();
                 SearchBox.Focus();
             }
+        }
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.F4 && (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
+            {
+                if (DManager == null) return;
+                var b = DManager.ActiveContent;
+
+                if (SelectedContent is Views.OpenProject) return;
+                MainTabControl.SelectedContent?.Close();
+            }
+
         }
         private void AddOption(IDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
         {

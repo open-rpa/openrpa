@@ -21,13 +21,83 @@ namespace OpenRPA
         public int maxretries { get { return GetProperty<int>(); } set { SetProperty(value); } }
         public int retrydelay { get { return GetProperty<int>(); } set { SetProperty(value); } }
         public int initialdelay { get { return GetProperty<int>(); } set { SetProperty(value); } }
-        public async Task Save()
+        public async Task Save(bool skipOnline = false)
         {
-            await Save<WorkitemQueue>();
+            if(string.IsNullOrEmpty(_id) && global.webSocketClient.isConnected)
+            {
+                try
+                {
+                    var wiq = await global.webSocketClient.AddWorkitemQueue(this);
+                    EnumerableExtensions.CopyPropertiesTo(wiq, this);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            } else if (string.IsNullOrEmpty(_id))
+            {
+                throw new Exception("Failed adding WorkitemQueue, not online!");
+            }
+            var ___id = _id;
+            bool hadError = true;
+            try
+            {
+                await Save<WorkitemQueue>(skipOnline);
+                hadError = false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+            if(hadError)
+            {
+                try
+                {
+                    var q = await global.webSocketClient.Query<WorkitemQueue>("mq", "{\"_id\": \"" + _id + "\"}", null, 1);
+                    if (q.Length > 0)
+                    {
+                        EnumerableExtensions.CopyPropertiesTo(q[0], this);
+                        isDirty = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
+            }
+            else if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
+            {
+                try
+                {
+                    var exists = RobotInstance.instance.WorkItemQueues.FindById(_id);
+                    if (exists == null) RobotInstance.instance.WorkItemQueues.Add(this);
+                    if (exists != null) RobotInstance.instance.WorkItemQueues.UpdateItem(exists, this);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(RobotInstance.instance.WorkItemQueues);
+                }
+            }
         }
-        public async Task Delete()
+        public async Task Update(IWorkitemQueue item, bool skipOnline = false)
         {
-            await Delete<WorkitemQueue>();
+            RobotInstance.instance.WorkItemQueues.UpdateItem(this, item);
+            await Save<WorkitemQueue>(skipOnline);
+        }
+        public async Task Delete(bool skipOnline = false)
+        {
+            if(!skipOnline) await Delete<WorkitemQueue>();
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
+            {
+                try
+                {
+                    RobotInstance.instance.WorkItemQueues.Remove(this);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(RobotInstance.instance.WorkItemQueues);
+                }
+            }
         }
         public void ExportFile(string filepath)
         {

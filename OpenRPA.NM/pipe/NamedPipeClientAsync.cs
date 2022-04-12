@@ -20,7 +20,17 @@ namespace OpenRPA.NM.pipe
             if (pipe == null || !pipe.isConnected) return result;
 
             var queue = new queuemsg<T>(message);
-            lock (lockobj) replyqueue.Add(queue);
+            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            {
+                try
+                {
+                    replyqueue.Add(queue);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(lockobj);
+                }
+            }
             // Log.Debug("ASYNC Send and queue message " + message.messageid);
             using (queue.autoReset = new AutoResetEvent(false))
             {
@@ -29,7 +39,17 @@ namespace OpenRPA.NM.pipe
                 queue.sw.Stop();
             }
             // Log.Debug("ASYNC received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
-            lock (lockobj) replyqueue.Remove(queue);
+            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            {
+                try
+                {
+                    replyqueue.Remove(queue);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(lockobj);
+                }
+            }
             result = queue.result;
             if (result != null && result.error != null)
             {

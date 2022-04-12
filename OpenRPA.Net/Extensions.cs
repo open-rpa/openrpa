@@ -104,9 +104,16 @@ namespace OpenRPA.Net
 
             public override void Post(SendOrPostCallback d, object state)
             {
-                lock (items)
+                if (System.Threading.Monitor.TryEnter(items, 1000))
                 {
-                    items.Enqueue(Tuple.Create(d, state));
+                    try
+                    {
+                        items.Enqueue(Tuple.Create(d, state));
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(items);
+                    }
                 }
                 workItemsWaiting.Set();
             }
@@ -121,11 +128,18 @@ namespace OpenRPA.Net
                 while (!done)
                 {
                     Tuple<SendOrPostCallback, object> task = null;
-                    lock (items)
+                    if (System.Threading.Monitor.TryEnter(items, 1000))
                     {
-                        if (items.Count > 0)
+                        try
                         {
-                            task = items.Dequeue();
+                            if (items.Count > 0)
+                            {
+                                task = items.Dequeue();
+                            }
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(items);
                         }
                     }
                     if (task != null)

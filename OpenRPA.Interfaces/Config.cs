@@ -251,7 +251,9 @@ namespace OpenRPA
                 foreach (var k in p) if (k.Key != "properties") d.Add(k.Key, k.Value);
                 d.Add("properties", properties);
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(d, Newtonsoft.Json.Formatting.Indented);
-                System.IO.File.WriteAllText(filename, json);
+                var oldjson = "";
+                if (System.IO.File.Exists(filename)) oldjson = System.IO.File.ReadAllText(filename);
+                if(json != oldjson) System.IO.File.WriteAllText(filename, json);
             }
             catch (Exception ex)
             {

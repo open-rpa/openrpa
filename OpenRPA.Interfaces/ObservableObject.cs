@@ -27,18 +27,25 @@ namespace OpenRPA
                 PropertyChanged -= value;
             }
         }
-
-        //public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+            catch (Exception)
+            {
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+                throw;
+            }
         }
     }
-
     public abstract class ObservableObject : NotifyChange, System.ComponentModel.INotifyPropertyChanged
     {
         [JsonIgnore]
         public Dictionary<string, object> _backingFieldValues = new Dictionary<string, object>();
+        [JsonIgnore]
+        public Dictionary<string, object> _UpdatedFields = new Dictionary<string, object>();
         public void SetBackingFieldValues(Dictionary<string, object> values)
         {
             _backingFieldValues = values;
@@ -90,6 +97,7 @@ namespace OpenRPA
                     string modulename2 = null;
                     try
                     {
+                        if (IsEqual(GetProperty<T>(propertyName), newValue)) return false;
                         if (!_disabledirty)
                         {
                             var stack = (new System.Diagnostics.StackTrace());
@@ -104,26 +112,32 @@ namespace OpenRPA
                             else if (modulename2 == "CommonLanguageRuntimeLibrary")
                             {
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
                             else if (modulename == "OpenRPA.exe" && modulename2 == "System.Activities.dll")
                             {
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
                             else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.exe")
                             {
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
                             else if (modulename == "OpenRPA.exe" && modulename2 == "LiteDB.dll")
                             {
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
                             else if (modulename == "OpenRPA.exe" && modulename2 == "OpenRPA.Interfaces.dll")
                             {
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
                             else if (modulename == "OpenRPA.exe" && modulename2 == "RefEmit_InMemoryManifestModule")
                             {
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
                             else
                             {
@@ -132,6 +146,7 @@ namespace OpenRPA
 #else
 #endif
                                 _backingFieldValues["isDirty"] = true;
+                                _UpdatedFields[propertyName] = newValue;
                             }
 
                         }
@@ -139,6 +154,10 @@ namespace OpenRPA
                     catch (Exception)
                     {
                     }
+                }
+                if(propertyName == "isDirty")
+                {
+                    if(newValue != null && bool.Parse(newValue.ToString()) == false) _UpdatedFields.Clear();
                 }
                 if (IsEqual(GetProperty<T>(propertyName), newValue)) return false;
                 _backingFieldValues[propertyName] = newValue;

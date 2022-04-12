@@ -10,7 +10,7 @@ namespace OpenRPA.Interfaces
 {
     public delegate void idleOrComplete(IWorkflowInstance sender, EventArgs e);
     public delegate void VisualTrackingHandler(IWorkflowInstance Instance, string ActivityId, string ChildActivityId, string State);
-    public interface IWorkflow : INotifyPropertyChanged, IBase
+    public interface IWorkflow : IProjectableBase
     {
         [JsonIgnore]
         long current_version { get; set; }
@@ -18,7 +18,6 @@ namespace OpenRPA.Interfaces
         bool IsSelected { get; set; }
         string queue { get; set; }
         string Xaml { get; set; }
-        string projectid { get; set; }
         [JsonIgnore]
         string RelativeFilename { get; }
         string FilePath { get; }
@@ -28,13 +27,16 @@ namespace OpenRPA.Interfaces
         string ProjectAndName { get; set; }
         List<workflowparameter> Parameters { get; set; }
         IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking);
-        Task Delete();
         string UniqueFilename();
-        Task Save();
+        Task Delete(bool skipOnline = false);
+        Task Save(bool skipOnline = false);
         Task UpdateImagePermissions();
-        // Task ExportFile(string filepath);
+        Task Update(IWorkflow item, bool skipOnline = false);
         void ParseParameters();
         void NotifyUIState();
+        [JsonIgnore]
+        string State { get; }
+
     }
     public enum workflowparameterdirection
     {

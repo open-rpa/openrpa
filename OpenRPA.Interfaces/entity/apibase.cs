@@ -71,38 +71,5 @@ namespace OpenRPA.Interfaces.entity
                 foreach (ace_right bit in rights) ace.setBit((decimal)bit);
             }
         }
-        //public void delete()
-        //{
-        //    rpaactivities.socketService.instance.DELETE(_id, "workflows");
-        //}
-        //public void save()
-        //{
-        //    if (string.IsNullOrEmpty(_id))
-        //    {
-        //        var result = rpaactivities.socketService.instance.POST(this, "workflows");
-        //        if (result != null)
-        //        {
-        //            _id = result._id;
-        //            _type = result._type;
-        //            _modified = result._modified;
-        //            _modifiedby = result._modifiedby;
-        //            _modifiedbyid = result._modifiedbyid;
-        //            _created = result._created;
-        //            _createdby = result._createdby;
-        //            _createdbyid = result._createdbyid;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var result = rpaactivities.socketService.instance.PUT(this, "workflows");
-        //        if (result != null)
-        //        {
-        //            _modified = result._modified;
-        //            _modifiedby = result._modifiedby;
-        //            _modifiedbyid = result._modifiedbyid;
-        //        }
-        //    }
-        //}
-
     }
 }

@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.4.3</Version>
+		<Version>1.4.4</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>open_rpa128.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -107,6 +107,7 @@
 		<None Remove="Activities\TypeTextDesigner.xaml" />
 		<None Remove="Activities\UpdateWorkitemDesigner.xaml" />
 		<None Remove="Activities\Workitems\BulkAddWorkitemsDesigner.xaml" />
+		<None Remove="Activities\Workitems\ThrowBusinessRuleExceptionDesigner.xaml" />
 		<None Remove="AgentWindow.xaml" />
 		<None Remove="App.xaml" />
 		<None Remove="Images\PinDocMenu_Black.png" />
@@ -212,6 +213,7 @@
 		<None Remove="Resources\designer\readfile.png" />
 		<None Remove="Resources\designer\readpdf.png" />
 		<None Remove="Resources\designer\sleep.png" />
+		<None Remove="Resources\designer\throwbusinessruleexception.png" />
 		<None Remove="Resources\designer\typetext.png" />
 		<None Remove="Resources\designer\uiscraping.png" />
 		<None Remove="Resources\designer\updateworkitem.png" />
@@ -326,6 +328,7 @@
 		<None Remove="Resources\toolbox\readfile.png" />
 		<None Remove="Resources\toolbox\readpdf.png" />
 		<None Remove="Resources\toolbox\sleep.png" />
+		<None Remove="Resources\toolbox\throwbusinessruleexception.png" />
 		<None Remove="Resources\toolbox\typetext.png" />
 		<None Remove="Resources\toolbox\uiscraping.png" />
 		<None Remove="Resources\toolbox\updateworkitem.png" />
@@ -359,6 +362,10 @@
 		<None Remove="Views\WorkItemQueuesView.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<Page Include="Activities\Workitems\ThrowBusinessRuleExceptionDesigner.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="Activities\Workitems\BulkAddWorkitemsDesigner.xaml">
 		  <SubType>Designer</SubType>
 		  <Generator>MSBuild:Compile</Generator>
@@ -528,6 +535,7 @@
 		<Resource Include="Resources\designer\mouse.png" />
 		<Resource Include="Resources\designer\moveelement.png" />
 		<Resource Include="Resources\designer\popworkitem.png" />
+		<Resource Include="Resources\designer\throwbusinessruleexception.png" />
 		<Resource Include="Resources\designer\updateworkitem.png" />
 		<Resource Include="Resources\gears-1236578_1920.jpg" />
 		<Resource Include="Resources\icons\activity.png" />
@@ -593,6 +601,7 @@
 		<EmbeddedResource Include="Resources\toolbox\readfile.png" />
 		<EmbeddedResource Include="Resources\toolbox\readpdf.png" />
 		<EmbeddedResource Include="Resources\toolbox\sleep.png" />
+		<EmbeddedResource Include="Resources\toolbox\throwbusinessruleexception.png" />
 		<EmbeddedResource Include="Resources\toolbox\typetext.png" />
 		<EmbeddedResource Include="Resources\toolbox\uiscraping.png" />
 		<EmbeddedResource Include="Resources\toolbox\updateworkitem.png" />

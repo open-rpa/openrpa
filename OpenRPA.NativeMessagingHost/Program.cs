@@ -61,15 +61,22 @@ namespace OpenRPA.NativeMessagingHost
         {
             try
             {
-                lock (_lock)
+                if (System.Threading.Monitor.TryEnter(_lock, 1000))
                 {
-                    if (pipe == null && !string.IsNullOrEmpty(msg.browser))
+                    try
                     {
-                        var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
-                        pipe = new NamedPipeServer<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_" + msg.browser);
-                        pipe.ClientMessage += Server_OnReceivedMessage;
-                        //pipe.OnReceivedMessage += Server_OnReceivedMessage;
-                        pipe.Start();
+                        if (pipe == null && !string.IsNullOrEmpty(msg.browser))
+                        {
+                            var SessionId = System.Diagnostics.Process.GetCurrentProcess().SessionId;
+                            pipe = new NamedPipeServer<NativeMessagingMessage>(SessionId + "_" + PIPE_NAME + "_" + msg.browser);
+                            pipe.ClientMessage += Server_OnReceivedMessage;
+                            //pipe.OnReceivedMessage += Server_OnReceivedMessage;
+                            pipe.Start();
+                        }
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(_lock);
                     }
                 }
                 if (msg.functionName == "ping") return;

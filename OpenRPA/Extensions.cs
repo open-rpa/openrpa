@@ -223,68 +223,68 @@ namespace OpenRPA
         /// <param name="collection">Collection.</param>
         /// <param name="newCollection">New collection.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static void UpdateCollectionById<T>(this ObservableCollection<T> collection, IEnumerable<T> newCollection) where T : IBase
-        {
-            var current = newCollection.ToArray();
-            for (var i = 0; i < current.Count(); i++)
-            {
-                var exists = collection.Where(x => x._id == current[i]._id);
-                if (exists.Count() == 0) collection.Add(current[i]);
-            }
-            var list = collection.ToArray();
-            for (var i = 0; i < list.Count(); i++)
-            {
-                var exists = current.Where(x => x._id == list[i]._id);
-                if (exists.Count() == 0) collection.Remove(list[i]);
-            }
-        }
+        //public static void UpdateCollectionById<T>(this ObservableCollection<T> collection, IEnumerable<T> newCollection) where T : IBase
+        //{
+        //    var current = newCollection.ToArray();
+        //    for (var i = 0; i < current.Count(); i++)
+        //    {
+        //        var exists = collection.Where(x => x._id == current[i]._id);
+        //        if (exists.Count() == 0) collection.Add(current[i]);
+        //    }
+        //    var list = collection.ToArray();
+        //    for (var i = 0; i < list.Count(); i++)
+        //    {
+        //        var exists = current.Where(x => x._id == list[i]._id);
+        //        if (exists.Count() == 0) collection.Remove(list[i]);
+        //    }
+        //}
 
-        public static void UpdateCollection<T>(this ObservableCollection<T> collection, IEnumerable<T> newCollection)
-        {
-            IEnumerator<T> newCollectionEnumerator = newCollection.GetEnumerator();
-            IEnumerator<T> collectionEnumerator = collection.GetEnumerator();
+        //public static void UpdateCollection<T>(this ObservableCollection<T> collection, IEnumerable<T> newCollection)
+        //{
+        //    IEnumerator<T> newCollectionEnumerator = newCollection.GetEnumerator();
+        //    IEnumerator<T> collectionEnumerator = collection.GetEnumerator();
 
-            Collection<T> itemsToDelete = new Collection<T>();
-            while (collectionEnumerator.MoveNext())
-            {
-                T item = collectionEnumerator.Current;
+        //    Collection<T> itemsToDelete = new Collection<T>();
+        //    while (collectionEnumerator.MoveNext())
+        //    {
+        //        T item = collectionEnumerator.Current;
 
-                // Store item to delete (we can't do it while parse collection.
-                if (!newCollection.Contains(item))
-                {
-                    itemsToDelete.Add(item);
-                }
-            }
+        //        // Store item to delete (we can't do it while parse collection.
+        //        if (!newCollection.Contains(item))
+        //        {
+        //            itemsToDelete.Add(item);
+        //        }
+        //    }
 
-            // Handle item to delete.
-            foreach (T itemToDelete in itemsToDelete)
-            {
-                collection.Remove(itemToDelete);
-            }
+        //    // Handle item to delete.
+        //    foreach (T itemToDelete in itemsToDelete)
+        //    {
+        //        collection.Remove(itemToDelete);
+        //    }
 
-            var i = 0;
-            while (newCollectionEnumerator.MoveNext())
-            {
-                T item = newCollectionEnumerator.Current;
+        //    var i = 0;
+        //    while (newCollectionEnumerator.MoveNext())
+        //    {
+        //        T item = newCollectionEnumerator.Current;
 
-                // Handle new item.
-                if (!collection.Contains(item))
-                {
-                    collection.Insert(i, item);
-                }
+        //        // Handle new item.
+        //        if (!collection.Contains(item))
+        //        {
+        //            collection.Insert(i, item);
+        //        }
 
-                // Handle existing item, move at the good index.
-                if (collection.Contains(item))
-                {
-                    int oldIndex = collection.IndexOf(item);
-                    if (oldIndex != i)
-                    {
-                        collection.Move(oldIndex, i);
-                    }
-                }
+        //        // Handle existing item, move at the good index.
+        //        if (collection.Contains(item))
+        //        {
+        //            int oldIndex = collection.IndexOf(item);
+        //            if (oldIndex != i)
+        //            {
+        //                collection.Move(oldIndex, i);
+        //            }
+        //        }
 
-                i++;
-            }
-        }
+        //        i++;
+        //    }
+        //}
     }
 }

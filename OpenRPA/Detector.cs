@@ -19,13 +19,39 @@ namespace OpenRPA
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string detectortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public async Task Save()
+        public async Task Save(bool skipOnline = false)
         {
-            await Save<Detector>();
+            await Save<Detector>(skipOnline);
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, 1000))
+            {
+                try
+                {
+                    var exists = RobotInstance.instance.Detectors.FindById(_id);
+                    if (exists == null) RobotInstance.instance.Detectors.Add(this);
+                    if (exists != null) RobotInstance.instance.Detectors.UpdateItem(exists, this);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(RobotInstance.instance.Detectors);
+                }
+            }
+            else { throw new LockNotReceivedException("Saving detector"); }
         }
-        public async Task Delete()
+        public async Task Delete(bool skipOnline = false)
         {
-            await Delete<Detector>();
+            if(!skipOnline) await Delete<Detector>();
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, 1000))
+            {
+                try
+                {
+                    RobotInstance.instance.Detectors.Remove(this);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(RobotInstance.instance.Detectors);
+                }
+            }
+            else { throw new LockNotReceivedException("Deleting detector"); }
         }
         public void ExportFile(string filepath)
         {

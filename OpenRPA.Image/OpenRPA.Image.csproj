@@ -71,26 +71,22 @@
     <None Remove="Resources\designer\foreachimage.png" />
     <None Remove="Resources\designer\getimage.png" />
     <None Remove="Resources\designer\palette.png" />
-    <None Remove="Resources\designer\palette2.png" />
     <None Remove="Resources\search.png" />
     <None Remove="Resources\toolbox\camera.png" />
     <None Remove="Resources\toolbox\foreachimage.png" />
     <None Remove="Resources\toolbox\getimage.png" />
     <None Remove="Resources\toolbox\palette.png" />
-    <None Remove="Resources\toolbox\palette2.png" />
     <None Remove="Resources\x.png" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\check.png" />
     <Resource Include="Resources\designer\palette.png" />
-    <Resource Include="Resources\designer\palette2.png" />
     <EmbeddedResource Include="Resources\search.png" />
     <EmbeddedResource Include="Resources\toolbox\camera.png" />
     <EmbeddedResource Include="Resources\toolbox\foreachimage.png" />
     <EmbeddedResource Include="Resources\toolbox\getimage.png" />
     <EmbeddedResource Include="Resources\toolbox\palette.png" />
-    <EmbeddedResource Include="Resources\toolbox\palette2.png" />
     <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>

@@ -33,24 +33,30 @@ namespace OpenRPA.SAPBridge
         private static object _lockObj = new object();
         public void OpenConnection(string server, int secondsOfTimeout = 10)
         {
-            lock (_lockObj)
+            if (System.Threading.Monitor.TryEnter(_lockObj, 1000))
             {
-                var Application = SAPHook.Instance.app;
                 try
                 {
-                    Application.OpenConnectionByConnectionString(server);
+                    var Application = SAPHook.Instance.app;
+                    try
+                    {
+                        Application.OpenConnectionByConnectionString(server);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Open Connection Failed, is ip/fqdn correct? is server alive and running? " + ex.Message);
+                    }
+                    var index = Application.Connections.Count - 1;
+                    this.Connection = Application.Children.ElementAt(index) as GuiConnection;
+                    index = Connection.Sessions.Count - 1;
+                    if (Connection.Sessions.Count == 0) throw new Exception("New session not found, did you forget to enable scripting on the server side ?");
+                    this.Session = Connection.Children.Item(index) as GuiSession;
                 }
-                catch (Exception ex)
+                finally
                 {
-                    throw new Exception("Open Connection Failed, is ip/fqdn correct? is server alive and running? " + ex.Message);
+                    System.Threading.Monitor.Exit(_lockObj);
                 }
-                var index = Application.Connections.Count - 1;
-                this.Connection = Application.Children.ElementAt(index) as GuiConnection;
-                index = Connection.Sessions.Count - 1;
-                if (Connection.Sessions.Count == 0) throw new Exception("New session not found, did you forget to enable scripting on the server side ?");
-                this.Session = Connection.Children.Item(index) as GuiSession;
             }
-
         }
         public bool Login(string UserName, string Password, string Client, string Language)
         {

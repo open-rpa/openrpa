@@ -1609,6 +1609,42 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Throw Business Rule Exception.
+        /// </summary>
+        public static string activity_throwbusinessruleexception {
+            get {
+                return ResourceManager.GetString("activity_throwbusinessruleexception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        public static string activity_throwbusinessruleexception_message {
+            get {
+                return ResourceManager.GetString("activity_throwbusinessruleexception_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Short describtion of why this workflow failed due to an Business Rule Exception. What data was missing, incomplete or invalid ? We recommend using payload for more detailed information.
+        /// </summary>
+        public static string activity_throwbusinessruleexception_message_help {
+            get {
+                return ResourceManager.GetString("activity_throwbusinessruleexception_message_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Throw a Business Rule Exception. The workflow is failing due to missing, incomplete or invalid data.
+        /// </summary>
+        public static string activity_throwbusinessruleexception_tooltip {
+            get {
+                return ResourceManager.GetString("activity_throwbusinessruleexception_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timeout.
         /// </summary>
         public static string activity_timeout {
@@ -1911,6 +1947,24 @@ namespace OpenRPA.Resources {
         public static string browseraddons {
             get {
                 return ResourceManager.GetString("browseraddons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string button_cancel {
+            get {
+                return ResourceManager.GetString("button_cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string button_close {
+            get {
+                return ResourceManager.GetString("button_close", resourceCulture);
             }
         }
         

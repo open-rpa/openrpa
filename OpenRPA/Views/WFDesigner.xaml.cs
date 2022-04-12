@@ -495,7 +495,7 @@ namespace OpenRPA.Views
                 Workflow.Xaml = WorkflowDesigner.Text;
                 var _hasChanged = HasChanged;
                 HasChanged = false;
-                RobotInstance.instance.Workflows.Update(Workflow);
+                RobotInstance.instance.dbWorkflows.Update(Workflow);
                 await Workflow.Save();
                 if (_hasChanged)
                 {
@@ -1327,10 +1327,6 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                                 {
                                     System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                                 }
-                            }
-                            else
-                            {
-                                throw new Exception("Failed running workflow, due to theading deadlock");
                             }
                         }
                     });

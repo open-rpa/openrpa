@@ -40,7 +40,7 @@ namespace OpenRPA.Views
         {
             get
             {
-                return RobotInstance.instance.Projects.FindAll().ToList();
+                return RobotInstance.instance.dbProjects.FindAll().ToList();
             }
         }
         public AgentViewProjects(AgentWindow main)

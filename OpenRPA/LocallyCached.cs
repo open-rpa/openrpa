@@ -86,24 +86,29 @@ namespace OpenRPA
                                     _version = result._version;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                                 }
-                                else
-                                {
-                                    Log.Debug("Failed saving " + entity._type + " " + entity._id + " will be updated at next sync or save");
-                                }
                             }
-                            catch (Exception ex)
+                            catch (Exception) 
                             {
-                                Log.Error(ex.ToString());
+                                //Log.Debug("Failed saving " + entity._type + " " + entity._id + " will be updated at next sync or save");
+                                throw;
                             }
                         }
                     }
                 }
-                lock (savelock)
+                if (System.Threading.Monitor.TryEnter(savelock, 1000))
                 {
-                    var exists = collection.FindById(_id);
-                    if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
-                    if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                    try
+                    {
+                        var exists = collection.FindById(_id);
+                        if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                        if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(savelock);
+                    }
                 }
+                else { throw new LockNotReceivedException("Locally Cached savelock"); }
             }
             catch (Exception)
             {
@@ -124,12 +129,20 @@ namespace OpenRPA
                 {
                     isDeleted = true;
                     isDirty = true;
-                    lock (savelock)
+                    if (System.Threading.Monitor.TryEnter(savelock, 1000))
                     {
-                        var exists = collection.FindById(_id);
-                        if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
-                        if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                        try
+                        {
+                            var exists = collection.FindById(_id);
+                            if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                            if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(savelock);
+                        }
                     }
+                    else { throw new LockNotReceivedException("Locally Cached savelock"); }
                 }
                 catch (Exception ex)
                 {
@@ -143,11 +156,19 @@ namespace OpenRPA
 
                 await global.webSocketClient.DeleteOne(collectionname, entity._id);
                 Log.Verbose("Deleted in openflow and as version " + entity._version + " " + entity._type + " " + entity.name);
-                lock (savelock)
+                if (System.Threading.Monitor.TryEnter(savelock, 1000))
                 {
-                    var exists = collection.FindById(_id);
-                    if (exists != null) { collection.Delete(entity._id); Log.Verbose("Deleted in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                    try
+                    {
+                        var exists = collection.FindById(_id);
+                        if (exists != null) { collection.Delete(entity._id); Log.Verbose("Deleted in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(savelock);
+                    }
                 }
+                else { throw new LockNotReceivedException("Locally Cached savelock"); }
             }
         }
     }

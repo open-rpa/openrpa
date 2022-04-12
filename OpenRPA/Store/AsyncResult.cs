@@ -41,15 +41,21 @@ namespace OpenRPA.Store
                 {
                     return manualResetEvent;
                 }
-
-                lock (ThisLock)
+                if (System.Threading.Monitor.TryEnter(ThisLock, 1000))
                 {
-                    if (manualResetEvent == null)
+                    try
                     {
-                        manualResetEvent = new ManualResetEvent(isCompleted);
+                        if (manualResetEvent == null)
+                        {
+                            manualResetEvent = new ManualResetEvent(isCompleted);
+                        }
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(ThisLock);
                     }
                 }
-
+                else { throw new LockNotReceivedException("Async ThisLock"); }
                 return manualResetEvent;
             }
         }
@@ -104,16 +110,23 @@ namespace OpenRPA.Store
             }
             else
             {
-                lock (ThisLock)
+                if (System.Threading.Monitor.TryEnter(ThisLock, 1000))
                 {
-                    this.isCompleted = true;
-                    if (this.manualResetEvent != null)
+                    try
                     {
-                        this.manualResetEvent.Set();
+                        this.isCompleted = true;
+                        if (this.manualResetEvent != null)
+                        {
+                            this.manualResetEvent.Set();
+                        }
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(ThisLock);
                     }
                 }
-            }
-
+                else { throw new LockNotReceivedException("Async ThisLock"); }
+            }            
             if (callback != null)
             {
                 try

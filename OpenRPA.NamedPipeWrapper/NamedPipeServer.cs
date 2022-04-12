@@ -105,11 +105,18 @@ namespace OpenRPA.NamedPipeWrapper
         /// <param name="message"></param>
         public void PushMessage(TWrite message)
         {
-            lock (_connections)
+            if (System.Threading.Monitor.TryEnter(_connections, 1000))
             {
-                foreach (var client in _connections)
+                try
                 {
-                    client.PushMessage(message);
+                    foreach (var client in _connections)
+                    {
+                        client.PushMessage(message);
+                    }
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_connections);
                 }
             }
         }
@@ -121,12 +128,19 @@ namespace OpenRPA.NamedPipeWrapper
         /// <param name="clientName"></param>
         public void PushMessage(TWrite message, string clientName)
         {
-            lock (_connections)
+            if (System.Threading.Monitor.TryEnter(_connections, 1000))
             {
-                foreach (var client in _connections)
+                try
                 {
-                    if (client.Name == clientName)
-                        client.PushMessage(message);
+                    foreach (var client in _connections)
+                    {
+                        if (client.Name == clientName)
+                            client.PushMessage(message);
+                    }
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_connections);
                 }
             }
         }
@@ -138,11 +152,18 @@ namespace OpenRPA.NamedPipeWrapper
         {
             _shouldKeepRunning = false;
 
-            lock (_connections)
+            if (System.Threading.Monitor.TryEnter(_connections, 1000))
             {
-                foreach (var client in _connections.ToArray())
+                try
                 {
-                    client.Close();
+                    foreach (var client in _connections.ToArray())
+                    {
+                        client.Close();
+                    }
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_connections);
                 }
             }
 
@@ -196,9 +217,16 @@ namespace OpenRPA.NamedPipeWrapper
                 connection.Error += ConnectionOnError;
                 connection.Open();
 
-                lock (_connections)
+                if (System.Threading.Monitor.TryEnter(_connections, 1000))
                 {
-                    _connections.Add(connection);
+                    try
+                    {
+                        _connections.Add(connection);
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(_connections);
+                    }
                 }
 
                 ClientOnConnected(connection);
@@ -232,9 +260,16 @@ namespace OpenRPA.NamedPipeWrapper
             if (connection == null)
                 return;
 
-            lock (_connections)
+            if (System.Threading.Monitor.TryEnter(_connections, 1000))
             {
-                _connections.Remove(connection);
+                try
+                {
+                    _connections.Remove(connection);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_connections);
+                }
             }
 
             if (ClientDisconnected != null)

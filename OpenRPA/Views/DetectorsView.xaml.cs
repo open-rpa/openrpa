@@ -109,9 +109,9 @@ namespace OpenRPA.Views
                 }
                 d.Start(true);
                 updateUIList = true;
-                var dexists = RobotInstance.instance.Detectors.FindById(d._id);
-                if (dexists == null) RobotInstance.instance.Detectors.Insert(d);
-                if (dexists != null) RobotInstance.instance.Detectors.Update(d);
+                var dexists = RobotInstance.instance.dbDetectors.FindById(d._id);
+                if (dexists == null) RobotInstance.instance.dbDetectors.Insert(d);
+                if (dexists != null) RobotInstance.instance.dbDetectors.Update(d);
             }
             catch (Exception ex)
             {
@@ -141,6 +141,7 @@ namespace OpenRPA.Views
                             {
                                 entity.Stop();
                                 await entity.Delete();
+                                RobotInstance.instance.Detectors.Remove(entity);
                             }
                         }
                     }
@@ -173,7 +174,6 @@ namespace OpenRPA.Views
                 {
                     if (updateUIList)
                     {
-                        OpenProject.UpdateProjectsList(false, true);
                         updateUIList = false;
                     }
                     foreach (var d in detectorPlugins)
@@ -209,7 +209,6 @@ namespace OpenRPA.Views
             Entity.isDirty = true;
             updateUIList = true;
         }
-
         private void listType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

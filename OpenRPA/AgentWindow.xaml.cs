@@ -441,14 +441,10 @@ namespace OpenRPA
                                     System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                                 }
                             }
-                            else
-                            {
-                                throw new Exception("Failed running workflow, due to theading deadlock");
-                            }
+                            // else { throw new LockNotReceivedException("Resume bookmark"); }
                         }
                     });
                 }
-                RobotInstance.instance.NotifyPropertyChanged("Projects");
             }
             catch (Exception ex)
             {
@@ -530,8 +526,6 @@ namespace OpenRPA
                     layoutDocument.Content = view;
                     MainTabControl.Children.Add(layoutDocument);
                     layoutDocument.IsSelected = true;
-                    // layoutDocument.Closing += LayoutDocument_Closing;
-                    RobotInstance.instance.NotifyPropertyChanged("Projects");
                 }
                 catch (Exception ex)
                 {
@@ -695,26 +689,19 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "SaveLayout");
             try
             {
-                //var workflows = new List<string>();
-                //foreach (var designer in RobotInstance.instance.Designers)
-                //{
-                //    if (string.IsNullOrEmpty(designer.Workflow._id) && !string.IsNullOrEmpty(designer.Workflow.Filename))
-                //    {
-                //        workflows.Add(designer.Workflow.RelativeFilename);
-                //    }
-                //    else if (!string.IsNullOrEmpty(designer.Workflow._id))
-                //    {
-                //        workflows.Add(designer.Workflow._id);
-
-                //    }
-                //}
                 //Config.local.openworkflows = workflows.ToArray();
                 var pos = new System.Drawing.Rectangle((int)Left, (int)Top, (int)Width, (int)Height);
                 if (pos.Left > 0 && pos.Top > 0 && pos.Width > 100 && pos.Height > 100)
                 {
-                    Config.local.mainwindow_position = pos;
+                    var newpos = pos.ToString();
+                    var oldpos = Config.local.mainwindow_position.ToString();
+                    if (newpos != oldpos)
+                    {
+                        Config.local.mainwindow_position = pos;
+                        Config.Save();
+                    }
                 }
-                Config.Save();
+
                 try
                 {
                     var serializer = new Xceed.Wpf.AvalonDock.Layout.Serialization.XmlLayoutSerializer(DManager);

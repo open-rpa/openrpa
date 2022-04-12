@@ -12,17 +12,11 @@
          Loaded="Window_Loaded" KeyDown="Window_KeyDown"
         FocusManager.FocusedElement="{Binding ElementName=search}"
         LostFocus="Window_LostFocus">
-    <Grid>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="451*" />
-            <ColumnDefinition Width="141*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <input:AutoCompleteBox  Grid.Row="0" Grid.Column="0" 
+    <StackPanel Margin="10">
+        <StackPanel>
+            <TextBlock>Name</TextBlock>
+            <input:AutoCompleteBox  Grid.Row="0" Grid.Column="0" 
                 x:Name="search" 
                 FilterMode="None"
                 IsTextCompletionEnabled="False"
@@ -32,15 +26,18 @@
                 MinimumPopulateDelay="200"
                 ValueMemberPath="Name" Grid.ColumnSpan="2"
             >
-            <input:AutoCompleteBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Name="textBlock" Text="{Binding Name}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </input:AutoCompleteBox.ItemTemplate>
-        </input:AutoCompleteBox>
-        <Button x:Name="okButton" Grid.Row="1" Width="40" HorizontalAlignment="Left"  Margin="5,5,0,5" Click="okButton_Click">
-            <TextBlock Text="{x:Static or:strings.button_ok}"></TextBlock></Button>
-    </Grid>
+                <input:AutoCompleteBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Name="textBlock" Text="{Binding Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </input:AutoCompleteBox.ItemTemplate>
+            </input:AutoCompleteBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,7,0,0">
+            <Button x:Name="okButton" Click="okButton_Click" MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="{x:Static or:strings.button_close}"></Button>
+        </StackPanel>
+    </StackPanel>
+
 </Window>

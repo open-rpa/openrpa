@@ -22,5 +22,13 @@ namespace OpenRPA.Input
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
         public string detectortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string projectid { get; set; }
+        public Task Delete(bool skipOnline = false)
+        {
+            throw new NotImplementedException();
+        }
+        public Task Save(bool skipOnline = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

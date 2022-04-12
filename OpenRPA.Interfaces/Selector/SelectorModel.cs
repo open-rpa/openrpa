@@ -62,11 +62,11 @@ namespace OpenRPA.Interfaces.Selector
                     
                 };
 
-            Selector.ItemPropertyChanged += (sender, e) =>
-            {
-                _json = Selector.ToString();
-                OnPropertyChanged("json");
-            };
+            //Selector.ItemPropertyChanged += (sender, e) =>
+            //{
+            //    _json = Selector.ToString();
+            //    OnPropertyChanged("json");
+            //};
             //Selector.ElementPropertyChanged += (sender, e) =>
             //{
             //    OnPropertyChanged("json");
@@ -77,11 +77,11 @@ namespace OpenRPA.Interfaces.Selector
             Highlight = true;
             Directories = new ExtendedObservableCollection<treeelement>();
             this.window = window;
-            Directories.ItemPropertyChanged += (sender, e) =>
-            {
-                _json = Selector.ToString();
-                NotifyPropertyChanged("json");
-            };
+            //Directories.ItemPropertyChanged += (sender, e) =>
+            //{
+            //    _json = Selector.ToString();
+            //    NotifyPropertyChanged("json");
+            //};
 
         }
         public SelectorModel(SelectorWindow window, Selector Selector, Selector Anchor = null)
@@ -91,11 +91,11 @@ namespace OpenRPA.Interfaces.Selector
             this.Selector = Selector;
             Directories = new ExtendedObservableCollection<treeelement>();
             this.window = window;
-            Directories.ItemPropertyChanged += (sender, e) =>
-            {
-                _json = Selector.ToString();
-                NotifyPropertyChanged("json");
-            };
+            //Directories.ItemPropertyChanged += (sender, e) =>
+            //{
+            //    _json = Selector.ToString();
+            //    NotifyPropertyChanged("json");
+            //};
         }
         private SelectorWindow window;
         public Selector Selector { get { return GetProperty<Selector>(); } set { SetProperty(value); } }

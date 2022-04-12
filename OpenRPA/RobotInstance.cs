@@ -18,19 +18,10 @@ using OpenTelemetry.Logs;
 
 namespace OpenRPA
 {
-    public class RobotInstance : IOpenRPAClient, System.ComponentModel.INotifyPropertyChanged
+    public class RobotInstance : IOpenRPAClient
     {
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public static System.Timers.Timer unsavedTimer = null;
         private readonly System.Timers.Timer reloadTimer = null;
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            if (propertyName == "Projects")
-            {
-                Views.OpenProject.UpdateProjectsList(true, false);
-            }
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
         private RobotInstance()
         {
             reloadTimer = new System.Timers.Timer(Config.local.reloadinterval.TotalMilliseconds);
@@ -43,26 +34,17 @@ namespace OpenRPA
             {
             }
         }
-        // public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
-        //public static Prometheus.Client.Collectors.CollectorRegistry registry = new Prometheus.Client.Collectors.CollectorRegistry();
-        //public static Prometheus.Client.MetricFactory factory = new Prometheus.Client.MetricFactory(registry);
-        //public static Prometheus.Client.Abstractions.IMetricFamily<Prometheus.Client.Abstractions.ICounter, (string, string, string)> activity_counter = 
-        //    factory.CreateCounter("openrpa_activity_counter", "Total number of acitivity activations", labelNames: ("activity", "type", "workflow"));
-        //public static Prometheus.Client.Abstractions.IMetricFamily<Prometheus.Client.Abstractions.IHistogram, (string, string, string)> activity_duration = 
-        //    factory.CreateHistogram("openrpa_activity_duration", "Duration of each acitivity activation",
-        //        buckets: new[] { 0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10 },
-        //        labelNames: ("activity", "type", "workflow"));
-        //public static Prometheus.Client.Abstractions.IGauge mem_used = factory.CreateGauge("openrpa_memory_size_used_bytes", "Amount of heap memory usage for OpenRPA client");
-        //public static Prometheus.Client.Abstractions.IGauge mem_total = factory.CreateGauge("openrpa_memory_size_total_bytes", "Amount of heap memory usage for OpenRPA client");
-        // public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; } = new System.Collections.ObjectModel.ObservableCollection<Project>();
         public LiteDatabase db;
-        public LiteDB.ILiteCollection<Project> Projects;
-        public LiteDB.ILiteCollection<Workflow> Workflows;
-        public LiteDB.ILiteCollection<Detector> Detectors;
-        public LiteDB.ILiteCollection<WorkitemQueue> WorkItemQueues;        
+        public LiteDB.ILiteCollection<Project> dbProjects;
+        public ExtendedIBaseObservableCollection<IProject> Projects;
+        public LiteDB.ILiteCollection<Workflow> dbWorkflows;
+        public ExtendedIBaseObservableCollection<IWorkflow> Workflows;
+        public LiteDB.ILiteCollection<Detector> dbDetectors;
+        public ExtendedIBaseObservableCollection<IDetector> Detectors;
+        public LiteDB.ILiteCollection<WorkitemQueue> dbWorkItemQueues;
+        public ExtendedIBaseObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
+
         public LiteDB.ILiteCollection<WorkflowInstance> dbWorkflowInstances;
-        public System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue> WorkItemQueuesSource { get; set; }
-        = new System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue>();
         public int ProjectCount
         {
             get
@@ -159,22 +141,40 @@ namespace OpenRPA
                         return _instance;
                     }
 
-                    _instance.Projects = _instance.db.GetCollection<Project>("projects");
-                    _instance.Projects.EnsureIndex(x => x._id, true);
+                    _instance.dbWorkflows = _instance.db.GetCollection<Workflow>("workflows");
+                    _instance.dbWorkflows.EnsureIndex(x => x._id, true);
+                    _instance.Workflows = new ExtendedIBaseObservableCollection<IWorkflow>();
 
-                    _instance.Workflows = _instance.db.GetCollection<Workflow>("workflows");
-                    _instance.Workflows.EnsureIndex(x => x._id, true);
 
-                    _instance.Detectors = _instance.db.GetCollection<Detector>("detectors");
-                    _instance.Detectors.EnsureIndex(x => x._id, true);
+                    _instance.dbProjects = _instance.db.GetCollection<Project>("projects");
+                    _instance.dbProjects.EnsureIndex(x => x._id, true);
+                    _instance.Projects = new ExtendedIBaseObservableCollection<IProject>();
+
+                    _instance.dbDetectors = _instance.db.GetCollection<Detector>("detectors");
+                    _instance.dbDetectors.EnsureIndex(x => x._id, true);
+                    _instance.Detectors = new ExtendedIBaseObservableCollection<IDetector>();
 
                     _instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
                     _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
-                    _instance.WorkItemQueues = _instance.db.GetCollection<WorkitemQueue>("workitemqueues");
-                    _instance.WorkItemQueues.EnsureIndex(x => x._id, true);
+                    _instance.dbWorkItemQueues = _instance.db.GetCollection<WorkitemQueue>("workitemqueues");
+                    _instance.dbWorkItemQueues.EnsureIndex(x => x._id, true);
+                    _instance.WorkItemQueues = new ExtendedIBaseObservableCollection<IWorkitemQueue>();
 
-                    
+
+                    _instance.Workflows.AddRange(_instance.dbWorkflows.FindAll().OrderBy(x => x.name));
+                    _instance.Detectors.AddRange(_instance.dbDetectors.FindAll().OrderBy(x => x.name));
+                    _instance.WorkItemQueues.AddRange(_instance.dbWorkItemQueues.FindAll().OrderBy(x => x.name));
+                    var projects = _instance.dbProjects.FindAll().ToList();
+                    foreach (var p in projects)
+                    {
+                        p.Workflows.Refresh();
+                        p.Detectors.Refresh();
+                        p.WorkItemQueues.Refresh();
+                    }
+                    _instance.Projects.AddRange(projects);
+
+
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -241,10 +241,7 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                     }
                 }
-                else
-                {
-                    throw new Exception("Failed running workflow, due to theading deadlock");
-                }
+                else { throw new LockNotReceivedException("Failed returning list of workflow instances"); }
                 return result;
             }
         }
@@ -366,12 +363,16 @@ namespace OpenRPA
                     foreach (var p in Views.OpenProject.Instance.Projects.ToList())
                     {
                         result = p.Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
-                        if (result != null) return result;
+                        if (result != null)
+                        {
+                            var _p = result.projectid;
+                            return result;
+                        }
                     }
                 }
                 if (result == null)
                 {
-                    result = Workflows.Find(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
+                    result = Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
                 }
             }
             catch (Exception)
@@ -460,7 +461,7 @@ namespace OpenRPA
                 Log.Debug("LoadServerData::query project versions");
                 SetStatus("query project versions");
                 var server_projects = await global.webSocketClient.Query<Project>("openrpa", "{\"_type\": 'project'}", "{\"_version\": 1}", top: Config.local.max_projects);
-                var local_projects = Projects.FindAll().ToList();
+                var local_projects = Projects.ToList();
                 var reload_ids = new List<string>();
                 var updatePackages = new List<string>();
                 foreach (var p in server_projects)
@@ -475,10 +476,8 @@ namespace OpenRPA
                         }
                         if (exists._version > p._version && p.isDirty)
                         {
-                            //Log.Debug("LoadServerData::Updating project " + p.name);
-                            //await p.Save();
+                            // await exists.Update(p);
                             Log.Warning("project " + p.name + " has a newer version on the server!");
-                            // await wf.Save();
                         }
                     }
                     else
@@ -486,13 +485,13 @@ namespace OpenRPA
                         reload_ids.Add(p._id);
                     }
                 }
-                foreach (var p in local_projects)
+                foreach (Project p in local_projects)
                 {
                     var exists = server_projects.Where(x => x._id == p._id).FirstOrDefault();
                     if (exists == null && !p.isDirty)
                     {
                         Log.Debug("LoadServerData::Removing local project " + p.name);
-                        Projects.Delete(p._id);
+                        await p.Delete(true);
                     }
                     else if (p.isDirty)
                     {
@@ -518,7 +517,7 @@ namespace OpenRPA
                                 p.IsExpanded = exists.IsExpanded;
                                 p.IsSelected = exists.IsSelected;
                                 p.isDirty = false;
-                                await p.Save();
+                                await exists.Update(p, true);
                                 updatePackages.Add(p._id);
                             }
                             else
@@ -535,15 +534,15 @@ namespace OpenRPA
                         }
                     }
                 }
-                local_projects = Projects.FindAll().ToList();
                 var local_project_ids = new List<string>();
-                for (var i = 0; i < local_projects.Count; i++) local_project_ids.Add("'" + local_projects[i]._id + "'");
+                //for (var i = 0; i < local_projects.Count; i++) local_project_ids.Add("'" + local_projects[i]._id + "'");
+                for (var i = 0; i < Projects.Count; i++) local_project_ids.Add("'" + Projects[i]._id + "'");
 
                 Log.Debug("LoadServerData::query workflow versions");
                 var _q = "{ _type: 'workflow', 'projectid': {'$in': [" + string.Join(",", local_project_ids) + "]}}";
                 SetStatus("query updated workflows");
                 var server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", _q, "{\"_version\": 1}", top: Config.local.max_workflows);
-                var local_workflows = Workflows.FindAll().ToList();
+                var local_workflows = Workflows.ToList();
                 reload_ids = new List<string>();
                 Log.Debug("LoadServerData::Loop " + server_workflows.Length + " server workflows");
                 foreach (var wf in server_workflows)
@@ -556,10 +555,10 @@ namespace OpenRPA
                             if (exists._version < wf._version) reload_ids.Add(wf._id);
                             if (exists._version > wf._version && exists.isDirty) // Do NOT save offline changes. Let user do that using the right click menu
                             {
-                                Log.Warning(exists.ProjectAndName + " exists on server with version " + wf._version  + ", but local version is newer " + exists._version  + "! Open and save it, to preserve local changes, or right ciick and select \"get server version\" to fix mitch match");
+                                Log.Warning(exists.ProjectAndName + " exists on server with version " + wf._version + ", but local version is newer " + exists._version + "! Open and save it, to preserve local changes, or right ciick and select \"get server version\" to fix mitch match");
                                 var state = exists.State;
-                                exists.SetLastState("warning");
-                                await exists.Save(true);
+                                ((Workflow)exists).SetLastState("warning");
+                                // await ((Workflow)exists).Save(true);
                                 // await wf.Save();
                             }
                         }
@@ -573,7 +572,7 @@ namespace OpenRPA
                         reload_ids.Add(wf._id);
                     }
                 }
-                Log.Debug("LoadServerData::Loop " + local_workflows.Count + " local workflows");
+                Log.Debug("LoadServerData::Loop " + local_workflows.Count() + " local workflows");
                 foreach (var _wf in local_workflows)
                 {
                     try
@@ -583,23 +582,27 @@ namespace OpenRPA
                         if (exists == null && !wf.isDirty)
                         {
                             Log.Debug("Removing local workflow " + wf.name);
-                            Workflows.Delete(wf._id);
+                            await wf.Delete();
                         }
                         else if ((wf.isDirty || wf.isLocalOnly) && exists != null && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
                         {
                             var _version = wf._version;
                             string name = wf.name;
                             string RelativeFilename = wf.RelativeFilename;
-                            if (wf.isDeleted) await wf.Delete();
-                            if (!wf.isDeleted && exists._version > wf._version) await wf.Save();
+                            reload_ids.Add(wf._id);
+                            //if (wf.isDeleted) await wf.Delete();
+                            //if (!wf.isDeleted && exists._version > wf._version)
+                            //{
+                            //    await wf.Update(exists, true);
+                            //}
                         }
                         else if (exists == null)
                         {
                             Log.Warning(wf.RelativeFilename + " no longer exists on server, but is marked as dirty! Open and save it, to preserve it, or delete it if no longer needed");
                             if (wf.State != "warning")
                             {
-                                wf.SetLastState("warning");
-                                await wf.Save(true);
+                                ((Workflow)exists).SetLastState("warning");
+                                await ((Workflow)exists).Save(true);
                             }
                         }
                     }
@@ -615,7 +618,12 @@ namespace OpenRPA
                     var q = "{ _type: 'workflow', '_id': {'$in': [" + string.Join(",", reload_ids) + "]}}";
                     Log.Debug("LoadServerData::Featching fresh version of ´" + reload_ids.Count + " workflows");
                     SetStatus("fetch updated " + reload_ids.Count + " workflows");
+                    var oldcount = reload_ids.Count;
                     server_workflows = await global.webSocketClient.Query<Workflow>("openrpa", q, orderby: "{\"name\":-1}", top: Config.local.max_workflows);
+                    if (oldcount != server_workflows.Length)
+                    {
+                        Log.Error("Failed getting all " + oldcount + " workflows from server, received " + server_workflows.Length);
+                    }
                     foreach (var wf in server_workflows)
                     {
                         var exists = local_workflows.Where(x => x._id == wf._id).FirstOrDefault();
@@ -625,9 +633,10 @@ namespace OpenRPA
                             {
                                 Log.Debug("LoadServerData::Updating local workflow " + wf.name);
                                 wf.isDirty = false;
+                                await exists.Update(wf, true);
                                 var isloading = Window.IsLoading;
                                 Window.IsLoading = false;
-                                UpdateWorkflow(wf, false);
+                                UpdateWorkflow(exists, false);
                                 Window.IsLoading = isloading;
                             }
                             else
@@ -650,7 +659,7 @@ namespace OpenRPA
                 Log.Debug("LoadServerData::query detector versions");
                 SetStatus("query updated detectors");
                 var server_detectors = await global.webSocketClient.Query<Detector>("openrpa", "{\"_type\": 'detector'}", "{\"_version\": 1}");
-                var local_detectors = Detectors.FindAll().ToList();
+                var local_detectors = Detectors.ToList();
                 reload_ids = new List<string>();
                 foreach (var detector in server_detectors)
                 {
@@ -683,7 +692,7 @@ namespace OpenRPA
                             Log.Debug("Removing local detector " + detector.name);
                             var d = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
                             if (d != null) d.Stop();
-                            Detectors.Delete(_id);
+                            await detector.Delete(true);
                         }
                         else if (detector.isDirty)
                         {
@@ -719,17 +728,7 @@ namespace OpenRPA
                                 Log.Debug("LoadServerData::Adding detector " + detector.name);
                                 detector.Start(true);
                             }
-                            var dexists = Detectors.FindById(detector._id);
-                            if (dexists == null)
-                            {
-                                Log.Debug("LoadServerData::Adding detector " + detector.name);
-                                Detectors.Insert(detector);
-                            }
-                            if (dexists != null)
-                            {
-                                Log.Debug("LoadServerData::Updating detector " + detector.name);
-                                Detectors.Update(detector);
-                            }
+                            await detector.Save(true);
                         }
                         catch (Exception ex)
                         {
@@ -744,7 +743,7 @@ namespace OpenRPA
                 Log.Debug("LoadServerData::query workitemqueues versions");
                 SetStatus("query updated workitemqueues");
                 var server_workitemqueues = await global.webSocketClient.Query<WorkitemQueue>("mq", "{\"_type\": 'workitemqueue'}", "{\"_version\": 1}");
-                var local_workitemqueues = WorkItemQueues.FindAll().ToList();
+                var local_workitemqueues = WorkItemQueues.ToList();
                 reload_ids = new List<string>();
                 foreach (var WorkItemQueue in server_workitemqueues)
                 {
@@ -754,7 +753,10 @@ namespace OpenRPA
                         if (exists != null)
                         {
                             if (exists._version < WorkItemQueue._version) reload_ids.Add(WorkItemQueue._id);
-                            if (exists._version > WorkItemQueue._version && WorkItemQueue.isDirty) await WorkItemQueue.Save();
+                            if (exists._version > WorkItemQueue._version && WorkItemQueue.isDirty)
+                            {
+                                await exists.Update(WorkItemQueue, true);
+                            }
                         }
                         else
                         {
@@ -771,16 +773,25 @@ namespace OpenRPA
                     try
                     {
                         var exists = server_workitemqueues.Where(x => x._id == WorkItemQueue._id).FirstOrDefault();
-                        if (exists == null && !WorkItemQueue.isDirty)
+                        if (exists == null)
                         {
                             var _id = WorkItemQueue._id;
                             Log.Debug("Removing local WorkItemQueue " + WorkItemQueue.name);
-                            WorkItemQueues.Delete(_id);
+                            await WorkItemQueue.Delete(true);
                         }
                         else if (WorkItemQueue.isDirty)
                         {
-                            if (WorkItemQueue.isDeleted) await WorkItemQueue.Delete();
-                            if (!WorkItemQueue.isDeleted) await WorkItemQueue.Save();
+                            if (WorkItemQueue.isDeleted)
+                            {
+                                if (exists != null)
+                                {
+                                    await exists.Delete(true);
+                                }
+                            }
+                            if (!WorkItemQueue.isDeleted)
+                            {
+                                await WorkItemQueue.Update(exists, true);
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -797,41 +808,28 @@ namespace OpenRPA
                     server_workitemqueues = await global.webSocketClient.Query<WorkitemQueue>("mq", q, orderby: "{\"name\":-1}");
                     foreach (var workitemqueue in server_workitemqueues)
                     {
+                        var exists = local_workitemqueues.Where(x => x._id == workitemqueue._id).FirstOrDefault();
                         workitemqueue.isDirty = false;
-                        try
+                        if (exists != null)
                         {
-                            var dexists = WorkItemQueues.FindById(workitemqueue._id);
-                            if (dexists == null)
-                            {
-                                Log.Debug("LoadServerData::Adding WorkItemQueue " + workitemqueue.name);
-                                WorkItemQueues.Insert(workitemqueue);
-                            }
-                            if (dexists != null)
-                            {
-                                Log.Debug("LoadServerData::Updating WorkItemQueue " + workitemqueue.name);
-                                WorkItemQueues.Update(workitemqueue);
-                            }
+                            await exists.Update(workitemqueue, true);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Log.Error(ex.ToString());
+                            await workitemqueue.Save(true);
                         }
                     }
                 }
-                var LocalOnlyProjects = _instance.Projects.Find(x => x.isLocalOnly);
-                foreach (var i in LocalOnlyProjects) await i.Save<Project>();
-                var LocalOnlyWorkflws = _instance.Workflows.Find(x => x.isLocalOnly);
-                foreach (var i in LocalOnlyWorkflws) await i.Save<Workflow>();
-                //_instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
-                //_instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
-
+                var LocalOnlyProjects = _instance.Projects.Where(x => x.isLocalOnly);
+                foreach (var i in LocalOnlyProjects) await i.Save();
+                var LocalOnlyWorkflws = _instance.Workflows.Where(x => x.isLocalOnly);
+                foreach (var i in LocalOnlyWorkflws) await i.Save();
 
 
                 if (Projects.Count() == 0)
                 {
                     GenericTools.RunUIAsync(async () =>
                     {
-                        WorkItemQueuesSource.UpdateCollectionById(WorkItemQueues.FindAll());
                         string Name = "New Project";
                         try
                         {
@@ -845,15 +843,7 @@ namespace OpenRPA
                             Log.Error(ex.ToString());
                         }
                     }).Wait();
-                } else
-                {
-                    GenericTools.RunUI(() =>
-                    {
-                        WorkItemQueuesSource.UpdateCollectionById(WorkItemQueues.FindAll());
-                    });
                 }
-                NotifyPropertyChanged("Projects");
-
                 foreach (var _id in updatePackages)
                 {
                     try
@@ -866,7 +856,6 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                 }
-
                 Log.Debug("LoadServerData::query pending workflow instances");
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
@@ -875,7 +864,7 @@ namespace OpenRPA
                 // var runpending = false;
                 foreach (var i in runninginstances)
                 {
-                    var exists = dbWorkflowInstances.Find(x => x._id == i._id).FirstOrDefault();
+                    var exists = dbWorkflowInstances.FindById(i._id);
                     if (exists != null)
                     {
                         if (i._version > exists._version)
@@ -923,51 +912,44 @@ namespace OpenRPA
                           Log.Debug("RunPendingInstances::begin ");
                           await WorkflowInstance.RunPendingInstances();
                           Log.Debug("RunPendingInstances::end ");
-                          if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
+                          try
                           {
-                              try
+                              foreach (var i in WorkflowInstance.Instances)
                               {
-                                  foreach (var i in WorkflowInstance.Instances)
+                                  if (i.Bookmarks != null && i.Bookmarks.Count > 0)
                                   {
-                                      if (i.Bookmarks != null && i.Bookmarks.Count > 0)
+                                      foreach (var b in i.Bookmarks)
                                       {
-                                          foreach (var b in i.Bookmarks)
+                                          var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
+                                          if (instance != null)
                                           {
-                                              var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
-                                              if (instance != null)
+                                              if (instance.isCompleted)
                                               {
-                                                  if (instance.isCompleted)
+                                                  try
                                                   {
-                                                      try
+                                                      i.ResumeBookmark(b.Key, instance);
+                                                  }
+                                                  catch (System.ArgumentException ex)
+                                                  {
+                                                      if (i.state == "idle" || i.state == "running")
                                                       {
-                                                          i.ResumeBookmark(b.Key, instance);
+                                                          i.Abort(ex.Message);
                                                       }
-                                                      catch (System.ArgumentException ex)
-                                                      {
-                                                          if (i.state == "idle" || i.state == "running")
-                                                          {
-                                                              i.Abort(ex.Message);
-                                                          }
-                                                      }
-                                                      catch (Exception ex)
-                                                      {
-                                                          Log.Error(ex.ToString());
-                                                      }
+                                                  }
+                                                  catch (Exception ex)
+                                                  {
+                                                      Log.Error(ex.ToString());
                                                   }
                                               }
                                           }
-
                                       }
+
                                   }
                               }
-                              finally
-                              {
-                                  System.Threading.Monitor.Exit(WorkflowInstance.Instances);
-                              }
                           }
-                          else
+                          finally
                           {
-                              throw new Exception("Failed running workflow, due to theading deadlock");
+                              System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                           }
                       }
                       catch (Exception ex)
@@ -1149,7 +1131,7 @@ namespace OpenRPA
                 // ExpressionEditor.EditorUtil.Init();
                 _ = CodeEditor.init.Initialize();
                 SetStatus("loading detectors");
-                var _detectors = Detectors.FindAll();
+                var _detectors = dbDetectors.FindAll();
                 foreach (var d in _detectors)
                 {
                     Log.Debug("Loading detector " + d.name);
@@ -1372,7 +1354,7 @@ namespace OpenRPA
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
-            }            
+            }
             GenericTools.RunUI(() =>
             {
                 if (App.splash != null)
@@ -1421,8 +1403,17 @@ namespace OpenRPA
             {
                 if (global.openflowconfig != null && global.openflowconfig.supports_watch)
                 {
-                    await global.webSocketClient.Watch("openrpa", "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
+                    await global.webSocketClient.Watch("openrpa",
+                        "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
+                    await global.webSocketClient.Watch("mq", "[\"$.[?(@ && @._type == 'workitemqueue')]\"]", onWatchEvent);
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+            try
+            {
                 _ = LoadServerData();
                 InitializeOTEL();
             }
@@ -1432,7 +1423,7 @@ namespace OpenRPA
             }
             try
             {
-                foreach(var d in Plugins.detectorPlugins)
+                foreach (var d in Plugins.detectorPlugins)
                 {
                     var _d = d.Entity as Detector;
                     await _d.RegisterExchange();
@@ -1591,158 +1582,165 @@ namespace OpenRPA
                     IWorkflowInstance instance = null;
                     var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(command.workflowid);
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
-                    lock (statelock)
+                    // if (System.Threading.Monitor.TryEnter(statelock, 1000))
                     {
-                        if (!Config.local.remote_allowed)
+                        try
                         {
-                            // Don't fail, just say busy and let the message expire
-                            // so if this was send to a robot in a role, another robot can pick this up.
-                            e.isBusy = true; return;
-                        }
-                        int RunningCount = 0;
-                        int RemoteRunningCount = 0;
-                        WorkflowInstance.CleanUp();
-                        foreach (var i in WorkflowInstance.Instances.ToList())
-                        {
-                            if (command.killallexisting && Config.local.remote_allowed_killing_any && !i.isCompleted)
+                            if (!Config.local.remote_allowed)
                             {
-                                i.Abort("Killed by nodered rpa node, due to killallexisting");
-                            }
-                            else if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
-                            {
-                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
-                                {
-                                    i.Abort("Killed by nodered rpa node, due to killexisting");
-                                }
-                                else
-                                {
-                                    RemoteRunningCount++;
-                                    RunningCount++;
-                                }
-                            }
-                            else if (!i.isCompleted)
-                            {
-                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
-                                {
-                                    i.Abort("Killed by nodered rpa node, due to killexisting");
-                                }
-                                else if (command.killallexisting && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
-                                {
-                                    i.Abort("Killed by nodered rpa node, due to killexisting");
-                                }
-                                else
-                                {
-                                    RunningCount++;
-                                }
-                            }
-                            if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
-                            {
-                                if (i.Workflow != null)
-                                {
-                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
-                                }
-                                else
-                                {
-                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
-                                }
+                                // Don't fail, just say busy and let the message expire
+                                // so if this was send to a robot in a role, another robot can pick this up.
                                 e.isBusy = true; return;
                             }
-                            else if (Config.local.remote_allow_multiple_running && RemoteRunningCount > Config.local.remote_allow_multiple_running_max)
+                            int RunningCount = 0;
+                            int RemoteRunningCount = 0;
+                            WorkflowInstance.CleanUp();
+                            foreach (var i in WorkflowInstance.Instances.ToList())
                             {
-                                if (i.Workflow != null)
+                                if (command.killallexisting && Config.local.remote_allowed_killing_any && !i.isCompleted)
                                 {
-                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    i.Abort("Killed by nodered rpa node, due to killallexisting");
                                 }
-                                else
+                                else if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
                                 {
-                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
-                                }
-                                e.isBusy = true; return;
-                            }
-                        }
-                        // e.sendReply = true;
-                        var param = new Dictionary<string, object>();
-                        foreach (var k in data)
-                        {
-                            var p = workflow.Parameters.Where(x => x.name == k.Key).FirstOrDefault();
-                            if (p == null) continue;
-                            switch (k.Value.Type)
-                            {
-                                case JTokenType.Integer: param.Add(k.Key, k.Value.Value<long>()); break;
-                                case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
-                                case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
-                                case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
-                                case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
-                                case JTokenType.Array: param.Add(k.Key, k.Value.Value<JArray>()); break;
-                                default:
-                                    try
+                                    if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
                                     {
-
-                                        // param.Add(k.Key, k.Value.Value<string>());
-                                        var v = k.Value.ToObject(Type.GetType(p.type));
-                                        param.Add(k.Key, v);
+                                        i.Abort("Killed by nodered rpa node, due to killexisting");
                                     }
-                                    catch (Exception ex)
+                                    else
                                     {
-                                        Log.Debug("WebSocketClient_OnQueueMessage: " + ex.Message);
+                                        RemoteRunningCount++;
+                                        RunningCount++;
                                     }
-                                    break;
-
-                                    // default: param.Add(k.Key, k.Value.Value<string>()); break;
-                            }
-                        }
-                        foreach (var p in workflow.Parameters)
-                        {
-                            if (param.ContainsKey(p.name))
-                            {
-                                var value = param[p.name];
-                                if (p.type == "System.Data.DataTable" && value != null)
+                                }
+                                else if (!i.isCompleted)
                                 {
-                                    if (value is JArray)
+                                    if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
                                     {
-                                        param[p.name] = ((JArray)value).ToDataTable();
+                                        i.Abort("Killed by nodered rpa node, due to killexisting");
                                     }
+                                    else if (command.killallexisting && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                    {
+                                        i.Abort("Killed by nodered rpa node, due to killexisting");
+                                    }
+                                    else
+                                    {
+                                        RunningCount++;
+                                    }
+                                }
+                                if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
+                                {
+                                    if (i.Workflow != null)
+                                    {
+                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    }
+                                    else
+                                    {
+                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                    }
+                                    e.isBusy = true; return;
+                                }
+                                else if (Config.local.remote_allow_multiple_running && RemoteRunningCount > Config.local.remote_allow_multiple_running_max)
+                                {
+                                    if (i.Workflow != null)
+                                    {
+                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                    }
+                                    else
+                                    {
+                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                    }
+                                    e.isBusy = true; return;
+                                }
+                            }
+                            // e.sendReply = true;
+                            var param = new Dictionary<string, object>();
+                            foreach (var k in data)
+                            {
+                                var p = workflow.Parameters.Where(x => x.name == k.Key).FirstOrDefault();
+                                if (p == null) continue;
+                                switch (k.Value.Type)
+                                {
+                                    case JTokenType.Integer: param.Add(k.Key, k.Value.Value<long>()); break;
+                                    case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
+                                    case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
+                                    case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
+                                    case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
+                                    case JTokenType.Array: param.Add(k.Key, k.Value.Value<JArray>()); break;
+                                    default:
+                                        try
+                                        {
 
-                                }
-                                else if (p.type.EndsWith("[]"))
-                                {
-                                    param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
+                                            // param.Add(k.Key, k.Value.Value<string>());
+                                            var v = k.Value.ToObject(Type.GetType(p.type));
+                                            param.Add(k.Key, v);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Log.Debug("WebSocketClient_OnQueueMessage: " + ex.Message);
+                                        }
+                                        break;
+
+                                        // default: param.Add(k.Key, k.Value.Value<string>()); break;
                                 }
                             }
+                            foreach (var p in workflow.Parameters)
+                            {
+                                if (param.ContainsKey(p.name))
+                                {
+                                    var value = param[p.name];
+                                    if (p.type == "System.Data.DataTable" && value != null)
+                                    {
+                                        if (value is JArray)
+                                        {
+                                            param[p.name] = ((JArray)value).ToDataTable();
+                                        }
+
+                                    }
+                                    else if (p.type.EndsWith("[]"))
+                                    {
+                                        param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
+                                    }
+                                }
+                            }
+                            Log.Information("[" + message.correlationId + "] Create instance of " + workflow.name);
+                            Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
+                            if (Window == null) { e.isBusy = true; return; }
+                            GenericTools.RunUI(() =>
+                            {
+                                command.command = "invokesuccess";
+                                string errormessage = "";
+                                try
+                                {
+                                    if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
+                                    {
+                                        designer.BreakpointLocations = null;
+                                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
+                                        designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
+                                    }
+                                    else
+                                    {
+                                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
+                                        instance.Run();
+                                    }
+                                    if (Config.local.notify_on_workflow_remote_start)
+                                    {
+                                        App.notifyIcon.ShowBalloonTip(1000, "", workflow.name + " remotly started", System.Windows.Forms.ToolTipIcon.Info);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    command.command = "error";
+                                    command.data = data = JObject.FromObject(ex);
+                                    errormessage = ex.Message;
+                                    Log.Error(ex.ToString());
+                                }
+                            });
                         }
-                        Log.Information("[" + message.correlationId + "] Create instance of " + workflow.name);
-                        Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
-                        if (Window == null) { e.isBusy = true; return; }
-                        GenericTools.RunUI(() =>
+                        finally
                         {
-                            command.command = "invokesuccess";
-                            string errormessage = "";
-                            try
-                            {
-                                if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
-                                {
-                                    designer.BreakpointLocations = null;
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
-                                    designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
-                                }
-                                else
-                                {
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
-                                    instance.Run();
-                                }
-                                if (Config.local.notify_on_workflow_remote_start)
-                                {
-                                    App.notifyIcon.ShowBalloonTip(1000, "", workflow.name + " remotly started", System.Windows.Forms.ToolTipIcon.Info);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                command.command = "error";
-                                command.data = data = JObject.FromObject(ex);
-                                errormessage = ex.Message;
-                                Log.Error(ex.ToString());
-                            }
-                        });
+                            // System.Threading.Monitor.Exit(statelock);
+                        }
                     }
                 }
             }
@@ -1778,7 +1776,7 @@ namespace OpenRPA
         }
         async private Task RegisterQueues()
         {
-            if (!global.isConnected || !global.webSocketClient.signedin )
+            if (!global.isConnected || !global.webSocketClient.signedin)
             {
                 return;
             }
@@ -1838,7 +1836,7 @@ namespace OpenRPA
                     SetStatus("Registering queues");
                     Log.Debug("Registering queue for robot " + user._id);
                     robotqueue = await global.webSocketClient.RegisterQueue(user._id);
-                    if(global.webSocketClient.user != null)
+                    if (global.webSocketClient.user != null)
                         foreach (var role in global.webSocketClient.user.roles)
                         {
                             var roles = await global.webSocketClient.Query<Interfaces.entity.apirole>("users", "{_id: '" + role._id + "'}", top: 5000);
@@ -1921,7 +1919,7 @@ namespace OpenRPA
                     })
                     .Build();
                 }
-                if(LocalTracerProvider == null && Config.local != null && !string.IsNullOrEmpty(Config.local.otel_trace_url))
+                if (LocalTracerProvider == null && Config.local != null && !string.IsNullOrEmpty(Config.local.otel_trace_url))
                 {
                     LocalTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
                     .SetSampler(new AlwaysOnSampler())
@@ -1935,7 +1933,7 @@ namespace OpenRPA
                     .Build();
 
                 }
-                if ( (Config.local.enable_analytics && StatsMeterProvider == null) || (LocalMeterProvider == null && !string.IsNullOrEmpty(Config.local.otel_metric_url)) )
+                if ((Config.local.enable_analytics && StatsMeterProvider == null) || (LocalMeterProvider == null && !string.IsNullOrEmpty(Config.local.otel_metric_url)))
                 {
                     // Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
                     try
@@ -2091,54 +2089,67 @@ namespace OpenRPA
                 string operationType = data.Value<string>("operationType");
                 Log.Debug("WatchEvent: " + _type + " with id " + _id + " operation: " + operationType);
                 long _version = data["fullDocument"].Value<long>("_version");
+                string collection = "";
+                if (data.ContainsKey("ns"))
+                {
+                    var ns = data["ns"].Value<JObject>();
+                    if (ns.ContainsKey("coll"))
+                    {
+                        collection = data["ns"].Value<string>("coll");
+                    }
+                }
+                if (string.IsNullOrEmpty(collection)) collection = "openrpa";
                 if (operationType != "replace" && operationType != "insert" && operationType != "update" && operationType != "delete") return;
-                if (_type == "workflow")
+                if (_type == "workflow" && collection == "openrpa")
                 {
                     Log.Verbose(operationType + " version " + _version);
                     var workflow = Newtonsoft.Json.JsonConvert.DeserializeObject<Workflow>(data["fullDocument"].ToString());
-                    var wfexists = instance.Workflows.FindById(_id);
-                    if (operationType == "delete")
+                    try
                     {
-                        if (wfexists == null) return;
-                        if (instance.Workflows.Delete(_id))
+                        IWorkflow exists = null;
+                        if (System.Threading.Monitor.TryEnter(Workflows, 1000))
                         {
-                            Views.OpenProject.UpdateProjectsList(true, false);
+                            try
+                            {
+                                exists = Workflows.FindById(_id);
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(Workflows);
+                            }
                         }
-                        else
+                        if (operationType == "delete")
                         {
-                            Log.Error("Failed deleting workflow " + wfexists.name + " with id" + _id);
+                            if (exists == null) return;
+                            await exists.Delete(true);
+                            return;
                         }
-                        return;
+                        if (exists != null && workflow._version != exists._version)
+                        {
+                            await exists.Update(workflow, true);
+                            UpdateWorkflow(exists, false);
+                        }
+                        else if (exists == null)
+                        {
+                            await workflow.Save(true);
+                        }
                     }
-                    if (wfexists != null && wfexists._version != _version)
+                    catch (Exception ex)
                     {
-                        UpdateWorkflow(workflow, false);
-                        Log.Verbose("Update " + workflow.ProjectAndName + " from version " + wfexists._version + " to " + _version + " " + workflow._id);
-                    }
-                    else if (wfexists == null)
-                    {
-                        Log.Verbose("Adding " + workflow.ProjectAndName + " with version " + _version + " " + workflow._id);
-                        workflow.isDirty = false;
-                        bool skiponline = true;
-                        if (string.IsNullOrEmpty(workflow.Filename)) { workflow.Filename = workflow.UniqueFilename(); workflow.isDirty = true; skiponline = false; }
-                        _ = workflow.RelativeFilename;
-                        await workflow.Save<Workflow>(skiponline);
-                        UpdateWorkflow(workflow, false);
-                        Log.Verbose("Adding " + workflow.ProjectAndName + " with version " + _version + " " + workflow._id);
-                        instance.NotifyPropertyChanged("Projects");
+                        Log.Error(ex.ToString());
                     }
                 }
-                if (_type == "project")
+                if (_type == "project" && collection == "openrpa")
                 {
                     var project = Newtonsoft.Json.JsonConvert.DeserializeObject<Project>(data["fullDocument"].ToString());
                     project.isDirty = false;
-                    Project exists = RobotInstance.instance.Projects.FindById(_id);
+                    IProject exists = Projects.FindById(_id);
                     if (operationType == "delete")
                     {
                         if (exists == null) return;
-                        if (instance.Projects.Delete(_id))
+                        if (instance.dbProjects.Delete(_id))
                         {
-                            Views.OpenProject.UpdateProjectsList(true, false);
+                            Projects.Remove(exists);
                         }
                         else
                         {
@@ -2148,15 +2159,17 @@ namespace OpenRPA
                     }
                     if (exists != null && _version != exists._version)
                     {
-                        await UpdateProject(project);
+                        await exists.Update(project, true);
+                        await exists.InstallDependencies(true);
                     }
                     else if (exists == null)
                     {
-                        await UpdateProject(project);
+                        await project.Save(true);
+                        await project.InstallDependencies(true);
                     }
 
                 }
-                if (_type == "detector")
+                if (_type == "detector" && collection == "openrpa")
                 {
                     var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(data["fullDocument"].ToString());
                     d.isDirty = false;
@@ -2169,9 +2182,9 @@ namespace OpenRPA
                             {
                                 if (exists == null) return;
                                 exists.Stop();
-                                if (instance.Detectors.Delete(_id))
+                                if (instance.dbDetectors.Delete(_id))
                                 {
-                                    Views.OpenProject.UpdateProjectsList(false, true);
+                                    Detectors.Remove(exists.Entity);
                                 }
                                 else
                                 {
@@ -2188,10 +2201,52 @@ namespace OpenRPA
                             {
                                 d.Start(true);
                             }
-                            var dexists = Detectors.FindById(d._id);
-                            if (dexists == null) Detectors.Insert(d);
-                            if (dexists != null) Detectors.Update(d);
-                            Views.OpenProject.UpdateProjectsList(false, true);
+                            var dexists = dbDetectors.FindById(d._id);
+                            if (dexists == null) { dbDetectors.Insert(d); Detectors.Add(d); }
+                            if (dexists != null) { dbDetectors.Update(d); Detectors.Remove(d); }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
+                    });
+                }
+                if (_type == "workitemqueue" && collection == "mq")
+                {
+                    var wiq = Newtonsoft.Json.JsonConvert.DeserializeObject<WorkitemQueue>(data["fullDocument"].ToString());
+                    wiq.isDirty = false;
+                    GenericTools.RunUI(async () =>
+                    {
+                        try
+                        {
+                            IWorkitemQueue exists = null;
+                            if (System.Threading.Monitor.TryEnter(WorkItemQueues, 1000))
+                            {
+                                try
+                                {
+                                    exists = WorkItemQueues.FindById(_id);
+                                }
+                                finally
+                                {
+                                    System.Threading.Monitor.Exit(WorkItemQueues);
+                                }
+                            }
+                            if (operationType == "delete")
+                            {
+                                if (exists == null) return;
+                                await exists.Delete(true);
+                                return;
+                            }
+                            if (exists != null && wiq._version != exists._version)
+                            {
+                                WorkItemQueues.UpdateItem(exists, wiq);
+                                await exists.Save(true);
+                            }
+                            else if (exists == null)
+                            {
+                                await wiq.Save(true);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -2212,12 +2267,12 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (!(instance.GetWorkflowDesignerByIDOrRelativeFilename(Workflow.RelativeFilename) is Views.WFDesigner designer))
+                    if (!(instance.GetWorkflowDesignerByIDOrRelativeFilename(Workflow._id) is Views.WFDesigner designer))
                     {
                         var wfo = Workflow as Workflow;
                         var isDirty = wfo.isDirty;
                         wfo.isDirty = false;
-                        instance.Workflows.Update(wfo);
+                        instance.dbWorkflows.Update(wfo);
                     }
                     else
                     {
@@ -2225,7 +2280,7 @@ namespace OpenRPA
                         {
                             if (forceSave)
                             {
-                                instance.Workflows.Update(Workflow as Workflow);
+                                instance.dbWorkflows.Update(Workflow as Workflow);
                             }
                             else
                             {
@@ -2233,7 +2288,7 @@ namespace OpenRPA
                                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.None, System.Windows.MessageBoxResult.Yes);
                                 if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
                                 {
-                                    instance.Workflows.Update(Workflow as Workflow);
+                                    instance.dbWorkflows.Update(Workflow as Workflow);
                                     designer.forceHasChanged(false);
                                     designer.tab.Close();
                                     Window.OnOpenWorkflow(Workflow);
@@ -2246,13 +2301,10 @@ namespace OpenRPA
                         }
                         else
                         {
-                            if (designer.Workflow._version != Workflow._version)
-                            {
-                                designer.forceHasChanged(false);
-                                designer.tab.Close();
-                                instance.Workflows.Update(Workflow as Workflow);
-                                Window.OnOpenWorkflow(Workflow);
-                            }
+                            designer.forceHasChanged(false);
+                            designer.tab.Close();
+                            instance.dbWorkflows.Update(Workflow as Workflow);
+                            Window.OnOpenWorkflow(Workflow);
                         }
                     }
                 }
@@ -2261,20 +2313,6 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             });
-            instance.NotifyPropertyChanged("Projects");
-        }
-        public async Task UpdateProject(IProject project)
-        {
-            await project.Save();
-            instance.NotifyPropertyChanged("Projects");
-            try
-            {
-                await project.InstallDependencies(true);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
         }
     }
 }

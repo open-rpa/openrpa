@@ -61,6 +61,7 @@ namespace OpenRPA.Net
         {
             try
             {
+                watches.Clear();
                 Log.Network("Connecting to " + url);
                 //if (ws != null && (ws.State == System.Net.WebSockets.WebSocketState.Aborted || ws.State == System.Net.WebSockets.WebSocketState.Closed))
                 if (ws != null && (ws.State != WebSocketState.Connecting))
@@ -131,7 +132,17 @@ namespace OpenRPA.Net
                 //ws = null;
             }
             signedin = false;
-            lock (_sendQueuelock) _sendQueue.Clear();
+            if (System.Threading.Monitor.TryEnter(_sendQueuelock, 1000))
+            {
+                try
+                {
+                    _sendQueue.Clear();
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_sendQueuelock);
+                }
+            }
             src.Cancel();
         }
         string tempbuffer = null;
@@ -156,60 +167,73 @@ namespace OpenRPA.Net
                     }
                     result = ws.ReceiveAsync(new ArraySegment<byte>(buffer), src.Token).Result;
                     bool foundone = false;
-                    lock (lockobject)
+                    if (System.Threading.Monitor.TryEnter(lockobject, 1000))
                     {
-                        json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-                        if (lastmessage.AddMinutes(10) < DateTime.Now && !string.IsNullOrEmpty(tempbuffer))
+                        try
                         {
-                            //Log.Error("Recevied no ping/message for more than a minute, clearing local buffer!");
-                            //tempbuffer = "";
-                        }
-
-                        var serializer = new JsonSerializer();
-                        var workingjson = tempbuffer + json;
-                        // System.IO.File.AppendAllText(FileName, json + Environment.NewLine);
-
-
-                        if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
-                        {
-                            //int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
-                            //int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
-                            //if (begincount == endcount)
-                            try
+                            json = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
+                            if (lastmessage.AddMinutes(10) < DateTime.Now && !string.IsNullOrEmpty(tempbuffer))
                             {
-                                using (StringReader sr = new StringReader(workingjson))
-                                using (JsonTextReader reader = new JsonTextReader(sr))
-                                {
-                                    reader.SupportMultipleContent = true;
-                                    while (reader.Read())
-                                    {
-                                        if (reader.TokenType == JsonToken.StartObject)
-                                        {
-                                            var message = serializer.Deserialize<SocketMessage>(reader);
-                                            if (message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message.data != null)
-                                            {
-                                                lock (_receiveQueue)
-                                                {
-                                                    foundone = true;
-                                                    tempbuffer += json;
-                                                    tempbuffer = tempbuffer.Substring(reader.LinePosition);
-                                                    if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
-                                                    _receiveQueue.Add(message);
-                                                    lastmessage = DateTime.Now;
-                                                }
+                                //Log.Error("Recevied no ping/message for more than a minute, clearing local buffer!");
+                                //tempbuffer = "";
+                            }
 
+                            var serializer = new JsonSerializer();
+                            var workingjson = tempbuffer + json;
+                            // System.IO.File.AppendAllText(FileName, json + Environment.NewLine);
+
+
+                            if ((workingjson.StartsWith("{") && workingjson.EndsWith("}")) || (workingjson.StartsWith("[") && workingjson.EndsWith("]")))
+                            {
+                                //int begincount = System.Text.RegularExpressions.Regex.Matches(workingjson, "{").Count;
+                                //int endcount = System.Text.RegularExpressions.Regex.Matches(workingjson, "}").Count;
+                                //if (begincount == endcount)
+                                try
+                                {
+                                    using (StringReader sr = new StringReader(workingjson))
+                                    using (JsonTextReader reader = new JsonTextReader(sr))
+                                    {
+                                        reader.SupportMultipleContent = true;
+                                        while (reader.Read())
+                                        {
+                                            if (reader.TokenType == JsonToken.StartObject)
+                                            {
+                                                var message = serializer.Deserialize<SocketMessage>(reader);
+                                                if (message != null && !string.IsNullOrEmpty(message.id) && !string.IsNullOrEmpty(message.command) && message.data != null)
+                                                {
+                                                    if (System.Threading.Monitor.TryEnter(_receiveQueue, 1000))
+                                                    {
+                                                        try
+                                                        {
+                                                            foundone = true;
+                                                            tempbuffer += json;
+                                                            tempbuffer = tempbuffer.Substring(reader.LinePosition);
+                                                            if (message.index % 100 == 99) Log.Network("Adding " + message.id + " to receiveQueue " + (message.index + 1) + " of " + message.count);
+                                                            _receiveQueue.Add(message);
+                                                            lastmessage = DateTime.Now;
+                                                        }
+                                                        finally
+                                                        {
+                                                            System.Threading.Monitor.Exit(_receiveQueue);
+                                                        }
+                                                    }
+                                                }
+                                                else { tempbuffer += json; }
                                             }
-                                            else { tempbuffer += json; }
                                         }
                                     }
                                 }
+                                catch (Exception)
+                                {
+                                    tempbuffer += json;
+                                }
                             }
-                            catch (Exception)
-                            {
-                                tempbuffer += json;
-                            }
+                            else { tempbuffer += json; }
                         }
-                        else { tempbuffer += json; }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(lockobject);
+                        }
                     }
                     if (foundone) await ProcessQueue();
                 }
@@ -261,15 +285,22 @@ namespace OpenRPA.Net
                 await ProcessingSemaphore.WaitAsync();
                 if (_receiveQueue == null) return;
                 List<string> ids = new List<string>();
-                lock (_receiveQueue)
+                if (System.Threading.Monitor.TryEnter(_receiveQueue, 1000))
                 {
-                    for (var i = 0; i < _receiveQueue.Count; i++)
+                    try
                     {
-                        if (_receiveQueue[i] != null)
+                        for (var i = 0; i < _receiveQueue.Count; i++)
                         {
-                            string id = _receiveQueue[i].id;
-                            if (!ids.Contains(id)) ids.Add(id);
+                            if (_receiveQueue[i] != null)
+                            {
+                                string id = _receiveQueue[i].id;
+                                if (!ids.Contains(id)) ids.Add(id);
+                            }
                         }
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(_receiveQueue);
                     }
                 }
 
@@ -278,10 +309,17 @@ namespace OpenRPA.Net
                 {
                     SocketMessage first = null;
                     List<SocketMessage> msgs = null;
-                    lock (_receiveQueue)
+                    if (System.Threading.Monitor.TryEnter(_receiveQueue, 1000))
                     {
-                        first = _receiveQueue.ToList().Where((x) => x.id == id).First();
-                        msgs = _receiveQueue.ToList().Where((x) => x.id == id).ToList();
+                        try
+                        {
+                            first = _receiveQueue.ToList().Where((x) => x.id == id).First();
+                            msgs = _receiveQueue.ToList().Where((x) => x.id == id).ToList();
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(_receiveQueue);
+                        }
                     }
                     if (first.count == msgs.Count)
                     {
@@ -293,11 +331,18 @@ namespace OpenRPA.Net
                         }
                         var result = new Message(first, data);
                         Log.Network("Processing message " + result.id);
-                        lock (_receiveQueue)
+                        if (System.Threading.Monitor.TryEnter(_receiveQueue, 1000))
                         {
-                            foreach (var m in msgs.OrderBy((y) => y.index).ToList())
+                            try
                             {
-                                _receiveQueue.Remove(m);
+                                foreach (var m in msgs.OrderBy((y) => y.index).ToList())
+                                {
+                                    _receiveQueue.Remove(m);
+                                }
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(_receiveQueue);
                             }
                         }
                         Process(result);
@@ -311,18 +356,36 @@ namespace OpenRPA.Net
 
             try
             {
-                List<SocketMessage> templist;
-                lock (_sendQueuelock)
+                List<SocketMessage> templist = null;
+                if (System.Threading.Monitor.TryEnter(_sendQueuelock, 1000))
                 {
-                    templist = _sendQueue.OrderBy(x => x.priority).ToList();
-                }
-                foreach (var msg in templist)
-                {
-                    if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
+                    try
                     {
-                        lock (_sendQueuelock) _sendQueue.Remove(msg);
+                        templist = _sendQueue.OrderBy(x => x.priority).ToList();
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(_sendQueuelock);
                     }
                 }
+                if(templist != null)
+                    foreach (var msg in templist)
+                    {
+                        if (await SendString(JsonConvert.SerializeObject(msg), src.Token))
+                        {
+                            if (System.Threading.Monitor.TryEnter(_sendQueuelock, 1000))
+                            {
+                                try
+                                {
+                                    _sendQueue.Remove(msg);
+                                }
+                                finally
+                                {
+                                    System.Threading.Monitor.Exit(_sendQueuelock);
+                                }
+                            }                            
+                        }
+                    }
             }
             finally
             {
@@ -361,12 +424,19 @@ namespace OpenRPA.Net
         }
         public void PushMessage(SocketMessage msg)
         {
-            lock (_sendQueuelock)
+            if (System.Threading.Monitor.TryEnter(_sendQueuelock, 1000))
             {
-                var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index).Count();
-                if (exists == 0)
+                try
                 {
-                    _sendQueue.Add(msg);
+                    var exists = _sendQueue.Where(x => x.id == msg.id && x.index == msg.index).Count();
+                    if (exists == 0)
+                    {
+                        _sendQueue.Add(msg);
+                    }
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_sendQueuelock);
                 }
             }
             _ = ProcessQueue();
@@ -513,9 +583,16 @@ namespace OpenRPA.Net
         public async Task<Message> SendMessage(Message msg)
         {
             var qm = new QueuedMessage(msg);
-            lock (_messageQueue)
+            if (System.Threading.Monitor.TryEnter(_messageQueue, 1000))
             {
-                _messageQueue.Add(qm);
+                try
+                {
+                    _messageQueue.Add(qm);
+                }
+                finally
+                {
+                    System.Threading.Monitor.Exit(_messageQueue);
+                }
             }
             try
             {
@@ -536,18 +613,32 @@ namespace OpenRPA.Net
                                 else
                                 {
                                     Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command + " not signed in (" + (_messageQueue.Count - 1)  + ")");
-                                    lock (_messageQueue)
+                                    if (System.Threading.Monitor.TryEnter(_messageQueue, 1000))
                                     {
-                                        _messageQueue.Remove(qm);
+                                        try
+                                        {
+                                            _messageQueue.Remove(qm);
+                                        }
+                                        finally
+                                        {
+                                            System.Threading.Monitor.Exit(_messageQueue);
+                                        }
                                     }
                                     throw new Exception("Not connected/signed in to OpenFlow");
                                 }
                             } else
                             {
                                 Log.Error("Gave up on " + qm.msg.id + " " + qm.msg.command + " not connected");
-                                lock (_messageQueue)
+                                if (System.Threading.Monitor.TryEnter(_messageQueue, 1000))
                                 {
-                                    _messageQueue.Remove(qm);
+                                    try
+                                    {
+                                        _messageQueue.Remove(qm);
+                                    }
+                                    finally
+                                    {
+                                        System.Threading.Monitor.Exit(_messageQueue);
+                                    }
                                 }
                                 throw new Exception("Not connected/signed in to OpenFlow");
                             }
@@ -559,7 +650,7 @@ namespace OpenRPA.Net
                                 // insertmany skipped for now, always skip ping and poing and signin
                                 if (signedin)
                                 {
-                                    //lock (_messageQueue)
+                                    //l o ck (_messageQueue)
                                     //{
                                     //    _messageQueue.Remove(qm);
                                     //    _messageQueue.Add(qm);
@@ -600,9 +691,16 @@ namespace OpenRPA.Net
                                 var state = data["item"].Value<string>("state");
                                 if (state == "running" || state == "idle" || msg.sendcount > 50)
                                 {
-                                    lock (_messageQueue)
+                                    if (System.Threading.Monitor.TryEnter(_messageQueue, 1000))
                                     {
-                                        _messageQueue.Remove(qm);
+                                        try
+                                        {
+                                            _messageQueue.Remove(qm);
+                                        }
+                                        finally
+                                        {
+                                            System.Threading.Monitor.Exit(_messageQueue);
+                                        }
                                     }
                                     return null;
                                 }

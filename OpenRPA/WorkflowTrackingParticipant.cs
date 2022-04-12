@@ -85,111 +85,125 @@ namespace OpenRPA
                         }
                         else
                         {
-                            throw new Exception("Failed running workflow, due to theading deadlock");
+                            Log.Debug("Failed getting WorkflowInstance in TrackingParticipant");
                         }
                     }
                     if (Instance == null)
                     {
                         return;
                     }
-                    if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
+                    try
                     {
-                        try
+                        if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                         {
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
+                            if (System.Threading.Monitor.TryEnter(timerslock, 1000))
                             {
-                                lock (timerslock) timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
-
-                                System.Diagnostics.Activity.Current = null;
                                 try
                                 {
-                                    Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                                    timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
                                 }
-                                catch (Exception)
+                                finally
                                 {
-                                    Instance.source = null;
-                                }
-                                if (Instance.RootActivity != null)
-                                {
-                                    if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
-                                    Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
-                                }
-                                Instance.RootActivity?.SetTag("status.code", 200);
-                                Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                                Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
-                                try
-                                {
-                                    if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.username))
-                                    {
-                                        Instance.RootActivity?.SetTag("username", global.webSocketClient.user.username);
-                                    }
-                                    else
-                                    {
-                                        Instance.RootActivity?.SetTag("username", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                                    }
-                                }
-                                catch (Exception)
-                                {
-                                }
-                                try
-                                {
-                                    if (hostname == null) hostname = System.Net.Dns.GetHostName();
-                                    Instance.RootActivity?.SetTag("hostname", hostname);
-                                }
-                                catch (Exception)
-                                {
-                                    hostname = "";
-                                }
-                                Instance.Activities.Push(Instance.RootActivity);
-
-                            }
-                            else if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
-                                workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
-                                workflowInstanceRecord.State == WorkflowInstanceStates.Suspended || workflowInstanceRecord.State == WorkflowInstanceStates.Terminated ||
-                                workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
-                            {
-                                if (timers.ContainsKey(InstanceId.ToString())) lock (timerslock) timers.Remove(InstanceId.ToString());
-                                if (workflowInstanceRecord.State != WorkflowInstanceStates.Completed)
-                                {
-                                    Instance.RootActivity?.SetTag("status.state", 500);
-                                }
-                                if (workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException)
-                                {
-                                    Instance.RootActivity?.SetTag("Exception", ((System.Activities.Tracking.WorkflowInstanceUnhandledExceptionRecord)workflowInstanceRecord).UnhandledException);
-                                }
-                                if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted)
-                                {
-                                    Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceAbortedRecord)workflowInstanceRecord).Reason);
-                                }
-                                if (workflowInstanceRecord.State == WorkflowInstanceStates.Suspended)
-                                {
-                                    Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceSuspendedRecord)workflowInstanceRecord).Reason);
-                                }
-                                if (workflowInstanceRecord.State == WorkflowInstanceStates.Terminated)
-                                {
-                                    Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
-                                }
-                                Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                                if (Instance.source != null)
-                                {
-                                    while (Instance.Activities.Count > 0)
-                                    {
-                                        var span = Instance.Activities.Pop();
-                                        span?.Dispose();
-                                    }
-                                    if (Instance.RootActivity != null) Instance.RootActivity.Dispose();
-                                    Instance.RootActivity = null;
+                                    System.Threading.Monitor.Exit(timerslock);
                                 }
                             }
+
+
+                            System.Diagnostics.Activity.Current = null;
+                            try
+                            {
+                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                            }
+                            catch (Exception)
+                            {
+                                Instance.source = null;
+                            }
+                            if (Instance.RootActivity != null)
+                            {
+                                if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
+                                Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
+                            }
+                            Instance.RootActivity?.SetTag("status.code", 200);
+                            Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
+                            Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
+                            try
+                            {
+                                if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.username))
+                                {
+                                    Instance.RootActivity?.SetTag("username", global.webSocketClient.user.username);
+                                }
+                                else
+                                {
+                                    Instance.RootActivity?.SetTag("username", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
+                            try
+                            {
+                                if (hostname == null) hostname = System.Net.Dns.GetHostName();
+                                Instance.RootActivity?.SetTag("hostname", hostname);
+                            }
+                            catch (Exception)
+                            {
+                                hostname = "";
+                            }
+                            Instance.Activities.Push(Instance.RootActivity);
+
                         }
-                        finally
+                        else if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
+                            workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
+                            workflowInstanceRecord.State == WorkflowInstanceStates.Suspended || workflowInstanceRecord.State == WorkflowInstanceStates.Terminated ||
+                            workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
                         {
-                            System.Threading.Monitor.Exit(WorkflowInstance.Instances);
+                            if (System.Threading.Monitor.TryEnter(timerslock, 1000))
+                            {
+                                try
+                                {
+                                    if (timers.ContainsKey(InstanceId.ToString())) timers.Remove(InstanceId.ToString());
+                                }
+                                finally
+                                {
+                                    System.Threading.Monitor.Exit(timerslock);
+                                }
+                            }
+                            if (workflowInstanceRecord.State != WorkflowInstanceStates.Completed)
+                            {
+                                Instance.RootActivity?.SetTag("status.state", 500);
+                            }
+                            if (workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException)
+                            {
+                                Instance.RootActivity?.SetTag("Exception", ((System.Activities.Tracking.WorkflowInstanceUnhandledExceptionRecord)workflowInstanceRecord).UnhandledException);
+                            }
+                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted)
+                            {
+                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceAbortedRecord)workflowInstanceRecord).Reason);
+                            }
+                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Suspended)
+                            {
+                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceSuspendedRecord)workflowInstanceRecord).Reason);
+                            }
+                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Terminated)
+                            {
+                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
+                            }
+                            Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
+                            if (Instance.source != null)
+                            {
+                                while (Instance.Activities.Count > 0)
+                                {
+                                    var span = Instance.Activities.Pop();
+                                    span?.Dispose();
+                                }
+                                if (Instance.RootActivity != null) Instance.RootActivity.Dispose();
+                                Instance.RootActivity = null;
+                            }
                         }
                     }
-                    else
+                    finally
                     {
-                        throw new Exception("Failed running workflow, due to theading deadlock");
+                        System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                     }
                 }
                 if (activityStateRecord != null)
@@ -241,15 +255,22 @@ namespace OpenRPA
 
                                 try
                                 {
-                                    lock (Instance.Activities)
+                                    if (System.Threading.Monitor.TryEnter(Instance.Activities, 1000))
                                     {
-                                        if (Instance.Activities.Count > 0)
+                                        try
                                         {
-                                            if (Instance.Activities.First()?.DisplayName == Name)
+                                            if (Instance.Activities.Count > 0)
                                             {
-                                                var span = Instance.Activities.Pop();
-                                                span?.Dispose();
+                                                if (Instance.Activities.First()?.DisplayName == Name)
+                                                {
+                                                    var span = Instance.Activities.Pop();
+                                                    span?.Dispose();
+                                                }
                                             }
+                                        }
+                                        finally
+                                        {
+                                            System.Threading.Monitor.Exit(Instance.Activities);
                                         }
                                     }
                                 }
@@ -285,116 +306,121 @@ namespace OpenRPA
                 {
                     var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (Instance == null || Instance.wfApp == null) return;
-                    lock (Instance)
+                    try
                     {
-
-                        var wfApp = Instance.wfApp;
-                        var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
-                        var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
-
-                        string ActivityId = null;
-                        string ChildActivityId = null;
-                        if (activityStateRecord != null)
+                        if (Instance.Activities.Count > 0)
                         {
-                            ActivityId = activityStateRecord.Activity.Id;
-                            State = activityStateRecord.State.ToLower();
-                        }
-                        if (activityScheduledRecord != null)
-                        {
-                            State = "Scheduled";
-                            if (activityScheduledRecord.Activity != null) ActivityId = activityScheduledRecord.Activity.Id;
-                            if (activityScheduledRecord.Child != null) ChildActivityId = activityScheduledRecord.Child.Id;
-                        }
-                        if (activityScheduledRecord.Activity == null && activityScheduledRecord.Child != null)
-                        {
-                            // this will make "1" be handles twice, but "1" is always sendt AFTER being scheduled, but we can catch it here ?
-                            ActivityId = activityScheduledRecord.Child.Id;
-                            ChildActivityId = activityScheduledRecord.Child.Id;
-                        }
-                        if (string.IsNullOrEmpty(ActivityId)) return;
+                            var wfApp = Instance.wfApp;
+                            var executor = typeof(System.Activities.Hosting.WorkflowInstance).GetField("executor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(wfApp);
+                            var scheduler = executor.GetType().GetField("scheduler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
 
-                        if (activityScheduledRecord.Child.Id == "1.11")
-                        {
-                            // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
-                            // scheduler.GetType().GetMethod("ScheduleWork", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { false });
-                            //var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
-                            //firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
-                            //firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
-
-                            //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
-                        }
-
-                        if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
-                        if (activityStateRecord != null)
-                        {
-                            foreach (var v in Instance.Variables.ToList())
+                            string ActivityId = null;
+                            string ChildActivityId = null;
+                            if (activityStateRecord != null)
                             {
-                                if (!activityStateRecord.Variables.ContainsKey(v.Key)) Instance.Variables.Remove(v.Key);
+                                ActivityId = activityStateRecord.Activity.Id;
+                                State = activityStateRecord.State.ToLower();
                             }
-                            foreach (var v in activityStateRecord.Variables)
+                            if (activityScheduledRecord != null)
                             {
-                                if (Instance.Variables.ContainsKey(v.Key))
+                                State = "Scheduled";
+                                if (activityScheduledRecord.Activity != null) ActivityId = activityScheduledRecord.Activity.Id;
+                                if (activityScheduledRecord.Child != null) ChildActivityId = activityScheduledRecord.Child.Id;
+                            }
+                            if (activityScheduledRecord.Activity == null && activityScheduledRecord.Child != null)
+                            {
+                                // this will make "1" be handles twice, but "1" is always sendt AFTER being scheduled, but we can catch it here ?
+                                ActivityId = activityScheduledRecord.Child.Id;
+                                ChildActivityId = activityScheduledRecord.Child.Id;
+                            }
+                            if (string.IsNullOrEmpty(ActivityId)) return;
+
+                            if (activityScheduledRecord.Child.Id == "1.11")
+                            {
+                                // scheduler.GetType().GetMethod("ClearAllWorkItems", BindingFlags.Public | BindingFlags.Instance).Invoke(scheduler, new object[] { executor });
+                                // scheduler.GetType().GetMethod("ScheduleWork", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { false });
+                                //var firstWorkItem = scheduler.GetType().GetField("firstWorkItem", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(scheduler);
+                                //firstWorkItem.GetType().GetMethod("Release", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+                                //firstWorkItem.GetType().GetMethod("Dispose", BindingFlags.Public | BindingFlags.Instance).Invoke(firstWorkItem, new object[] { executor });
+
+                                //scheduler.GetType().GetMethod("NotifyWorkCompletion", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(scheduler, new object[] { });
+                            }
+
+                            if (Instance.Variables == null) Instance.Variables = new Dictionary<string, WorkflowInstanceValueType>();
+                            if (activityStateRecord != null)
+                            {
+                                foreach (var v in Instance.Variables.ToList())
                                 {
-                                    Instance.Variables[v.Key].value = v.Value;
+                                    if (!activityStateRecord.Variables.ContainsKey(v.Key)) Instance.Variables.Remove(v.Key);
                                 }
-                            }
-                        }
-                        var instanceMapField = executor.GetType().GetField("instanceMap", BindingFlags.NonPublic | BindingFlags.Instance);
-
-                        // get SerializedProgramMapping to have InstanceMap get filled, needed by SerializedProgramMapping
-                        var SerializedProgramMapping = executor.GetType().GetProperty("SerializedProgramMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
-                        ActivityInstance activityInstance = executor.GetType().GetField("rootInstance", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor) as ActivityInstance;
-
-                        // Sometimes we can find the ActivityInstance in rootInstance
-                        ActivityInstance result = findActivityInstance(executor, activityInstance, ActivityId);
-
-                        // But more often, we find it in InstanceMapping
-                        var instanceMap = instanceMapField.GetValue(executor);
-                        if (instanceMap != null && result == null)
-                        {
-                            var _list = SerializedProgramMapping.GetType().GetProperty("InstanceMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(SerializedProgramMapping);
-                            foreach (System.Collections.DictionaryEntry kvp in (System.Collections.IDictionary)_list)
-                            {
-                                var a = kvp.Key as System.Activities.Activity;
-                                if (a == null) continue;
-                                if (result == null && a.Id == ActivityId)
+                                foreach (var v in activityStateRecord.Variables)
                                 {
-                                    result = findActivityInstance(kvp.Value, ActivityId);
-                                }
-                            }
-                        }
-                        if (result != null)
-                        {
-                            WorkflowDataContext context = null;
-                            var cs = typeof(WorkflowDataContext).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
-                            ConstructorInfo c = cs.First();
-
-                            try
-                            {
-                                object o = c.Invoke(new Object[] { executor, result, true });
-                                context = o as WorkflowDataContext;
-                                var vars = context.GetProperties();
-                                foreach (dynamic v in vars)
-                                {
-                                    var value = v.GetValue(context);
-                                    if (Instance.Variables.ContainsKey(v.DisplayName))
+                                    if (Instance.Variables.ContainsKey(v.Key))
                                     {
-                                        Instance.Variables[v.DisplayName] = new WorkflowInstanceValueType(v.PropertyType, value);
-                                    }
-                                    else
-                                    {
-                                        Instance.Variables.Add(v.DisplayName, new WorkflowInstanceValueType(v.PropertyType, value));
+                                        Instance.Variables[v.Key].value = v.Value;
                                     }
                                 }
                             }
-                            catch (Exception ex)
+                            var instanceMapField = executor.GetType().GetField("instanceMap", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                            // get SerializedProgramMapping to have InstanceMap get filled, needed by SerializedProgramMapping
+                            var SerializedProgramMapping = executor.GetType().GetProperty("SerializedProgramMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor);
+                            ActivityInstance activityInstance = executor.GetType().GetField("rootInstance", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(executor) as ActivityInstance;
+
+                            // Sometimes we can find the ActivityInstance in rootInstance
+                            ActivityInstance result = findActivityInstance(executor, activityInstance, ActivityId);
+
+                            // But more often, we find it in InstanceMapping
+                            var instanceMap = instanceMapField.GetValue(executor);
+                            if (instanceMap != null && result == null)
                             {
-                                Log.Debug(ex.Message);
+                                var _list = SerializedProgramMapping.GetType().GetProperty("InstanceMapping", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(SerializedProgramMapping);
+                                foreach (System.Collections.DictionaryEntry kvp in (System.Collections.IDictionary)_list)
+                                {
+                                    var a = kvp.Key as System.Activities.Activity;
+                                    if (a == null) continue;
+                                    if (result == null && a.Id == ActivityId)
+                                    {
+                                        result = findActivityInstance(kvp.Value, ActivityId);
+                                    }
+                                }
                             }
+                            if (result != null)
+                            {
+                                WorkflowDataContext context = null;
+                                var cs = typeof(WorkflowDataContext).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
+                                ConstructorInfo c = cs.First();
+
+                                try
+                                {
+                                    object o = c.Invoke(new Object[] { executor, result, true });
+                                    context = o as WorkflowDataContext;
+                                    var vars = context.GetProperties();
+                                    foreach (dynamic v in vars)
+                                    {
+                                        var value = v.GetValue(context);
+                                        if (Instance.Variables.ContainsKey(v.DisplayName))
+                                        {
+                                            Instance.Variables[v.DisplayName] = new WorkflowInstanceValueType(v.PropertyType, value);
+                                        }
+                                        else
+                                        {
+                                            Instance.Variables.Add(v.DisplayName, new WorkflowInstanceValueType(v.PropertyType, value));
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Debug(ex.Message);
+                                }
+                            }
+                            OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                         }
-                        OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                     }
-
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(Instance);
+                    }
                 }
             }
             catch (Exception ex)

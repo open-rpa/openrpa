@@ -40,9 +40,7 @@ namespace OpenRPA.Views
         public bool CanClose { get; set; } = false;
         public bool CanHide { get; set; } = false;
         public event Action<IWorkflow> onOpenWorkflow;
-        // public event Action<Project> onOpenProject;
         public event Action onSelectedItemChanged;
-        //public System.Collections.ObjectModel.ObservableCollection<Project> Projects { get; set; }
         private IMainWindow main = null;
         public ICommand PlayCommand
         {
@@ -219,151 +217,36 @@ namespace OpenRPA.Views
                 }
             }
         }
-        private System.Collections.ObjectModel.ObservableCollection<IProject> _Projects = new System.Collections.ObjectModel.ObservableCollection<IProject>();
-        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects
+        public ExtendedObservableCollection<IProject> Projects
         {
             get
             {
-                return _Projects;
-            }
-        }
-        public System.Windows.Data.ListCollectionView FilteredSource;
-        public System.ComponentModel.ICollectionView FilteredProjects
-        {
-            get
-            {
-                var FilterText = Instance.FilterText;
-                if (string.IsNullOrEmpty(FilterText))
-                {
-                    FilteredSource.Filter = null;
-                    return FilteredSource;
-                }
-                FilterText = FilterText.ToLower();
-                FilteredSource.Filter =
-                    obj =>
-                    {
-                        Project p = obj as Project;
-                        if (p.name.ToLower().Contains(FilterText)) return true;
-                        p.UpdateFilteredWorkflows();
-                        p.UpdateFilteredDetectors();
-                        p.UpdateFilteredWorkItemQueues();
-                        if (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0) return true;
-                        return false;
-                    };
-                return FilteredSource;
+                return RobotInstance.instance.Projects;
             }
         }
         public static OpenProject Instance;
         public static bool isUpdating = false;
         public static bool isUpdateProjectsList = false;
-        public static void UpdateProjectsList(bool workflows, bool detectors)
-        {
-            if (isUpdateProjectsList) return;
-            isUpdateProjectsList = true;
-            try
-            {
-                if (Instance == null) { Log.Debug("UpdateProjectsList, Instance is null"); return; }
-                GenericTools.RunUI(() =>
-                {
-                    if (!string.IsNullOrEmpty(Instance.FilterText))
-                    {
-                        foreach (var p in Instance.Projects)
-                        {
-                            p.NotifyPropertyChanged("FilteredWorkflows");
-                            p.NotifyPropertyChanged("FilteredDetectors");
-                            p.NotifyPropertyChanged("FilteredWorkItemQueues");
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        GenericTools.RunUI(() =>
-                        {
-                            isUpdating = true;
-                            foreach (var p in Instance.Projects)
-                            {
-                                p.NotifyPropertyChanged("FilteredWorkflows");
-                                p.NotifyPropertyChanged("FilteredDetectors");
-                                p.NotifyPropertyChanged("FilteredWorkItemQueues");
-                            }
-                            Instance.NotifyPropertyChanged("FilteredProjects");
-                            isUpdating = false;
-                        });
-                    }
-                    var _current = Instance._Projects.ToArray();
-                    var _fresh = RobotInstance.instance.Projects.FindAll().OrderBy(x => x.name).ToList();
-                    foreach (var p in _fresh)
-                    {
-                        var exists = _current.Where(x => x._id == p._id).FirstOrDefault();
-                        if (exists == null)
-                        {
-                            p.UpdateWorkflowsList();
-                            p.UpdateDetectorsList();
-                            p.UpdateWorkItemQueuesList();
-                            Instance._Projects.Add(p);
-                        }
-                    }
-                    Instance.NotifyPropertyChanged("Projects");
-                    Instance.NotifyPropertyChanged("FilteredProjects");
-                    foreach (var p in _current)
-                    {
-                        var exists = _fresh.Where(x => x._id == p._id).FirstOrDefault();
-                        if (exists == null)
-                        {
-                            Instance._Projects.Remove(p);
-                        }
-                        else
-                        {
-                            p.UpdateDetectorsList();
-                            p.UpdateWorkflowsList();
-                            p.UpdateWorkItemQueuesList();
-                        }
-                    }
-                    isUpdating = true;
-                    try
-                    {
-                        // if (Instance != null) Instance._Projects.UpdateCollection(result);
-                        System.Windows.Input.CommandManager.InvalidateRequerySuggested();
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    isUpdating = false;
-                });
-            }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                isUpdateProjectsList = false;
-            }
-        }
         public OpenProject(IMainWindow main)
         {
             Instance = this;
-            FilteredSource = ((System.Windows.Data.ListCollectionView)System.Windows.Data.CollectionViewSource.GetDefaultView(Projects));
             Log.FunctionIndent("OpenProject", "OpenProject");
             try
             {
                 InitializeComponent();
+                // https://stackoverflow.com/questions/50922465/how-to-sort-the-child-nodes-of-treeview
+                listWorkflows.Items.SortDescriptions.Add(new SortDescription("name", ListSortDirection.Ascending));
+
                 if (RobotInstance.instance.Window is AgentWindow) EditXAMLPanel.Visibility = Visibility.Hidden;
                 if (RobotInstance.instance.Window is AgentWindow) PackageManagerPanel.Visibility = Visibility.Hidden;
                 this.main = main;
                 DataContext = this;
-                RobotInstance.instance.PropertyChanged += Instance_PropertyChanged;
-                UpdateProjectsList(true, true);
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
             Log.FunctionOutdent("OpenProject", "OpenProject");
-        }
-        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Projects") NotifyPropertyChanged("Projects");
-            if (e.PropertyName == "Projects") NotifyPropertyChanged("FilteredProjects");
         }
         public static bool isFiltering = false;
         public static bool ReFilter = false;
@@ -377,50 +260,50 @@ namespace OpenRPA.Views
             set
             {
                 _FilterText = value;
-                if (isFiltering)
-                {
-                    ReFilter = true;
-                    return;
-                }
-                ReFilter = false;
-                isFiltering = true;
-                isUpdating = true;
-                foreach (Project p in _Projects)
-                {
-                    p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0);
-                }
-                isUpdating = false;
-                // UpdateProjectsList();
-                foreach (var p in Instance.Projects)
-                {
-                    p.NotifyPropertyChanged("FilteredWorkflows");
-                    p.NotifyPropertyChanged("FilteredDetectors");
-                    p.NotifyPropertyChanged("FilteredWorkItemQueues");
-                }
-                NotifyPropertyChanged("FilterText");
-                NotifyPropertyChanged("Projects");
-                NotifyPropertyChanged("FilteredProjects");
+                //if (isFiltering)
+                //{
+                //    ReFilter = true;
+                //    return;
+                //}
+                //ReFilter = false;
+                //isFiltering = true;
+                //isUpdating = true;
+                //foreach (Project p in Projects)
+                //{
+                //    p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.Workflows.Count > 0 || p.Detectors.Count > 0);
+                //}
+                //isUpdating = false;
+                //// UpdateProjectsList();
+                //foreach (var p in Instance.Projects)
+                //{
+                //    p.NotifyPropertyChanged("Workflows");
+                //    p.NotifyPropertyChanged("Detectors");
+                //    p.NotifyPropertyChanged("WorkItemQueues");
+                //}
+                //NotifyPropertyChanged("FilterText");
+                //NotifyPropertyChanged("Projects");
+                //NotifyPropertyChanged("FilteredProjects");
 
-                if (ReFilter)
-                {
-                    isUpdating = true;
-                    foreach (Project p in _Projects)
-                    {
-                        p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.FilteredWorkflowsSource.Count > 0 || p.FilteredDetectorsSource.Count > 0);
-                    }
-                    isUpdating = false;
-                    // UpdateProjectsList();
-                    foreach (var p in Instance.Projects)
-                    {
-                        p.NotifyPropertyChanged("FilteredWorkflows");
-                        p.NotifyPropertyChanged("FilteredDetectors");
-                        p.NotifyPropertyChanged("FilteredWorkItemQueues");
-                    }
-                    NotifyPropertyChanged("FilterText");
-                    NotifyPropertyChanged("Projects");
-                    NotifyPropertyChanged("FilteredProjects");
-                }
-                isFiltering = false;
+                //if (ReFilter)
+                //{
+                //    isUpdating = true;
+                //    foreach (Project p in _Projects)
+                //    {
+                //        p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.Workflows.Count > 0 || p.Detectors.Count > 0);
+                //    }
+                //    isUpdating = false;
+                //    // UpdateProjectsList();
+                //    foreach (var p in Instance.Projects)
+                //    {
+                //        p.NotifyPropertyChanged("Workflows");
+                //        p.NotifyPropertyChanged("Detectors");
+                //        p.NotifyPropertyChanged("WorkItemQueues");
+                //    }
+                //    NotifyPropertyChanged("FilterText");
+                //    NotifyPropertyChanged("Projects");
+                //    NotifyPropertyChanged("FilteredProjects");
+                //}
+                //isFiltering = false;
             }
         }
         async private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -546,11 +429,11 @@ namespace OpenRPA.Views
         private void listWorkflows_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (isUpdating) return;
-            NotifyPropertyChanged("Workflow");
-            NotifyPropertyChanged("Project");
-            NotifyPropertyChanged("IsWorkflowSelected");
-            NotifyPropertyChanged("IsWorkflowOrProjectSelected");
-            // NotifyPropertyChanged("FilteredProjects");
+            //NotifyPropertyChanged("Workflow");
+            //NotifyPropertyChanged("Project");
+            //NotifyPropertyChanged("IsWorkflowSelected");
+            //NotifyPropertyChanged("IsWorkflowOrProjectSelected");
+            // NotifyPropertyChanged("Projects");
             onSelectedItemChanged?.Invoke();
         }
         public bool IsWorkflowSelected
@@ -733,7 +616,6 @@ namespace OpenRPA.Views
                             await d.Save();
                             d.Start(true);
                         }
-                        UpdateProjectsList(false, true);
                     }
                 }
                 if (wf != null)
@@ -773,7 +655,6 @@ namespace OpenRPA.Views
                                     wf._acl = p._acl;
                                     await wf.Save();
                                     await wf.UpdateImagePermissions();
-                                    UpdateProjectsList(true, false);
                                 }
 
                             }
@@ -841,12 +722,11 @@ namespace OpenRPA.Views
                             var json = System.IO.File.ReadAllText(filename);
                             Detector _d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(json);
                             _d._acl = p._acl;
-                            var exists = RobotInstance.instance.Detectors.FindById(_d._id);
+                            var exists = RobotInstance.instance.dbDetectors.FindById(_d._id);
                             if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
                             _d.projectid = p._id;
                             await _d.Save();
                             _d.Start(true);
-                            UpdateProjectsList(false, true);
                         }
                     }
                 }
@@ -857,7 +737,6 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
         }
-
         internal bool CanAddWorkItemQueue(object _item)
         {
             try
@@ -901,11 +780,7 @@ namespace OpenRPA.Views
                         {
                             dia.item._acl = p._acl;
                             dia.item.projectid = p._id;
-                            var wiq = await global.webSocketClient.AddWorkitemQueue(dia.item as OpenRPA.WorkitemQueue);
-                            RobotInstance.instance.WorkItemQueues.Insert(wiq);
-                            RobotInstance.instance.WorkItemQueuesSource.UpdateCollectionById(RobotInstance.instance.WorkItemQueues.FindAll());
-                            p.UpdateFilteredWorkItemQueues();
-                            RobotInstance.instance.NotifyPropertyChanged("Projects");
+                            await dia.item.Save();
                         }
                     }
                     catch (Exception ex)
@@ -917,7 +792,5 @@ namespace OpenRPA.Views
                 }
             }
         }
-
-
     }
 }

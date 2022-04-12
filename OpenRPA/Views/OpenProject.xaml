@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:OpenRPA.Views"
              xmlns:localroot="clr-namespace:OpenRPA"
              xmlns:or="clr-namespace:OpenRPA.Resources"
+             xmlns:i="clr-namespace:OpenRPA.Interfaces;assembly=OpenRPA.Interfaces"
              xmlns:projectbase="clr-namespace:OpenRPA" d:DataContext="{d:DesignInstance Type=local:OpenProject}"
              mc:Ignorable="d" 
              KeyUp="UserControl_KeyUp"
@@ -14,15 +15,22 @@
     <UserControl.Resources>
         <localroot:BindingProxy x:Key="proxy" Data="{Binding}" />
         <local:SimpleBindingConverter x:Key="bindingConverter" />
+        <local:SortConverter x:Key="sortConverter" />
 
-        <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}">
-            <HierarchicalDataTemplate.ItemsSource>
+        <!--ItemsSource="{Binding Path=WorkItemQueues}"-->
+        <!-- , Converter={StaticResource sortConverter}, ConverterParameter=name} -->
+
+        <HierarchicalDataTemplate DataType="{x:Type projectbase:Project}" 
+                                  ItemsSource="{Binding Path=Children}"
+                                  >
+            <!--<HierarchicalDataTemplate.ItemsSource>
+                <Binding Path="WorkItemQueues" />
                 <MultiBinding Converter="{StaticResource bindingConverter}">
-                    <Binding Path="FilteredWorkItemQueues" />
-                    <Binding Path="FilteredDetectors" />
-                    <Binding Path="FilteredWorkflows" />
+                    <Binding Path="WorkItemQueues" />
+                    <Binding Path="Detectors" />
+                    <Binding Path="Workflows" />
                 </MultiBinding>
-            </HierarchicalDataTemplate.ItemsSource>
+            </HierarchicalDataTemplate.ItemsSource>-->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding name}"/>
                 <StackPanel.ContextMenu >
@@ -36,7 +44,7 @@
         </HierarchicalDataTemplate>
 
 
-        <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding FilteredWorkflows}">
+        <HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding Workflows}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{Binding StateImage}" Width="16" Height="16" />
                 <TextBlock Text="{Binding name}" />
@@ -53,13 +61,13 @@
                 </StackPanel.ContextMenu>
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type projectbase:Detector}" ItemsSource="{Binding FilteredDetectors}">
+        <HierarchicalDataTemplate DataType="{x:Type projectbase:Detector}" ItemsSource="{Binding Detectors}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/OpenRPA;component/Resources/state/sensor.png" Width="16" Height="16" />
                 <TextBlock Text="{Binding name}"/>
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type projectbase:WorkitemQueue}" ItemsSource="{Binding FilteredWorkItemQueues}">
+        <HierarchicalDataTemplate DataType="{x:Type projectbase:WorkitemQueue}" ItemsSource="{Binding WorkItemQueues}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/OpenRPA;component/Resources/state/workitemqueue.png" Width="16" Height="16" />
                 <TextBlock Text="{Binding name}"/>
@@ -77,7 +85,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding FilteredProjects}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
+        <TreeView   x:Name="listWorkflows" ItemsSource="{Binding Projects}" BorderThickness="0" Grid.Column="0"  Grid.Row="1" 
                                        MouseDoubleClick="ListWorkflows_MouseDoubleClick" SelectedItemChanged="listWorkflows_SelectedItemChanged"
                                        DragDrop.Drop="listWorkflows_Drop"
                     PreviewMouseLeftButtonDown="listWorkflows_PreviewMouseLeftButtonDown"
@@ -103,7 +111,7 @@
             </TreeView.ItemContainerStyle>
 
             <TreeView.Resources>
-                <!--<HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding FilteredWorkflows}" x:Key="WorkflowTemplate">
+                <!--<HierarchicalDataTemplate DataType="{x:Type projectbase:Workflow}" ItemsSource="{Binding Workflows}" x:Key="WorkflowTemplate">
                     -->
                 <!-- DataType="{x:Type projectbase:Workflow}" -->
                 <!--
@@ -156,6 +164,10 @@
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_filename}" FontWeight="Bold"></TextBlock>
                 <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue.Filename}" ></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Id" FontWeight="Bold"></TextBlock>
+                <TextBlock Margin="20,0,0,0" Text="{Binding ElementName=listWorkflows, Path=SelectedValue._id}" ></TextBlock>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{x:Static or:strings.open_state}" FontWeight="Bold"></TextBlock>

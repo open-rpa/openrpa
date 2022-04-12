@@ -200,6 +200,16 @@ namespace OpenRPA.Forms.Activities
                                 else if (result.Model[a.Key] is JArray _a)
                                 {
                                 }
+                                else if (result.Model[a.Key] is Int64 i64)
+                                {
+                                    if(Arguments[a.Key].ArgumentType == typeof(int))
+                                    {
+                                        Arguments[a.Key].Set(context, Convert.ToInt32(result.Model[a.Key]));
+                                    } else
+                                    {
+                                        Arguments[a.Key].Set(context, result.Model[a.Key]);
+                                    }
+                                }
                                 else
                                 {
                                     Arguments[a.Key].Set(context, result.Model[a.Key]);

@@ -535,7 +535,7 @@ namespace OpenRPA.Views
         public static KeyedCollection<string, System.Activities.DynamicActivityProperty> GetParameters(string culture, string Xaml)
         {
             System.Activities.ActivityBuilder ab2;
-            if (string.IsNullOrEmpty(culture))
+            if (!string.IsNullOrEmpty(culture))
             {
                 try
                 {
@@ -1003,7 +1003,7 @@ namespace OpenRPA.Views
                 {
                     CompileExpressions = true
                 };
-                if (string.IsNullOrEmpty(Workflow.culture))
+                if (!string.IsNullOrEmpty(Workflow.culture))
                 {
                     try
                     {

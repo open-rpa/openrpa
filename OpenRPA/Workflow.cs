@@ -528,7 +528,7 @@ namespace OpenRPA
             {
                 CompileExpressions = true
             };
-            if (string.IsNullOrEmpty(culture))
+            if (!string.IsNullOrEmpty(culture))
             {
                 try
                 {

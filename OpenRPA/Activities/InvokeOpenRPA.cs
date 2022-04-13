@@ -103,6 +103,7 @@ namespace OpenRPA.Activities
                     }
                     else
                     {
+                        Log.Debug("Recived property value of " + a.Key + " is null");
                         param[a.Key] = null;
                     }
                 }

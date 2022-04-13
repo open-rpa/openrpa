@@ -35,7 +35,7 @@ namespace OpenRPA.RDService
                 {
                     try
                     {
-                        if (System.Threading.Monitor.TryEnter(mylock, 1000))
+                        if (System.Threading.Monitor.TryEnter(mylock, Config.local.thread_lock_timeout_seconds * 1000))
                         {
                             try
                             {

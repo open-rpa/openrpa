@@ -48,21 +48,16 @@ namespace OpenRPA
                 string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
                 if (_type == "workitemqueue") collectionname = "mq";
+                if (_type == "workflowinstance" && Config.local.skip_online_state) {
+                    skipOnline = true;                    
+                }                
                 if (global.isConnected && !skipOnline)
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {
                         var result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
-                        isLocalOnly = false;
-                        isDirty = false;
-                        _id = result._id;
-                        _acl = result._acl;
-                        _modified = result._modified;
-                        _modifiedby = result._modifiedby;
-                        _modifiedbyid = result._modifiedbyid;
-                        _created = result._created;
-                        _createdby = result._createdby;
-                        _createdbyid = result._createdbyid;
+                        EnumerableExtensions.CopyPropertiesTo(result, entity);
+                        _backingFieldValues["isDirty"] = false;
                         Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }
                     else
@@ -75,15 +70,8 @@ namespace OpenRPA
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
+                                    EnumerableExtensions.CopyPropertiesTo(result, entity);
                                     _backingFieldValues["isDirty"] = false;
-                                    _acl = result._acl;
-                                    _modified = result._modified;
-                                    _modifiedby = result._modifiedby;
-                                    _modifiedbyid = result._modifiedbyid;
-                                    _created = result._created;
-                                    _createdby = result._createdby;
-                                    _createdbyid = result._createdbyid;
-                                    _version = result._version;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                                 }
                             }
@@ -95,7 +83,7 @@ namespace OpenRPA
                         }
                     }
                 }
-                if (System.Threading.Monitor.TryEnter(savelock, 1000))
+                if (System.Threading.Monitor.TryEnter(savelock, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
@@ -129,7 +117,7 @@ namespace OpenRPA
                 {
                     isDeleted = true;
                     isDirty = true;
-                    if (System.Threading.Monitor.TryEnter(savelock, 1000))
+                    if (System.Threading.Monitor.TryEnter(savelock, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {
@@ -156,7 +144,7 @@ namespace OpenRPA
 
                 await global.webSocketClient.DeleteOne(collectionname, entity._id);
                 Log.Verbose("Deleted in openflow and as version " + entity._version + " " + entity._type + " " + entity.name);
-                if (System.Threading.Monitor.TryEnter(savelock, 1000))
+                if (System.Threading.Monitor.TryEnter(savelock, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {

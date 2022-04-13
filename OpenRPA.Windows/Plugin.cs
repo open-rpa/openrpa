@@ -135,7 +135,7 @@ namespace OpenRPA.Windows
             {
                 try
                 {
-                    if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                    if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {
@@ -159,7 +159,7 @@ namespace OpenRPA.Windows
                     {
                         Log.Error(ex.ToString());
                     }
-                    if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                    if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {

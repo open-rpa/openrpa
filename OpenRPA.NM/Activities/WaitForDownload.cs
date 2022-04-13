@@ -40,7 +40,7 @@ namespace OpenRPA.NM
                 {
                     try
                     {
-                        wfApp.ResumeBookmark("DownloadDetectorPlugin", null);
+                        wfApp.ResumeBookmark("DownloadDetectorPlugin", null, false);
                     }
                     catch (Exception ex)
                     {

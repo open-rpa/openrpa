@@ -86,8 +86,8 @@ namespace OpenRPA.Interfaces
         Task<int> DeleteMany(string collectionname, string query);
         Task<T[]> InsertMany<T>(string collectionname, int w, bool j, bool skipresults, T[] items);
         Task<string> UploadFile(string filepath, string path, metadata metadata);
-        Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath);
-        Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath);
+        Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound);
+        Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound);
         Task<ICollection[]> ListCollections(bool includehist = false);
         Task PushMetrics(string metrics);
         Task<string> Watch(string collectionname, string query, WatchEventDelegate onWatchEvent);

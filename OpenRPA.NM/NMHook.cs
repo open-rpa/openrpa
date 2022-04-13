@@ -227,7 +227,7 @@ namespace OpenRPA.NM
                 return;
             }
             msg.tab.browser = msg.browser;
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -270,7 +270,7 @@ namespace OpenRPA.NM
             var tab = FindTabById(msg.browser, msg.tabid);
             if (tab != null)
             {
-                if (System.Threading.Monitor.TryEnter(tabs, 1000))
+                if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
@@ -285,7 +285,7 @@ namespace OpenRPA.NM
         }
         private static void tabactivated(NativeMessagingMessage msg)
         {
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -326,7 +326,7 @@ namespace OpenRPA.NM
                     {
                         if (b.Key == "DownloadDetectorPlugin")
                         {
-                            wi.ResumeBookmark(b.Key, e);
+                            wi.ResumeBookmark(b.Key, e, true);
                         }
                     }
                 }
@@ -454,7 +454,7 @@ namespace OpenRPA.NM
         }
         public static void enumtabs()
         {
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -526,7 +526,7 @@ namespace OpenRPA.NM
                 int tabcount = 0;
                 if (chromeconnected)
                 {
-                    if (System.Threading.Monitor.TryEnter(tabs, 1000))
+                    if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {
@@ -567,7 +567,7 @@ namespace OpenRPA.NM
                 int tabcount = 0;
                 if (edgeconnected)
                 {
-                    if (System.Threading.Monitor.TryEnter(tabs, 1000))
+                    if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {
@@ -609,7 +609,7 @@ namespace OpenRPA.NM
                 int tabcount = 0;
                 if (ffconnected)
                 {
-                    if (System.Threading.Monitor.TryEnter(tabs, 1000))
+                    if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {
@@ -1048,7 +1048,7 @@ namespace OpenRPA.NM
             if (browser == "edge") CurrentTab = CurrentEdgeTab;
             if (browser == "ff") CurrentTab = CurrentFFTab;
             if (CurrentTab != null && !string.IsNullOrEmpty(CurrentTab.url) && CurrentTab.url.ToLower().StartsWith(url.ToLower())) return CurrentTab;
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -1064,7 +1064,7 @@ namespace OpenRPA.NM
         public static NativeMessagingMessageTab FindTabById(string browser, int id)
         {
             NativeMessagingMessageTab CurrentTab = null;
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -1079,7 +1079,7 @@ namespace OpenRPA.NM
         }
         public static NativeMessagingMessageTab FindTabByWindowId(string browser, int windowId, bool isSelectéd)
         {
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -1127,7 +1127,7 @@ namespace OpenRPA.NM
         public static void CloseAllTabs(string browser)
         {
             List<NativeMessagingMessageTab> _tabs = null;
-            if (System.Threading.Monitor.TryEnter(tabs, 1000))
+            if (System.Threading.Monitor.TryEnter(tabs, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {

@@ -30,7 +30,7 @@ namespace OpenRPA.Interfaces
         Exception Exception { get; set; }
         System.Diagnostics.Stopwatch runWatch { get; set; }
         Dictionary<string, WorkflowInstanceValueType> Variables { get; set; }
-        void ResumeBookmark(string bookmarkName, object value);
+        void ResumeBookmark(string bookmarkName, object value, bool ignoreCompleted);
         void Run();
         void Abort(string Reason);
     }

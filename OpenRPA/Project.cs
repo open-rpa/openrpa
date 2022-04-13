@@ -216,8 +216,24 @@ namespace OpenRPA
                     if (!string.IsNullOrEmpty(_wiq._id))
                     {
                         var exists = RobotInstance.instance.dbWorkItemQueues.FindById(_wiq._id);
-                        if (exists != null) { _wiq._id = null; } else { _wiq.isLocalOnly = true; }
+                        if (exists == null)
+                        {
+                            exists = RobotInstance.instance.dbWorkItemQueues.Find(x => x.name.ToLower() == _wiq.name.ToLower()).FirstOrDefault();
+                        } else
+                        {
+                            if (string.IsNullOrEmpty(exists.name)) exists.name = "";
+                            if (exists.name.ToLower() != _wiq.name.ToLower())
+                            {
+                                _wiq._id = null;
+                                exists = null;
+                            }
+                        }
+                        if (exists != null) {
+                            Log.Warning("Skipping workitem queeu " + exists.name + " it already exists");
+                            return;
+                        } else { _wiq.isLocalOnly = true; }
                     }
+                    _wiq.isDirty = true;
                     if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
                     {
                         if (_wiq.isLocalOnly || string.IsNullOrEmpty(_wiq._id))
@@ -259,14 +275,34 @@ namespace OpenRPA
                 if (_type == "workflow")
                 {
                     var _wf = JsonConvert.DeserializeObject<Workflow>(json);
-                    if (!string.IsNullOrEmpty(_wf._id))
+
+                    var exists = RobotInstance.instance.dbWorkflows.FindById(_wf._id);
+                    _wf.projectid = _id;
+                    if (exists == null)
                     {
-                        var exists = RobotInstance.instance.Workflows.Where(x => x._id == _wf._id).FirstOrDefault();
-                        if (exists != null) { _wf._id = null; } else { _wf.isLocalOnly = true; }
+                        exists = RobotInstance.instance.dbWorkflows.Find(x => x.ProjectAndName.ToLower() == _wf.ProjectAndName.ToLower()).FirstOrDefault();
                     }
+                    else
+                    {
+                        if (exists.ProjectAndName.ToLower() != _wf.ProjectAndName.ToLower())
+                        {
+                            _wf._id = null;
+                            exists = null;
+                        }
+                    }
+                    if (exists != null)
+                    {
+                        Log.Warning("Skipping workitem queeu " + exists.name + " it already exists");
+                        return;
+                    }
+                    else { _wf.isLocalOnly = true; }
+                    //if (!string.IsNullOrEmpty(_wf._id))
+                    //{
+                    //    var exists = RobotInstance.instance.Workflows.Where(x => x._id == _wf._id).FirstOrDefault();
+                    //    if (exists != null) { _wf._id = null; } else { _wf.isLocalOnly = true; }
+                    //}
                     if (string.IsNullOrEmpty(_wf._id)) _wf._id = Guid.NewGuid().ToString();
                     _wf.isDirty = true;
-                    _wf.projectid = _id;
                     _wf.projectid = _id;
                     _wf._acl = _acl;
                     await _wf.Save();
@@ -355,7 +391,7 @@ namespace OpenRPA
                 if (wiq.projectid != _id) wiq.projectid = _id;
                 await wiq.Save(skipOnline);
             }
-            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, 1000))
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -426,7 +462,7 @@ namespace OpenRPA
             {
                 RobotInstance.instance.dbProjects.Delete(_id);
             }
-            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, 1000))
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {

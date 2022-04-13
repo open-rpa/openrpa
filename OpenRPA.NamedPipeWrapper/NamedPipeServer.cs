@@ -105,7 +105,7 @@ namespace OpenRPA.NamedPipeWrapper
         /// <param name="message"></param>
         public void PushMessage(TWrite message)
         {
-            if (System.Threading.Monitor.TryEnter(_connections, 1000))
+            if (System.Threading.Monitor.TryEnter(_connections, 10000))
             {
                 try
                 {
@@ -128,7 +128,7 @@ namespace OpenRPA.NamedPipeWrapper
         /// <param name="clientName"></param>
         public void PushMessage(TWrite message, string clientName)
         {
-            if (System.Threading.Monitor.TryEnter(_connections, 1000))
+            if (System.Threading.Monitor.TryEnter(_connections, 10000))
             {
                 try
                 {
@@ -152,7 +152,7 @@ namespace OpenRPA.NamedPipeWrapper
         {
             _shouldKeepRunning = false;
 
-            if (System.Threading.Monitor.TryEnter(_connections, 1000))
+            if (System.Threading.Monitor.TryEnter(_connections, 10000))
             {
                 try
                 {
@@ -217,7 +217,7 @@ namespace OpenRPA.NamedPipeWrapper
                 connection.Error += ConnectionOnError;
                 connection.Open();
 
-                if (System.Threading.Monitor.TryEnter(_connections, 1000))
+                if (System.Threading.Monitor.TryEnter(_connections, 10000))
                 {
                     try
                     {
@@ -260,7 +260,7 @@ namespace OpenRPA.NamedPipeWrapper
             if (connection == null)
                 return;
 
-            if (System.Threading.Monitor.TryEnter(_connections, 1000))
+            if (System.Threading.Monitor.TryEnter(_connections, 10000))
             {
                 try
                 {

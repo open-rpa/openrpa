@@ -84,7 +84,7 @@ namespace OpenRPA.Image
                 }
             }
             e.Element = lastelement;
-            if (System.Threading.Monitor.TryEnter(_lock, 1000))
+            if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -97,7 +97,7 @@ namespace OpenRPA.Image
                 }
             }
             var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
-            if (System.Threading.Monitor.TryEnter(_lock, 1000))
+            if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {

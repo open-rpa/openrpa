@@ -230,7 +230,7 @@ namespace OpenRPA
             get
             {
                 var result = new List<IWorkflowInstance>();
-                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 10000))
+                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
@@ -925,7 +925,7 @@ namespace OpenRPA
                                               {
                                                   try
                                                   {
-                                                      i.ResumeBookmark(b.Key, instance);
+                                                      i.ResumeBookmark(b.Key, instance, true);
                                                   }
                                                   catch (System.ArgumentException ex)
                                                   {
@@ -1534,7 +1534,7 @@ namespace OpenRPA
                                     }
                                     else
                                     {
-                                        wi.ResumeBookmark(b.Key, message.data.ToString());
+                                        wi.ResumeBookmark(b.Key, message.data.ToString(), true);
                                     }
 
                                 }
@@ -1575,8 +1575,6 @@ namespace OpenRPA
                     IWorkflowInstance instance = null;
                     var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(command.workflowid);
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
-                    // if (System.Threading.Monitor.TryEnter(statelock, 1000))
-                    {
                         try
                         {
                             if (!Config.local.remote_allowed)
@@ -1734,7 +1732,6 @@ namespace OpenRPA
                         {
                             // System.Threading.Monitor.Exit(statelock);
                         }
-                    }
                 }
             }
             catch (Exception ex)
@@ -2100,7 +2097,7 @@ namespace OpenRPA
                     try
                     {
                         IWorkflow exists = null;
-                        if (System.Threading.Monitor.TryEnter(Workflows, 1000))
+                        if (System.Threading.Monitor.TryEnter(Workflows, Config.local.thread_lock_timeout_seconds * 1000))
                         {
                             try
                             {
@@ -2214,7 +2211,7 @@ namespace OpenRPA
                         try
                         {
                             IWorkitemQueue exists = null;
-                            if (System.Threading.Monitor.TryEnter(WorkItemQueues, 1000))
+                            if (System.Threading.Monitor.TryEnter(WorkItemQueues, Config.local.thread_lock_timeout_seconds * 1000))
                             {
                                 try
                                 {

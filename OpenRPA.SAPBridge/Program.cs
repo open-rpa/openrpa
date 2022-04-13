@@ -114,7 +114,7 @@ namespace OpenRPA.SAPBridge
         private static object _lock = new object();
         private static void OnMouseMove(InputEventArgs e)
         {
-            if (System.Threading.Monitor.TryEnter(_lock, 1000))
+            if (System.Threading.Monitor.TryEnter(_lock, 10000))
             {
                 try
                 {
@@ -130,7 +130,7 @@ namespace OpenRPA.SAPBridge
             {
                 if (SAPHook.Instance.Connections.Count() == 0 || SAPHook.Instance.UIElements.Count() == 0)
                 {
-                    if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                    if (System.Threading.Monitor.TryEnter(_lock, 10000))
                     {
                         try
                         {
@@ -149,7 +149,7 @@ namespace OpenRPA.SAPBridge
                     var ProcessId = Element.Current.ProcessId;
                     if (ProcessId < 1)
                     {
-                        if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                        if (System.Threading.Monitor.TryEnter(_lock, 10000))
                         {
                             try
                             {
@@ -164,7 +164,7 @@ namespace OpenRPA.SAPBridge
                     }
                     if (SAPProcessId > 0 && SAPProcessId != ProcessId)
                     {
-                        if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                        if (System.Threading.Monitor.TryEnter(_lock, 10000))
                         {
                             try
                             {
@@ -184,7 +184,7 @@ namespace OpenRPA.SAPBridge
                             if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
                             if (p.ProcessName.ToLower() != "saplogon")
                             {
-                                if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                                if (System.Threading.Monitor.TryEnter(_lock, 10000))
                                 {
                                     try
                                     {
@@ -202,7 +202,7 @@ namespace OpenRPA.SAPBridge
                     if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
                     if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements(true);
                     SAPEventElement[] elements = new SAPEventElement[] { };
-                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 1000))
+                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 10000))
                     {
                         try
                         {
@@ -241,7 +241,7 @@ namespace OpenRPA.SAPBridge
                         if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
                         {
                             // form.AddText("[SKIP] mousemove " + LastElement.ToString());
-                            if (System.Threading.Monitor.TryEnter(_lock, 1000))
+                            if (System.Threading.Monitor.TryEnter(_lock, 10000))
                             {
                                 try
                                 {
@@ -269,7 +269,7 @@ namespace OpenRPA.SAPBridge
             catch (Exception)
             {
             }
-            if (System.Threading.Monitor.TryEnter(_lock, 1000))
+            if (System.Threading.Monitor.TryEnter(_lock, 10000))
             {
                 try
                 {
@@ -302,7 +302,7 @@ namespace OpenRPA.SAPBridge
                         }
                     }
                     SAPEventElement[] elements = new SAPEventElement[] { };
-                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 1000))
+                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 10000))
                     {
                         try
                         {

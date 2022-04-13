@@ -909,6 +909,9 @@
   <data name="open_createdby" xml:space="preserve">
     <value>Created by</value>
   </data>
+  <data name="open_culture" xml:space="preserve">
+    <value>Culture</value>
+  </data>
   <data name="open_edit" xml:space="preserve">
     <value>Edit</value>
   </data>

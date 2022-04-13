@@ -264,6 +264,10 @@ namespace OpenRPA.Views
         private readonly Type[] extratypes = null;
         public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
+            if(!string.IsNullOrEmpty(Workflow.culture))
+            {
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Workflow.culture);
+            }
             InitializeComponent();
             Log.Verbose("Open " + workflow.name + " version " + workflow._version);
             this.extratypes = extratypes;
@@ -481,7 +485,7 @@ namespace OpenRPA.Views
                 try
                 {
                     Workflow.Xaml = WorkflowDesigner.Text;
-                    Parseparameters();
+                    Parseparameters(Workflow);
                 }
                 catch (Exception ex)
                 {
@@ -524,25 +528,52 @@ namespace OpenRPA.Views
             bool result = GenericTools.RunUIAsync(SaveAsync).Result;
             return result;
         }
-        public KeyedCollection<string, DynamicActivityProperty> GetParameters()
+        public KeyedCollection<string, System.Activities.DynamicActivityProperty> GetParameters()
         {
-            ActivityBuilder ab2;
-
-            using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Workflow.Xaml)))
+            return GetParameters(Workflow.culture, Workflow.Xaml);
+        }
+        public static KeyedCollection<string, System.Activities.DynamicActivityProperty> GetParameters(string culture, string Xaml)
+        {
+            System.Activities.ActivityBuilder ab2;
+            if (string.IsNullOrEmpty(culture))
             {
-                ab2 = System.Xaml.XamlServices.Load(
-                    System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
-                    new System.Xaml.XamlXmlReader(stream))) as ActivityBuilder;
+                try
+                {
+                    ab2 = Task.Run(() =>
+                    {
+                        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(culture);
+                        using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
+                        {
+                            return System.Xaml.XamlServices.Load(
+                                System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
+                                new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
+                        }
+                    }).Result;
+                }
+                catch (Exception ex)
+                {
+                    while (ex.InnerException != null) ex = ex.InnerException;
+                    throw ex;
+                }
+            }
+            else
+            {
+                using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
+                {
+                    ab2 = System.Xaml.XamlServices.Load(
+                        System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
+                        new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
+                }
             }
             return ab2.Properties;
         }
-        public void Parseparameters()
+        public void Parseparameters(Workflow Workflow)
         {
             // Workflow.Serializable = true;
             Workflow.Parameters.Clear();
             if (!string.IsNullOrEmpty(Workflow.Xaml))
             {
-                var parameters = GetParameters();
+                var parameters = GetParameters(Workflow.culture, Workflow.Xaml);
                 foreach (var prop in parameters)
                 {
                     var par = new workflowparameter() { name = prop.Name };
@@ -572,7 +603,7 @@ namespace OpenRPA.Views
             if (Workflow.Serializable == true)
             {
                 bool canIdle = false;
-                foreach (ModelItem item in this.GetWorkflowActivities())
+                foreach (ModelItem item in GetWorkflowActivities())
                 {
                     try
                     {
@@ -583,7 +614,7 @@ namespace OpenRPA.Views
                             var CanInduceIdle = (bool)prop.GetValue(a);
                             if (CanInduceIdle == true)
                             {
-                                Log.Activity(string.Format("Activity: '{0}' Can induce idle, need to check if workflow is serializable", ToString()));
+                                Log.Activity(string.Format("Activity: '{0}' Can induce idle, need to check if workflow is serializable", Workflow.ProjectAndName));
                                 canIdle = true;
                             }
                         }
@@ -972,9 +1003,32 @@ namespace OpenRPA.Views
                 {
                     CompileExpressions = true
                 };
-                var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(WFDesigner).Assembly };
-                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(WorkflowDesigner.Text), xamlReaderSettings);
-                rootActivity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+                if (string.IsNullOrEmpty(Workflow.culture))
+                {
+                    try
+                    {
+                        rootActivity = Task.Run(() =>
+                        {
+                            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Workflow.culture);
+                            var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(WFDesigner).Assembly };
+                            var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(WorkflowDesigner.Text), xamlReaderSettings);
+                            return System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+
+                        }).Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        while (ex.InnerException != null) ex = ex.InnerException;
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(WFDesigner).Assembly };
+                    var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(WorkflowDesigner.Text), xamlReaderSettings);
+                    rootActivity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+                }
+
             }
             WorkflowInspectionServices.CacheMetadata(rootActivity);
 

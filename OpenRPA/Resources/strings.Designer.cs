@@ -2419,6 +2419,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Culture.
+        /// </summary>
+        public static string open_culture {
+            get {
+                return ResourceManager.GetString("open_culture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string open_edit {

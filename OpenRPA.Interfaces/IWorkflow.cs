@@ -18,6 +18,7 @@ namespace OpenRPA.Interfaces
         bool IsSelected { get; set; }
         string queue { get; set; }
         string Xaml { get; set; }
+        string culture { get; set; }        
         [JsonIgnore]
         string RelativeFilename { get; }
         string FilePath { get; }

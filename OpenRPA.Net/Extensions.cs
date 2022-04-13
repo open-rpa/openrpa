@@ -104,7 +104,7 @@ namespace OpenRPA.Net
 
             public override void Post(SendOrPostCallback d, object state)
             {
-                if (System.Threading.Monitor.TryEnter(items, 1000))
+                if (System.Threading.Monitor.TryEnter(items, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
@@ -128,7 +128,7 @@ namespace OpenRPA.Net
                 while (!done)
                 {
                     Tuple<SendOrPostCallback, object> task = null;
-                    if (System.Threading.Monitor.TryEnter(items, 1000))
+                    if (System.Threading.Monitor.TryEnter(items, Config.local.thread_lock_timeout_seconds * 1000))
                     {
                         try
                         {

@@ -341,13 +341,14 @@ namespace OpenRPA
                 Workflow.SetLastState("aborted");
             });
         }
-        public void ResumeBookmark(string bookmarkName, object value)
+        public void ResumeBookmark(string bookmarkName, object value, bool ignoreCompleted)
         {
             try
             {
                 Log.Verbose("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
                 if (isCompleted)
                 {
+                    if (ignoreCompleted) return;
                     throw new ArgumentException("cannot resume bookmark on completed workflow!");
                 }
                 var _ref = (this as IWorkflowInstance);
@@ -901,41 +902,6 @@ namespace OpenRPA
             };
         }
         private object filelock = new object();
-        //public void SaveFile()
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(InstanceId)) return;
-        //        if (string.IsNullOrEmpty(Path)) return;
-        //        if (isCompleted || hasError) return;
-        //        if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
-        //        var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-        //        string json = "";
-        //        try
-        //        {
-        //            json = JsonConvert.SerializeObject(this);
-        //        }
-        //        catch (Exception)
-        //        {
-        //        }
-        //        if (System.Threading.Monitor.TryEnter(filelock, 1000))
-        //        {
-        //            try
-        //            {
-        //                if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
-        //            }
-        //            finally
-        //            {
-        //                System.Threading.Monitor.Exit(filelock);
-        //            }
-        //        }
-        //        else { throw new LockNotReceivedException("Failed saving workflow instance"); }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Error(ex.ToString());
-        //    }
-        //}
         public void DeleteFile()
         {
             if (string.IsNullOrEmpty(InstanceId)) return;
@@ -950,28 +916,6 @@ namespace OpenRPA
                 Log.Debug(ex.ToString());
             }
         }
-        //        public void Save()
-        //        {
-        //            if (Workflow != null) Workflow.NotifyUIState();
-        //            if (isCompleted || hasError)
-        //            {
-        //                _ = Task.Run(async () =>
-        //                {
-        //                    System.Threading.Thread.Sleep(2000);
-        //                    if (isCompleted || hasError)
-        //                    {
-        //                        xml = null;
-        //                    }
-        //                    isDirty = true;
-        //#if DEBUG
-        //                    Log.Output("WorkflowInstance.Save()");
-        //#endif
-
-        //                    await Save<WorkflowInstance>(true);
-        //                });
-        //                if (Workflow != null) Workflow.NotifyUIState();
-        //            }
-        //        }
         private static bool hasRanPending = false;
         public static async Task RunPendingInstances()
         {
@@ -1003,7 +947,7 @@ namespace OpenRPA
                             var filename = System.IO.Path.Combine(folder, i.InstanceId + ".xml");
                             if (!System.IO.File.Exists(filename))
                             {
-                                Log.Error("Refuse to load instance " + i.RelativeFilename + " / " + i.name + " (" + i.InstanceId + ") it contains no state!");
+                                Log.Information("Refuse to load instance " + i.RelativeFilename + " / " + i.name + " (" + i.InstanceId + ") it contains no state!");
                                 i.state = "aborted";
                                 i.errormessage = "Refuse to load instance " + i.InstanceId + " it contains no state!";
                                 i.isDirty = true;

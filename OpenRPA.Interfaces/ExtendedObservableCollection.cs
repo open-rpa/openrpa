@@ -192,17 +192,12 @@ namespace OpenRPA.Interfaces
         }
         public void UpdateItem(T Item, T NewItem)
         {
+            T originalItem = Item;
+            var index = Items.IndexOf(Item);
             NewItem.CopyPropertiesTo(Item);
             GenericTools.RunUI(() =>
             {
-                try
-                {
-                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item));
-                }
-                catch (Exception ex)
-                {
-                    Log.Debug(ex.Message);
-                }
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, originalItem, index));
             });
             return;
         }
@@ -382,13 +377,7 @@ namespace OpenRPA.Interfaces
                         }
                         if (replacelist.Count > 0)
                         {
-                            try
-                            {
-                                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, replacelist));
-                            }
-                            catch (Exception)
-                            {
-                            }
+                            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, replacelist, replacelist, 0));
                             // Log.Output("OnBaseCollectionChanged replace " + replacelist.Count);
                         }
                         if (removelist.Count > 0)

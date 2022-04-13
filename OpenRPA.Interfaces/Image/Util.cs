@@ -239,7 +239,7 @@ namespace OpenRPA.Interfaces.Image
                 var imagepath = System.IO.Path.Combine(basepath, "images");
                 if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
                 var imagefilepath = System.IO.Path.Combine(imagepath, id + ".png");
-                if (!System.IO.File.Exists(imagefilepath) && global.webSocketClient != null ) { await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true); }
+                if (!System.IO.File.Exists(imagefilepath) && global.webSocketClient != null ) { await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true, true); }
                 if (System.IO.File.Exists(imagefilepath)) { return new Bitmap(imagefilepath); }
                 return null;
             }
@@ -257,7 +257,14 @@ namespace OpenRPA.Interfaces.Image
             if (string.IsNullOrEmpty(ImageString)) return null;
             if (System.Text.RegularExpressions.Regex.Match(ImageString, "[a-f0-9]{24}").Success)
             {
-                b = await LoadWorkflowImage(basepath, ImageString);
+                try
+                {
+                    b = await LoadWorkflowImage(basepath, ImageString);
+                }
+                catch (Exception)
+                {
+                    b = null;
+                }
             }
             else
             {

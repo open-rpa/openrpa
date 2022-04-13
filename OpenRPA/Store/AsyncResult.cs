@@ -41,7 +41,7 @@ namespace OpenRPA.Store
                 {
                     return manualResetEvent;
                 }
-                if (System.Threading.Monitor.TryEnter(ThisLock, 1000))
+                if (System.Threading.Monitor.TryEnter(ThisLock, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
@@ -110,7 +110,7 @@ namespace OpenRPA.Store
             }
             else
             {
-                if (System.Threading.Monitor.TryEnter(ThisLock, 1000))
+                if (System.Threading.Monitor.TryEnter(ThisLock, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {

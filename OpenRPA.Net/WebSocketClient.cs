@@ -1061,7 +1061,7 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.id;
         }
-        public async Task<GetFileMessage> DownloadFile(string filename, string id)
+        public async Task<GetFileMessage> DownloadFile(string filename, string id, bool IgnoreNotFound)
         {
             if (string.IsNullOrEmpty(filename) && string.IsNullOrEmpty(id)) throw new ArgumentException("path or id is mandatory");
             GetFileMessage q = new GetFileMessage();
@@ -1069,14 +1069,18 @@ namespace OpenRPA.Net
             q.id = id;
             q = await q.SendMessage<GetFileMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
-            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            if (!string.IsNullOrEmpty(q.error))
+            {
+                if (IgnoreNotFound && q.error.ToLower().Contains("not found")) return null;
+                throw new SocketException(q.error);
+            }
             return q;
         }
         public class apifile : apibase  
         {
             public Interfaces.entity.metadata metadata { get; set; }
         }
-        public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath)
+        public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound)
         {
             apifile file = null;
             if(!string.IsNullOrEmpty(id))
@@ -1106,14 +1110,16 @@ namespace OpenRPA.Net
                     return;
                 }
             }
-            var res = await DownloadFile(filename, id);
+            var res = await DownloadFile(filename, id, IgnoreNotFound);
+            if (res == null) return;
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
             File.SetCreationTime(filepath, res.metadata._created);
             File.SetLastWriteTime(filepath, res.metadata._modified);
         }
-        public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath)
+        public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound)
         {
-            var res = await DownloadFile(filename, id);
+            var res = await DownloadFile(filename, id, IgnoreNotFound);
+            if (res == null) return;
             var path = System.IO.Path.GetFullPath(filepath);
             if (!ignorepath)
             {

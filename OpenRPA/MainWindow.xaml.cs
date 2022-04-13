@@ -3395,7 +3395,7 @@ namespace OpenRPA
                             Log.Debug(b.Key + " -> " + "detector_" + _id);
                             if (b.Key == "detector_" + _id)
                             {
-                                wi.ResumeBookmark(b.Key, detector);
+                                wi.ResumeBookmark(b.Key, detector, true);
                             }
                         }
                     }
@@ -3528,7 +3528,7 @@ namespace OpenRPA
                         {
                             while (sw.Elapsed < TimeSpan.FromSeconds(1))
                             {
-                                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
+                                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, Config.local.thread_lock_timeout_seconds * 1000))
                                 {
                                     try
                                     {
@@ -3540,7 +3540,7 @@ namespace OpenRPA
                                             {
                                                 if (b.Key == instance._id)
                                                 {
-                                                    wi.ResumeBookmark(b.Key, instance);
+                                                    wi.ResumeBookmark(b.Key, instance, true);
                                                     return;
                                                 }
                                             }

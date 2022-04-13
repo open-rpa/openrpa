@@ -1317,7 +1317,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                                         {
                                             if (b.Key == instance._id)
                                             {
-                                                wi.ResumeBookmark(b.Key, instance);
+                                                wi.ResumeBookmark(b.Key, instance, true);
                                                 return;
                                             }
                                         }

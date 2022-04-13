@@ -20,7 +20,7 @@ namespace OpenRPA.NM.pipe
         public event Action<Exception> Error;
         public NamedPipeClient(string pipeName)
         {
-            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            if (System.Threading.Monitor.TryEnter(lockobj, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -39,7 +39,7 @@ namespace OpenRPA.NM.pipe
             pipe.ServerMessage += (sender, message) =>
             {
                 queuemsg<T> queue = null;
-                if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+                if (System.Threading.Monitor.TryEnter(lockobj, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
@@ -82,7 +82,7 @@ namespace OpenRPA.NM.pipe
             if (pipe == null || !pipe.isConnected) return result;
 
             var queue = new queuemsg<T>(message);
-            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            if (System.Threading.Monitor.TryEnter(lockobj, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -101,7 +101,7 @@ namespace OpenRPA.NM.pipe
                 queue.sw.Stop();
             }
             // Log.Debug("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
-            if (System.Threading.Monitor.TryEnter(lockobj, 1000))
+            if (System.Threading.Monitor.TryEnter(lockobj, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {

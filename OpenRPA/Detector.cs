@@ -22,7 +22,7 @@ namespace OpenRPA
         public async Task Save(bool skipOnline = false)
         {
             await Save<Detector>(skipOnline);
-            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, 1000))
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {
@@ -40,7 +40,7 @@ namespace OpenRPA
         public async Task Delete(bool skipOnline = false)
         {
             if(!skipOnline) await Delete<Detector>();
-            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, 1000))
+            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
                 {

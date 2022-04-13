@@ -25,6 +25,8 @@ namespace OpenRPA.Office.Activities
         [System.ComponentModel.Category("Input")]
         public InArgument<string> To { get; set; }
         [System.ComponentModel.Category("Input")]
+        public InArgument<string> Account { get; set; }
+        [System.ComponentModel.Category("Input")]
         public InArgument<string> CC { get; set; }
         [System.ComponentModel.Category("Input")]
         public InArgument<string> BCC { get; set; }
@@ -52,13 +54,27 @@ namespace OpenRPA.Office.Activities
             var cc = CC.Get(context);
             var bcc = BCC.Get(context);
             var subject = Subject.Get(context);
+            var account = Account.Get(context);
             string body = (Body != null ?Body.Get(context) : null);
             string htmlbody = (HTMLBody != null ? HTMLBody.Get(context) : null);
             if (!string.IsNullOrEmpty(htmlbody)) body = htmlbody;
             var attachments = Attachments.Get(context);
             var uiaction = UIAction.Get(context);
 
+            Microsoft.Office.Interop.Outlook.Account oAccount = null;
+            if (!string.IsNullOrEmpty(account))
+            {
+                for (int i = 1; i <= outlookApplication.Session.Accounts.Count; i++)
+                {
+                    if(outlookApplication.Session.Accounts[i].SmtpAddress == account)
+                    {
+                        oAccount = outlookApplication.Session.Accounts[i];
+                    }
+                }
+            }
+
             email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatRichText;
+            if(oAccount!=null) email.SendUsingAccount = oAccount;
             email.To = to;
             email.Subject = subject;
             email.HTMLBody = body;
@@ -84,6 +100,10 @@ namespace OpenRPA.Office.Activities
             //    email.Display(true);
             //    email.Send();
             //}
+            if(uiaction == "Draft")
+            {
+                email.Save();
+            }
             else
             {
                 email.Send();
@@ -121,8 +141,8 @@ namespace OpenRPA.Office.Activities
                 lst.Columns.Add("ID", typeof(string));
                 lst.Columns.Add("TEXT", typeof(string));
                 lst.Rows.Add("SendHidden", "Send");
-                //lst.Rows.Add("SendVisable", "Show and send");
                 lst.Rows.Add("Show", "Show and wait");
+                lst.Rows.Add("Draft", "Save to Drafts");
                 return lst;
             }
         }

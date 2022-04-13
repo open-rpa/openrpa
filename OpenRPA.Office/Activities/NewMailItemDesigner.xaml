@@ -5,6 +5,7 @@
     xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation" 
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+                      xmlns:rpaoffice="clr-namespace:OpenRPA.Office"
     >
 
 
@@ -27,6 +28,24 @@
         <ResourceDictionary x:Uid="ResourceDictionary_1">
             <DataTemplate x:Uid="DataTemplate_1" x:Key="ExpandedCommentOutTemplate">
                 <Border x:Uid="Border_1" BorderThickness ="1">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="25" />
+                        </Grid.ColumnDefinitions>
+                            <ComboBox ItemsSource="{Binding Path=Accounts}" DisplayMemberPath="UserName" Grid.Column="0"
+                            SelectedValuePath="SmtpAddress" SelectedValue="{Binding Path=ModelItem.Account, Mode=TwoWay, Converter={rpaoffice:InArgumentStringConverter}}" >
+                        </ComboBox>
+                        <Button Click="Button_Click"  Width="25" Grid.Column="1">
+                            <StackPanel Orientation="Horizontal" >
+                                <Image Height="16" Width="16" Source="/OpenRPA.Office;component/Resources/designer/refresh.png" />
+                                <!--<TextBlock Text="{x:Static or:strings.activity_getemails_reload}"></TextBlock>-->
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+                
                 </Border>
             </DataTemplate>
             <DataTemplate x:Uid="DataTemplate_6" x:Key="CollapsedActivityViewTemplate">

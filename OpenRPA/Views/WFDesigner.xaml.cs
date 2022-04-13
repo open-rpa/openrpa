@@ -264,9 +264,9 @@ namespace OpenRPA.Views
         private readonly Type[] extratypes = null;
         public WFDesigner(Xceed.Wpf.AvalonDock.Layout.LayoutDocument tab, Workflow workflow, Type[] extratypes)
         {
-            if(!string.IsNullOrEmpty(Workflow.culture))
+            if(!string.IsNullOrEmpty(workflow.culture))
             {
-                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Workflow.culture);
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(workflow.culture);
             }
             InitializeComponent();
             Log.Verbose("Open " + workflow.name + " version " + workflow._version);

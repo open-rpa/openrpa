@@ -49,7 +49,8 @@ namespace OpenRPA
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
                 if (_type == "workitemqueue") collectionname = "mq";
                 if (_type == "workflowinstance" && Config.local.skip_online_state) {
-                    skipOnline = true;                    
+                    skipOnline = true;
+                    isDirty = false;
                 }                
                 if (global.isConnected && !skipOnline)
                 {

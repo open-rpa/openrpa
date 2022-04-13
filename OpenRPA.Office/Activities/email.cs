@@ -25,6 +25,8 @@ namespace OpenRPA.Office.Activities
         //public NameSpace Session { get { return mailItem.Session; } }
         //public dynamic Parent { get { return mailItem.Parent; } }
         //public Actions Actions { get { return mailItem.Actions; } }
+
+
         public Attachment[] Attachments { 
             get {
                 var result = new List<Attachment>();
@@ -174,7 +176,60 @@ namespace OpenRPA.Office.Activities
         //public OlPermission Permission { get { return mailItem.Permission; } set { mailItem.Permission = value; } }
         //public OlPermissionService PermissionService { get { return mailItem.PermissionService; } set { mailItem.PermissionService = value; } }
         //public PropertyAccessor PropertyAccessor { get { return mailItem.PropertyAccessor; } }
-        //public Account SendUsingAccount { get { return mailItem.SendUsingAccount; } set { mailItem.SendUsingAccount = value; } }
+        public string Account { 
+            get { 
+                if(mailItem.SendUsingAccount != null) return mailItem.SendUsingAccount.SmtpAddress;
+                return null;
+            } 
+            set {
+                var dolookup = true;
+                if (mailItem.SendUsingAccount != null)
+                {
+                    if(mailItem.SendUsingAccount.SmtpAddress == value)
+                    {
+                        dolookup = false;
+                    }
+                }
+                if (string.IsNullOrEmpty(value)) dolookup = false;
+                if (dolookup)
+                {
+                    var outlookApplication = CreateOutlookInstance();
+                    for (int i = 1; i <= outlookApplication.Session.Accounts.Count; i++)
+                    {
+                        if (outlookApplication.Session.Accounts[i].SmtpAddress == value)
+                        {
+                            mailItem.SendUsingAccount = outlookApplication.Session.Accounts[i];
+                        }
+                    }
+                }
+            } 
+        }
+        public bool Send(string SendUsingAccount = null)
+        {
+            try
+            {
+                if(!string.IsNullOrEmpty(SendUsingAccount))
+                {
+                    Account = SendUsingAccount;
+                }
+                    //var outlookApplication = CreateOutlookInstance();
+                    //Explorer myOlExp = outlookApplication.ActiveExplorer();
+                    //Selection myOlSel = myOlExp.Selection;
+                    //myOlExp..ClearSelection();
+                    //for (var i = 1; i < myOlSel.Count; i++)
+                    //{
+                    //    outlookApplication.ActiveExplorer().RemoveFromSelection(myOlSel[i]);
+                    //}
+                    mailItem.Send();
+                
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+            return true;
+        }
         public string TaskSubject { get { return mailItem.TaskSubject; } set { mailItem.TaskSubject = value; } }
         public DateTime TaskDueDate { get { return mailItem.TaskDueDate; } set { mailItem.TaskDueDate = value; } }
         public DateTime TaskStartDate { get { return mailItem.TaskStartDate; } set { mailItem.TaskStartDate = value; } }

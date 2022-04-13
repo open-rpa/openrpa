@@ -230,7 +230,7 @@ namespace OpenRPA
             get
             {
                 var result = new List<IWorkflowInstance>();
-                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
+                if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 10000))
                 {
                     try
                     {
@@ -912,8 +912,6 @@ namespace OpenRPA
                           Log.Debug("RunPendingInstances::begin ");
                           await WorkflowInstance.RunPendingInstances();
                           Log.Debug("RunPendingInstances::end ");
-                          try
-                          {
                               foreach (var i in WorkflowInstance.Instances)
                               {
                                   if (i.Bookmarks != null && i.Bookmarks.Count > 0)
@@ -946,11 +944,6 @@ namespace OpenRPA
 
                                   }
                               }
-                          }
-                          finally
-                          {
-                              System.Threading.Monitor.Exit(WorkflowInstance.Instances);
-                          }
                       }
                       catch (Exception ex)
                       {

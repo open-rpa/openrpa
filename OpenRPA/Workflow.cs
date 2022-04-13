@@ -35,6 +35,7 @@ namespace OpenRPA
         }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
+        public string culture { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }        
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename
@@ -527,9 +528,30 @@ namespace OpenRPA
             {
                 CompileExpressions = true
             };
-            var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
-            var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
-            _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+            if (!string.IsNullOrEmpty(culture))
+            {
+                try
+                {
+                    _activity = Task.Run(() =>
+                    {
+                        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(culture);
+                        var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
+                        var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
+                        return System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+
+                    }).Result;
+                }
+                catch (Exception ex) 
+                {
+                    while(ex.InnerException != null) ex = ex.InnerException;
+                    throw ex;
+                }
+            } else
+            {
+                var xamlReaderSettings = new System.Xaml.XamlXmlReaderSettings { LocalAssembly = typeof(Workflow).Assembly };
+                var xamlReader = new System.Xaml.XamlXmlReader(new System.IO.StringReader(Xaml), xamlReaderSettings);
+                _activity = System.Activities.XamlIntegration.ActivityXamlServices.Load(xamlReader, activitySettings);
+            }
             return _activity;
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
@@ -548,23 +570,18 @@ namespace OpenRPA
             //instance.Run();
             return instance;
         }
-        public System.Collections.ObjectModel.KeyedCollection<string, System.Activities.DynamicActivityProperty> GetParameters()
+        [JsonIgnore, BsonIgnore]
+        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public override string ToString()
         {
-            System.Activities.ActivityBuilder ab2;
-            using (var stream = new System.IO.MemoryStream(Encoding.UTF8.GetBytes(Xaml)))
-            {
-                ab2 = System.Xaml.XamlServices.Load(
-                    System.Activities.XamlIntegration.ActivityXamlServices.CreateBuilderReader(
-                    new System.Xaml.XamlXmlReader(stream))) as System.Activities.ActivityBuilder;
-            }
-            return ab2.Properties;
+            return RelativeFilename;
         }
         public void ParseParameters()
         {
             Parameters.Clear();
             if (!string.IsNullOrEmpty(Xaml))
             {
-                var parameters = GetParameters();
+                var parameters = Views.WFDesigner.GetParameters(culture, Xaml);
                 foreach (var prop in parameters)
                 {
                     var par = new workflowparameter() { name = prop.Name };
@@ -585,12 +602,6 @@ namespace OpenRPA
                     Parameters.Add(par);
                 }
             }
-        }
-        [JsonIgnore, BsonIgnore]
-        public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } }
-        public override string ToString()
-        {
-            return RelativeFilename;
         }
     }
 

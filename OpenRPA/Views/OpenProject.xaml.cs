@@ -42,6 +42,8 @@ namespace OpenRPA.Views
         public event Action<IWorkflow> onOpenWorkflow;
         public event Action onSelectedItemChanged;
         private IMainWindow main = null;
+        public List<System.Globalization.CultureInfo> Cultures { get; set; }
+
         public ICommand PlayCommand
         {
             get
@@ -229,6 +231,7 @@ namespace OpenRPA.Views
         public static bool isUpdateProjectsList = false;
         public OpenProject(IMainWindow main)
         {
+            Cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.InstalledWin32Cultures).ToList();
             Instance = this;
             Log.FunctionIndent("OpenProject", "OpenProject");
             try

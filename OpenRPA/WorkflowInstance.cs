@@ -1032,6 +1032,10 @@ namespace OpenRPA
                         {
                             Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
                             Instances.Remove(i);
+                        } 
+                        else if (Config.local.skip_online_state && i.isCompleted)
+                        {
+                            Instances.Remove(i);
                         }
                     }
                 }

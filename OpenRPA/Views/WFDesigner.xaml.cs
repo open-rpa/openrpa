@@ -868,7 +868,7 @@ namespace OpenRPA.Views
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
-            Input.InputDriver.Instance.onCancel += OnCancel;
+            Input.InputDriver.Instance.onCancel -= OnCancel;
         }
         public Argument GetArgument(string Name, bool add, Type type)
         {

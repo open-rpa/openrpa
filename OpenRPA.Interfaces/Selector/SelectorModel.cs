@@ -75,7 +75,7 @@ namespace OpenRPA.Interfaces.Selector
         public SelectorModel(SelectorWindow window)
         {
             Highlight = true;
-            Directories = new ExtendedObservableCollection<treeelement>();
+            Directories = new SelectorObservableCollection<treeelement>();
             this.window = window;
             //Directories.ItemPropertyChanged += (sender, e) =>
             //{
@@ -89,7 +89,7 @@ namespace OpenRPA.Interfaces.Selector
             Highlight = true;
             this.Anchor = Anchor;
             this.Selector = Selector;
-            Directories = new ExtendedObservableCollection<treeelement>();
+            Directories = new SelectorObservableCollection<treeelement>();
             this.window = window;
             //Directories.ItemPropertyChanged += (sender, e) =>
             //{
@@ -100,8 +100,8 @@ namespace OpenRPA.Interfaces.Selector
         private SelectorWindow window;
         public Selector Selector { get { return GetProperty<Selector>(); } set { SetProperty(value); } }
         public Selector Anchor { get { return GetProperty<Selector>(); } set { SetProperty(value); } }
-        private ExtendedObservableCollection<treeelement> directories;
-        public ExtendedObservableCollection<treeelement> Directories
+        private SelectorObservableCollection<treeelement> directories;
+        public SelectorObservableCollection<treeelement> Directories
         {
             get
             {

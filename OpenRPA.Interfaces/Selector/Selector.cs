@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces.Selector
 {
-    public partial class Selector : ExtendedObservableCollection<SelectorItem>
+    public partial class Selector : SelectorObservableCollection<SelectorItem>
     {
         public static string ReplaceVariables(string selector, System.Activities.WorkflowDataContext DataContext)
         {

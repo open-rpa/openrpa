@@ -66,28 +66,29 @@ namespace OpenRPA
                 ActivityScheduledRecord activityScheduledRecord = trackRecord as ActivityScheduledRecord;
                 WorkflowInstanceRecord workflowInstanceRecord = trackRecord as WorkflowInstanceRecord;
 
-                if (workflowInstanceRecord != null)
+                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
+                if (Instance == null)
                 {
-                    Log.Activity(workflowInstanceRecord.ActivityDefinitionId + " " + workflowInstanceRecord.State);
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
-                    if (Instance == null)
+                    if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
                     {
-                        if (System.Threading.Monitor.TryEnter(WorkflowInstance.Instances, 1000))
+                        try
                         {
-                            try
-                            {
-                                Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
-                            }
-                            finally
-                            {
-                                System.Threading.Monitor.Exit(WorkflowInstance.Instances);
-                            }
+                            Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                         }
-                        else
+                        finally
                         {
-                            Log.Debug("Failed getting WorkflowInstance in TrackingParticipant");
+                            System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                         }
                     }
+                    else
+                    {
+                        Log.Error("Failed getting WorkflowInstance in TrackingParticipant");
+                    }
+                }
+
+                if (workflowInstanceRecord != null && Instance != null)
+                {
+                    Log.Activity(workflowInstanceRecord.ActivityDefinitionId + " " + workflowInstanceRecord.State);
                     if (Instance == null)
                     {
                         return;
@@ -199,10 +200,9 @@ namespace OpenRPA
                             }
                         }
                 }
-                if (activityStateRecord != null)
+                if (activityStateRecord != null && Instance != null)
                 {
                     string ActivityId = null, name = null;
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Id)) ActivityId = activityStateRecord.Activity.Id;
                     if (activityStateRecord.Activity != null && !string.IsNullOrEmpty(activityStateRecord.Activity.Name)) name = activityStateRecord.Activity.Name;
                     // var sw = new Stopwatch(); sw.Start();
@@ -295,10 +295,8 @@ namespace OpenRPA
                         }
                     }
                 }
-                if (activityScheduledRecord != null)
+                if (activityScheduledRecord != null && Instance != null && Instance.wfApp != null)
                 {
-                    var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.ToString()).FirstOrDefault();
-                    if (Instance == null || Instance.wfApp == null) return;
                     if (Instance.Activities.Count > 0)
                     {
                         var wfApp = Instance.wfApp;

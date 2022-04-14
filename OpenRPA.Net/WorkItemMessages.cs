@@ -50,7 +50,7 @@ namespace OpenRPA.Net
         public bool ignoremaxretries { get; set; }
         public string errormessage { get; set; }
         public string errorsource { get; set; }
-
+        public string errortype { get; set; }
     }
     public class PopWorkitemMessage<T> : SocketCommand where T : IWorkitem
     {

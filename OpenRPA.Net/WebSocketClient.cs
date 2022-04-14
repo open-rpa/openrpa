@@ -1259,6 +1259,7 @@ namespace OpenRPA.Net
             var q = new UpdateWorkitemMessage<T>(); q.msg.command = "updateworkitem";
             q._id = item._id; q.name = item.name; q.state = item.state; q.nextrun = item.nextrun;
             q.errormessage = item.errormessage; q.errorsource = item.errorsource; q.ignoremaxretries = ignoremaxretries;
+            q.errortype = item.errortype;
             q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
             var _files = new List<MessageWorkitemFile>();
             if (files != null)

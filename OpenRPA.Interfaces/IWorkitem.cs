@@ -22,6 +22,7 @@ namespace OpenRPA.Interfaces
         DateTime? nextrun { get; set; }
         string errormessage { get; set; }
         string errorsource { get; set; }
+        string errortype { get; set; }        
     }
     public interface IWorkitemQueue : IProjectableBase
     {

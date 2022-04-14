@@ -110,20 +110,6 @@ namespace OpenRPA.Views
         public ModelItem SelectedActivity { get; private set; }
         private void OnCancel()
         {
-            //GenericTools.RunUI(() =>
-            //{
-            //    if (tab == null) return;
-            //    if (!tab.IsSelected) return;
-            //    foreach (var i in WorkflowInstance.Instances)
-            //    {
-            //        if (i.WorkflowId == Workflow._id && !i.isCompleted)
-            //        {
-            //            i.Abort("User canceled workflow with cancel key");
-            //        }
-            //    }
-            //    if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
-
-            //});
             foreach (var i in WorkflowInstance.Instances.ToList())
             {
                 if (i.WorkflowId == Workflow._id && !i.isCompleted)
@@ -882,6 +868,7 @@ namespace OpenRPA.Views
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             Input.InputDriver.Instance.OnKeyUp -= OnKeyUp;
+            Input.InputDriver.Instance.onCancel += OnCancel;
         }
         public Argument GetArgument(string Name, bool add, Type type)
         {

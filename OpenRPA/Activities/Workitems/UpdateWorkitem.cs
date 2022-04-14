@@ -42,8 +42,13 @@ namespace OpenRPA.WorkItems
                 var state = State.Get(context);
                 if (!string.IsNullOrEmpty(state)) t.state = state;
             }
-            if (ex != null) t.errormessage = ex.Message;
+            if (ex != null) { t.errormessage = ex.Message; t.errortype = "application"; }
             if (ex != null) t.errorsource = ex.Source;
+            if(ex is BusinessRuleException)
+            {
+                t.errortype = "business";
+                if (t.state == "retry") t.state = "failed";
+            }
             t.state = t.state.ToLower();
             if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be failed, successful, abandoned or retry");
             var result = await global.webSocketClient.UpdateWorkitem<Workitem>(t, files, ignoremaxretries);

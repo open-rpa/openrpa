@@ -38,6 +38,7 @@ namespace OpenRPA.SAP
             string client = Client.Get(context);
             string language = Language.Get(context);
             string systemname = SystemName.Get(context);
+            if (!SAPhook.Instance.isConnected) throw new Exception("OpenRPA is not connected to the SAP bridge");
             SAPhook.Instance.RefreshConnections();
             bool dologin = true;
             SAPSession _session = null;
@@ -55,6 +56,7 @@ namespace OpenRPA.SAP
             }
             if(_session==null)
             {
+                if (!SAPhook.Instance.isConnected) throw new Exception("OpenRPA is not connected to the SAP bridge");
                 SAPhook.Instance.RefreshConnections();
                 if (SAPhook.Instance.Sessions != null)
                     foreach (var session in SAPhook.Instance.Sessions)

@@ -197,6 +197,7 @@ namespace OpenRPA.SAP
         public bool isSapRunning { get; private set; } = false;
         public void RefreshConnections()
         {
+            if (!isConnected) return;
             var msg = new SAPEvent("getconnections");
             msg = SAPhook.Instance.SendMessage(msg, TimeSpan.FromSeconds(PluginConfig.bridge_timeout_seconds));
             if (msg != null)

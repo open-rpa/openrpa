@@ -656,6 +656,7 @@ namespace OpenRPA.Net
                                     //    _messageQueue.Add(qm);
                                     //}
                                     Log.Network("(" + _messageQueue.Count + ") " + msg.command + " RSND: " + msg.id);
+                                    if (!_messageQueue.Contains(qm)) _messageQueue.Add(qm);
                                     msg.SendMessage(this, 3);
                                 }
                                 else
@@ -666,6 +667,7 @@ namespace OpenRPA.Net
                             else if (signedin)
                             {
                                 Log.Network("(" + _messageQueue.Count + ") " + msg.command + " SEND: " + msg.id);
+                                if (!_messageQueue.Contains(qm)) _messageQueue.Add(qm);
                                 msg.SendMessage(this, 3);
                             }
                         }

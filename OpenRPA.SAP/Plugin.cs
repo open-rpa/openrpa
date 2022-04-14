@@ -103,7 +103,11 @@ namespace OpenRPA.SAP
             try
             {
                 SAPhook.Instance.RefreshConnections();
-                if (SAPhook.Instance.Connections.Length < 1)
+                if(SAPhook.Instance.Connections == null)
+                {
+                    SetStatus("Offline");
+                }
+                else if (SAPhook.Instance.Connections.Length < 1)
                 {
                     SetStatus("Online(-1)");
                 }

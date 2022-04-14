@@ -481,7 +481,7 @@ namespace OpenRPA.Views
                 WorkflowDesigner.Flush();
                 var modelItem = WorkflowDesigner.Context.Services.GetService<ModelService>().Root;
                 Workflow.name = modelItem.GetValue<string>("Name").Replace("_", " ");
-
+                Workflow.culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
                 Workflow.Xaml = WorkflowDesigner.Text;
                 var _hasChanged = HasChanged;
                 HasChanged = false;

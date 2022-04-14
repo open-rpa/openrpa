@@ -43,7 +43,6 @@ namespace OpenRPA.Views
         public event Action onSelectedItemChanged;
         private IMainWindow main = null;
         public List<System.Globalization.CultureInfo> Cultures { get; set; }
-
         public ICommand PlayCommand
         {
             get
@@ -263,6 +262,8 @@ namespace OpenRPA.Views
             set
             {
                 _FilterText = value;
+                Projects.ForceUpdate();
+                RobotInstance.instance.Workflows.ForceUpdate();
                 //if (isFiltering)
                 //{
                 //    ReFilter = true;

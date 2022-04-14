@@ -356,7 +356,8 @@ namespace OpenRPA
                 {
                     isRemote = true;
                     Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
-                    var data = JObject.FromObject(instance.Parameters);
+                    JObject data = null;
+                    if (instance.Parameters != null) data = JObject.FromObject(instance.Parameters);
                     command.command = "invoke" + instance.state;
                     command.workflowid = instance.WorkflowId;
                     command.data = data;
@@ -389,13 +390,19 @@ namespace OpenRPA
                 if (instance.hasError || instance.isCompleted)
                 {
                     string message = "";
-                    if (instance.runWatch != null)
+                    if(instance.Workflow != null)
                     {
-                        message += instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed);
-                    }
-                    else
+                        if (instance.runWatch != null)
+                        {
+                            message += instance.Workflow.name + " " + instance.state + " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed);
+                        }
+                        else
+                        {
+                            message += instance.Workflow.name + " " + instance.state;
+                        }
+                    } else
                     {
-                        message += instance.Workflow.name + " " + instance.state;
+                        message += "MISSING WORKFLOW!!!! " + instance.state;
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += Environment.NewLine + "# " + instance.errormessage;
                     Log.Information(message);

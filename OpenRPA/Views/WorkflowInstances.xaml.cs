@@ -70,8 +70,8 @@ namespace OpenRPA.Views
                 }
             }
         }
-        private WorkflowInstance[] _Instances = new WorkflowInstance[] { };
-        public WorkflowInstance[] Instances
+        private IWorkflowInstance[] _Instances = new IWorkflowInstance[] { };
+        public IWorkflowInstance[] Instances
         {
             get
             {

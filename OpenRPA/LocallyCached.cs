@@ -57,7 +57,7 @@ namespace OpenRPA
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {
                         var result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
-                        EnumerableExtensions.CopyPropertiesTo(result, entity);
+                        EnumerableExtensions.CopyPropertiesTo(result, entity, true);
                         _backingFieldValues["isDirty"] = false;
                         Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }
@@ -71,7 +71,7 @@ namespace OpenRPA
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
-                                    EnumerableExtensions.CopyPropertiesTo(result, entity);
+                                    EnumerableExtensions.CopyPropertiesTo(result, entity, true);
                                     _backingFieldValues["isDirty"] = false;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                                 }

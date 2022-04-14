@@ -315,11 +315,12 @@ namespace OpenRPA
         }
         private WorkflowInstance[] _Instances = new WorkflowInstance[] { };
         [JsonIgnore, BsonIgnore]
-        public WorkflowInstance[] Instances
+        public IWorkflowInstance[] Instances
         {
             get
             {
-                return RobotInstance.instance.dbWorkflowInstances.Find(x => x.WorkflowId == _id).OrderByDescending(x => x._modified).Take(10).ToArray();
+                return RobotInstance.instance.WorkflowInstances.Where(x => x.WorkflowId == _id).OrderByDescending(x => x._modified).Take(10).ToArray();
+                // return RobotInstance.instance.dbWorkflowInstances.Find(x => x.WorkflowId == _id).OrderByDescending(x => x._modified).Take(10).ToArray();
                 // return RobotInstance.instance.dbWorkflowInstances.Find(x => x.WorkflowId == _id, 0, 10).ToArray();
             }
         }

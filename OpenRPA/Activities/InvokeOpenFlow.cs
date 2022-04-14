@@ -38,6 +38,8 @@ namespace OpenRPA.Activities
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            string _workflow = workflow.Get(context);
+            if (string.IsNullOrEmpty(_workflow)) throw new Exception("Workflow property is mandatory for Invoke Openflow");
             bool waitforcompleted = WaitForCompleted.Get(context);
             string bookmarkname = null;
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
@@ -120,7 +122,8 @@ namespace OpenRPA.Activities
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
                     int expiration = Expiration.Get(context);
-                    var result = global.webSocketClient.QueueMessage(workflow.Get(context), _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration);
+                    Log.Output("Invoke Openflow sending message to queue " + _workflow);
+                    var result = global.webSocketClient.QueueMessage(_workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration);
                     if (expiration < 1) expiration = 5000;
                     result.Wait(expiration + 500);
                 }
@@ -138,6 +141,7 @@ namespace OpenRPA.Activities
         }
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
+            Log.Output("Invoke Openflow resumed with bookmark");
             bool waitforcompleted = WaitForCompleted.Get(context);
             if (!waitforcompleted) return;
             // context.RemoveBookmark(bookmark.Name);

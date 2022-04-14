@@ -131,6 +131,7 @@ namespace OpenRPA
         public DateTime? nextrun { get { return GetProperty<DateTime?>(); } set { SetProperty(value); } }
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string errortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
     }
     public class WorkitemFile : Interfaces.WorkitemFile
     {

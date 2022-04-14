@@ -56,8 +56,23 @@ namespace OpenRPA
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
                     {
-                        var result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
+                        T result = default(T);
+                        try
+                        {
+                            result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
+                        }
+                        catch (Exception ex)
+                        {
+                            if(ex.Message.Contains("E11000 duplicate key error"))
+                            {
+                                result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
+                            } else
+                            {
+                                throw;
+                            }
+                        }
                         EnumerableExtensions.CopyPropertiesTo(result, entity, true);
+                        isLocalOnly = false;
                         _backingFieldValues["isDirty"] = false;
                         Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }

@@ -206,7 +206,7 @@ namespace OpenRPA.Interfaces.Selector
             vm.NotifyPropertyChanged("json");
             // e.Element
         }
-        private treeelement SearchTree(ExtendedObservableCollection<treeelement> item, SelectorItem s)
+        private treeelement SearchTree(SelectorObservableCollection<treeelement> item, SelectorItem s)
         {
             foreach (var treenode in item)
             {
@@ -214,7 +214,7 @@ namespace OpenRPA.Interfaces.Selector
                 {
                     return treenode;
                 }
-                var currentNode = new ExtendedObservableCollection<treeelement>();
+                var currentNode = new SelectorObservableCollection<treeelement>();
                 foreach (var subc in treenode.Children) { currentNode.Add(subc); if (subc.Children.Count() == 0) subc.AddSubElements(); }
                 var res = SearchTree(currentNode, s);
                 if (res != null) return res;
@@ -245,7 +245,7 @@ namespace OpenRPA.Interfaces.Selector
                         found = true;
                         treenode.IsExpanded = true;
                         treenode.IsSelected = true;
-                        currentNode = new ExtendedObservableCollection<treeelement>();
+                        currentNode = new SelectorObservableCollection<treeelement>();
                         foreach (var subc in treenode.Children) currentNode.Add(subc);
                         //currentNode = c.Children;
                     }
@@ -263,7 +263,7 @@ namespace OpenRPA.Interfaces.Selector
                             found = true;
                             treenode.IsExpanded = true;
                             treenode.IsSelected = true;
-                            currentNode = new ExtendedObservableCollection<treeelement>();
+                            currentNode = new SelectorObservableCollection<treeelement>();
                             foreach (var subc in treenode.Children) currentNode.Add(subc);
                             //currentNode = c.Children;
                             continue;
@@ -281,7 +281,7 @@ namespace OpenRPA.Interfaces.Selector
                                     subtreenode.IsExpanded = true;
                                 
                                     subtreenode.IsSelected = true;
-                                    currentNode = new ExtendedObservableCollection<treeelement>();
+                                    currentNode = new SelectorObservableCollection<treeelement>();
                                     foreach (var subc in subtreenode.Children) currentNode.Add(subc);
                                     //currentNode = c.Children;
                                     continue;
@@ -301,7 +301,7 @@ namespace OpenRPA.Interfaces.Selector
                     found = true;
                     _treenode.IsExpanded = true;
                     _treenode.IsSelected = true;
-                    currentNode = new ExtendedObservableCollection<treeelement>();
+                    currentNode = new SelectorObservableCollection<treeelement>();
                     foreach (var subc in _treenode.Children) currentNode.Add(subc);
 
                 }

@@ -13,7 +13,7 @@ namespace OpenRPA.Interfaces.Selector
         public IElement Element { get; set; }
         public treeelement(treeelement parent)
         {
-            // ItemDetails = new rpaactivities.ExtendedObservableCollection<DetailGroupViewModel>();
+            // ItemDetails = new rpaactivities.SelectorObservableCollection<DetailGroupViewModel>();
             Children = new ObservableCollection<treeelement>();
             Name = "unknown";
             Parent = parent;
@@ -89,7 +89,7 @@ namespace OpenRPA.Interfaces.Selector
         {
             return Name;
         }
-        // public rpaactivities.ExtendedObservableCollection<DetailGroupViewModel> ItemDetails { get; set; }
+        // public rpaactivities.SelectorObservableCollection<DetailGroupViewModel> ItemDetails { get; set; }
     }
 
 }

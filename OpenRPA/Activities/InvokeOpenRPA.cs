@@ -120,7 +120,7 @@ namespace OpenRPA.Activities
                 if (killifrunning)
                     foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
                     {
-                        if (!i.isCompleted && i.Workflow._id == workflow._id)
+                        if (i.Workflow != null && !i.isCompleted && i.Workflow._id == workflow._id)
                         {
                             i.Abort("Killed by KillIfRunning from " + Instance.Workflow.name);
                         }
@@ -231,7 +231,7 @@ namespace OpenRPA.Activities
                             }
                         }
                 }
-                else
+                else if (instance.projectid != null)
                 {
                     Dictionary<string, object> arguments = (from argument in Arguments
                                                             where argument.Value.Direction != ArgumentDirection.In

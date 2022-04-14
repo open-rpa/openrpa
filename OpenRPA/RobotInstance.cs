@@ -869,11 +869,13 @@ namespace OpenRPA
                     {
                         if (i._version > exists._version)
                         {
+                            if (i.Workflow == null) i.Workflow = Workflows.Where(x => x._id == i.WorkflowId).FirstOrDefault() as Workflow;
                             i.isDirty = false;
                             await i.Save<WorkflowInstance>();
                         }
                         else if (i._version < exists._version)
                         {
+                            if (exists.Workflow == null) exists.Workflow = Workflows.Where(x => x._id == exists.WorkflowId).FirstOrDefault() as Workflow;
                             await exists.Save<WorkflowInstance>();
                         }
                         else

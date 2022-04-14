@@ -28,7 +28,7 @@ namespace OpenRPA
                 try
                 {
                     var wiq = await global.webSocketClient.AddWorkitemQueue(this);
-                    EnumerableExtensions.CopyPropertiesTo(wiq, this);
+                    EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
                 }
                 catch (Exception)
                 {
@@ -56,7 +56,7 @@ namespace OpenRPA
                     var q = await global.webSocketClient.Query<WorkitemQueue>("mq", "{\"_id\": \"" + _id + "\"}", null, 1);
                     if (q.Length > 0)
                     {
-                        EnumerableExtensions.CopyPropertiesTo(q[0], this);
+                        EnumerableExtensions.CopyPropertiesTo(q[0], this, true);
                         isDirty = false;
                     }
                 }

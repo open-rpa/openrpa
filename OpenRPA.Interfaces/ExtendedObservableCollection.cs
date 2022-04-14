@@ -194,7 +194,7 @@ namespace OpenRPA.Interfaces
         {
             T originalItem = Item;
             var index = Items.IndexOf(Item);
-            NewItem.CopyPropertiesTo(Item);
+            NewItem.CopyPropertiesTo(Item, false);
             GenericTools.RunUI(() =>
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, originalItem, index));
@@ -517,13 +517,31 @@ namespace OpenRPA.Interfaces
         {
             return source?.OfType<T>().ToList() ?? new List<T>();
         }
-        public static void CopyPropertiesTo(this object fromObject, object toObject)
+        public static void CopyPropertiesTo(this object fromObject, object toObject, bool SimpleOnly)
         {
             PropertyInfo[] toObjectProperties = toObject.GetType().GetProperties();
             foreach (PropertyInfo propTo in toObjectProperties)
             {
                 PropertyInfo propFrom = fromObject.GetType().GetProperty(propTo.Name);
-                if (propFrom != null && propFrom.CanWrite)
+
+
+                var JsonIgnore = propTo.GetCustomAttributes(typeof(Newtonsoft.Json.JsonIgnoreAttribute), false);
+                if (JsonIgnore != null) continue;
+                bool copy = false;
+                if(SimpleOnly) {
+                    if (propTo.PropertyType == typeof(int)) copy = true;
+                    if (propTo.PropertyType == typeof(Int64)) copy = true;
+                    if (propTo.PropertyType == typeof(double)) copy = true;
+                    if (propTo.PropertyType == typeof(long)) copy = true;
+                    if (propTo.PropertyType == typeof(float)) copy = true;
+                    if (propTo.PropertyType == typeof(bool)) copy = true;
+                    if (propTo.PropertyType == typeof(string)) copy = true;
+                }
+                else
+                {
+                    copy = true;
+                }
+                if (propFrom != null && propFrom.CanWrite && copy)
                     propTo.SetValue(toObject, propFrom.GetValue(fromObject, null), null);
             }
         }

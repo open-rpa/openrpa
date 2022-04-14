@@ -1225,7 +1225,8 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))
                 {
                     Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
-                    var data = JObject.FromObject(instance.Parameters);
+                    JObject data = null;
+                    if (instance.Parameters != null) data = JObject.FromObject(instance.Parameters);
                     command.command = "invoke" + instance.state;
                     command.workflowid = instance.WorkflowId;
                     command.data = data;
@@ -1323,7 +1324,8 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                             }
                         }
                     }
-                    string message = (instance.Workflow.name + " " + instance.state);
+                    string message = ("MISSING WORKFLOW!!!! " + instance.state);
+                    if(instance.Workflow != null ) message = (instance.Workflow.name + " " + instance.state);
                     if (!string.IsNullOrEmpty(instance.errorsource))
                     {
                         message += " at " + instance.errorsource;

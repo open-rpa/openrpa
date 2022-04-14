@@ -3473,7 +3473,8 @@ namespace OpenRPA
                 {
                     isRemote = true;
                     Interfaces.mq.RobotCommand command = new Interfaces.mq.RobotCommand();
-                    var data = JObject.FromObject(instance.Parameters);
+                    JObject data = null;
+                    if(instance.Parameters != null) data = JObject.FromObject(instance.Parameters);
                     command.command = "invoke" + instance.state;
                     command.workflowid = instance.WorkflowId;
                     command.data = data;

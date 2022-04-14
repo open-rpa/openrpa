@@ -158,8 +158,10 @@ namespace OpenRPA
         }
         public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
         {
+            if (Workflow == null) throw new Exception("Workflow is mandatory for WorkflowInstance.Create");
             if (RobotInstance.openrpa_workflow_run_count != null) RobotInstance.openrpa_workflow_run_count.Add(1, RobotInstance.tags);
             var result = new WorkflowInstance(Workflow) { Parameters = Parameters, name = Workflow.name, Path = Workflow.Project().Path };
+            if (result.Parameters == null) result.Parameters = new Dictionary<string, object>();
             result.RelativeFilename = Workflow.RelativeFilename;
             result.projectid = Workflow.projectid;
             result.projectname = Workflow.Project().name;
@@ -197,8 +199,11 @@ namespace OpenRPA
         {
             //var xh = new XamlHelper(workflow.xaml);
             //extraextension.updateProfile(xh.Variables.ToArray(), xh.ArgumentNames.ToArray());
+            if(Workflow == null) throw new Exception("Cannot create WorkflowInstance app, without a Workflow");
             TrackingParticipant = new WorkflowTrackingParticipant();
             TrackingParticipant.OnVisualTracking += Participant_OnVisualTracking;
+
+            if(Parameters == null) Parameters = new Dictionary<string, object>();
 
             if (string.IsNullOrEmpty(InstanceId))
             {
@@ -345,6 +350,8 @@ namespace OpenRPA
         {
             try
             {
+                if (Workflow == null) throw new Exception("Cannot ResumeBookmark, without a Workflow");
+                if (wfApp == null) throw new Exception("Cannot ResumeBookmark, without an Application loaded (wfApp)");
                 Log.Verbose("[workflow] Resume workflow at bookmark '" + bookmarkName + "'");
                 if (isCompleted)
                 {
@@ -719,6 +726,7 @@ namespace OpenRPA
         }
         public void Run()
         {
+            if (Workflow == null) throw new Exception("Cannot Run WorkflowInstance, without a Workflow");
             try
             {
                 runWatch = new System.Diagnostics.Stopwatch();
@@ -919,8 +927,8 @@ namespace OpenRPA
         private static bool hasRanPending = false;
         public static async Task RunPendingInstances()
         {
-            if (hasRanPending) return;
             if (Config.local.disable_instance_store) return;
+            if (hasRanPending) return;
             // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
             try
@@ -935,41 +943,45 @@ namespace OpenRPA
                 //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
 
                 var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn).ToList();
-                if (results.Count > 0) Log.Information("Try running " + results.Count + " pending workflows");
+                if (results.Count == 0) return;
+                Log.Information("Try running " + results.Count + " pending workflows");
                 foreach (WorkflowInstance i in results)
                 {
-                    if (i.Workflow != null && i.Workflow.Serializable == false) return;
                     try
                     {
-                        if (!string.IsNullOrEmpty(i.InstanceId) && string.IsNullOrEmpty(i.xml))
+                        if (i.Workflow == null) i.Workflow = RobotInstance.instance.Workflows.Where(x => x._id == i.WorkflowId).FirstOrDefault() as Workflow;
+                        if (i.Workflow == null)
                         {
-                            var folder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "state");
-                            var filename = System.IO.Path.Combine(folder, i.InstanceId + ".xml");
-                            if (!System.IO.File.Exists(filename))
-                            {
-                                Log.Information("Refuse to load instance " + i.RelativeFilename + " / " + i.name + " (" + i.InstanceId + ") it contains no state!");
-                                i.state = "aborted";
-                                i.errormessage = "Refuse to load instance " + i.InstanceId + " it contains no state!";
-                                i.isDirty = true;
-                                await i.Save<WorkflowInstance>();
-                                if (i.Workflow != null) i.Workflow.NotifyUIState();
-                                continue;
-                            }
+                            i.state = "aborted";
+                            i.errormessage = "Cannot run WorkflowInstance " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
+                            continue;
+                        }
+                        else if (i.Workflow.Serializable == false)
+                        {
+                            i.state = "aborted";
+                            i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state (non serializable)";
+                            continue;
+                        }
+                        else if (string.IsNullOrEmpty(i.xml))
+                        {
+                            i.state = "aborted";
+                            i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state";
+                            continue;
                         }
                         var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(i.WorkflowId) as Workflow;
                         if (workflow == null)
                         {
-                            Log.Error("Cannot run instance " + i.RelativeFilename + " / " + i.name + " (" + i.InstanceId + "), unknown workflow id " + i.WorkflowId);
                             i.state = "aborted";
-                            i.errormessage = "Cannot run instance " + i.InstanceId + ", unknown workflow id " + i.WorkflowId;
-                            i.isDirty = true;
-                            await i.Save<WorkflowInstance>();
-                            if (i.Workflow != null) i.Workflow.NotifyUIState();
+                            i.errormessage = "Cannot run WorkflowInstance, second try " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
                             continue;
                         }
-                        i.Workflow = workflow;
                         if (RobotInstance.instance.Window != null) i.OnIdleOrComplete += RobotInstance.instance.Window.IdleOrComplete;
-                        //if (VisualTracking != null) i.OnVisualTracking += VisualTracking;
+                        var _ref = (i as IWorkflowInstance);
+                        foreach (var runner in Plugins.runPlugins)
+                        {
+                            if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+                        }
+                        i.createApp(workflow.Activity());
                         if (System.Threading.Monitor.TryEnter(Instances, 1000))
                         {
                             try
@@ -982,32 +994,24 @@ namespace OpenRPA
                             }
                         }
                         else { throw new LockNotReceivedException("Failed adding workflow instance in running pending"); }
-                        var _ref = (i as IWorkflowInstance);
-                        foreach (var runner in Plugins.runPlugins)
-                        {
-                            if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
-                        }
-                        i.createApp(workflow.Activity());
                         i.Run();
-                        await Task.Delay(250);
                     }
                     catch (Exception ex)
                     {
                         i.state = "failed";
                         i.Exception = ex;
                         i.errormessage = ex.Message;
-                        try
-                        {
-                            i.isDirty = true;
-                        }
-                        catch (Exception)
-                        {
-
-                        }
                         Log.Error("RunPendingInstances: " + ex.ToString());
                     }
+                    finally
+                    {
+                        i.isDirty = true;
+                        if (!string.IsNullOrEmpty(i.errormessage)) Log.Error(i.errormessage);
+                        await i.Save<WorkflowInstance>();
+                        i.Workflow?.NotifyUIState();
+                    }
                 }
-                hasRanPending = true;
+                
             }
             catch (Exception ex)
             {
@@ -1015,9 +1019,9 @@ namespace OpenRPA
             }
             finally
             {
-
+                hasRanPending = true;
+                Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
             }
-            Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
         }
         public static void CleanUp()
         {

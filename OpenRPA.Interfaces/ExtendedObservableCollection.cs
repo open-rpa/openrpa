@@ -21,6 +21,8 @@ namespace OpenRPA.Interfaces
         {
         }
         public event PropertyChangedEventHandler ItemPropertyChanged;
+        public event EventHandler onFilterUpdated;
+
         private void _ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ItemPropertyChanged?.Invoke(sender, e);
@@ -170,6 +172,7 @@ namespace OpenRPA.Interfaces
             item.PropertyChanged += _ItemPropertyChanged;
             GenericTools.RunUI(() =>
             {
+                if (index >= Items.Count && index > 0) index = Items.Count - 1;
                 base.InsertItem(index, item);
             });
         }
@@ -254,6 +257,17 @@ namespace OpenRPA.Interfaces
                 i++;
             }
         }
+        public void ForceUpdate()
+        {
+            GenericTools.RunUI(() =>
+            {
+                onFilterUpdated?.Invoke(this, new EventArgs());
+                //OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                //OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+                //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            });
+
+        }
     }
     public class ExtendedIBaseObservableCollection<T> : ExtendedObservableCollection<T> where T : INotifyPropertyChanged, IBase
     {
@@ -296,11 +310,45 @@ namespace OpenRPA.Interfaces
             foreach (var item in collection) if (_filter(item) == true) Items.Add(item);
             collection.CollectionChanged += new NotifyCollectionChangedEventHandler(OnBaseCollectionChanged);
             basecollection.ItemPropertyChanged += Basecollection_ItemPropertyChanged;
+            basecollection.onFilterUpdated += Basecollection_onFilterUpdated;
         }
         public void Refresh()
         {
             Items.Clear();
             foreach (var item in basecollection) if (_filter(item) == true) base.Add(item);
+        }
+
+        private void Basecollection_onFilterUpdated(object sender, EventArgs e)
+        {
+            List<T> addlist = new List<T>();
+            List<T> removelist = new List<T>();
+            try
+            {
+                foreach (var item in Items.ToList())
+                {
+                    if (_filter(item) == false)
+                    {
+                        Items.Remove(item);
+                        removelist.Add(item);
+                    }
+                }
+                foreach (var item in basecollection.ToList())
+                {
+                    if (Items.Contains(item)) continue;
+                    if (_filter(item) == true)
+                    {
+                        Items.Add(item);
+                        addlist.Add(item);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+            if (removelist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
+            if (addlist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
         }
         private void Basecollection_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -472,11 +520,7 @@ namespace OpenRPA.Interfaces
         }
         private void AddItems(IEnumerable<IBase> newItems, INotifyCollectionChanged sender)
         {
-            foreach (var itemToAdd in newItems)
-            {
-                var indexOfNewItemToAdd = CalculateIndexForInsertNewItem(sender);
-                InsertItem(indexOfNewItemToAdd, itemToAdd);
-            }
+            AddRange(newItems);
         }
         private IEnumerable<IBase> GetItemsToDelete()
         {

@@ -36,13 +36,13 @@ namespace OpenRPA
         }
         public LiteDatabase db;
         public LiteDB.ILiteCollection<Project> dbProjects;
-        public ExtendedIBaseObservableCollection<IProject> Projects;
+        public IBaseObservableCollection<IProject> Projects;
         public LiteDB.ILiteCollection<Workflow> dbWorkflows;
-        public ExtendedIBaseObservableCollection<IWorkflow> Workflows;
+        public IBaseObservableCollection<IWorkflow> Workflows;
         public LiteDB.ILiteCollection<Detector> dbDetectors;
-        public ExtendedIBaseObservableCollection<IDetector> Detectors;
+        public IBaseObservableCollection<IDetector> Detectors;
         public LiteDB.ILiteCollection<WorkitemQueue> dbWorkItemQueues;
-        public ExtendedIBaseObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
+        public IBaseObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
 
         public LiteDB.ILiteCollection<WorkflowInstance> dbWorkflowInstances;
         public int ProjectCount
@@ -143,38 +143,29 @@ namespace OpenRPA
 
                     _instance.dbWorkflows = _instance.db.GetCollection<Workflow>("workflows");
                     _instance.dbWorkflows.EnsureIndex(x => x._id, true);
-                    _instance.Workflows = new ExtendedIBaseObservableCollection<IWorkflow>();
+                    _instance.Workflows = new IBaseObservableCollection<IWorkflow>();
 
 
                     _instance.dbProjects = _instance.db.GetCollection<Project>("projects");
                     _instance.dbProjects.EnsureIndex(x => x._id, true);
-                    _instance.Projects = new ExtendedIBaseObservableCollection<IProject>();
+                    _instance.Projects = new IBaseObservableCollection<IProject>();
 
                     _instance.dbDetectors = _instance.db.GetCollection<Detector>("detectors");
                     _instance.dbDetectors.EnsureIndex(x => x._id, true);
-                    _instance.Detectors = new ExtendedIBaseObservableCollection<IDetector>();
+                    _instance.Detectors = new IBaseObservableCollection<IDetector>();
 
                     _instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
                     _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
                     _instance.dbWorkItemQueues = _instance.db.GetCollection<WorkitemQueue>("workitemqueues");
                     _instance.dbWorkItemQueues.EnsureIndex(x => x._id, true);
-                    _instance.WorkItemQueues = new ExtendedIBaseObservableCollection<IWorkitemQueue>();
+                    _instance.WorkItemQueues = new IBaseObservableCollection<IWorkitemQueue>();
 
 
-                    _instance.Workflows.AddRange(_instance.dbWorkflows.FindAll().OrderBy(x => x.name));
-                    _instance.Detectors.AddRange(_instance.dbDetectors.FindAll().OrderBy(x => x.name));
+                    _instance.Projects.AddRange(_instance.dbProjects.FindAll().OrderBy(x => x.name));
                     _instance.WorkItemQueues.AddRange(_instance.dbWorkItemQueues.FindAll().OrderBy(x => x.name));
-                    var projects = _instance.dbProjects.FindAll().ToList();
-                    foreach (var p in projects)
-                    {
-                        p.Workflows.Refresh();
-                        p.Detectors.Refresh();
-                        p.WorkItemQueues.Refresh();
-                    }
-                    _instance.Projects.AddRange(projects);
-
-
+                    _instance.Detectors.AddRange(_instance.dbDetectors.FindAll().OrderBy(x => x.name));
+                    _instance.Workflows.AddRange(_instance.dbWorkflows.FindAll().OrderBy(x => x.name));
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>

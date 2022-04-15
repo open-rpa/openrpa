@@ -26,7 +26,7 @@ namespace OpenRPA.Interfaces
         string errorsource { get; set; }
         bool isCompleted { get; set; }
         bool hasError { get; set; }
-        string state { get; set; }
+        string state { get; }
         Exception Exception { get; set; }
         System.Diagnostics.Stopwatch runWatch { get; set; }
         Dictionary<string, WorkflowInstanceValueType> Variables { get; set; }

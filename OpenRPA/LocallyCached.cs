@@ -77,7 +77,6 @@ namespace OpenRPA
                         }
                         EnumerableExtensions.CopyPropertiesTo(result, entity, true);
                         isLocalOnly = false;
-                        // _backingFieldValues["isDirty"] = false;
                         isDirty = false;
                         Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }
@@ -91,8 +90,20 @@ namespace OpenRPA
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
-                                    EnumerableExtensions.CopyPropertiesTo(result, entity, true);
-                                    // _backingFieldValues["isDirty"] = false;
+                                    if(_type != "workflowinstance")
+                                    {
+                                        EnumerableExtensions.CopyPropertiesTo(result, entity, true);
+                                    } else
+                                    {
+                                        _acl = result._acl;
+                                        _modified = result._modified;
+                                        _modifiedby = result._modifiedby;
+                                        _modifiedbyid = result._modifiedbyid;
+                                        _created = result._created;
+                                        _createdby = result._createdby;
+                                        _createdbyid = result._createdbyid;
+                                        _version = result._version;
+                                    }
                                     isDirty = false;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                                 }

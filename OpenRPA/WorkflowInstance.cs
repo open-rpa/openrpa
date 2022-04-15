@@ -116,11 +116,10 @@ namespace OpenRPA
                 }
                 return value;
             }
-            set
+            private set
             {
                 SetProperty(value);
-                if (Workflow != null) Workflow.SetLastState(value);
-                isDirty = true;
+                Workflow?.SetLastState(value);
             }
         }
         [JsonIgnore, LiteDB.BsonIgnore]

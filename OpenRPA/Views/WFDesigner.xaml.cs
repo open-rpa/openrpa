@@ -157,6 +157,27 @@ namespace OpenRPA.Views
                 var element = AutomationHelper.GetFromFocusedElement();
                 if (element.ProcessId != currentprocessid) return;
             }
+            if (e.Key == Key.F1)
+            {
+                if(selection != null)
+                {
+                    var SelectedActivity = selection.PrimarySelection;
+                    if (SelectedActivity == null) return;
+                }
+                if(SelectedActivity != null)
+                {
+                    string targeturl = null;
+                    var LocalizedHelpURLAttributes = SelectedActivity.ItemType.GetCustomAttributes(typeof(LocalizedHelpURLAttribute), false);
+                    if (LocalizedHelpURLAttributes != null && LocalizedHelpURLAttributes.Length > 0)
+                    {
+                        var LocalizedHelpURLAttribute = LocalizedHelpURLAttributes[0] as LocalizedHelpURLAttribute;
+                        targeturl = LocalizedHelpURLAttribute.HelpURL;
+
+                    }
+                    if (string.IsNullOrEmpty(targeturl) || !targeturl.Contains("://")) targeturl = "https://docs.openiap.io/openrpa.html#id1";
+                    GenericTools.OpenUrl(targeturl);
+                }
+            }
             if (e.Key == Key.F2)
             {
                 Task.Run(() =>

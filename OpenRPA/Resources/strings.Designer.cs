@@ -313,6 +313,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/blob/master/docs/pages/activities.md#Break.
+        /// </summary>
+        public static string activity_break_helpurl {
+            get {
+                return ResourceManager.GetString("activity_break_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Breaks out of a loop and continues execution after the loop.
         /// </summary>
         public static string activity_break_tooltip {
@@ -633,6 +642,15 @@ namespace OpenRPA.Resources {
         public static string activity_continue {
             get {
                 return ResourceManager.GetString("activity_continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/blob/master/docs/pages/activities.md#Continue.
+        /// </summary>
+        public static string activity_continue_helpurl {
+            get {
+                return ResourceManager.GetString("activity_continue_helpurl", resourceCulture);
             }
         }
         

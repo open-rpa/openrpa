@@ -3757,7 +3757,20 @@ namespace OpenRPA
                 if (SelectedContent is Views.OpenProject) return;
                 MainTabControl.SelectedContent?.Close();
             }
-
+            if(e.Key == Key.F1)
+            {
+                if (SelectedContent is Views.WFDesigner)
+                {
+                    return;
+                }
+                if(!string.IsNullOrEmpty(Config.local.getting_started_url))
+                {
+                    GenericTools.OpenUrl(Config.local.getting_started_url);
+                } else
+                {
+                    GenericTools.OpenUrl("https://skadefro.github.io/openrpa.dk/gettingstarted.html");
+                }
+            }
         }
         private void AddOption(IDesigner designer, System.Activities.Presentation.Model.ModelItem item, List<QuickLaunchItem> options)
         {

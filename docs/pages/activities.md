@@ -5,7 +5,7 @@ description: A short Overview of base Activies
 ---
 # OpenApplication
 
-![1558717936148](..\img\1558717936148.png)
+![1558717936148](../img/1558717936148.png)
 
 **What:** The basic idea behind this activity, is to make it easy to check for a running application, and launch it, if it is not. At the time of writing this, the activity supports Windows components, Internet Explorer and NativeMessaging (chrome/Firefox)
 
@@ -26,7 +26,7 @@ Clicking "Select element" will try and find the position of the window, and save
 
 # HighlightElement
 
-![1558718230861](..\img\1558718230861.png)
+![1558718230861](../img/1558718230861.png)
 
 **What:** Highlights a found element.
 
@@ -36,7 +36,7 @@ Clicking "Select element" will try and find the position of the window, and save
 
 # TypeText
 
-![1558718403772](..\img\1558718403772.png)
+![1558718403772](../img/1558718403772.png)
 
 **What:** To assign a value you generally should use the Value property on item's, but if you need to send a Key combination to an application, this is your friend. 
 
@@ -46,7 +46,7 @@ Clicking "Select element" will try and find the position of the window, and save
 
 # ClickElement
 
-![1558720283840](..\img\1558720283840.png)
+![1558720283840](../img/1558720283840.png)
 
 **What:** Represents a mouse click, the default is using virtual clicks. This means different things depending on the object type and provider, but generally you can think if it as a click without moving the mouse. Set VirtualClick to False, to do a real Mouse Click and then use OffsetX/OffsetY to make the click hit within the element (0,0 will be the top left corner of the element)
 
@@ -56,7 +56,7 @@ Clicking "Select element" will try and find the position of the window, and save
 
 # GetElement
 
-![1558720872448](..\img\1558720872448.png)
+![1558720872448](../img/1558720872448.png)
 
 **What:** The primary tool of the robot, used for locating items in the environment. Depending on the provider the settings may differ, but generally this can be used to locate one or many elements based on a selector. Use Open Selector to fine tune what you want. Per default, we will only find 1 item, and throw an error if we find less than one object. Use MaxResults and MinResults to change this behaviour. 
 For instance if you want to loop though a DataSet you could select the DataRow and set MaxResults to 100. Then within the GetElement you add new GetElement to "pick" different elements per DataRow.
@@ -157,7 +157,7 @@ To Comment out multiple activites: Mark the activities and choose "Comment out" 
 
 # Detector
 
-![1558723009540](..\img\1558723009540.png)
+![1558723009540](../img/1558723009540.png)
 
 **What:** Make workflow wait for an detector to be triggered
 
@@ -168,7 +168,7 @@ To Comment out multiple activites: Mark the activities and choose "Comment out" 
 Note, as soon as an activity has been created, all actions will also be sent to OpenFlow.
 You can use OpenFlow to trigger other robots based on a trigger ( or interact with one of the more than 2000 different systems supported )
 
-![1558723403613](..\img\1558723403613.png)
+![1558723403613](../img/1558723403613.png)
 
 # InvokeOpenFlow
 
@@ -407,7 +407,7 @@ GetCredentials
 
 # OpenURL
 
-![1558722430092](..\img\1558722430092.png)
+![1558722430092](../img/1558722430092.png)
 
 **What:** It is pretty much the same as OpenApplication, except it only supports Internet Explorer. 
 
@@ -499,4 +499,22 @@ You can use ForEachDataRow to loop though the data using .table(0) if you have m
 **Why:** Simple solution for basic PDF reading, use [AWS Textract](https://aws.amazon.com/textract/) or similar services for more advanced parsing, or [Abby](https://www.abbyy.com/en-eu/solutions/accounts-payable-automation) or [Rossum](https://rossum.ai/) or similar for invoice parsing.
 
 
+## Continue
 
+![image-20220415152133880](activities/continue.png)
+
+**What:** Skip rest of sequence and move to next item.
+
+**How:** When used inside a breakable loop ( get element, for each, do while, while etc. ) you can skip the remaining activities and make the loop move to next item.
+
+**Why:** makes workflows more readable, when using Continue instead of multiple nested if statements
+
+## Break
+
+![image-20220415153414144](activities/break.png)
+
+**What:** Allows stop processing more items and continue with the workflow
+
+**How:** When used inside a breakable loop ( get element, for each, do while, while etc. ) you can skip the remaining activities and stop processing more items.
+
+**Why:** If you know you do not need to process more items, breaking out is more efficient that using continue

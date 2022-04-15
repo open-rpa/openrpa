@@ -18,6 +18,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.break.png")]
     [LocalizedToolboxTooltip("activity_break_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_break", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_break_helpurl", typeof(Resources.strings))]
     public class Break : NativeActivity
     {
         protected override void Execute(NativeActivityContext context)

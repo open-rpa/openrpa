@@ -219,6 +219,9 @@
   <data name="activity_breakablewhile_tooltip" xml:space="preserve">
     <value>Execute the contained workflow while condition is true</value>
   </data>
+  <data name="activity_break_helpurl" xml:space="preserve">
+    <value>https://github.com/open-rpa/openrpa/blob/master/docs/pages/activities.md#Break</value>
+  </data>
   <data name="activity_break_tooltip" xml:space="preserve">
     <value>Breaks out of a loop and continues execution after the loop</value>
   </data>
@@ -308,6 +311,9 @@
   </data>
   <data name="activity_continue" xml:space="preserve">
     <value>Continue</value>
+  </data>
+  <data name="activity_continue_helpurl" xml:space="preserve">
+    <value>https://github.com/open-rpa/openrpa/blob/master/docs/pages/activities.md#Continue</value>
   </data>
   <data name="activity_continue_tooltip" xml:space="preserve">
     <value>Stop executing body of the loop and continue to next item</value>

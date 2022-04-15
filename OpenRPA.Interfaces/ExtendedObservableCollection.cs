@@ -570,7 +570,7 @@ namespace OpenRPA.Interfaces
 
 
                 var JsonIgnore = propTo.GetCustomAttributes(typeof(Newtonsoft.Json.JsonIgnoreAttribute), false);
-                if (JsonIgnore != null) continue;
+                if (JsonIgnore != null && JsonIgnore.Length > 0) continue;
                 bool copy = false;
                 if(SimpleOnly) {
                     if (propTo.PropertyType == typeof(int)) copy = true;

@@ -22,11 +22,10 @@ namespace OpenRPA
 #if DEBUG
                 // Log.Output("LocallyCached.Save<" + typeof(T).Name + ">()");
 #endif
-                if (!global.isConnected)
+                if (!global.isConnected )
                 {
                     try
                     {
-                        isDirty = true;
                         if (string.IsNullOrEmpty(_id))
                         {
                             _id = Guid.NewGuid().ToString();
@@ -44,8 +43,13 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
+                } 
+                else if (string.IsNullOrEmpty(_id))
+                {
+                    isDirty = true;
+                    _id = Guid.NewGuid().ToString();
                 }
-                string collectionname = "openrpa";
+                    string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
                 if (_type == "workitemqueue") collectionname = "mq";
                 if (_type == "workflowinstance" && Config.local.skip_online_state) {
@@ -73,7 +77,8 @@ namespace OpenRPA
                         }
                         EnumerableExtensions.CopyPropertiesTo(result, entity, true);
                         isLocalOnly = false;
-                        _backingFieldValues["isDirty"] = false;
+                        // _backingFieldValues["isDirty"] = false;
+                        isDirty = false;
                         Log.Verbose("Inserted to openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                     }
                     else
@@ -87,7 +92,8 @@ namespace OpenRPA
                                 if (result != null)
                                 {
                                     EnumerableExtensions.CopyPropertiesTo(result, entity, true);
-                                    _backingFieldValues["isDirty"] = false;
+                                    // _backingFieldValues["isDirty"] = false;
+                                    isDirty = false;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
                                 }
                             }
@@ -103,9 +109,16 @@ namespace OpenRPA
                 {
                     try
                     {
-                        var exists = collection.FindById(_id);
-                        if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
-                        if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                        if(!string.IsNullOrEmpty(_id))
+                        {
+                            var exists = collection.FindById(_id);
+                            if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                            if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                        } else
+                        {
+                            // WHY ????
+                            System.Diagnostics.Debugger.Break();
+                        }
                     }
                     finally
                     {

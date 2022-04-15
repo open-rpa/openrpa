@@ -270,5 +270,36 @@ namespace OpenRPA.Interfaces
         public static extern int GetWindowTextLength(IntPtr hWnd);
         [DllImport("USER32.DLL")]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        public static void OpenUrl(string url)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(url);
+            }
+            catch
+            {
+                url = url.Replace("&", "^&");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                //if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                //{
+                //    url = url.Replace("&", "^&");
+                //    Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+                //}
+                //else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                //{
+                //    System.Diagnostics.Process.Start("xdg-open", url);
+                //}
+                //else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                //{
+                //    System.Diagnostics.Process.Start("open", url);
+                //}
+                //else
+                //{
+                //    throw;
+                //}
+            }
+        }
+
     }
 }

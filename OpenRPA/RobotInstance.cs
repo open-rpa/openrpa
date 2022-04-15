@@ -193,7 +193,6 @@ namespace OpenRPA
             }
         }
         public string robotqueue = "";
-        public bool loginInProgress = false;
         private bool first_connect = true;
         private int connect_attempts = 0;
         private bool? _isRunningInChildSession = null;
@@ -601,8 +600,8 @@ namespace OpenRPA
                             Log.Warning(wf.RelativeFilename + " no longer exists on server, but is marked as dirty! Open and save it, to preserve it, or delete it if no longer needed");
                             if (wf.State != "warning")
                             {
-                                ((Workflow)exists).SetLastState("warning");
-                                await ((Workflow)exists).Save(true);
+                                ((Workflow)_wf).SetLastState("warning");
+                                await ((Workflow)_wf).Save(true);
                             }
                         }
                     }
@@ -714,7 +713,7 @@ namespace OpenRPA
                     server_detectors = await global.webSocketClient.Query<Detector>("openrpa", q, orderby: "{\"name\":-1}");
                     foreach (var detector in server_detectors)
                     {
-                        detector.isDirty = false;
+                        // detector.isDirty = false;
                         try
                         {
                             IDetectorPlugin exists = Plugins.detectorPlugins.Where(x => x.Entity._id == detector._id).FirstOrDefault();
@@ -809,7 +808,7 @@ namespace OpenRPA
                     foreach (var workitemqueue in server_workitemqueues)
                     {
                         var exists = local_workitemqueues.Where(x => x._id == workitemqueue._id).FirstOrDefault();
-                        workitemqueue.isDirty = false;
+                        // workitemqueue.isDirty = false;
                         if (exists != null)
                         {
                             await exists.Update(workitemqueue, true);
@@ -822,13 +821,13 @@ namespace OpenRPA
                 }
                 var LocalOnlyProjects = _instance.Projects.Where(x => x.isLocalOnly);
                 foreach (var i in LocalOnlyProjects) await i.Save();
-                var LocalOnlyWorkflws = _instance.Workflows.Where(x => x.isLocalOnly);
+                var LocalOnlyWorkflws = _instance.Workflows.Where(x => x.isLocalOnly && !string.IsNullOrEmpty(x.projectid));
                 foreach (var i in LocalOnlyWorkflws) await i.Save();
 
 
                 if (Projects.Count() == 0)
                 {
-                    GenericTools.RunUIAsync(async () =>
+                    await GenericTools.RunUIAsync(async () =>
                     {
                         string Name = "New Project";
                         try
@@ -842,7 +841,7 @@ namespace OpenRPA
                         {
                             Log.Error(ex.ToString());
                         }
-                    }).Wait();
+                    });
                 }
                 foreach (var _id in updatePackages)
                 {
@@ -914,38 +913,38 @@ namespace OpenRPA
                           Log.Debug("RunPendingInstances::begin ");
                           await WorkflowInstance.RunPendingInstances();
                           Log.Debug("RunPendingInstances::end ");
-                              foreach (var i in WorkflowInstance.Instances)
+                          foreach (var i in WorkflowInstance.Instances)
+                          {
+                              if (i.Bookmarks != null && i.Bookmarks.Count > 0)
                               {
-                                  if (i.Bookmarks != null && i.Bookmarks.Count > 0)
+                                  foreach (var b in i.Bookmarks)
                                   {
-                                      foreach (var b in i.Bookmarks)
+                                      var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
+                                      if (instance != null)
                                       {
-                                          var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
-                                          if (instance != null)
+                                          if (instance.isCompleted)
                                           {
-                                              if (instance.isCompleted)
+                                              try
                                               {
-                                                  try
+                                                  i.ResumeBookmark(b.Key, instance, true);
+                                              }
+                                              catch (System.ArgumentException ex)
+                                              {
+                                                  if (i.state == "idle" || i.state == "running")
                                                   {
-                                                      i.ResumeBookmark(b.Key, instance, true);
+                                                      i.Abort(ex.Message);
                                                   }
-                                                  catch (System.ArgumentException ex)
-                                                  {
-                                                      if (i.state == "idle" || i.state == "running")
-                                                      {
-                                                          i.Abort(ex.Message);
-                                                      }
-                                                  }
-                                                  catch (Exception ex)
-                                                  {
-                                                      Log.Error(ex.ToString());
-                                                  }
+                                              }
+                                              catch (Exception ex)
+                                              {
+                                                  Log.Error(ex.ToString());
                                               }
                                           }
                                       }
-
                                   }
+
                               }
+                          }
                       }
                       catch (Exception ex)
                       {
@@ -1230,82 +1229,78 @@ namespace OpenRPA
                         }
                     }
                     if (!global.webSocketClient.isConnected) return;
-                    if (user == null)
+                    if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin)
                     {
-                        if (loginInProgress == false && (global.webSocketClient.isConnected && !global.webSocketClient.signedin))
+                        string jwt = null;
+                        try
                         {
-                            loginInProgress = true;
-                            string jwt = null;
-                            try
+                            Hide();
+                            Log.Debug("Create SigninWindow " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            GenericTools.RunUI(() =>
                             {
-                                Hide();
-                                GenericTools.RunUI(async () =>
+                                var signinWindow = new Views.SigninWindow(url, true);
+                                Log.Debug("ShowDialog " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                signinWindow.ShowDialog();
+                                jwt = signinWindow.jwt;
+                            });
+                            if (!string.IsNullOrEmpty(jwt))
+                            {
+                                Config.local.jwt = Config.local.ProtectString(jwt);
+                                user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                if (user != null)
                                 {
-                                    try
-                                    {
-                                        Log.Debug("Create SigninWindow " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                        var signinWindow = new Views.SigninWindow(url, true);
-                                        Log.Debug("ShowDialog " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                        signinWindow.ShowDialog();
-                                        jwt = signinWindow.jwt;
-                                        if (!string.IsNullOrEmpty(jwt))
-                                        {
-                                            Config.local.jwt = Config.local.ProtectString(jwt);
-                                            user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                                            if (user != null)
-                                            {
-                                                Config.local.username = user.username;
-                                                Config.Save();
-                                                Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                                            }
-                                        }
-                                        else if (Config.local.jwt != null && Config.local.jwt.Length > 0)
-                                        {
-                                            user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
-                                            if (user != null)
-                                            {
-                                                Config.local.username = user.username;
-                                                Config.Save();
-                                                Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
-                                            }
-                                        }
-                                        else
-                                        {
-
-                                            if (global.webSocketClient.isConnected && global.webSocketClient.user != null)
-                                            {
-                                                user = global.webSocketClient.user;
-                                                Config.local.username = user.username;
-                                            }
-                                            else
-                                            {
-                                                Log.Debug("Call close " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                                Close();
-                                            }
-                                        }
-
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Log.Error("RobotInstance.RobotInstance_WebSocketClient_OnOpen.UIlogin: " + ex.Message);
-                                    }
-                                });
+                                    Config.local.username = user.username;
+                                    Config.Save();
+                                    Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                    Show();
+                                }
                             }
-                            catch (Exception)
+                            else if (Config.local.jwt != null && Config.local.jwt.Length > 0)
                             {
-                                throw;
+                                // user closed window or login failed,
+                                // try once more with the jwt from the config file incase it was a network issue and login window is still open
+                                // else, we assume user closed the window and wants openrpa to close as well
+                                try
+                                {
+                                    user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
+                                    if (user != null)
+                                    {
+                                        Config.local.username = user.username;
+                                        Config.Save();
+                                        Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                        SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                                        Show();
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    Close();
+                                    return;
+                                }
                             }
-                            finally
+                            else
                             {
-                                loginInProgress = false;
-                            }
 
+                                if (global.webSocketClient.isConnected && global.webSocketClient.user != null)
+                                {
+                                    user = global.webSocketClient.user;
+                                    Config.local.username = user.username;
+                                }
+                                else
+                                {
+                                    Log.Debug("Call close " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                                    Close();
+                                    return;
+                                }
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            return;
+                            Log.Error(ex.Message);
+                        }
+                        finally
+                        {
                         }
                     }
                 }
@@ -1366,7 +1361,7 @@ namespace OpenRPA
             }
             try
             {
-                SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                if(global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
             }
             catch (Exception ex)
             {
@@ -1391,12 +1386,12 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
-                    SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                    if (global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
                 });
             }
             try
             {
-                if (global.openflowconfig != null && global.openflowconfig.supports_watch)
+                if (global.openflowconfig != null && global.openflowconfig.supports_watch && global.webSocketClient.isConnected && global.webSocketClient.signedin)
                 {
                     await global.webSocketClient.Watch("openrpa",
                         "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
@@ -1421,7 +1416,7 @@ namespace OpenRPA
                 foreach (var d in Plugins.detectorPlugins)
                 {
                     var _d = d.Entity as Detector;
-                    await _d.RegisterExchange();
+                    if (global.webSocketClient.isConnected && global.webSocketClient.signedin) await _d.RegisterExchange();
                 }
             }
             catch (Exception ex)
@@ -1577,163 +1572,163 @@ namespace OpenRPA
                     IWorkflowInstance instance = null;
                     var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(command.workflowid);
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
-                        try
+                    try
+                    {
+                        if (!Config.local.remote_allowed)
                         {
-                            if (!Config.local.remote_allowed)
+                            // Don't fail, just say busy and let the message expire
+                            // so if this was send to a robot in a role, another robot can pick this up.
+                            e.isBusy = true; return;
+                        }
+                        int RunningCount = 0;
+                        int RemoteRunningCount = 0;
+                        WorkflowInstance.CleanUp();
+                        foreach (var i in WorkflowInstance.Instances.ToList())
+                        {
+                            if (command.killallexisting && Config.local.remote_allowed_killing_any && !i.isCompleted)
                             {
-                                // Don't fail, just say busy and let the message expire
-                                // so if this was send to a robot in a role, another robot can pick this up.
+                                i.Abort("Killed by nodered rpa node, due to killallexisting");
+                            }
+                            else if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
+                            {
+                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else
+                                {
+                                    RemoteRunningCount++;
+                                    RunningCount++;
+                                }
+                            }
+                            else if (!i.isCompleted)
+                            {
+                                if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else if (command.killallexisting && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
+                                {
+                                    i.Abort("Killed by nodered rpa node, due to killexisting");
+                                }
+                                else
+                                {
+                                    RunningCount++;
+                                }
+                            }
+                            if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
+                            {
+                                if (i.Workflow != null)
+                                {
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
+                                }
+                                else
+                                {
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
+                                }
                                 e.isBusy = true; return;
                             }
-                            int RunningCount = 0;
-                            int RemoteRunningCount = 0;
-                            WorkflowInstance.CleanUp();
-                            foreach (var i in WorkflowInstance.Instances.ToList())
+                            else if (Config.local.remote_allow_multiple_running && RemoteRunningCount > Config.local.remote_allow_multiple_running_max)
                             {
-                                if (command.killallexisting && Config.local.remote_allowed_killing_any && !i.isCompleted)
+                                if (i.Workflow != null)
                                 {
-                                    i.Abort("Killed by nodered rpa node, due to killallexisting");
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
                                 }
-                                else if (!string.IsNullOrEmpty(i.correlationId) && !i.isCompleted)
+                                else
                                 {
-                                    if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
-                                    {
-                                        i.Abort("Killed by nodered rpa node, due to killexisting");
-                                    }
-                                    else
-                                    {
-                                        RemoteRunningCount++;
-                                        RunningCount++;
-                                    }
+                                    if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
                                 }
-                                else if (!i.isCompleted)
-                                {
-                                    if (command.killexisting && i.WorkflowId == workflow._id && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
-                                    {
-                                        i.Abort("Killed by nodered rpa node, due to killexisting");
-                                    }
-                                    else if (command.killallexisting && (Config.local.remote_allowed_killing_self || Config.local.remote_allowed_killing_any))
-                                    {
-                                        i.Abort("Killed by nodered rpa node, due to killexisting");
-                                    }
-                                    else
-                                    {
-                                        RunningCount++;
-                                    }
-                                }
-                                if (!Config.local.remote_allow_multiple_running && RunningCount > 0)
-                                {
-                                    if (i.Workflow != null)
-                                    {
-                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
-                                    }
-                                    else
-                                    {
-                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
-                                    }
-                                    e.isBusy = true; return;
-                                }
-                                else if (Config.local.remote_allow_multiple_running && RemoteRunningCount > Config.local.remote_allow_multiple_running_max)
-                                {
-                                    if (i.Workflow != null)
-                                    {
-                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy. (running " + i.Workflow.ProjectAndName + ")");
-                                    }
-                                    else
-                                    {
-                                        if (Config.local.log_busy_warning) Log.Warning("Cannot invoke " + workflow.name + ", I'm busy.");
-                                    }
-                                    e.isBusy = true; return;
-                                }
+                                e.isBusy = true; return;
                             }
-                            // e.sendReply = true;
-                            var param = new Dictionary<string, object>();
-                            foreach (var k in data)
-                            {
-                                var p = workflow.Parameters.Where(x => x.name == k.Key).FirstOrDefault();
-                                if (p == null) continue;
-                                switch (k.Value.Type)
-                                {
-                                    case JTokenType.Integer: param.Add(k.Key, k.Value.Value<long>()); break;
-                                    case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
-                                    case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
-                                    case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
-                                    case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
-                                    case JTokenType.Array: param.Add(k.Key, k.Value.Value<JArray>()); break;
-                                    default:
-                                        try
-                                        {
-
-                                            // param.Add(k.Key, k.Value.Value<string>());
-                                            var v = k.Value.ToObject(Type.GetType(p.type));
-                                            param.Add(k.Key, v);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Log.Debug("WebSocketClient_OnQueueMessage: " + ex.Message);
-                                        }
-                                        break;
-
-                                        // default: param.Add(k.Key, k.Value.Value<string>()); break;
-                                }
-                            }
-                            foreach (var p in workflow.Parameters)
-                            {
-                                if (param.ContainsKey(p.name))
-                                {
-                                    var value = param[p.name];
-                                    if (p.type == "System.Data.DataTable" && value != null)
-                                    {
-                                        if (value is JArray)
-                                        {
-                                            param[p.name] = ((JArray)value).ToDataTable();
-                                        }
-
-                                    }
-                                    else if (p.type.EndsWith("[]"))
-                                    {
-                                        param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
-                                    }
-                                }
-                            }
-                            Log.Information("[" + message.correlationId + "] Create instance of " + workflow.name);
-                            Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
-                            if (Window == null) { e.isBusy = true; return; }
-                            GenericTools.RunUI(() =>
-                            {
-                                command.command = "invokesuccess";
-                                string errormessage = "";
-                                try
-                                {
-                                    if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
-                                    {
-                                        designer.BreakpointLocations = null;
-                                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
-                                        designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
-                                    }
-                                    else
-                                    {
-                                        instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
-                                        instance.Run();
-                                    }
-                                    if (Config.local.notify_on_workflow_remote_start)
-                                    {
-                                        App.notifyIcon.ShowBalloonTip(1000, "", workflow.name + " remotly started", System.Windows.Forms.ToolTipIcon.Info);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    command.command = "error";
-                                    command.data = data = JObject.FromObject(ex);
-                                    errormessage = ex.Message;
-                                    Log.Error(ex.ToString());
-                                }
-                            });
                         }
-                        finally
+                        // e.sendReply = true;
+                        var param = new Dictionary<string, object>();
+                        foreach (var k in data)
                         {
-                            // System.Threading.Monitor.Exit(statelock);
+                            var p = workflow.Parameters.Where(x => x.name == k.Key).FirstOrDefault();
+                            if (p == null) continue;
+                            switch (k.Value.Type)
+                            {
+                                case JTokenType.Integer: param.Add(k.Key, k.Value.Value<long>()); break;
+                                case JTokenType.Float: param.Add(k.Key, k.Value.Value<float>()); break;
+                                case JTokenType.Boolean: param.Add(k.Key, k.Value.Value<bool>()); break;
+                                case JTokenType.Date: param.Add(k.Key, k.Value.Value<DateTime>()); break;
+                                case JTokenType.TimeSpan: param.Add(k.Key, k.Value.Value<TimeSpan>()); break;
+                                case JTokenType.Array: param.Add(k.Key, k.Value.Value<JArray>()); break;
+                                default:
+                                    try
+                                    {
+
+                                        // param.Add(k.Key, k.Value.Value<string>());
+                                        var v = k.Value.ToObject(Type.GetType(p.type));
+                                        param.Add(k.Key, v);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Debug("WebSocketClient_OnQueueMessage: " + ex.Message);
+                                    }
+                                    break;
+
+                                    // default: param.Add(k.Key, k.Value.Value<string>()); break;
+                            }
                         }
+                        foreach (var p in workflow.Parameters)
+                        {
+                            if (param.ContainsKey(p.name))
+                            {
+                                var value = param[p.name];
+                                if (p.type == "System.Data.DataTable" && value != null)
+                                {
+                                    if (value is JArray)
+                                    {
+                                        param[p.name] = ((JArray)value).ToDataTable();
+                                    }
+
+                                }
+                                else if (p.type.EndsWith("[]"))
+                                {
+                                    param[p.name] = ((JArray)value).ToObject(Type.GetType(p.type));
+                                }
+                            }
+                        }
+                        Log.Information("[" + message.correlationId + "] Create instance of " + workflow.name);
+                        Log.Function("RobotInstance", "WebSocketClient_OnQueueMessage", "Create instance and run workflow");
+                        if (Window == null) { e.isBusy = true; return; }
+                        GenericTools.RunUI(() =>
+                        {
+                            command.command = "invokesuccess";
+                            string errormessage = "";
+                            try
+                            {
+                                if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
+                                {
+                                    designer.BreakpointLocations = null;
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
+                                    designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
+                                }
+                                else
+                                {
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
+                                    instance.Run();
+                                }
+                                if (Config.local.notify_on_workflow_remote_start)
+                                {
+                                    App.notifyIcon.ShowBalloonTip(1000, "", workflow.name + " remotly started", System.Windows.Forms.ToolTipIcon.Info);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                command.command = "error";
+                                command.data = data = JObject.FromObject(ex);
+                                errormessage = ex.Message;
+                                Log.Error(ex.ToString());
+                            }
+                        });
+                    }
+                    finally
+                    {
+                        // System.Threading.Monitor.Exit(statelock);
+                    }
                 }
             }
             catch (Exception ex)

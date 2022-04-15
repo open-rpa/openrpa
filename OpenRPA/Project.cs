@@ -174,7 +174,7 @@ namespace OpenRPA
         public async Task<IWorkflow> AddDefaultWorkflow()
         {
             var w = await Workflow.Create(this, "New Workflow");
-            Workflows.Add(w);
+            // Workflows.Add(w);
             return w;
         }
         public async Task LoadFileFromDisk(string file)

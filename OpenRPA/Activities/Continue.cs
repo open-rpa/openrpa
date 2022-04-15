@@ -18,6 +18,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.continue.png")]
     [LocalizedToolboxTooltip("activity_continue_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_continue", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_continue_helpurl", typeof(Resources.strings))]
     public class Continue : NativeActivity
     {
         protected override void Execute(NativeActivityContext context)

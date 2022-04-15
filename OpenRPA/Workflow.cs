@@ -446,7 +446,11 @@ namespace OpenRPA
         {
             try
             {
-                if(!skipOnline) await Delete<Workflow>();
+                GenericTools.RunUI(() =>
+                {
+                    if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(IDOrRelativeFilename) is Views.WFDesigner designer) { designer.tab.Close(); }
+                });
+                if (!skipOnline) await Delete<Workflow>();
                 if (!string.IsNullOrEmpty(_id) && global.isConnected)
                 {
                     var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");

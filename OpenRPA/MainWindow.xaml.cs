@@ -2555,13 +2555,6 @@ namespace OpenRPA
                 var val = view.listWorkflows.SelectedValue;
                 if (val is Workflow wf)
                 {
-                    if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(wf.IDOrRelativeFilename) is Views.WFDesigner designer) { designer.tab.Close(); }
-                    var messageBoxResult = MessageBox.Show("Delete " + wf.name + " ?", "Delete Confirmation", MessageBoxButton.YesNo);
-                    if (messageBoxResult != MessageBoxResult.Yes)
-                    {
-                        Log.FunctionOutdent("MainWindow", "OnDelete", "User canceled");
-                        return;
-                    }
                     await wf.Delete();
                 }
                 if (val is Detector d)

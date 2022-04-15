@@ -37,8 +37,15 @@ namespace OpenRPA.Interfaces
                 if (exists.Count() == 0) Items.Remove(list[i]);
             }
         }
+        public void UpdateItem(T Item)
+        {
+            var index = Items.IndexOf(Item);
+             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, Item, index));
+            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Item));
+            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Item, index));
+        }
     }
-    public class FilteredObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
+    public class FilteredObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
     {
         private Predicate<T> _filter;
         private ObservableCollection<T> basecollection;
@@ -51,43 +58,20 @@ namespace OpenRPA.Interfaces
             collection.CollectionChanged += new NotifyCollectionChangedEventHandler(OnBaseCollectionChanged);
             // basecollection.onFilterUpdated += Basecollection_onFilterUpdated;
         }
-        public void Refresh()
-        {
-            Items.Clear();
-            foreach (var item in basecollection) if (_filter(item) == true) base.Add(item);
-        }
-
-        //private void Basecollection_onFilterUpdated(object sender, EventArgs e)
+        //private void Basecollection_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         //{
-        //    List<T> addlist = new List<T>();
-        //    List<T> removelist = new List<T>();
-        //    try
+        //    T item = (T)sender;
+        //    if (e.PropertyName == "_id" || e.PropertyName == "projectid")
         //    {
-        //        foreach (var item in Items.ToList())
+        //        if (Items.Contains(item))
         //        {
-        //            if (_filter(item) == false)
-        //            {
-        //                Items.Remove(item);
-        //                removelist.Add(item);
-        //            }
+        //            if (_filter(item) != true) base.Remove(item);
         //        }
-        //        foreach (var item in basecollection.ToList())
+        //        else
         //        {
-        //            if (Items.Contains(item)) continue;
-        //            if (_filter(item) == true)
-        //            {
-        //                Items.Add(item);
-        //                addlist.Add(item);
-        //            }
+        //            if (_filter(item) == true) base.Add(item);
         //        }
-
         //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Error(ex.Message);
-        //    }
-        //    if (removelist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
-        //    if (addlist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
         //}
         public Predicate<T> Filter
         {
@@ -96,7 +80,6 @@ namespace OpenRPA.Interfaces
         }
         void OnBaseCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // ObservableCollection<T> collection = sender as ObservableCollection<T>;
             var collection = Items;
             if (collection != null)
             {
@@ -131,6 +114,28 @@ namespace OpenRPA.Interfaces
                     else
                         removelist.Add(item);
 
+
+                if (e.NewItems != null && e.Action == NotifyCollectionChangedAction.Replace)
+                {
+                    foreach (var item in e.NewItems)
+                    {
+                        bool shouldbehere = false;
+                        bool ishere = false;
+                        var titem = (T)item;
+                        if (!shouldbehere) shouldbehere = _filter(titem);
+                        if (!ishere) ishere = Items.Contains(titem);
+                        if (shouldbehere && !ishere && !addlist.Contains(titem)) { 
+                            addlist.Add(titem);
+                        }
+                        if (!shouldbehere && ishere && !removelist.Contains(titem))
+                        {
+                            removelist.Add(titem);
+                        }
+                    }
+                    // Log.Output("shouldbehere: " + shouldbehere + " / ishere: " + ishere);
+                }
+
+
                 foreach (T item in addlist) Items.Add(item);
                 foreach (T item in removelist) Items.Remove(item);
                 // Send the corrected event
@@ -142,6 +147,7 @@ namespace OpenRPA.Interfaces
                     case NotifyCollectionChangedAction.Replace:
                         if (addlist.Count > 0)
                         {
+                            // foreach (var item in addlist) item.PropertyChanged += Basecollection_ItemPropertyChanged;
                             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
                             // Log.Output("OnBaseCollectionChanged add " + addlist.Count);
                             //OnPropertyChanged(new PropertyChangedEventArgs("Count"));
@@ -154,6 +160,7 @@ namespace OpenRPA.Interfaces
                         }
                         if (removelist.Count > 0)
                         {
+                            // foreach (var item in removelist) item.PropertyChanged -= Basecollection_ItemPropertyChanged;
                             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
                             // Log.Output("OnBaseCollectionChanged remove " + removelist.Count);
                         }
@@ -198,14 +205,12 @@ namespace OpenRPA.Interfaces
             var newItems = e.NewItems.ToListOfType<IBase>();
             var oldItems = e.OldItems.ToListOfType<IBase>();
             var notifyCollectionChanged = (INotifyCollectionChanged)sender;
-
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     AddItems(newItems, notifyCollectionChanged);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    // this.RemoveRange(oldItems);
                     foreach (var item in oldItems) Remove(item);
                     break;
                 case NotifyCollectionChangedAction.Replace:
@@ -220,6 +225,10 @@ namespace OpenRPA.Interfaces
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            this.Sort((a, b) => { 
+                if(a._type != "workflow" && b._type == "workflow") return -1;
+                return 1;
+                });
         }
         private void Reset()
         {
@@ -320,3 +329,4 @@ namespace OpenRPA.Interfaces
 
     }
 }
+

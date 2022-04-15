@@ -624,6 +624,8 @@ namespace OpenRPA.Views
                 }
                 if (wf != null)
                 {
+                    wf = RobotInstance.instance.Workflows.FindById(wf._id) as Workflow;
+
                     e.Handled = true;
                     if (target != null)
                     {

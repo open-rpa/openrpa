@@ -111,6 +111,16 @@ namespace OpenRPA.Interfaces
             //    }
             //});
         }
+        public static void Sort<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, Comparison<T> comparison)
+        {
+            var sortableList = new List<T>(collection);
+            sortableList.Sort(comparison);
+
+            for (int i = 0; i < sortableList.Count; i++)
+            {
+                collection.Move(collection.IndexOf(sortableList[i]), i);
+            }
+        }
         public static string Base64Encode(string plainText)
         {
             if (string.IsNullOrEmpty(plainText)) plainText = "";

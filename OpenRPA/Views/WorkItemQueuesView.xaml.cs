@@ -31,37 +31,37 @@ namespace OpenRPA.Views
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public ExtendedObservableCollection<IWorkitemQueue> WorkItemQueues
+        public System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue> WorkItemQueues
         {
             get
             {
                 return RobotInstance.instance.WorkItemQueues;
             }
         }
-        private ExtendedObservableCollection<Workflow> _Workflows = new ExtendedObservableCollection<Workflow>();
-        public ExtendedObservableCollection<Workflow> Workflows
+        private System.Collections.ObjectModel.ObservableCollection<Workflow> _Workflows = new System.Collections.ObjectModel.ObservableCollection<Workflow>();
+        public System.Collections.ObjectModel.ObservableCollection<Workflow> Workflows
         {
             get
             {
                 return _Workflows;
             }
         }
-        private ExtendedObservableCollection<Workitem> _WorkItems = new ExtendedObservableCollection<Workitem>();
-        public ExtendedObservableCollection<Workitem> WorkItems
+        private System.Collections.ObjectModel.ObservableCollection<Workitem> _WorkItems = new System.Collections.ObjectModel.ObservableCollection<Workitem>();
+        public System.Collections.ObjectModel.ObservableCollection<Workitem> WorkItems
         {
             get
             {
                 return _WorkItems;
             }
         }
-        public ExtendedObservableCollection<IProject> Projects
+        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects
         {
             get
             {
                 return OpenProject.Instance.Projects;
             }
         }
-        public ExtendedObservableCollection<apiuser> Robots { get; set; } = new ExtendedObservableCollection<apiuser>();
+        public System.Collections.ObjectModel.ObservableCollection<apiuser> Robots { get; set; } = new System.Collections.ObjectModel.ObservableCollection<apiuser>();
         public WorkItemQueuesView(MainWindow main)
         {
             Log.FunctionIndent("WorkItemQueuesView", "WorkItemQueuesView");

@@ -26,7 +26,7 @@ namespace OpenRPA.Activities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public ExtendedObservableCollection<IDetectorPlugin> detectorPlugins
+        public System.Collections.ObjectModel.ObservableCollection<IDetectorPlugin> detectorPlugins
         {
             get
             {

@@ -37,6 +37,80 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
+
+        public static void UpdateCollection<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, IEnumerable<T> newCollection) 
+        {
+            IEnumerator<T> newCollectionEnumerator = newCollection.GetEnumerator();
+            IEnumerator<T> collectionEnumerator = collection.GetEnumerator();
+
+            var itemsToDelete = new System.Collections.ObjectModel.Collection<T>();
+            while (collectionEnumerator.MoveNext())
+            {
+                T item = collectionEnumerator.Current;
+
+                // Store item to delete (we can't do it while parse collection.
+                if (!newCollection.Contains(item))
+                {
+                    itemsToDelete.Add(item);
+                }
+            }
+
+            // Handle item to delete.
+            foreach (T itemToDelete in itemsToDelete)
+            {
+                collection.Remove(itemToDelete);
+            }
+
+            var i = 0;
+            while (newCollectionEnumerator.MoveNext())
+            {
+                T item = newCollectionEnumerator.Current;
+
+                // Handle new item.
+                if (!collection.Contains(item))
+                {
+                    collection.Insert(i, item);
+                }
+
+                // Handle existing item, move at the good index.
+                if (collection.Contains(item))
+                {
+                    int oldIndex = collection.IndexOf(item);
+                    if (oldIndex != i)
+                    {
+                        // Items.Move(oldIndex, i);
+                        collection.Move(oldIndex, i);
+                    }
+                }
+
+                i++;
+            }
+        }
+        public static void UpdateItem<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, T Item, T NewItem)
+        {
+            T originalItem = Item;
+            var index = collection.IndexOf(Item);
+            NewItem.CopyPropertiesTo(Item, false);
+            //GenericTools.RunUI(() =>
+            //{
+            //    collection.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, originalItem, index));
+            //});
+            return;
+        }
+        public static void AddRange<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, IEnumerable<T> range)
+        {
+            foreach(var item in range) collection.Add(item);
+            //GenericTools.RunUI(() =>
+            //{
+            //    List<T> addlist = new List<T>();
+            //    foreach (var item in range) addlist.Add(item);
+            //    if (range.Count() == 0) return;
+            //    foreach (var item in addlist)
+            //    {
+            //        collection.Add(item);
+            //    }
+            //});
+        }
         public static string Base64Encode(string plainText)
         {
             if (string.IsNullOrEmpty(plainText)) plainText = "";

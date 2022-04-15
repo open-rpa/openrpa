@@ -9,273 +9,13 @@ using System.Reflection;
 
 namespace OpenRPA.Interfaces
 {
-    public class ExtendedObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
-    {
-        public ExtendedObservableCollection()
-        {
-        }
-        public ExtendedObservableCollection(IEnumerable<T> collection) : base(collection)
-        {
-        }
-        public ExtendedObservableCollection(List<T> list) : base(list)
-        {
-        }
-        public event PropertyChangedEventHandler ItemPropertyChanged;
-        public event EventHandler onFilterUpdated;
-
-        private void _ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            ItemPropertyChanged?.Invoke(sender, e);
-        }
-        protected override void ClearItems()
-        {
-            foreach (var item in Items) item.PropertyChanged -= _ItemPropertyChanged;
-            base.ClearItems();
-        }
-        public new void Add(T item)
-        {
-            GenericTools.RunUI(() => base.Add(item));
-        }
-        public new void Clear()
-        {
-            GenericTools.RunUI(() => base.Clear());
-        }
-        public new void Remove(T item)
-        {
-            if(item == null) return;
-            item.PropertyChanged -= _ItemPropertyChanged;
-            GenericTools.RunUI(() => base.Remove(item));
-        }
-        public new void RemoveAt(int index)
-        {
-            Items[index].PropertyChanged -= _ItemPropertyChanged;
-            GenericTools.RunUI(() => base.RemoveAt(index));
-        }
-        public new void CopyTo(T[] array, int index)
-        {
-            GenericTools.RunUI(() => base.CopyTo(array, index));
-        }
-        public new void Insert(int index, T item)
-        {
-            item.PropertyChanged += _ItemPropertyChanged;
-            GenericTools.RunUI(() => base.Insert(index, item));
-        }
-        public new void Move(int oldIndex, int newIndex)
-        {
-            GenericTools.RunUI(() => base.Move(oldIndex, newIndex));
-        }
-        public void AddRange(IEnumerable<T> range)
-        {
-            IList<T> rangeList = null;
-            try
-            {
-                rangeList = range as IList<T>;
-                if (rangeList == null)
-                {
-                    var _enum = range as IEnumerable<T>;
-                    if (_enum != null) rangeList = _enum.ToList();
-                }
-            }
-            catch (Exception)
-            {
-            }
-            if (rangeList == null)
-            {
-                rangeList = range.ToList();
-            }
-            if (rangeList.Count == 0) { return; }
-            if (rangeList.Count == 1)
-            {
-                Add(rangeList[0]);
-                return;
-            }
-            foreach (var item in rangeList)
-            {
-                GenericTools.RunUI(() =>
-                {
-                    item.PropertyChanged += _ItemPropertyChanged;
-                    Items.Add(item);
-                });
-            }
-            GenericTools.RunUI(() =>
-            {
-                try
-                {
-                    OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                    OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                    OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-                }
-                catch (Exception ex)
-                {
-                    Log.Debug(ex.ToString());
-                }
-            });
-        }
-        public void RemoveRange(int index, int count)
-        {
-            if (count <= 0 || index >= Items.Count) { return; }
-            if (count == 1)
-            {
-                Items[index].PropertyChanged -= _ItemPropertyChanged;
-                RemoveAt(index);
-                return;
-            }
-            GenericTools.RunUI(() =>
-            {
-                for (var i = 0; i < count; i++)
-                {
-                    Items[index].PropertyChanged -= _ItemPropertyChanged;
-                    Items.RemoveAt(index);
-                }
-                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-            });
-        }
-        public void RemoveRange(IEnumerable<T> range)
-        {
-            foreach (var item in range)
-            {
-                Remove(item);
-            }
-            GenericTools.RunUI(() =>
-            {
-                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-            });
-        }
-        public void RemoveAll(Predicate<T> match)
-        {
-            var removedItem = false;
-            for (var i = Items.Count - 1; i >= 0; i--)
-            {
-                if (match(Items[i]))
-                {
-                    Items[i].PropertyChanged -= _ItemPropertyChanged;
-                    Items.RemoveAt(i);
-                    removedItem = true;
-                }
-            }
-            if (removedItem)
-            {
-                GenericTools.RunUI(() =>
-                {
-                    OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                    OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                    OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-                });
-            }
-        }
-        protected override void InsertItem(int index, T item)
-        {
-            item.PropertyChanged += _ItemPropertyChanged;
-            GenericTools.RunUI(() =>
-            {
-                if (index >= Items.Count && index > 0) index = Items.Count - 1;
-                base.InsertItem(index, item);
-            });
-        }
-        protected override void RemoveItem(int index)
-        {
-            this[index].PropertyChanged -= _ItemPropertyChanged;
-            GenericTools.RunUI(() =>
-            {
-                base.RemoveItem(index);
-            });
-        }
-        protected override void SetItem(int index, T item)
-        {
-            this[index].PropertyChanged -= _ItemPropertyChanged;
-            item.PropertyChanged += _ItemPropertyChanged;
-            GenericTools.RunUI(() =>
-            {
-                base.SetItem(index, item);
-            });
-        }
-        public void UpdateItem(T Item, T NewItem)
-        {
-            T originalItem = Item;
-            var index = Items.IndexOf(Item);
-            NewItem.CopyPropertiesTo(Item, false);
-            GenericTools.RunUI(() =>
-            {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, originalItem, index));
-            });
-            return;
-        }
-        public void Reset(IEnumerable<T> range)
-        {
-            ClearItems();
-            AddRange(range);
-        }
-        public void UpdateCollection(IEnumerable<T> newCollection)
-        {
-            IEnumerator<T> newCollectionEnumerator = newCollection.GetEnumerator();
-            IEnumerator<T> collectionEnumerator = Items.GetEnumerator();
-
-            Collection<T> itemsToDelete = new Collection<T>();
-            while (collectionEnumerator.MoveNext())
-            {
-                T item = collectionEnumerator.Current;
-
-                // Store item to delete (we can't do it while parse collection.
-                if (!newCollection.Contains(item))
-                {
-                    itemsToDelete.Add(item);
-                }
-            }
-
-            // Handle item to delete.
-            foreach (T itemToDelete in itemsToDelete)
-            {
-                Items.Remove(itemToDelete);
-            }
-
-            var i = 0;
-            while (newCollectionEnumerator.MoveNext())
-            {
-                T item = newCollectionEnumerator.Current;
-
-                // Handle new item.
-                if (!Items.Contains(item))
-                {
-                    Items.Insert(i, item);
-                }
-
-                // Handle existing item, move at the good index.
-                if (Items.Contains(item))
-                {
-                    int oldIndex = Items.IndexOf(item);
-                    if (oldIndex != i)
-                    {
-                        // Items.Move(oldIndex, i);
-                        Move(oldIndex, i);
-                    }
-                }
-
-                i++;
-            }
-        }
-        public void ForceUpdate()
-        {
-            GenericTools.RunUI(() =>
-            {
-                onFilterUpdated?.Invoke(this, new EventArgs());
-                //OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                //OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            });
-
-        }
-    }
-    public class ExtendedIBaseObservableCollection<T> : ExtendedObservableCollection<T> where T : INotifyPropertyChanged, IBase
+    public class IBaseObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
     {
         public T FindById(string id) => Items.Where(x => x._id == id).FirstOrDefault();
-        public ExtendedIBaseObservableCollection() : base()
+        public IBaseObservableCollection() : base()
         {
         }
-        public ExtendedIBaseObservableCollection(IEnumerable<T> pItems) : base()
+        public IBaseObservableCollection(IEnumerable<T> pItems) : base()
         {
             foreach (var item in pItems)
             {
@@ -298,19 +38,18 @@ namespace OpenRPA.Interfaces
             }
         }
     }
-    public class FilteredObservableCollection<T> : ExtendedObservableCollection<T> where T : INotifyPropertyChanged
+    public class FilteredObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
     {
         private Predicate<T> _filter;
-        private ExtendedObservableCollection<T> basecollection;
-        public FilteredObservableCollection(ExtendedObservableCollection<T> collection, Predicate<T> Filter) : base()
+        private ObservableCollection<T> basecollection;
+        public FilteredObservableCollection(ObservableCollection<T> collection, Predicate<T> Filter) : base()
         {
             _filter = Filter;
             basecollection = collection;
             var _list = new List<T>();
             foreach (var item in collection) if (_filter(item) == true) Items.Add(item);
             collection.CollectionChanged += new NotifyCollectionChangedEventHandler(OnBaseCollectionChanged);
-            basecollection.ItemPropertyChanged += Basecollection_ItemPropertyChanged;
-            basecollection.onFilterUpdated += Basecollection_onFilterUpdated;
+            // basecollection.onFilterUpdated += Basecollection_onFilterUpdated;
         }
         public void Refresh()
         {
@@ -318,53 +57,38 @@ namespace OpenRPA.Interfaces
             foreach (var item in basecollection) if (_filter(item) == true) base.Add(item);
         }
 
-        private void Basecollection_onFilterUpdated(object sender, EventArgs e)
-        {
-            List<T> addlist = new List<T>();
-            List<T> removelist = new List<T>();
-            try
-            {
-                foreach (var item in Items.ToList())
-                {
-                    if (_filter(item) == false)
-                    {
-                        Items.Remove(item);
-                        removelist.Add(item);
-                    }
-                }
-                foreach (var item in basecollection.ToList())
-                {
-                    if (Items.Contains(item)) continue;
-                    if (_filter(item) == true)
-                    {
-                        Items.Add(item);
-                        addlist.Add(item);
-                    }
-                }
+        //private void Basecollection_onFilterUpdated(object sender, EventArgs e)
+        //{
+        //    List<T> addlist = new List<T>();
+        //    List<T> removelist = new List<T>();
+        //    try
+        //    {
+        //        foreach (var item in Items.ToList())
+        //        {
+        //            if (_filter(item) == false)
+        //            {
+        //                Items.Remove(item);
+        //                removelist.Add(item);
+        //            }
+        //        }
+        //        foreach (var item in basecollection.ToList())
+        //        {
+        //            if (Items.Contains(item)) continue;
+        //            if (_filter(item) == true)
+        //            {
+        //                Items.Add(item);
+        //                addlist.Add(item);
+        //            }
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
-            if (removelist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
-            if (addlist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
-        }
-        private void Basecollection_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            T item = (T)sender;
-            if (e.PropertyName == "_id" || e.PropertyName == "projectid")
-            {
-                if (Items.Contains(item))
-                {
-                    if (_filter(item) != true) base.Remove(item);
-                }
-                else
-                {
-                    if (_filter(item) == true) base.Add(item);
-                }
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(ex.Message);
+        //    }
+        //    if (removelist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
+        //    if (addlist.Count > 0) OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
+        //}
         public Predicate<T> Filter
         {
             get { return _filter; }
@@ -450,7 +174,7 @@ namespace OpenRPA.Interfaces
         new public void Add(T item) { basecollection.Add(item); }
         new public void Remove(T item) { basecollection.Remove(item); }
     }
-    public class CompositionObservableCollection : ExtendedIBaseObservableCollection<IBase>
+    public class CompositionObservableCollection : IBaseObservableCollection<IBase>
     {
         private readonly List<INotifyCollectionChanged> _observableCollections;
         public CompositionObservableCollection(params INotifyCollectionChanged[] observableCollections)
@@ -462,7 +186,8 @@ namespace OpenRPA.Interfaces
         private void InitItems()
         {
             var itemsToAdd = _observableCollections.OfType<IEnumerable<IBase>>().SelectMany(item => item);
-            AddRange(itemsToAdd);
+            foreach(var item in itemsToAdd) Add(item);
+            // AddRange(itemsToAdd);
         }
         private void AttacheEvents()
         {
@@ -480,7 +205,8 @@ namespace OpenRPA.Interfaces
                     AddItems(newItems, notifyCollectionChanged);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    this.RemoveRange(oldItems);
+                    // this.RemoveRange(oldItems);
+                    foreach (var item in oldItems) Remove(item);
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     ReplaceItems(oldItems, newItems);
@@ -498,7 +224,8 @@ namespace OpenRPA.Interfaces
         private void Reset()
         {
             var itemsToDelete = GetItemsToDelete().ToList();
-            this.RemoveRange(itemsToDelete);
+            // this.RemoveRange(itemsToDelete);
+            foreach(var item in itemsToDelete) Remove(item);
         }
         private void MoveItems(IEnumerable<IBase> newItems, NotifyCollectionChangedEventArgs e)
         {
@@ -520,7 +247,8 @@ namespace OpenRPA.Interfaces
         }
         private void AddItems(IEnumerable<IBase> newItems, INotifyCollectionChanged sender)
         {
-            AddRange(newItems);
+            //AddRange(newItems);
+            foreach (var item in newItems) Add(item);
         }
         private IEnumerable<IBase> GetItemsToDelete()
         {

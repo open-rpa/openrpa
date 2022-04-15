@@ -218,7 +218,7 @@ namespace OpenRPA.Views
                 }
             }
         }
-        public ExtendedObservableCollection<IProject> Projects
+        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects
         {
             get
             {
@@ -262,8 +262,8 @@ namespace OpenRPA.Views
             set
             {
                 _FilterText = value;
-                Projects.ForceUpdate();
-                RobotInstance.instance.Workflows.ForceUpdate();
+                //Projects.ForceUpdate();
+                //RobotInstance.instance.Workflows.ForceUpdate();
                 //if (isFiltering)
                 //{
                 //    ReFilter = true;

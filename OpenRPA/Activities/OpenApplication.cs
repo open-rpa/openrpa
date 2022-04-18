@@ -15,6 +15,7 @@ namespace OpenRPA.Activities
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_openapplication", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_openapplication_helpurl", typeof(Resources.strings))]
     public class OpenApplication : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]

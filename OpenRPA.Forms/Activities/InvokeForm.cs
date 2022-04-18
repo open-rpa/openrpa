@@ -19,6 +19,7 @@ namespace OpenRPA.Forms.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.form30.png")]
     [LocalizedToolboxTooltip("activity_invokeform_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokeform", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_invokeform_helpurl", typeof(Resources.strings))]
     public class InvokeForm : AsyncTaskCodeActivity<FormResult>
     {
         [RequiredArgument]

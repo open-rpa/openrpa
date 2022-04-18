@@ -14,6 +14,7 @@ namespace OpenRPA.Activities
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_commentout_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_commentout", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_commentout_helpurl", typeof(Resources.strings))]
     public class CommentOut : CodeActivity
     {
         [DefaultValue(null)]

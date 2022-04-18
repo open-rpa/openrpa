@@ -15,6 +15,7 @@ namespace OpenRPA.Activities
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_foreachdatarow_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_foreachdatarow", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_foreachdatarow_helpurl", typeof(Resources.strings))]
     public class ForEachDataRow : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument, Category("Input"), OverloadGroup("DataTable"), LocalizedDisplayName("activity_datatable", typeof(Resources.strings)), LocalizedDescription("activity_datatable_help", typeof(Resources.strings))]

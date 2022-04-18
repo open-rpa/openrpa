@@ -19,7 +19,7 @@ namespace OpenRPA.NM.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -79,6 +79,15 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        /// </summary>
+        public static string activity_closetab_helpurl {
+            get {
+                return ResourceManager.GetString("activity_closetab_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close the current tab, or close all tabs.
         /// </summary>
         public static string activity_closetab_tooltip {
@@ -93,6 +102,15 @@ namespace OpenRPA.NM.Resources {
         public static string activity_executescript {
             get {
                 return ResourceManager.GetString("activity_executescript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        /// </summary>
+        public static string activity_executescript_helpurl {
+            get {
+                return ResourceManager.GetString("activity_executescript_helpurl", resourceCulture);
             }
         }
         
@@ -138,6 +156,15 @@ namespace OpenRPA.NM.Resources {
         public static string activity_getelement_drop_hint {
             get {
                 return ResourceManager.GetString("activity_getelement_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        /// </summary>
+        public static string activity_getelement_helpurl {
+            get {
+                return ResourceManager.GetString("activity_getelement_helpurl", resourceCulture);
             }
         }
         
@@ -196,6 +223,15 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-tab.
+        /// </summary>
+        public static string activity_gettab_helpurl {
+            get {
+                return ResourceManager.GetString("activity_gettab_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get current tab in chrome/edge or firefox, return nothing if browser not running.
         /// </summary>
         public static string activity_gettab_tooltip {
@@ -228,6 +264,15 @@ namespace OpenRPA.NM.Resources {
         public static string activity_openurl_getcurrent {
             get {
                 return ResourceManager.GetString("activity_openurl_getcurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        /// </summary>
+        public static string activity_openurl_helpurl {
+            get {
+                return ResourceManager.GetString("activity_openurl_helpurl", resourceCulture);
             }
         }
         

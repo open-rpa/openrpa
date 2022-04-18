@@ -16,6 +16,7 @@ namespace OpenRPA.WorkItems
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.throwbusinessruleexception.png")]
     [LocalizedToolboxTooltip("activity_throwbusinessruleexception_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_throwbusinessruleexception", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_throwbusinessruleexception_helpurl", typeof(Resources.strings))]
     public class ThrowBusinessRuleException : CodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_throwbusinessruleexception_message", typeof(Resources.strings)), LocalizedDescription("activity_throwbusinessruleexception_message_help", typeof(Resources.strings)), OverloadGroup("By ID")]

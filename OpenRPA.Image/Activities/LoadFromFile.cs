@@ -18,6 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_loadfromfile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_loadfromfile", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_loadfromfile_helpurl", typeof(Resources.strings))]
     public class LoadFromFile : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument]

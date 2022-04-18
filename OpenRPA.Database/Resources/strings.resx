@@ -120,6 +120,9 @@
   <data name="activity_databasescope" xml:space="preserve">
     <value>Database Scope</value>
   </data>
+  <data name="activity_databasescope_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-database</value>
+  </data>
   <data name="activity_databasescope_select" xml:space="preserve">
     <value>Select Database</value>
   </data>
@@ -153,6 +156,9 @@
   <data name="activity_executenonquery" xml:space="preserve">
     <value>Execute Non Query</value>
   </data>
+  <data name="activity_executenonquery_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#id76</value>
+  </data>
   <data name="activity_executenonquery_query" xml:space="preserve">
     <value>Query</value>
   </data>
@@ -165,11 +171,17 @@
   <data name="activity_executequery" xml:space="preserve">
     <value>Execute Query</value>
   </data>
+  <data name="activity_executequery_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#id77</value>
+  </data>
   <data name="activity_executequery_tooltip" xml:space="preserve">
     <value>Runs a query and returns the result as a DataTable</value>
   </data>
   <data name="activity_executescalar" xml:space="preserve">
     <value>Execute Scalar</value>
+  </data>
+  <data name="activity_executescalar_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#id78</value>
   </data>
   <data name="activity_executescalar_tooltip" xml:space="preserve">
     <value>Runs a query that returns exactly one result</value>
@@ -185,6 +197,9 @@
   </data>
   <data name="activity_updatefromtable_datatable_help" xml:space="preserve">
     <value>DataTable</value>
+  </data>
+  <data name="activity_updatefromtable_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#id79</value>
   </data>
   <data name="activity_updatefromtable_result" xml:space="preserve">
     <value>Result</value>

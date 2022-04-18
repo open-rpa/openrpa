@@ -19,7 +19,7 @@ namespace OpenRPA.Database.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -142,6 +142,15 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-database.
+        /// </summary>
+        public static string activity_databasescope_helpurl {
+            get {
+                return ResourceManager.GetString("activity_databasescope_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Database.
         /// </summary>
         public static string activity_databasescope_select {
@@ -165,6 +174,15 @@ namespace OpenRPA.Database.Resources {
         public static string activity_executenonquery {
             get {
                 return ResourceManager.GetString("activity_executenonquery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id76.
+        /// </summary>
+        public static string activity_executenonquery_helpurl {
+            get {
+                return ResourceManager.GetString("activity_executenonquery_helpurl", resourceCulture);
             }
         }
         
@@ -205,6 +223,15 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id77.
+        /// </summary>
+        public static string activity_executequery_helpurl {
+            get {
+                return ResourceManager.GetString("activity_executequery_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Runs a query and returns the result as a DataTable.
         /// </summary>
         public static string activity_executequery_tooltip {
@@ -219,6 +246,15 @@ namespace OpenRPA.Database.Resources {
         public static string activity_executescalar {
             get {
                 return ResourceManager.GetString("activity_executescalar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id78.
+        /// </summary>
+        public static string activity_executescalar_helpurl {
+            get {
+                return ResourceManager.GetString("activity_executescalar_helpurl", resourceCulture);
             }
         }
         
@@ -264,6 +300,15 @@ namespace OpenRPA.Database.Resources {
         public static string activity_updatefromtable_datatable_help {
             get {
                 return ResourceManager.GetString("activity_updatefromtable_datatable_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id79.
+        /// </summary>
+        public static string activity_updatefromtable_helpurl {
+            get {
+                return ResourceManager.GetString("activity_updatefromtable_helpurl", resourceCulture);
             }
         }
         

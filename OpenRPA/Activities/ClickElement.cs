@@ -16,6 +16,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.elementclick.png")]
     [LocalizedToolboxTooltip("activity_clickelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_clickelement", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_clickelement_helpurl", typeof(Resources.strings))]
     public class ClickElement : CodeActivity
     {
         public ClickElement()

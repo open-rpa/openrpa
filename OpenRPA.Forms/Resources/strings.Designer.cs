@@ -19,7 +19,7 @@ namespace OpenRPA.Forms.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -97,6 +97,15 @@ namespace OpenRPA.Forms.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-forms.
+        /// </summary>
+        public static string activity_invokeform_helpurl {
+            get {
+                return ResourceManager.GetString("activity_invokeform_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open designer.
         /// </summary>
         public static string activity_invokeform_open {
@@ -147,6 +156,15 @@ namespace OpenRPA.Forms.Resources {
         public static string activity_shownotification {
             get {
                 return ResourceManager.GetString("activity_shownotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-forms.
+        /// </summary>
+        public static string activity_shownotification_helpurl {
+            get {
+                return ResourceManager.GetString("activity_shownotification_helpurl", resourceCulture);
             }
         }
         

@@ -16,6 +16,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokerpaworkflow.png")]
     [LocalizedToolboxTooltip("activity_invokeopenrpa_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokeopenrpa", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_invokeopenrpa_helpurl", typeof(Resources.strings))]
     public class InvokeOpenRPA : NativeActivity
     {
         public InvokeOpenRPA()

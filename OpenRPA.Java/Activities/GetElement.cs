@@ -16,6 +16,7 @@ namespace OpenRPA.Java
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_getelement_helpurl", typeof(Resources.strings))]
     public class GetElement : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetElement()

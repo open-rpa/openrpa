@@ -19,6 +19,7 @@ namespace OpenRPA.Elis.Rossum
     [System.Drawing.ToolboxBitmap(typeof(UploadFile), "Resources.toolbox.getimage.png")]
     [LocalizedToolboxTooltip("activity_uploadfile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_uploadfile", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_uploadfile_helpurl", typeof(Resources.strings))]
     public class UploadFile : CodeActivity
     {
         [RequiredArgument]

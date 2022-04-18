@@ -15,6 +15,8 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.killapp.png")]
     [LocalizedToolboxTooltip("activity_closeapplication_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_closeapplication", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_closeapplication_helpurl", typeof(Resources.strings))]
+
     public class CloseApplication : CodeActivity
     {
         public CloseApplication()

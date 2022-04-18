@@ -19,6 +19,7 @@ namespace OpenRPA.Image
     [System.Drawing.ToolboxBitmap(typeof(GetColor), "Resources.toolbox.palette.png")]
     [LocalizedToolboxTooltip("activity_getcolor_tooltip" , typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getcolor", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_getcolor_helpurl", typeof(Resources.strings))]
     public class GetColor : CodeActivity
     {
         public GetColor()

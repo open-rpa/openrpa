@@ -16,6 +16,7 @@ namespace OpenRPA.WorkItems
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteworkitem.png")]
     [LocalizedToolboxTooltip("activity_deleteworkitem_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_deleteworkitem", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_deleteworkitem_helpurl", typeof(Resources.strings))]
     public class DeleteWorkitem : AsyncTaskCodeActivity
     {
         [LocalizedDisplayName("activity_deleteworkitem_workitem", typeof(Resources.strings)), LocalizedDescription("activity_deleteworkitem_workitem_help", typeof(Resources.strings))]

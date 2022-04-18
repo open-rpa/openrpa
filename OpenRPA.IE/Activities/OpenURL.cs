@@ -15,6 +15,7 @@ namespace OpenRPA.IE
     [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.gethtmlelement.png")]
     [LocalizedToolboxTooltip("activity_openurl_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_openurl", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_openurl_helpurl", typeof(Resources.strings))]
     public class OpenURL : NativeActivity
     {
         [RequiredArgument]

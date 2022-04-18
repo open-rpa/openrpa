@@ -20,6 +20,7 @@ namespace OpenRPA.Elis.Rossum
     [System.Drawing.ToolboxBitmap(typeof(ExportFileData), "Resources.toolbox.getimage.png")]
     [LocalizedToolboxTooltip("activity_exportfiledata_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_exportfiledata", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_exportfiledata_helpurl", typeof(Resources.strings))]
     public class ExportFileData : CodeActivity
     {
         [RequiredArgument]

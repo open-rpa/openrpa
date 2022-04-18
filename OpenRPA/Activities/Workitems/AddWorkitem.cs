@@ -16,6 +16,7 @@ namespace OpenRPA.WorkItems
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.addworkitem.png")]
     [LocalizedToolboxTooltip("activity_addworkitem_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_addworkitem", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_addworkitem_helpurl", typeof(Resources.strings))]
     public class AddWorkitem : AsyncTaskCodeActivity
     {
         public AddWorkitem()

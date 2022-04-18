@@ -15,6 +15,7 @@ namespace OpenRPA.AviRecorder.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
     [LocalizedToolboxTooltip("activity_stoprecording_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_stoprecording", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_stoprecording_helpurl", typeof(Resources.strings))]
     public class StopRecording : NativeActivity
     {
         //[RequiredArgument]

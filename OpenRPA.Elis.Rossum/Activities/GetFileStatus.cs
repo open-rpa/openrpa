@@ -19,6 +19,7 @@ namespace OpenRPA.Elis.Rossum
     [System.Drawing.ToolboxBitmap(typeof(GetFileStatus), "Resources.toolbox.getimage.png")]
     [LocalizedToolboxTooltip("activity_getfilestatus_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getfilestatus", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_getfilestatus_helpurl", typeof(Resources.strings))]
     public class GetFileStatus : CodeActivity
     {
         [RequiredArgument]

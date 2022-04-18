@@ -18,6 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_gettext_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettext", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_gettext_helpurl", typeof(Resources.strings))]
     public class GetText : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public GetText()

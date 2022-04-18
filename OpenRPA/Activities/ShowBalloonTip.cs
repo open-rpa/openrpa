@@ -17,6 +17,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.ballon.png")]
     [LocalizedToolboxTooltip("activity_showballoontip_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_showballoontip", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_showballoontip_helpurl", typeof(Resources.strings))]
     public class ShowBalloonTip : CodeActivity
     {
         [RequiredArgument, Category("Input")]

@@ -15,6 +15,7 @@ namespace OpenRPA.AviRecorder.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
     [LocalizedToolboxTooltip("activity_playrecording_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_playrecording", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_playrecording_helpurl", typeof(Resources.strings))]
     public class PlayRecording : NativeActivity
     {
         [RequiredArgument]

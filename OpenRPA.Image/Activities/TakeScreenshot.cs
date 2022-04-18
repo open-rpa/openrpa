@@ -18,6 +18,7 @@ namespace OpenRPA.Image
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_takescreenshot_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_takescreenshot", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_takescreenshot_helpurl", typeof(Resources.strings))]
     public class TakeScreenshot : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         public TakeScreenshot()

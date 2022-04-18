@@ -18,6 +18,7 @@ namespace OpenRPA.NM
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_executescript_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executescript", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_executescript_helpurl", typeof(Resources.strings))]
     public class ExecuteScript : NativeActivity
     {
         [RequiredArgument]

@@ -16,6 +16,7 @@ namespace OpenRPA.AviRecorder.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
     [LocalizedToolboxTooltip("activity_startrecording_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_startrecording", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_startrecording_helpurl", typeof(Resources.strings))]
     public class StartRecording : NativeActivity
     {
         [Editor(typeof(SelectNewEmailOptionsEditor), typeof(ExtendedPropertyValueEditor))]

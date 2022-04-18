@@ -19,7 +19,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -66,6 +66,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_auth {
             get {
                 return ResourceManager.GetString("activity_auth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        /// </summary>
+        public static string activity_auth_helpurl {
+            get {
+                return ResourceManager.GetString("activity_auth_helpurl", resourceCulture);
             }
         }
         
@@ -160,6 +169,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        /// </summary>
+        public static string activity_exportfiledata_helpurl {
+            get {
+                return ResourceManager.GetString("activity_exportfiledata_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get date the extracted data from an invoice, only works once the file status is in status exported.
         /// </summary>
         public static string activity_exportfiledata_tooltip {
@@ -174,6 +192,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_getfilestatus {
             get {
                 return ResourceManager.GetString("activity_getfilestatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        /// </summary>
+        public static string activity_getfilestatus_helpurl {
+            get {
+                return ResourceManager.GetString("activity_getfilestatus_helpurl", resourceCulture);
             }
         }
         
@@ -198,6 +225,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_getqueues {
             get {
                 return ResourceManager.GetString("activity_getqueues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        /// </summary>
+        public static string activity_getqueues_helpurl {
+            get {
+                return ResourceManager.GetString("activity_getqueues_helpurl", resourceCulture);
             }
         }
         
@@ -288,6 +324,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_uploadfile_filename_hint {
             get {
                 return ResourceManager.GetString("activity_uploadfile_filename_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        /// </summary>
+        public static string activity_uploadfile_helpurl {
+            get {
+                return ResourceManager.GetString("activity_uploadfile_helpurl", resourceCulture);
             }
         }
         
@@ -396,6 +441,15 @@ namespace OpenRPA.Elis.Rossum.Resources {
         public static string activity_waitforfilestatus {
             get {
                 return ResourceManager.GetString("activity_waitforfilestatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        /// </summary>
+        public static string activity_waitforfilestatus_helpurl {
+            get {
+                return ResourceManager.GetString("activity_waitforfilestatus_helpurl", resourceCulture);
             }
         }
         

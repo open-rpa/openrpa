@@ -19,6 +19,7 @@ namespace OpenRPA.Elis.Rossum
     [System.Drawing.ToolboxBitmap(typeof(Auth), "Resources.toolbox.getimage.png")]
     [LocalizedToolboxTooltip("activity_auth_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_auth", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_auth_helpurl", typeof(Resources.strings))]
     public class Auth : CodeActivity
     {
         [RequiredArgument]

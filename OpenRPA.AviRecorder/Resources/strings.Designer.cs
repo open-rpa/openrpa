@@ -19,7 +19,7 @@ namespace OpenRPA.AviRecorder.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -88,6 +88,15 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id75.
+        /// </summary>
+        public static string activity_playrecording_helpurl {
+            get {
+                return ResourceManager.GetString("activity_playrecording_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Playback a video recording.
         /// </summary>
         public static string activity_playrecording_tooltip {
@@ -115,6 +124,15 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id75.
+        /// </summary>
+        public static string activity_startrecording_helpurl {
+            get {
+                return ResourceManager.GetString("activity_startrecording_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start recording the screen to a file.
         /// </summary>
         public static string activity_startrecording_tooltip {
@@ -138,6 +156,15 @@ namespace OpenRPA.AviRecorder.Resources {
         public static string activity_stoprecording {
             get {
                 return ResourceManager.GetString("activity_stoprecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id75.
+        /// </summary>
+        public static string activity_stoprecording_helpurl {
+            get {
+                return ResourceManager.GetString("activity_stoprecording_helpurl", resourceCulture);
             }
         }
         

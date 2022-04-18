@@ -18,6 +18,7 @@ namespace OpenRPA.NM
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_gettab_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettab", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_gettab_helpurl", typeof(Resources.strings))]
     public class GetTab : NativeActivity
     {
         public InArgument<string> Browser { get; set; }

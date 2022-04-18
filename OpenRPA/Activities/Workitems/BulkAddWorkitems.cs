@@ -17,6 +17,7 @@ namespace OpenRPA.WorkItems
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.bulkaddworkitems.png")]
     [LocalizedToolboxTooltip("activity_bulkaddworkitems_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_bulkaddworkitems", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_bulkaddworkitems_helpurl", typeof(Resources.strings))]
     public class BulkAddWorkitems : AsyncTaskCodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_bulkaddworkitems_wiqid", typeof(Resources.strings)), LocalizedDescription("activity_bulkaddworkitems_wiqid_help", typeof(Resources.strings)), OverloadGroup("By ID")]

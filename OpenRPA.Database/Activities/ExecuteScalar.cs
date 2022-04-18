@@ -17,6 +17,7 @@ namespace OpenRPA.Database
     [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
     [LocalizedToolboxTooltip("activity_executescalar_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executescalar", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_executescalar_helpurl", typeof(Resources.strings))]
     public class ExecuteScalar<T> : CodeActivity<T>
     {
         [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_executescalar_query", typeof(Resources.strings)), LocalizedDescription("activity_executescalar_query_help", typeof(Resources.strings))]

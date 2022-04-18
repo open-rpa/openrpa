@@ -129,6 +129,9 @@
   <data name="activity_invokeform_create_var" xml:space="preserve">
     <value>Create variables</value>
   </data>
+  <data name="activity_invokeform_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-forms</value>
+  </data>
   <data name="activity_invokeform_open" xml:space="preserve">
     <value>Open designer</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="activity_shownotification" xml:space="preserve">
     <value>Show Notification</value>
+  </data>
+  <data name="activity_shownotification_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-forms</value>
   </data>
   <data name="activity_shownotification_tooltip" xml:space="preserve">
     <value>Show a notification in the lower right corner of the screen for a limited amount of time</value>

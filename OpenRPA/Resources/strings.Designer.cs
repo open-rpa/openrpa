@@ -97,6 +97,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#add-workitem.
+        /// </summary>
+        public static string activity_addworkitem_helpurl {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string activity_addworkitem_name {
@@ -313,7 +322,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/blob/master/docs/pages/activities.md#Break.
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#break.
         /// </summary>
         public static string activity_break_helpurl {
             get {
@@ -336,6 +345,15 @@ namespace OpenRPA.Resources {
         public static string activity_Breakabledowhile {
             get {
                 return ResourceManager.GetString("activity_Breakabledowhile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#do-while.
+        /// </summary>
+        public static string activity_Breakabledowhile_helpurl {
+            get {
+                return ResourceManager.GetString("activity_Breakabledowhile_helpurl", resourceCulture);
             }
         }
         
@@ -372,6 +390,15 @@ namespace OpenRPA.Resources {
         public static string activity_breakablewhile {
             get {
                 return ResourceManager.GetString("activity_breakablewhile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#while.
+        /// </summary>
+        public static string activity_breakablewhile_helpurl {
+            get {
+                return ResourceManager.GetString("activity_breakablewhile_helpurl", resourceCulture);
             }
         }
         
@@ -426,6 +453,15 @@ namespace OpenRPA.Resources {
         public static string activity_bulkaddworkitems_filefields_help {
             get {
                 return ResourceManager.GetString("activity_bulkaddworkitems_filefields_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#bulk-add-workitems.
+        /// </summary>
+        public static string activity_bulkaddworkitems_helpurl {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_helpurl", resourceCulture);
             }
         }
         
@@ -574,6 +610,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id1.
+        /// </summary>
+        public static string activity_clickelement_helpurl {
+            get {
+                return ResourceManager.GetString("activity_clickelement_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click on an element found with GetElement.
         /// </summary>
         public static string activity_clickelement_tooltip {
@@ -592,6 +637,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id63.
+        /// </summary>
+        public static string activity_closeapplication_helpurl {
+            get {
+                return ResourceManager.GetString("activity_closeapplication_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find application based on a UI selector and then closes the Application.
         /// </summary>
         public static string activity_closeapplication_tooltip {
@@ -606,6 +660,15 @@ namespace OpenRPA.Resources {
         public static string activity_commentout {
             get {
                 return ResourceManager.GetString("activity_commentout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id64.
+        /// </summary>
+        public static string activity_commentout_helpurl {
+            get {
+                return ResourceManager.GetString("activity_commentout_helpurl", resourceCulture);
             }
         }
         
@@ -646,7 +709,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/blob/master/docs/pages/activities.md#Continue.
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#continue.
         /// </summary>
         public static string activity_continue_helpurl {
             get {
@@ -669,6 +732,15 @@ namespace OpenRPA.Resources {
         public static string activity_copyclipboard {
             get {
                 return ResourceManager.GetString("activity_copyclipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id64.
+        /// </summary>
+        public static string activity_copyclipboard_helpurl {
+            get {
+                return ResourceManager.GetString("activity_copyclipboard_helpurl", resourceCulture);
             }
         }
         
@@ -727,6 +799,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#delete-workitem.
+        /// </summary>
+        public static string activity_deleteworkitem_helpurl {
+            get {
+                return ResourceManager.GetString("activity_deleteworkitem_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete specific Workitem and all associated files from queue. Generally this should never be used.
         /// </summary>
         public static string activity_deleteworkitem_tooltip {
@@ -768,6 +849,15 @@ namespace OpenRPA.Resources {
         public static string activity_detector_help {
             get {
                 return ResourceManager.GetString("activity_detector_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id65.
+        /// </summary>
+        public static string activity_detector_helpurl {
+            get {
+                return ResourceManager.GetString("activity_detector_helpurl", resourceCulture);
             }
         }
         
@@ -925,6 +1015,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id65.
+        /// </summary>
+        public static string activity_foreachdatarow_helpurl {
+            get {
+                return ResourceManager.GetString("activity_foreachdatarow_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enumerate through each row inside a DataTable.
         /// </summary>
         public static string activity_foreachdatarow_tooltip {
@@ -984,6 +1083,15 @@ namespace OpenRPA.Resources {
         public static string activity_highlightelement {
             get {
                 return ResourceManager.GetString("activity_highlightelement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id66.
+        /// </summary>
+        public static string activity_highlightelement_helpurl {
+            get {
+                return ResourceManager.GetString("activity_highlightelement_helpurl", resourceCulture);
             }
         }
         
@@ -1060,6 +1168,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id67.
+        /// </summary>
+        public static string activity_insertclipboard_helpurl {
+            get {
+                return ResourceManager.GetString("activity_insertclipboard_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Insert new content into the users Clipboard buffer.
         /// </summary>
         public static string activity_insertclipboard_tooltip {
@@ -1074,6 +1191,15 @@ namespace OpenRPA.Resources {
         public static string activity_invokeopenflow {
             get {
                 return ResourceManager.GetString("activity_invokeopenflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id68.
+        /// </summary>
+        public static string activity_invokeopenflow_helpurl {
+            get {
+                return ResourceManager.GetString("activity_invokeopenflow_helpurl", resourceCulture);
             }
         }
         
@@ -1096,6 +1222,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id69.
+        /// </summary>
+        public static string activity_invokeopenrpa_helpurl {
+            get {
+                return ResourceManager.GetString("activity_invokeopenrpa_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invoke a local OpenRPA Workflow.
         /// </summary>
         public static string activity_invokeopenrpa_tooltip {
@@ -1110,6 +1245,15 @@ namespace OpenRPA.Resources {
         public static string activity_invokeremoteopenrpa {
             get {
                 return ResourceManager.GetString("activity_invokeremoteopenrpa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id70.
+        /// </summary>
+        public static string activity_invokeremoteopenrpa_helpurl {
+            get {
+                return ResourceManager.GetString("activity_invokeremoteopenrpa_helpurl", resourceCulture);
             }
         }
         
@@ -1258,6 +1402,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id71.
+        /// </summary>
+        public static string activity_movemouse_helpurl {
+            get {
+                return ResourceManager.GetString("activity_movemouse_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied).
         /// </summary>
         public static string activity_movemouse_tooltip {
@@ -1321,6 +1474,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id72.
+        /// </summary>
+        public static string activity_openapplication_helpurl {
+            get {
+                return ResourceManager.GetString("activity_openapplication_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search for Windows element based on a selector, and give it focus, if not found start the application.
         /// </summary>
         public static string activity_openapplication_tooltip {
@@ -1335,6 +1497,15 @@ namespace OpenRPA.Resources {
         public static string activity_popworkitem {
             get {
                 return ResourceManager.GetString("activity_popworkitem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#pop-workitem.
+        /// </summary>
+        public static string activity_popworkitem_helpurl {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_helpurl", resourceCulture);
             }
         }
         
@@ -1546,6 +1717,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id73.
+        /// </summary>
+        public static string activity_showballoontip_helpurl {
+            get {
+                return ResourceManager.GetString("activity_showballoontip_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show a small ballontip near the system tray, will respect OS message center settings.
         /// </summary>
         public static string activity_showballoontip_tooltip {
@@ -1636,6 +1816,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#throw-business-rule-exception.
+        /// </summary>
+        public static string activity_throwbusinessruleexception_helpurl {
+            get {
+                return ResourceManager.GetString("activity_throwbusinessruleexception_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Message.
         /// </summary>
         public static string activity_throwbusinessruleexception_message {
@@ -1690,6 +1879,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id74.
+        /// </summary>
+        public static string activity_typetext_helpurl {
+            get {
+                return ResourceManager.GetString("activity_typetext_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send keyboard strokes to what ever that has focus, should only be used by recorder.
         /// </summary>
         public static string activity_typetext_tooltip {
@@ -1740,6 +1938,15 @@ namespace OpenRPA.Resources {
         public static string activity_updateworkitem_files_help {
             get {
                 return ResourceManager.GetString("activity_updateworkitem_files_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#update-workitem.
+        /// </summary>
+        public static string activity_updateworkitem_helpurl {
+            get {
+                return ResourceManager.GetString("activity_updateworkitem_helpurl", resourceCulture);
             }
         }
         

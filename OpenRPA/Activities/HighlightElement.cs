@@ -16,6 +16,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
     [LocalizedToolboxTooltip("activity_highlightelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_highlightelement", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_highlightelement_helpurl", typeof(Resources.strings))]
     public class HighlightElement : AsyncTaskCodeActivity<int>
     {
         public HighlightElement()

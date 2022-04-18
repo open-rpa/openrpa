@@ -15,6 +15,7 @@ namespace OpenRPA.Activities
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_breakablewhile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_breakablewhile", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_breakablewhile_helpurl", typeof(Resources.strings))]
     public class BreakableWhile : BreakableLoop // , System.Activities.Presentation.IActivityTemplateFactory
     {
         [RequiredArgument, LocalizedDisplayName("activity_condition", typeof(Resources.strings)), LocalizedDescription("activity_condition_help", typeof(Resources.strings))]

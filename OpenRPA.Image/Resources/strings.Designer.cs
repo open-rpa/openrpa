@@ -19,7 +19,7 @@ namespace OpenRPA.Image.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -106,6 +106,15 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-image.
+        /// </summary>
+        public static string activity_getcolor_helpurl {
+            get {
+                return ResourceManager.GetString("activity_getcolor_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Get color at specefied cordinates. .
         /// </summary>
         public static string activity_getcolor_tooltip {
@@ -129,6 +138,15 @@ namespace OpenRPA.Image.Resources {
         public static string activity_getelement_drop_hint {
             get {
                 return ResourceManager.GetString("activity_getelement_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id84.
+        /// </summary>
+        public static string activity_getelement_helpurl {
+            get {
+                return ResourceManager.GetString("activity_getelement_helpurl", resourceCulture);
             }
         }
         
@@ -187,6 +205,15 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id84.
+        /// </summary>
+        public static string activity_getimage_helpurl {
+            get {
+                return ResourceManager.GetString("activity_getimage_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Highlight.
         /// </summary>
         public static string activity_getimage_highlight {
@@ -228,6 +255,15 @@ namespace OpenRPA.Image.Resources {
         public static string activity_gettext_drop_hint {
             get {
                 return ResourceManager.GetString("activity_gettext_drop_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id86.
+        /// </summary>
+        public static string activity_gettext_helpurl {
+            get {
+                return ResourceManager.GetString("activity_gettext_helpurl", resourceCulture);
             }
         }
         
@@ -291,6 +327,15 @@ namespace OpenRPA.Image.Resources {
         public static string activity_loadfromfile {
             get {
                 return ResourceManager.GetString("activity_loadfromfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id87.
+        /// </summary>
+        public static string activity_loadfromfile_helpurl {
+            get {
+                return ResourceManager.GetString("activity_loadfromfile_helpurl", resourceCulture);
             }
         }
         
@@ -363,6 +408,15 @@ namespace OpenRPA.Image.Resources {
         public static string activity_takescreenshot {
             get {
                 return ResourceManager.GetString("activity_takescreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id88.
+        /// </summary>
+        public static string activity_takescreenshot_helpurl {
+            get {
+                return ResourceManager.GetString("activity_takescreenshot_helpurl", resourceCulture);
             }
         }
         

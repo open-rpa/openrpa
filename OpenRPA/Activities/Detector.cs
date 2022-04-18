@@ -18,6 +18,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.detector.png")]
     [LocalizedToolboxTooltip("activity_detector_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_detector", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_detector_helpurl", typeof(Resources.strings))]
     public class Detector : NativeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_detector", typeof(Resources.strings)), LocalizedDescription("activity_detector_help", typeof(Resources.strings))]

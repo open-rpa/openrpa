@@ -21,6 +21,7 @@ namespace OpenRPA.Forms.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.prompt.png")]
     [LocalizedToolboxTooltip("activity_shownotification_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_shownotification", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_shownotification_helpurl", typeof(Resources.strings))]
     public class ShowNotification : CodeActivity
     {
         public static bool FirstRun = true;

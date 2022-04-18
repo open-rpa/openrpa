@@ -19,6 +19,7 @@ namespace OpenRPA.Elis.Rossum
     [System.Drawing.ToolboxBitmap(typeof(WaitForFileStatus), "Resources.toolbox.getimage.png")]
     [LocalizedToolboxTooltip("activity_waitforfilestatus_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_waitforfilestatus", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_waitforfilestatus_helpurl", typeof(Resources.strings))]
     public class WaitForFileStatus : CodeActivity
     {
         [RequiredArgument]

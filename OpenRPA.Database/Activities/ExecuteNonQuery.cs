@@ -17,6 +17,7 @@ namespace OpenRPA.Database
     [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
     [LocalizedToolboxTooltip("activity_executenonquery_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executenonquery", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_executenonquery_helpurl", typeof(Resources.strings))]
     public class ExecuteNonQuery : CodeActivity
     {
         [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_executenonquery_query", typeof(Resources.strings)), LocalizedDescription("activity_executenonquery_query_help", typeof(Resources.strings))]

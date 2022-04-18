@@ -16,6 +16,7 @@ namespace OpenRPA.Database
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_databasescope_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_databasescope", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_databasescope_helpurl", typeof(Resources.strings))]
     public class DatabaseScope : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory
     {
         [Browsable(false)]

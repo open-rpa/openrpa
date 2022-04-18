@@ -16,6 +16,7 @@ namespace OpenRPA.Activities
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.typetext.png")]
     [LocalizedToolboxTooltip("activity_typetext_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_typetext", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_typetext_helpurl", typeof(Resources.strings))]
     public class TypeText : CodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_text", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]

@@ -16,6 +16,7 @@ namespace OpenRPA.WorkItems
     [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.popworkitem.png")]
     [LocalizedToolboxTooltip("activity_popworkitem_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_popworkitem", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_popworkitem_helpurl", typeof(Resources.strings))]
     public class PopWorkitem : AsyncTaskCodeActivity
     {
         [RequiredArgument, LocalizedDisplayName("activity_popworkitem_wiqid", typeof(Resources.strings)), LocalizedDescription("activity_popworkitem_wiqid_help", typeof(Resources.strings)), OverloadGroup("By ID")]

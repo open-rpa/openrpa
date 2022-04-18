@@ -18,6 +18,7 @@ namespace OpenRPA.Database
     [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
     [LocalizedToolboxTooltip("activity_updatefromtable_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_updatefromtable", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_updatefromtable_helpurl", typeof(Resources.strings))]
     public class UpdateFromDataTable : CodeActivity
     {
         [RequiredArgument, Category("Input"), LocalizedDisplayName("activity_updatefromtable_tablename", typeof(Resources.strings)), LocalizedDescription("activity_updatefromtable_tablename_help", typeof(Resources.strings))]

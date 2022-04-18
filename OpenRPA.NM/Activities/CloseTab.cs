@@ -16,6 +16,7 @@ namespace OpenRPA.NM
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_closetab_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_closetab", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_closetab_helpurl", typeof(Resources.strings))]
     public class CloseTab : NativeActivity
     {
         public InArgument<string> Browser { get; set; }

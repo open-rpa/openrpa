@@ -14,7 +14,20 @@ namespace OpenRPA
             _type = "workitemqueue";
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string projectid { get { return GetProperty<string>(); } set {
+                var current = projectid;
+                if(current != value)
+                {
+                    SetProperty(value);
+                }
+                if(RobotInstance.instance.WorkItemQueues.Contains(this))
+                {
+                    var index = RobotInstance.instance.WorkItemQueues.IndexOf(this);
+                    RobotInstance.instance.WorkItemQueues.Remove(this);
+                    RobotInstance.instance.WorkItemQueues.Insert(index, this);
+                }
+            } 
+        }
         public string workflowid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string robotqueue { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string amqpqueue { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -23,7 +36,7 @@ namespace OpenRPA
         public int initialdelay { get { return GetProperty<int>(); } set { SetProperty(value); } }
         public async Task Save(bool skipOnline = false)
         {
-            if(string.IsNullOrEmpty(_id) && global.webSocketClient.isConnected)
+            if(string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
             {
                 try
                 {
@@ -34,7 +47,7 @@ namespace OpenRPA
                 {
                     throw;
                 }
-            } else if (string.IsNullOrEmpty(_id))
+            } else if (string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(Config.local.wsurl))
             {
                 throw new Exception("Failed adding WorkitemQueue, not online!");
             }
@@ -42,11 +55,13 @@ namespace OpenRPA
             bool hadError = true;
             try
             {
+                isDirty = false;
                 await Save<WorkitemQueue>(skipOnline);
                 hadError = false;
             }
             catch (Exception ex)
             {
+                isDirty = true;
                 Log.Error(ex.Message);
             }
             if(hadError)
@@ -82,6 +97,7 @@ namespace OpenRPA
         public async Task Update(IWorkitemQueue item, bool skipOnline = false)
         {
             RobotInstance.instance.WorkItemQueues.UpdateItem(this, item);
+            isDirty = false;
             await Save<WorkitemQueue>(skipOnline);
         }
         public async Task Delete(bool skipOnline = false)
@@ -103,6 +119,18 @@ namespace OpenRPA
         {
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
             System.IO.File.WriteAllText(filepath, json);
+        }
+        public async Task Purge()
+        {
+            if (string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
+            {
+                var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true); ;
+            } else if (string.IsNullOrEmpty( Config.local.wsurl))
+            {
+                RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);
+                RobotInstance.instance.Workitems.Clear();
+                RobotInstance.instance.Workitems.AddRange(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
+            }
         }
         public override string ToString()
         {
@@ -132,6 +160,18 @@ namespace OpenRPA
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
+
+        public async Task Save(bool skipOnline = false)
+        {
+            await Save<Workitem>(skipOnline);
+            if (string.IsNullOrEmpty(Config.local.wsurl))
+            {
+                GenericTools.RunUI(() => {
+                    RobotInstance.instance.Workitems.Add(this);
+                });
+                
+            }
+        }
     }
     public class WorkitemFile : Interfaces.WorkitemFile
     {

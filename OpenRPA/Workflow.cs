@@ -408,7 +408,7 @@ namespace OpenRPA
                 }
             }
             await Save<Workflow>(skipOnline);
-            RobotInstance.instance.Workflows.UpdateItem(this);
+            // RobotInstance.instance.Workflows.UpdateItem(this);
             if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Workflows, 1000))
             {
                 try

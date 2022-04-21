@@ -81,6 +81,10 @@ namespace OpenRPA
         protected bool SetProperty<T>(T newValue, [CallerMemberName] string propertyName = null)
         {
             bool _disabledirty = false;
+            object o;
+            _backingFieldValues.TryGetValue("_type", out o);
+            string _type = (o != null ? o.ToString() : "");
+
             if (_backingFieldValues.ContainsKey("_disabledirty"))
             {
                 if (_backingFieldValues.ContainsKey("_disabledirty") == true) _disabledirty = true;
@@ -142,7 +146,6 @@ namespace OpenRPA
                             else
                             {
 #if (DEBUG)
-                                // Log.Output(modulename + " " + modulename2);
 #else
 #endif
                                 _backingFieldValues["isDirty"] = true;

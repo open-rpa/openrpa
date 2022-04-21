@@ -37,7 +37,10 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
-
+        public static T FindById<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, string id) where T : IBase
+        {
+            return collection.Where(x => x._id == id).FirstOrDefault();
+        }
         public static void UpdateCollection<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, IEnumerable<T> newCollection) 
         {
             IEnumerator<T> newCollectionEnumerator = newCollection.GetEnumerator();
@@ -69,7 +72,7 @@ namespace OpenRPA.Interfaces
                 // Handle new item.
                 if (!collection.Contains(item))
                 {
-                    collection.Insert(i, item);
+                    if (collection.Count >i) collection.Insert(i, item);
                 }
 
                 // Handle existing item, move at the good index.
@@ -79,7 +82,8 @@ namespace OpenRPA.Interfaces
                     if (oldIndex != i)
                     {
                         // Items.Move(oldIndex, i);
-                        collection.Move(oldIndex, i);
+                        
+                        if(collection.Count > oldIndex && collection.Count > i) collection.Move(oldIndex, i);
                     }
                 }
 
@@ -91,10 +95,6 @@ namespace OpenRPA.Interfaces
             T originalItem = Item;
             var index = collection.IndexOf(Item);
             NewItem.CopyPropertiesTo(Item, false);
-            //GenericTools.RunUI(() =>
-            //{
-            //    collection.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, originalItem, index));
-            //});
             return;
         }
         public static void AddRange<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, IEnumerable<T> range)

@@ -9,42 +9,43 @@ using System.Reflection;
 
 namespace OpenRPA.Interfaces
 {
-    public class IBaseObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
-    {
-        public T FindById(string id) => Items.Where(x => x._id == id).FirstOrDefault();
-        public IBaseObservableCollection() : base()
-        {
-        }
-        public IBaseObservableCollection(IEnumerable<T> pItems) : base()
-        {
-            foreach (var item in pItems)
-            {
-                Add(item);
-            }
-        }
-        public void UpdateCollectionById(IEnumerable<T> newCollection)
-        {
-            var current = newCollection.ToArray();
-            for (var i = 0; i < current.Count(); i++)
-            {
-                var exists = Items.Where(x => x._id == current[i]._id);
-                if (exists.Count() == 0) Items.Add(current[i]);
-            }
-            var list = Items.ToArray();
-            for (var i = 0; i < list.Count(); i++)
-            {
-                var exists = current.Where(x => x._id == list[i]._id);
-                if (exists.Count() == 0) Items.Remove(list[i]);
-            }
-        }
-        public void UpdateItem(T Item)
-        {
-            var index = Items.IndexOf(Item);
-             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, Item, index));
-            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Item));
-            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Item, index));
-        }
-    }
+    //public class IBaseObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
+    //{
+    //    public T FindById(string id) => Items.Where(x => x._id == id).FirstOrDefault();
+    //    public IBaseObservableCollection() : base()
+    //    {
+    //    }
+    //    public IBaseObservableCollection(IEnumerable<T> pItems) : base()
+    //    {
+    //        foreach (var item in pItems)
+    //        {
+    //            Add(item);
+    //        }
+    //    }
+    //    public void UpdateCollectionById(IEnumerable<T> newCollection)
+    //    {
+    //        var current = newCollection.ToArray();
+    //        for (var i = 0; i < current.Count(); i++)
+    //        {
+    //            var exists = Items.Where(x => x._id == current[i]._id);
+    //            if (exists.Count() == 0) Items.Add(current[i]);
+    //        }
+    //        var list = Items.ToArray();
+    //        for (var i = 0; i < list.Count(); i++)
+    //        {
+    //            var exists = current.Where(x => x._id == list[i]._id);
+    //            if (exists.Count() == 0) Items.Remove(list[i]);
+    //        }
+    //    }
+    //    public void UpdateItem(T Item)
+    //    {
+    //        var index = Items.IndexOf(Item);
+    //         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, Item, index));
+    //        // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Item));
+    //        // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Item, index));
+    //    }
+    //    new public void Clear() { foreach (var item in Items) Remove(item); }
+    //}
     public class FilteredObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
     {
         private Predicate<T> _filter;
@@ -132,7 +133,6 @@ namespace OpenRPA.Interfaces
                             removelist.Add(titem);
                         }
                     }
-                    // Log.Output("shouldbehere: " + shouldbehere + " / ishere: " + ishere);
                 }
 
 
@@ -147,27 +147,19 @@ namespace OpenRPA.Interfaces
                     case NotifyCollectionChangedAction.Replace:
                         if (addlist.Count > 0)
                         {
-                            // foreach (var item in addlist) item.PropertyChanged += Basecollection_ItemPropertyChanged;
                             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
-                            // Log.Output("OnBaseCollectionChanged add " + addlist.Count);
-                            //OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                            //OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                         }
                         if (replacelist.Count > 0)
                         {
                             // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, replacelist, replacelist, 0));
-                            // Log.Output("OnBaseCollectionChanged replace " + replacelist.Count);
                         }
                         if (removelist.Count > 0)
                         {
-                            // foreach (var item in removelist) item.PropertyChanged -= Basecollection_ItemPropertyChanged;
                             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
-                            // Log.Output("OnBaseCollectionChanged remove " + removelist.Count);
                         }
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                        // sLog.Output("OnBaseCollectionChanged reset");
                         break;
                 }
             }
@@ -180,8 +172,30 @@ namespace OpenRPA.Interfaces
         new public void MoveItem(int oldIndex, int newIndex) { basecollection.Move(oldIndex, newIndex); }
         new public void Add(T item) { basecollection.Add(item); }
         new public void Remove(T item) { basecollection.Remove(item); }
+        public void Refresh()
+        {
+            List<T> addlist = new List<T>();
+            List<T> removelist = new List<T>();
+            foreach (var item in basecollection)
+            {
+                bool isNeeded = _filter(item) == false;
+                bool exists = Items.Contains(item);
+                if (exists && !isNeeded) { Items.Remove(item); removelist.Add(item); }
+                if (!exists && isNeeded) { Items.Add(item); addlist.Add(item); }
+            }
+
+            if (addlist.Count > 0)
+            {
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
+            }
+            if (removelist.Count > 0)
+            {
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
+            }
+
+        }
     }
-    public class CompositionObservableCollection : IBaseObservableCollection<IBase>
+    public class CompositionObservableCollection : ObservableCollection<IBase>
     {
         private readonly List<INotifyCollectionChanged> _observableCollections;
         public CompositionObservableCollection(params INotifyCollectionChanged[] observableCollections)

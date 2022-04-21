@@ -36,13 +36,16 @@ namespace OpenRPA
         }
         public LiteDatabase db;
         public LiteDB.ILiteCollection<Project> dbProjects;
-        public IBaseObservableCollection<IProject> Projects;
+        public System.Collections.ObjectModel.ObservableCollection<IProject> Projects;
         public LiteDB.ILiteCollection<Workflow> dbWorkflows;
-        public IBaseObservableCollection<IWorkflow> Workflows;
+        public System.Collections.ObjectModel.ObservableCollection<IWorkflow> Workflows;
         public LiteDB.ILiteCollection<Detector> dbDetectors;
-        public IBaseObservableCollection<IDetector> Detectors;
+        public System.Collections.ObjectModel.ObservableCollection<IDetector> Detectors;
         public LiteDB.ILiteCollection<WorkitemQueue> dbWorkItemQueues;
-        public IBaseObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
+        public LiteDB.ILiteCollection<Workitem> dbWorkitems;
+        public System.Collections.ObjectModel.ObservableCollection<IWorkitem> Workitems;
+
+        public System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
 
         public LiteDB.ILiteCollection<WorkflowInstance> dbWorkflowInstances;
         public int ProjectCount
@@ -143,29 +146,36 @@ namespace OpenRPA
 
                     _instance.dbWorkflows = _instance.db.GetCollection<Workflow>("workflows");
                     _instance.dbWorkflows.EnsureIndex(x => x._id, true);
-                    _instance.Workflows = new IBaseObservableCollection<IWorkflow>();
+                    _instance.Workflows = new System.Collections.ObjectModel.ObservableCollection<IWorkflow>();
 
 
                     _instance.dbProjects = _instance.db.GetCollection<Project>("projects");
                     _instance.dbProjects.EnsureIndex(x => x._id, true);
-                    _instance.Projects = new IBaseObservableCollection<IProject>();
+                    _instance.Projects = new System.Collections.ObjectModel.ObservableCollection<IProject>();
 
                     _instance.dbDetectors = _instance.db.GetCollection<Detector>("detectors");
                     _instance.dbDetectors.EnsureIndex(x => x._id, true);
-                    _instance.Detectors = new IBaseObservableCollection<IDetector>();
+                    _instance.Detectors = new System.Collections.ObjectModel.ObservableCollection<IDetector>();
 
                     _instance.dbWorkflowInstances = _instance.db.GetCollection<WorkflowInstance>("workflowinstances");
                     _instance.dbWorkflowInstances.EnsureIndex(x => x._id, true);
 
                     _instance.dbWorkItemQueues = _instance.db.GetCollection<WorkitemQueue>("workitemqueues");
                     _instance.dbWorkItemQueues.EnsureIndex(x => x._id, true);
-                    _instance.WorkItemQueues = new IBaseObservableCollection<IWorkitemQueue>();
+                    _instance.WorkItemQueues = new System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue>();
+
+                    _instance.dbWorkitems = _instance.db.GetCollection<Workitem>("workitems");
+                    _instance.dbWorkItemQueues.EnsureIndex(x => x._id, true);
+                    _instance.Workitems = new System.Collections.ObjectModel.ObservableCollection<IWorkitem>();
 
 
                     _instance.Projects.AddRange(_instance.dbProjects.FindAll().OrderBy(x => x.name));
                     _instance.WorkItemQueues.AddRange(_instance.dbWorkItemQueues.FindAll().OrderBy(x => x.name));
                     _instance.Detectors.AddRange(_instance.dbDetectors.FindAll().OrderBy(x => x.name));
                     _instance.Workflows.AddRange(_instance.dbWorkflows.FindAll().OrderBy(x => x.name));
+
+                    _instance.Workitems.AddRange(_instance.dbWorkitems.FindAll().OrderBy(x => x.name));
+                    
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -780,7 +790,8 @@ namespace OpenRPA
                             }
                             if (!WorkItemQueue.isDeleted)
                             {
-                                await WorkItemQueue.Update(exists, true);
+                                reload_ids.Add(exists._id);
+                                // await WorkItemQueue.Update(exists, true);
                             }
                         }
                     }
@@ -1199,7 +1210,7 @@ namespace OpenRPA
                     {
                         try
                         {
-                            if (!global.webSocketClient.isConnected) return;
+                            if (global.webSocketClient == null || !global.webSocketClient.isConnected) return;
                             SetStatus("Sign in to " + Config.local.wsurl);
                             Log.Debug("Signing in with token " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             user = await global.webSocketClient.Signin(Config.local.UnprotectString(Config.local.jwt));
@@ -1219,7 +1230,7 @@ namespace OpenRPA
                             errormessage = ex.Message;
                         }
                     }
-                    if (!global.webSocketClient.isConnected) return;
+                    if (global.webSocketClient == null ||!global.webSocketClient.isConnected) return;
                     if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin)
                     {
                         string jwt = null;
@@ -1273,7 +1284,7 @@ namespace OpenRPA
                             else
                             {
 
-                                if (global.webSocketClient.isConnected && global.webSocketClient.user != null)
+                                if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.user != null)
                                 {
                                     user = global.webSocketClient.user;
                                     Config.local.username = user.username;
@@ -1352,7 +1363,7 @@ namespace OpenRPA
             }
             try
             {
-                if(global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
+                if(global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
             }
             catch (Exception ex)
             {
@@ -1377,12 +1388,12 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
-                    if (global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
+                    if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
                 });
             }
             try
             {
-                if (global.openflowconfig != null && global.openflowconfig.supports_watch && global.webSocketClient.isConnected && global.webSocketClient.signedin)
+                if (global.openflowconfig != null && global.openflowconfig.supports_watch && global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin)
                 {
                     await global.webSocketClient.Watch("openrpa",
                         "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
@@ -1407,7 +1418,7 @@ namespace OpenRPA
                 foreach (var d in Plugins.detectorPlugins)
                 {
                     var _d = d.Entity as Detector;
-                    if (global.webSocketClient.isConnected && global.webSocketClient.signedin) await _d.RegisterExchange();
+                    if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) await _d.RegisterExchange();
                 }
             }
             catch (Exception ex)
@@ -1422,7 +1433,7 @@ namespace OpenRPA
             try
             {
                 Log.FunctionIndent("RobotInstance", "WebSocketClient_OnClose", reason);
-                if (global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
+                if (global.webSocketClient != null && global.webSocketClient.isConnected) Log.Information("Disconnected " + reason);
                 SetStatus("Disconnected from " + Config.local.wsurl + " reason " + reason);
                 try
                 {

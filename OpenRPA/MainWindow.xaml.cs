@@ -3475,7 +3475,6 @@ namespace OpenRPA
                     {
                         command.data = JObject.FromObject(instance.Exception);
                     }
-                    // Log.Output("Send Instance state " + instance.state + " to " + instance.queuename);
                     try
                     {
                         await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);

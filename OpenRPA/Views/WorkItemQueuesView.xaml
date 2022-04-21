@@ -98,6 +98,7 @@
                               DisplayMemberPath="ProjectAndName"
                               SelectedValue="{Binding ElementName=listWorkItemQueues, Path=SelectedValue.workflowid}"  >
                     </ComboBox>
+                    <Button Content="Purge" Click="PurgeButton_Click"></Button>
                 </StackPanel>
             </StackPanel>
 
@@ -117,7 +118,7 @@
 
             <DataGrid AutoGenerateColumns="False"
                       Grid.Column="1" Grid.Row="2" Margin="0,4,0,4" BorderThickness="1"
-                      x:Name="listWorkItems" ItemsSource="{Binding WorkItems}"
+                      x:Name="listWorkItems" ItemsSource="{Binding WorkItems, UpdateSourceTrigger=PropertyChanged}"
                       CanUserAddRows="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static or:strings.name}" Binding="{Binding name}"/>

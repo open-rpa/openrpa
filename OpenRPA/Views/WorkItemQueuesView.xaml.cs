@@ -46,8 +46,8 @@ namespace OpenRPA.Views
                 return _Workflows;
             }
         }
-        private System.Collections.ObjectModel.ObservableCollection<Workitem> _WorkItems = new System.Collections.ObjectModel.ObservableCollection<Workitem>();
-        public System.Collections.ObjectModel.ObservableCollection<Workitem> WorkItems
+        private System.Collections.ObjectModel.ObservableCollection<IWorkitem> _WorkItems;
+        public System.Collections.ObjectModel.ObservableCollection<IWorkitem> WorkItems
         {
             get
             {
@@ -65,6 +65,7 @@ namespace OpenRPA.Views
         public WorkItemQueuesView(MainWindow main)
         {
             Log.FunctionIndent("WorkItemQueuesView", "WorkItemQueuesView");
+            _WorkItems = new FilteredObservableCollection<IWorkitem>(RobotInstance.instance.Workitems, wifilter);
             InitializeComponent();
             this.main = main;
             DataContext = this;
@@ -157,7 +158,7 @@ namespace OpenRPA.Views
                 {
                     foreach (OpenRPA.WorkitemQueue d in WorkItemQueues)
                     {
-                        await d.Save();
+                        if(d.isDirty) await d.Save();
                     }
                 }
                 catch (Exception ex)
@@ -189,25 +190,66 @@ namespace OpenRPA.Views
                 reloadOpenProjects = true;
                 return;
             }
-            if(WorkItemQueue.projectid != p._id)
-            {
-                WorkItemQueue._acl = p._acl;
-            }
+            if (WorkItemQueue != null)
+                if (WorkItemQueue.projectid != p._id)
+                {
+                    WorkItemQueue._acl = p._acl;
+                }
             foreach (var w in p.Workflows) Workflows.Add(w as Workflow);
             _Workflows.UpdateCollection(Workflows.ToList());
             reloadOpenProjects = true;
         }
         async private void listWorkItemQueues_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
-            WorkItems.Clear();
-            if (wiq == null) return;
-            var server_workitems = await global.webSocketClient.Query<Workitem>("workitems", "{\"_type\": 'workitem',\"wiqid\": '" + wiq._id + "'}", "{\"name\": 1,\"state\": 1,\"_modified\": 1}", top: 100);
-            foreach (var workitem in server_workitems)
+            try
             {
-                WorkItems.Add(workitem);
+                try
+                {
+                    foreach (OpenRPA.WorkitemQueue d in WorkItemQueues)
+                    {
+                        if (d.isDirty) await d.Save();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+
+                var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
+                if (wiq == null) return;
+                if (global.webSocketClient == null || !global.webSocketClient.isConnected)
+                {
+                    //RobotInstance.instance.Workitems.Clear();
+                    //RobotInstance.instance.Workitems.UpdateCollectionById(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
+                    // _WorkItems.Refresh();
+                    if (WorkItems != null) WorkItems.Clear();
+                    _WorkItems = new FilteredObservableCollection<IWorkitem>(RobotInstance.instance.Workitems, wifilter);
+
+                    return;
+                }
+                var server_workitems = await global.webSocketClient.Query<Workitem>("workitems", "{\"_type\": 'workitem',\"wiqid\": '" + wiq._id + "'}", "{\"name\": 1,\"state\": 1,\"_modified\": 1}", top: 100);
+                if (WorkItems != null) WorkItems.Clear();
+                foreach (var workitem in server_workitems)
+                {
+                    WorkItems.Add(workitem);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
+        public bool wifilter(IWorkitem item)
+        {
+            if (item == null) return false;
+            if (listWorkItemQueues == null) return true;
+            var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
+            if (wiq == null) return true;
+
+            if (item.wiq == wiq.name || item.wiqid == wiq._id) return true;
+            return false;
+        }
+
         async private void Button_CreateWorkItemQueue(object sender, RoutedEventArgs e)
         {
             try
@@ -232,6 +274,7 @@ namespace OpenRPA.Views
             try
             {
                 if (Robots.Count() > 0) return;
+                if (global.webSocketClient == null || !global.webSocketClient.isConnected) return;
                 var _users = await global.webSocketClient.Query<apiuser>("users", "{\"$or\":[ {\"_type\": \"user\"}, {\"_type\": \"role\", \"rparole\": true} ]}", top: 5000);
                 // foreach (var u in _users) robots.Add(u);
                 Robots.UpdateCollection(_users.ToList());
@@ -246,6 +289,22 @@ namespace OpenRPA.Views
                 Log.Error(ex.ToString());
             }
 
+        }
+
+        private async void PurgeButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
+                if (wiq == null) return;
+                var messageBoxResult = MessageBox.Show("Purge all workitems from " + wiq.name + " ?\n This action cannot be undone!!!", "Purge Confirmation", MessageBoxButton.YesNo);
+                if (messageBoxResult != MessageBoxResult.Yes) return;
+                await wiq.Purge();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
         }
     }
 }

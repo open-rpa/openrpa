@@ -86,7 +86,7 @@ namespace OpenRPA
             Log.Debug("Register Exchange for " + name);
             IDetectorPlugin dp = Plugins.detectorPlugins.Where(x => x.Entity._id == _id).FirstOrDefault();
             if (dp == null) return;
-            if (global.webSocketClient.isConnected && global.openflowconfig != null && !string.IsNullOrEmpty(global.openflowconfig.version))
+            if (global.webSocketClient != null && global.webSocketClient.isConnected && global.openflowconfig != null && !string.IsNullOrEmpty(global.openflowconfig.version))
             {
                 var ver = Version.Parse(global.openflowconfig.version);
                 var reqver = Version.Parse("1.3.103"); // exchange support for detectors was not added until 1.3.103

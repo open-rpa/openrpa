@@ -19,9 +19,6 @@ namespace OpenRPA
                 if (RobotInstance.instance.db == null) return;
                 var collection = RobotInstance.instance.db.GetCollection<T>(_type.ToLower() + "s");
                 var entity = (T)Convert.ChangeType(this, typeof(T));
-#if DEBUG
-                // Log.Output("LocallyCached.Save<" + typeof(T).Name + ">()");
-#endif
                 if (!global.isConnected )
                 {
                     try
@@ -52,6 +49,8 @@ namespace OpenRPA
                     string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
                 if (_type == "workitemqueue") collectionname = "mq";
+                if (_type == "workitem") collectionname = "workitems";
+                
                 if (_type == "workflowinstance" && Config.local.skip_online_state) {
                     skipOnline = true;
                     isDirty = false;

@@ -18,7 +18,7 @@ namespace OpenRPA.Interfaces
         event ConnectedEventHandler Connected;
         event DisconnectedEventHandler Disconnected;
         event ReadyForActionEventHandler ReadyForAction;
-        IBaseObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
+        System.Collections.ObjectModel.ObservableCollection<IWorkitemQueue> WorkItemQueues { get; set; }
         bool isReadyForAction { get; set; }
         bool isRunningInChildSession { get; }
         IMainWindow Window { get; set; }

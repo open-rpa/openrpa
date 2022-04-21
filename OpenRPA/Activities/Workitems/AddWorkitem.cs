@@ -58,8 +58,16 @@ namespace OpenRPA.WorkItems
             {
                 t.payload.Add(item.Key, item.Value.Get(context));
             }
-            var result = await global.webSocketClient.AddWorkitem<Workitem>(t, files);
-            return result;        
+            Workitem result = null;
+            if (string.IsNullOrEmpty(Config.local.wsurl))
+            {
+                await t.Save(false);
+            } 
+            else
+            {
+                result = await global.webSocketClient.AddWorkitem<Workitem>(t, files);
+            }
+            return result;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)
         {

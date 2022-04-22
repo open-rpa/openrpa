@@ -14,7 +14,11 @@ namespace OpenRPA
             _type = "workitemqueue";
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
-        public string projectid { get { return GetProperty<string>(); } set {
+        public string projectid { 
+            get { 
+                return GetProperty<string>(); 
+            } 
+            set {
                 var current = projectid;
                 if(current != value)
                 {

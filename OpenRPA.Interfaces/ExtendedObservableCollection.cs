@@ -93,9 +93,12 @@ namespace OpenRPA.Interfaces
 
                 // Check the OldItems
                 List<T> oldlist = new List<T>();
+                //if (e.OldItems != null)
+                //    foreach (T item in e.OldItems)
+                //        if (_filter(item) == true)
+                //            oldlist.Add(item);
                 if (e.OldItems != null)
                     foreach (T item in e.OldItems)
-                        if (_filter(item) == true)
                             oldlist.Add(item);
 
                 // Create the Add/Remove/Replace lists

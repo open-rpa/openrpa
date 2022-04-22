@@ -252,64 +252,6 @@ namespace OpenRPA.Views
         }
         public static bool isFiltering = false;
         public static bool ReFilter = false;
-        private string _FilterText = "";
-        public string FilterText
-        {
-            get
-            {
-                return _FilterText;
-            }
-            set
-            {
-                _FilterText = value;
-                //Projects.ForceUpdate();
-                //RobotInstance.instance.Workflows.ForceUpdate();
-                //if (isFiltering)
-                //{
-                //    ReFilter = true;
-                //    return;
-                //}
-                //ReFilter = false;
-                //isFiltering = true;
-                //isUpdating = true;
-                //foreach (Project p in Projects)
-                //{
-                //    p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.Workflows.Count > 0 || p.Detectors.Count > 0);
-                //}
-                //isUpdating = false;
-                //// UpdateProjectsList();
-                //foreach (var p in Instance.Projects)
-                //{
-                //    p.NotifyPropertyChanged("Workflows");
-                //    p.NotifyPropertyChanged("Detectors");
-                //    p.NotifyPropertyChanged("WorkItemQueues");
-                //}
-                //NotifyPropertyChanged("FilterText");
-                //NotifyPropertyChanged("Projects");
-                //NotifyPropertyChanged("FilteredProjects");
-
-                //if (ReFilter)
-                //{
-                //    isUpdating = true;
-                //    foreach (Project p in _Projects)
-                //    {
-                //        p.IsExpanded = string.IsNullOrEmpty(_FilterText) ? false : (p.Workflows.Count > 0 || p.Detectors.Count > 0);
-                //    }
-                //    isUpdating = false;
-                //    // UpdateProjectsList();
-                //    foreach (var p in Instance.Projects)
-                //    {
-                //        p.NotifyPropertyChanged("Workflows");
-                //        p.NotifyPropertyChanged("Detectors");
-                //        p.NotifyPropertyChanged("WorkItemQueues");
-                //    }
-                //    NotifyPropertyChanged("FilterText");
-                //    NotifyPropertyChanged("Projects");
-                //    NotifyPropertyChanged("FilteredProjects");
-                //}
-                //isFiltering = false;
-            }
-        }
         async private void ListWorkflows_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Log.FunctionIndent("OpenProject", "ListWorkflows_MouseDoubleClick");

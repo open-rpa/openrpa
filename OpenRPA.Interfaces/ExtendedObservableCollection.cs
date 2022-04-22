@@ -142,29 +142,33 @@ namespace OpenRPA.Interfaces
                 foreach (T item in addlist) Items.Add(item);
                 foreach (T item in removelist) Items.Remove(item);
                 // Send the corrected event
-                switch (e.Action)
+                GenericTools.RunUI(() =>
                 {
-                    case NotifyCollectionChangedAction.Add:
-                    case NotifyCollectionChangedAction.Move:
-                    case NotifyCollectionChangedAction.Remove:
-                    case NotifyCollectionChangedAction.Replace:
-                        if (addlist.Count > 0)
-                        {
-                            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
-                        }
-                        if (replacelist.Count > 0)
-                        {
-                            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, replacelist, replacelist, 0));
-                        }
-                        if (removelist.Count > 0)
-                        {
-                            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
-                        }
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                        break;
-                }
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangedAction.Add:
+                        case NotifyCollectionChangedAction.Move:
+                        case NotifyCollectionChangedAction.Remove:
+                        case NotifyCollectionChangedAction.Replace:
+                            if (addlist.Count > 0)
+                            {
+                                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));
+                            }
+                            if (replacelist.Count > 0)
+                            {
+                                // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, replacelist, replacelist, 0));
+                            }
+                            if (removelist.Count > 0)
+                            {
+                                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removelist));
+                            }
+                            break;
+                        case NotifyCollectionChangedAction.Reset:
+                            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                            break;
+                    }
+
+                });
             }
         }
         new public void Move(int oldIndex, int newIndex) { basecollection.Move(oldIndex, newIndex); }
@@ -175,18 +179,27 @@ namespace OpenRPA.Interfaces
         new public void MoveItem(int oldIndex, int newIndex) { basecollection.Move(oldIndex, newIndex); }
         new public void Add(T item) { basecollection.Add(item); }
         new public void Remove(T item) { basecollection.Remove(item); }
+        public Collection<T> Sort()
+        {
+            List<T> items = (List<T>)Items;
+            StringComparer invICCmp = StringComparer.InvariantCultureIgnoreCase;
+
+            items.Sort((x, y) => invICCmp.Compare(x.name, y.name));
+
+            return this;
+        }
         public void Refresh()
         {
             List<T> addlist = new List<T>();
             List<T> removelist = new List<T>();
             foreach (var item in basecollection)
             {
-                bool isNeeded = _filter(item) == false;
+                bool isNeeded = _filter(item);
                 bool exists = Items.Contains(item);
                 if (exists && !isNeeded) { Items.Remove(item); removelist.Add(item); }
                 if (!exists && isNeeded) { Items.Add(item); addlist.Add(item); }
             }
-
+            this.Sort();
             if (addlist.Count > 0)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, addlist));

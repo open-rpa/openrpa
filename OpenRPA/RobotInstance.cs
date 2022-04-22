@@ -15,11 +15,32 @@ using OpenTelemetry.Metrics;
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
+using System.ComponentModel;
 
 namespace OpenRPA
 {
-    public class RobotInstance : IOpenRPAClient
+    public class RobotInstance : IOpenRPAClient, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            GenericTools.RunUI(() =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            });
+        }
+        private string _FilterText = "";
+        public string FilterText { 
+            get
+            {
+                return _FilterText;
+            } 
+            set
+            {
+                _FilterText = value;
+                NotifyPropertyChanged("FilterText");
+            }
+        }
         public static System.Timers.Timer unsavedTimer = null;
         private readonly System.Timers.Timer reloadTimer = null;
         private RobotInstance()
@@ -953,6 +974,10 @@ namespace OpenRPA
                           Log.Error(ex.ToString());
                       }
                   });
+                GenericTools.RunUI(() =>
+                {
+                    NotifyPropertyChanged("FilterText");
+                });
             }
             catch (Exception ex)
             {

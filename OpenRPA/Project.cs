@@ -20,8 +20,18 @@ namespace OpenRPA
             WorkItemQueues = new FilteredObservableCollection<IWorkitemQueue>(RobotInstance.instance.WorkItemQueues, wiqfilter);
             Detectors = new FilteredObservableCollection<IDetector>(RobotInstance.instance.Detectors, detectorfilter);
             Children = new CompositionObservableCollection(WorkItemQueues, Detectors, Workflows);
-
+            RobotInstance.instance.PropertyChanged += Instance_PropertyChanged;
         }
+        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "FilterText")
+            {
+                Workflows.Refresh();
+                Detectors.Refresh();
+                WorkItemQueues.Refresh();
+            }
+        }
+
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -32,7 +42,7 @@ namespace OpenRPA
             if (item == null) return false;
             if (string.IsNullOrEmpty(_id)) return false;
             string FilterText = "";
-            if (Views.OpenProject.Instance != null) FilterText = Views.OpenProject.Instance.FilterText;
+            if (Views.OpenProject.Instance != null) FilterText = RobotInstance.instance.FilterText;
             if (string.IsNullOrEmpty(FilterText)) return item.projectid == _id;
             FilterText = FilterText.ToLower();
             return item.projectid == _id && item.name.ToLower().Contains(FilterText);
@@ -44,7 +54,7 @@ namespace OpenRPA
             if (item == null) return false;
             if (string.IsNullOrEmpty(_id)) return false;
             string FilterText = "";
-            if (Views.OpenProject.Instance != null) FilterText = Views.OpenProject.Instance.FilterText;
+            if (Views.OpenProject.Instance != null) FilterText = RobotInstance.instance.FilterText;
             if (string.IsNullOrEmpty(FilterText)) return item.projectid == _id;
             FilterText = FilterText.ToLower();
             return item.projectid == _id && item.name.ToLower().Contains(FilterText);
@@ -56,7 +66,7 @@ namespace OpenRPA
             if (item == null) return false;
             if (string.IsNullOrEmpty(_id)) return false;
             string FilterText = "";
-            if (Views.OpenProject.Instance != null) FilterText = Views.OpenProject.Instance.FilterText;
+            if (Views.OpenProject.Instance != null) FilterText = RobotInstance.instance.FilterText;
             if (string.IsNullOrEmpty(FilterText)) return item.projectid == _id;
             FilterText = FilterText.ToLower();
             return item.projectid == _id && item.name.ToLower().Contains(FilterText);

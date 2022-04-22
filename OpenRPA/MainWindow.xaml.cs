@@ -3896,10 +3896,7 @@ namespace OpenRPA
         }
         private void SearchBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (SelectedContent is Views.OpenProject op)
-            {
-            }
-            Views.OpenProject.Instance.FilterText = SearchBox.Text;
+            RobotInstance.instance.FilterText = SearchBox.Text;
         }
         private void clearTraceMessages_Click(object sender, RoutedEventArgs e)
         {

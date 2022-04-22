@@ -131,6 +131,22 @@ namespace OpenRPA
                 }
             }
         }
+        new public string name
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                var current = name;
+                if (current != value)
+                {
+                    SetProperty(value);
+                    RobotInstance.instance.NotifyPropertyChanged("FilterText");
+                }
+            }
+        }
 
         [JsonIgnore]
         public bool IsExpanded
@@ -601,7 +617,7 @@ namespace OpenRPA
         public bool IsVisible { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public override string ToString()
         {
-            return RelativeFilename;
+            return ProjectAndName;
         }
         public void ParseParameters()
         {

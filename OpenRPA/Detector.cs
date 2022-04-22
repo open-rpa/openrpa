@@ -17,7 +17,28 @@ namespace OpenRPA
         }
         public string Plugin { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public Dictionary<string, object> Properties { get { return GetProperty<Dictionary<string, object>>(); } set { SetProperty(value); } }
-        public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string projectid
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                var current = projectid;
+                if (current != value)
+                {
+                    SetProperty(value);
+                }
+                if (RobotInstance.instance.Detectors.Contains(this))
+                {
+                    var index = RobotInstance.instance.Detectors.IndexOf(this);
+                    RobotInstance.instance.Detectors.Remove(this);
+                    RobotInstance.instance.Detectors.Insert(index, this);
+                }
+            }
+        }
+
         public string detectortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public async Task Save(bool skipOnline = false)
         {

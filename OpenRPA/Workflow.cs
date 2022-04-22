@@ -110,7 +110,28 @@ namespace OpenRPA
                 return System.IO.Path.Combine(Project().Path, Filename);
             }
         }
-        public string projectid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string projectid
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                var current = projectid;
+                if (current != value)
+                {
+                    SetProperty(value);
+                }
+                if (RobotInstance.instance.Workflows.Contains(this))
+                {
+                    var index = RobotInstance.instance.Workflows.IndexOf(this);
+                    RobotInstance.instance.Workflows.Remove(this);
+                    RobotInstance.instance.Workflows.Insert(index, this);
+                }
+            }
+        }
+
         [JsonIgnore]
         public bool IsExpanded
         {

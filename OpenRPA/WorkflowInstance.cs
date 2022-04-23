@@ -972,6 +972,7 @@ namespace OpenRPA
                         {
                             i.state = "aborted";
                             i.errormessage = "Cannot run WorkflowInstance, second try " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
+                            await i.Save<WorkflowInstance>();
                             continue;
                         }
                         if (RobotInstance.instance.Window != null) i.OnIdleOrComplete += RobotInstance.instance.Window.IdleOrComplete;

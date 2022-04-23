@@ -40,19 +40,9 @@ namespace OpenRPA.Activities
                 if (RobotInstance.instance.Projects.Count() == 0) throw new ArgumentException("RobotInstance.instance.Projects.Count == 0");
                 var result = new List<Workflow>();
                 var designer = RobotInstance.instance.Window.Designer;
-                foreach (var w in RobotInstance.instance.Workflows)
-                {
-                    if (designer != null && designer.Workflow != null)
-                    {
-                        if (designer.Workflow._id != w._id || w._id == null) result.Add(w as Workflow);
-                    }
-                    else
-                    {
-                        result.Add(w as Workflow);
-                    }
-                }
                 var workflow = ModelItem.GetValue<string>("workflow");
-                if(!string.IsNullOrEmpty(workflow))
+                IWorkflow selected = null;
+                if (!string.IsNullOrEmpty(workflow))
                 {
                     var workflow2 = workflow.Replace("\\", "/");
                     if (workflow != workflow2)
@@ -60,11 +50,29 @@ namespace OpenRPA.Activities
                         ModelItem.SetValueInArg("workflow", workflow2);
                     }
                 }
+                foreach (var w in RobotInstance.instance.Workflows)
+                {
+                    if (designer != null && designer.Workflow != null)
+                    {
+                        if (designer.Workflow._id != w._id || w._id == null) result.Add(w as Workflow);
+                        if (w._id == workflow) selected = w;
+                        if (w.RelativeFilename == workflow) selected = w;
+                        // if (w.ProjectAndName == workflow) selected = w;
+                    }
+                    else
+                    {
+                        result.Add(w as Workflow);
+                    }
+                }
+                if(selected != null && selected.ProjectAndName != workflow)
+                {
+                    ModelItem.SetValueInArg("workflow", selected.ProjectAndName);
+                }
                 // result = result.OrderBy(x => x.name).OrderBy(x => x.Project.name).ToList();
                 result = result.OrderBy(x => x.name).OrderBy(x => x.projectid).ToList();
                 if (!string.IsNullOrEmpty(workflow))
                 {
-                    var exists = result.Where(x => x.RelativeFilename == workflow).ToList();
+                    var exists = result.Where(x => x.RelativeFilename == workflow || x.ProjectAndName == workflow).ToList();
                 }
 
                 foreach (var w in result) workflows.Add(w);

@@ -303,7 +303,7 @@ namespace OpenRPA.Interfaces.IPCService
             {
                 foreach (var i in global.OpenRPAClient.WorkflowInstances.ToList())
                 {
-                    if (!i.isCompleted && (i.Workflow._id == Id || i.Workflow.RelativeFilename == Id))
+                    if (!i.isCompleted && (i.Workflow._id == Id || i.Workflow.RelativeFilename == Id || i.Workflow.ProjectAndName == Id))
                     {
                         i.Abort("Killed remotely by killworkflows command");
                         result++;

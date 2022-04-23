@@ -44,7 +44,7 @@ namespace OpenRPA.Activities
                     {
                         if (!string.IsNullOrEmpty(workflowid))
                         {
-                            if (i.Workflow != null && i.Workflow._id == workflowid || i.Workflow.RelativeFilename == workflowid)
+                            if (i.Workflow != null && i.Workflow._id == workflowid || i.Workflow.RelativeFilename == workflowid || i.Workflow.ProjectAndName ==workflowid)
                             {
                                 i.Abort("Killed by StopOpenRPA command from " + Instance.Workflow.name);
                                 result++;

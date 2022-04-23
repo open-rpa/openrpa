@@ -401,24 +401,30 @@ namespace OpenRPA
                 if (wiq.projectid != _id) wiq.projectid = _id;
                 await wiq.Save(skipOnline);
             }
-            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, Config.local.thread_lock_timeout_seconds * 1000))
+            GenericTools.RunUI(() =>
             {
-                try
+                if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, Config.local.thread_lock_timeout_seconds * 1000))
                 {
-                    var exists = RobotInstance.instance.Projects.FindById(_id);
-                    if (exists == null) RobotInstance.instance.Projects.Add(this);
-                    if (exists != null) RobotInstance.instance.Projects.UpdateItem(exists, this);
+                    try
+                    {
+                        var exists = RobotInstance.instance.Projects.FindById(_id);
+                        if (exists == null) RobotInstance.instance.Projects.Add(this);
+                        if (exists != null) RobotInstance.instance.Projects.UpdateItem(exists, this);
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
+                    }
                 }
-                finally
-                {
-                    System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
-                }
-            }
-            else { throw new LockNotReceivedException("Saving Project"); }
+                else { throw new LockNotReceivedException("Saving Project"); }
+            });
         }
         public async Task Update(IProject item, bool skipOnline = false)
         {
-            RobotInstance.instance.Projects.UpdateItem(this, item);
+            GenericTools.RunUI(() =>
+            {
+                RobotInstance.instance.Projects.UpdateItem(this, item);
+            });
             await Save<Project>(skipOnline);
         }
         public async Task Delete(bool skipOnline = false)
@@ -427,8 +433,10 @@ namespace OpenRPA
                 if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
                 {
                     await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
-                    RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
-                    RobotInstance.instance.WorkItemQueues.Remove(wiq);
+                    GenericTools.RunUI(()=> {
+                        RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
+                        RobotInstance.instance.WorkItemQueues.Remove(wiq);
+                    });
                 }
                 else if (!string.IsNullOrEmpty(Config.local.wsurl))
                 {
@@ -472,18 +480,21 @@ namespace OpenRPA
             {
                 RobotInstance.instance.dbProjects.Delete(_id);
             }
-            if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, Config.local.thread_lock_timeout_seconds * 1000))
+            GenericTools.RunUI(() =>
             {
-                try
+                if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Projects, Config.local.thread_lock_timeout_seconds * 1000))
                 {
-                    RobotInstance.instance.Projects.Remove(this);
+                    try
+                    {
+                        RobotInstance.instance.Projects.Remove(this);
+                    }
+                    finally
+                    {
+                        System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
+                    }
                 }
-                finally
-                {
-                    System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
-                }
-            }
-            else { throw new LockNotReceivedException("Delete Project"); }
+                else { throw new LockNotReceivedException("Delete Project"); }
+            });
         }
         public override string ToString()
         {

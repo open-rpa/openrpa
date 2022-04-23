@@ -273,30 +273,6 @@ namespace OpenRPA
             if (State == "loaded") return;
             if (laststate != State)
             {
-                //Task.Run(() =>
-                //{
-                //    if (State != "idle" && State != "running")
-                //    {
-                //        if (lastSaveTime.AddSeconds(5) < DateTime.Now || true)
-                //        {
-                //            Task.Run(async () =>
-                //            {
-                //                try
-                //                {
-                //                    // await Save(true);
-                //                    await Save<Workflow>(true);
-                //                }
-                //                catch (Exception ex)
-                //                {
-                //                    Log.Error(ex.ToString());
-                //                }
-                //            });
-                //            lastSaveTime = DateTime.Now;
-                //        }
-                //    }
-                //    laststate = State;
-                //    GenericTools.RunUI(() => NotifyUIState());
-                //});
                 laststate = State;
                 if (State != "idle" && State != "running")
                 {

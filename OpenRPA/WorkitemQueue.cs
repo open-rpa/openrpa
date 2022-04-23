@@ -27,8 +27,11 @@ namespace OpenRPA
                 if(RobotInstance.instance.WorkItemQueues.Contains(this))
                 {
                     var index = RobotInstance.instance.WorkItemQueues.IndexOf(this);
-                    RobotInstance.instance.WorkItemQueues.Remove(this);
-                    RobotInstance.instance.WorkItemQueues.Insert(index, this);
+                    GenericTools.RunUI(() =>
+                    {
+                        RobotInstance.instance.WorkItemQueues.Remove(this);
+                        RobotInstance.instance.WorkItemQueues.Insert(index, this);
+                    });
                 }
             } 
         }
@@ -54,6 +57,10 @@ namespace OpenRPA
             } else if (string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(Config.local.wsurl))
             {
                 throw new Exception("Failed adding WorkitemQueue, not online!");
+            } else if(!string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
+            {
+                var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false);
+                EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
             }
             var ___id = _id;
             bool hadError = true;
@@ -84,29 +91,45 @@ namespace OpenRPA
                     Log.Error(ex.Message);
                 }
             }
-            else if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
+            else
             {
-                try
+                GenericTools.RunUI(() =>
                 {
-                    var exists = RobotInstance.instance.WorkItemQueues.FindById(_id);
-                    if (exists == null) RobotInstance.instance.WorkItemQueues.Add(this);
-                    if (exists != null) RobotInstance.instance.WorkItemQueues.UpdateItem(exists, this);
-                }
-                finally
-                {
-                    System.Threading.Monitor.Exit(RobotInstance.instance.WorkItemQueues);
-                }
+                    if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
+                    {
+                        try
+                        {
+                            var exists = RobotInstance.instance.WorkItemQueues.FindById(_id);
+                            if (exists == null) RobotInstance.instance.WorkItemQueues.Add(this);
+                            if (exists != null) RobotInstance.instance.WorkItemQueues.UpdateItem(exists, this);
+                        }
+                        finally
+                        {
+                            System.Threading.Monitor.Exit(RobotInstance.instance.WorkItemQueues);
+                        }
+                    }
+                });
             }
         }
         public async Task Update(IWorkitemQueue item, bool skipOnline = false)
         {
-            RobotInstance.instance.WorkItemQueues.UpdateItem(this, item);
+            GenericTools.RunUI(() =>
+            {
+                RobotInstance.instance.WorkItemQueues.UpdateItem(this, item);
+            });
             isDirty = false;
             await Save<WorkitemQueue>(skipOnline);
         }
         public async Task Delete(bool skipOnline = false)
         {
-            if(!skipOnline) await Delete<WorkitemQueue>();
+            try
+            {
+                if (!skipOnline) await Delete<WorkitemQueue>();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains("not found") && !ex.Message.Contains("denied")) throw;
+            }
             if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
             {
                 try

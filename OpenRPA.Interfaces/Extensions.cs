@@ -72,8 +72,9 @@ namespace OpenRPA.Interfaces
                 // Handle new item.
                 if (!collection.Contains(item))
                 {
-                    if (collection.Count >i) collection.Insert(i, item);
+                    if (collection.Count > i) { collection.Insert(i, item); } else { collection.Add(item); }
                 }
+                
 
                 // Handle existing item, move at the good index.
                 if (collection.Contains(item))

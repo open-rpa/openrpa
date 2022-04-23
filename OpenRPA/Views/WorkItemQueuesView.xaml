@@ -94,7 +94,7 @@
                     <ComboBox x:Name="listWorkflows" 
                               ItemsSource="{Binding Workflows, Converter={StaticResource ComboBoxEmptyItemConverter}}" 
                               BorderThickness="0"  Margin="0,0,0,0"
-                            SelectedValuePath="_id" 
+                            SelectedValuePath="ProjectAndName" 
                               DisplayMemberPath="ProjectAndName"
                               SelectedValue="{Binding ElementName=listWorkItemQueues, Path=SelectedValue.workflowid}"  >
                     </ComboBox>

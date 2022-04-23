@@ -2581,7 +2581,6 @@ namespace OpenRPA
                         }
                     }
                     await p.Delete();
-                    RobotInstance.instance.Projects.Remove(p);
                 }
             }
             catch (Exception ex)

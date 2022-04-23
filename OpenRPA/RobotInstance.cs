@@ -367,6 +367,7 @@ namespace OpenRPA
                 foreach (var designer in Designers)
                 {
                     if (designer.Workflow._id == IDOrRelativeFilename) return designer;
+                    if (designer.Workflow.ProjectAndName == IDOrRelativeFilename) return designer;
                     if (designer.Workflow.RelativeFilename.ToLower().Replace("\\", "/") == IDOrRelativeFilename.ToLower().Replace("\\", "/")) return designer;
                 }
             Log.FunctionOutdent("RobotInstance", "GetWorkflowDesignerByIDOrRelativeFilename");
@@ -383,7 +384,7 @@ namespace OpenRPA
                 {
                     foreach (var p in Views.OpenProject.Instance.Projects.ToList())
                     {
-                        result = p.Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
+                        result = p.Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename || x.ProjectAndName.ToLower() == IDOrRelativeFilename.ToLower()).FirstOrDefault();
                         if (result != null)
                         {
                             var _p = result.projectid;
@@ -393,7 +394,7 @@ namespace OpenRPA
                 }
                 if (result == null)
                 {
-                    result = Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename).FirstOrDefault();
+                    result = Workflows.Where(x => x.RelativeFilename.ToLower() == filename.ToLower() || x._id == IDOrRelativeFilename || x.ProjectAndName.ToLower() == IDOrRelativeFilename.ToLower()).FirstOrDefault();
                 }
             }
             catch (Exception)
@@ -2161,14 +2162,7 @@ namespace OpenRPA
                     if (operationType == "delete")
                     {
                         if (exists == null) return;
-                        if (instance.dbProjects.Delete(_id))
-                        {
-                            Projects.Remove(exists);
-                        }
-                        else
-                        {
-                            Log.Error("Failed deleting project " + exists.name + " with id" + _id);
-                        }
+                        await exists.Delete(true);
                         return;
                     }
                     if (exists != null && _version != exists._version)
@@ -2254,7 +2248,10 @@ namespace OpenRPA
                             }
                             if (exists != null && wiq._version != exists._version)
                             {
-                                WorkItemQueues.UpdateItem(exists, wiq);
+                                GenericTools.RunUI(() =>
+                                {
+                                    WorkItemQueues.UpdateItem(exists, wiq);
+                                });
                                 await exists.Save(true);
                             }
                             else if (exists == null)

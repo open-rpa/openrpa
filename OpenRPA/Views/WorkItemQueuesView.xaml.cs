@@ -156,7 +156,7 @@ namespace OpenRPA.Views
             {
                 try
                 {
-                    foreach (OpenRPA.WorkitemQueue d in WorkItemQueues)
+                    foreach (OpenRPA.WorkitemQueue d in WorkItemQueues.ToList())
                     {
                         if(d.isDirty) await d.Save();
                     }
@@ -203,9 +203,16 @@ namespace OpenRPA.Views
         {
             try
             {
+                var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
                 try
                 {
-                    foreach (OpenRPA.WorkitemQueue d in WorkItemQueues)
+                    if (wiq != null && RobotInstance.instance.Workflows != null)
+                        foreach (var wf in RobotInstance.instance.Workflows)
+                        {
+                            if (wf._id == wiq.workflowid) wiq.workflowid = wf.ProjectAndName;
+                            if (wf.RelativeFilename == wiq.workflowid) wiq.workflowid = wf.ProjectAndName;
+                        }
+                    foreach (OpenRPA.WorkitemQueue d in WorkItemQueues.ToList())
                     {
                         if (d.isDirty) await d.Save();
                     }
@@ -215,7 +222,6 @@ namespace OpenRPA.Views
                     Log.Error(ex.ToString());
                 }
 
-                var wiq = listWorkItemQueues.SelectedItem as OpenRPA.WorkitemQueue;
                 if (wiq == null) return;
                 if (global.webSocketClient == null || !global.webSocketClient.isConnected)
                 {

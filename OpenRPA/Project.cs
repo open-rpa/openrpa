@@ -432,7 +432,14 @@ namespace OpenRPA
             foreach (var wiq in WorkItemQueues.ToList()) {
                 if (global.webSocketClient != null && global.webSocketClient.user != null && global.webSocketClient.isConnected)
                 {
-                    await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
+                    try
+                    {
+                        await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!ex.Message.Contains("not found") && !ex.Message.Contains("denied")) throw;
+                    }
                     GenericTools.RunUI(()=> {
                         RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
                         RobotInstance.instance.WorkItemQueues.Remove(wiq);

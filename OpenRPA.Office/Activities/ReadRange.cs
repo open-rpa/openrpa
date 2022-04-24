@@ -54,23 +54,16 @@ namespace OpenRPA.Office.Activities
             if (string.IsNullOrEmpty(cells))
             {
                 range = base.worksheet.UsedRange;
-
-                //Range last = base.worksheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing);
-                //Range range = base.worksheet.get_Range("A1", last);
-
-                //int lastUsedRow = range.Row;
-                //int lastUsedColumn = range.Column;
             }
             else
             {
                 if (!cells.Contains(":")) throw new ArgumentException("Cell should contain a range dedenition, meaning it should contain a colon :");
                 range = base.worksheet.get_Range(cells);
             }
-            //object[,] valueArray = (object[,])range.Value;
             object[,] valueArray = (object[,])range.get_Value(Microsoft.Office.Interop.Excel.XlRangeValueDataType.xlRangeValueDefault);
             if(valueArray != null)
             {
-                var o = ProcessObjects(useHeaderRow, ignoreEmptyRows, valueArray);
+                var o = ProcessObjects(range, useHeaderRow, ignoreEmptyRows, valueArray);
 
                 System.Data.DataTable dt = o as System.Data.DataTable;
                 dt.TableName = base.worksheet.Name;
@@ -78,13 +71,6 @@ namespace OpenRPA.Office.Activities
                 DataTable.Set(context, dt);
 
             }
-
-
-            //dt.AsEnumerable();
-
-            //string json = Newtonsoft.Json.JsonConvert.SerializeObject(dt, Newtonsoft.Json.Formatting.Indented);
-            ////context.SetValue(Json, JObject.Parse(json));
-            //context.SetValue(Json, JArray.Parse(json));
 
             if (ClearFormats.Get(context))
             {
@@ -94,38 +80,6 @@ namespace OpenRPA.Office.Activities
 
             if (lastUsedColumn!=null || lastUsedRow!=null)
             {
-
-                // Unhide All Cells and clear formats
-
-                // Detect Last used Row - Ignore cells that contains formulas that result in blank values
-                //int lastRowIgnoreFormulas = worksheet.Cells.Find(
-                //                "*",
-                //                System.Reflection.Missing.Value,
-                //                XlFindLookIn.xlValues,
-                //                XlLookAt.xlWhole,
-                //                XlSearchOrder.xlByRows,
-                //                XlSearchDirection.xlPrevious,
-                //                false,
-                //                System.Reflection.Missing.Value,
-                //                System.Reflection.Missing.Value).Row;
-                // Detect Last Used Column  - Ignore cells that contains formulas that result in blank values
-                //int lastColIgnoreFormulas = worksheet.Cells.Find(
-                //                "*",
-                //System.Reflection.Missing.Value,
-                //                System.Reflection.Missing.Value,
-                //                System.Reflection.Missing.Value,
-                //                XlSearchOrder.xlByColumns,
-                //                XlSearchDirection.xlPrevious,
-                //                false,
-                //                System.Reflection.Missing.Value,
-                //                System.Reflection.Missing.Value).Column;
-
-                // Detect Last used Row / Column - Including cells that contains formulas that result in blank values
-                //int lastColIncludeFormulas = worksheet.UsedRange.Columns.Count;
-                //int lastColIncludeFormulas = worksheet.UsedRange.Rows.Count;
-
-
-
                 //range = base.worksheet.UsedRange;
                 int _lastUsedColumn = worksheet.UsedRange.Columns.Count;
                 int _lastUsedRow = worksheet.UsedRange.Rows.Count;
@@ -154,7 +108,7 @@ namespace OpenRPA.Office.Activities
             }
             return colLetter;
         }
-        private System.Data.DataTable ProcessObjects(bool useHeaderRow, bool ignoreEmptyRows, object[,] valueArray)
+        private System.Data.DataTable ProcessObjects(Microsoft.Office.Interop.Excel.Range range, bool useHeaderRow, bool ignoreEmptyRows, object[,] valueArray)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
             var beginat = 1;
@@ -162,7 +116,11 @@ namespace OpenRPA.Office.Activities
             {
                 for (int k = 1; k <= valueArray.GetLength(1); k++)
                 {
-                    dt.Columns.Add((string)valueArray[1, k]);  //add columns to the data table.
+                    var v = (worksheet.Cells[range.Row + 1, range.Column + (k - 1)] as Range).get_Value(Type.Missing);
+                    if (v == null) v = (worksheet.Cells[range.Row, range.Column + (k - 1)] as Range).get_Value(Type.Missing);
+                    Type type = typeof(string);
+                    if (v != null) type = v.GetType();
+                    dt.Columns.Add((string)valueArray[1, k], type);  //add columns to the data table.
                 }
                 beginat = 2;
             }
@@ -170,7 +128,10 @@ namespace OpenRPA.Office.Activities
             {
                 for (int k = 1; k <= valueArray.GetLength(1); k++)
                 {
-                    dt.Columns.Add(k.ToString());  //add columns to the data table.
+                    var v = (worksheet.Cells[range.Row + 1, range.Column + (k - 1)] as Range).get_Value(Type.Missing);
+                    Type type = typeof(string);
+                    if (v != null) type = v.GetType();
+                    dt.Columns.Add(k.ToString(), type);  //add columns to the data table.
                 }
                 beginat = 1;
             }

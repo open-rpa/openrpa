@@ -105,7 +105,7 @@ namespace OpenRPA.RDService
                 // ownerexplorer = null;
                 //if (ownerexplorer == null)
                 var rdpip = "127.0.0.2";
-                // if ((ConnectionAttempts % 2) == 1) rdpip = "127.0.0.1";
+                if (!string.IsNullOrEmpty(client.connectionhost)) rdpip = client.connectionhost;
                 if (PluginConfig.usefreerdp && !skiprdp)
                 {
                     if (freerdp == null || freerdp.Connected == false)
@@ -121,12 +121,12 @@ namespace OpenRPA.RDService
                         try
                         {
                             Log.Debug("Tesing connection to " + rdpip + " port 3389");
-                            using (var tcpClient = new System.Net.Sockets.TcpClient())
-                            {
-                                var ipAddress = System.Net.IPAddress.Parse(rdpip);
-                                var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
-                                tcpClient.Connect(ipEndPoint);
-                            }
+                            //using (var tcpClient = new System.Net.Sockets.TcpClient())
+                            //{
+                            //    var ipAddress = System.Net.IPAddress.Parse(rdpip);
+                            //    var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
+                            //    tcpClient.Connect(ipEndPoint);
+                            //}
                             Log.Debug("Success");
                         }
                         catch (Exception ex)
@@ -155,14 +155,25 @@ namespace OpenRPA.RDService
                             //Log.Debug("windowsusername: " + windowsusername);
                             //Log.Debug("windowsdomain: " + windowsdomain);
                             //Log.Debug("windowspassword: " + client.windowspassword);
-                            var credentials = new UserCredentials(windowsdomain, windowsusername, client.windowspassword);
-                            Impersonation.RunAsUser(credentials, LogonType.Interactive, () =>
+
+                            if (!string.IsNullOrEmpty(client.connectionhost))
                             {
                                 ConnectionAttempts++;
                                 Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
-                                freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
+                                var settings = new FreeRDP.Core.ConnectionSettings();
+                                freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword, 3389, settings);
+                            }
+                            else
+                            {
+                                var credentials = new UserCredentials(windowsdomain, windowsusername, client.windowspassword);
+                                Impersonation.RunAsUser(credentials, LogonType.Interactive, () =>
+                                {
+                                    ConnectionAttempts++;
+                                    Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                                    freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
 
-                            });
+                                });
+                            }
                             //using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
                             //{
                             //    ConnectionAttempts++;
@@ -209,14 +220,14 @@ namespace OpenRPA.RDService
                     {
                         try
                         {
-                            Log.Debug("Tesing connection to " + rdpip + " port 3389");
-                            using (var tcpClient = new System.Net.Sockets.TcpClient())
-                            {
-                                var ipAddress = System.Net.IPAddress.Parse(rdpip);
-                                var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
-                                tcpClient.Connect(ipEndPoint);
-                            }
-                            Log.Debug("Success");
+                            //Log.Debug("Tesing connection to " + rdpip + " port 3389");
+                            //using (var tcpClient = new System.Net.Sockets.TcpClient())
+                            //{
+                            //    var ipAddress = System.Net.IPAddress.Parse(rdpip);
+                            //    var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
+                            //    tcpClient.Connect(ipEndPoint);
+                            //}
+                            //Log.Debug("Success");
                         }
                         catch (Exception ex)
                         {

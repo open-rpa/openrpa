@@ -504,36 +504,8 @@ namespace OpenRPA.RDService
                 if (args.Length == 0)
                 {
                     log("Check IsServiceInstalled");
-                    // System.Threading.Thread.Sleep(1000 * StartupWaitSeconds);
                     if (!manager.IsServiceInstalled)
                     {
-                        //Console.Write("Username (" + NativeMethods.GetProcessUserName() + "): ");
-                        //var username = Console.ReadLine();
-                        //if (string.IsNullOrEmpty(username)) username = NativeMethods.GetProcessUserName();
-                        //Console.Write("Password: ");
-                        //string pass = "";
-                        //do
-                        //{
-                        //    ConsoleKeyInfo key = Console.ReadKey(true);
-                        //    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                        //    {
-                        //        pass += key.KeyChar;
-                        //        Console.Write("*");
-                        //    }
-                        //    else
-                        //    {
-                        //        if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                        //        {
-                        //            pass = pass.Substring(0, (pass.Length - 1));
-                        //            Console.Write("\b \b");
-                        //        }
-                        //        else if (key.Key == ConsoleKey.Enter)
-                        //        {
-                        //            break;
-                        //        }
-                        //    }
-                        //} while (true);
-                        //manager.InstallService(typeof(Program), new string[] { "username=" + username, "password=" + pass });
                         log("InstallService");
                         manager.InstallService(typeof(Program), new string[] { });
                     }

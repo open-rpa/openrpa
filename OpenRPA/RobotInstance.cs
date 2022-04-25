@@ -1264,13 +1264,13 @@ namespace OpenRPA
                         try
                         {
                             var key = Guid.NewGuid().ToString();
+                            Views.PendingToken pendingwin = null;
                             try
                             {
                                 var content = new System.Net.Http.StringContent("{\"key\": \"" + key + "\"}", Encoding.UTF8, "application/json");
 
                                 var client = new System.Net.Http.HttpClient();
                                 var result = await client.PostAsync(url + "/AddTokenRequest", content);
-                                Views.PendingToken pendingwin = null;
                                 GenericTools.RunUI(() =>
                                 {
                                     Hide();
@@ -1295,27 +1295,39 @@ namespace OpenRPA
                                         {
                                             System.Threading.Thread.Sleep(2000);
                                         }
+                                        if(global.webSocketClient == null || !global.webSocketClient.isConnected)
+                                        {
+                                            return;
+                                        } else if (global.webSocketClient != null && global.webSocketClient.user != null)
+                                        {
+                                            return;
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
                                         Log.Error(ex.Message);
-                                        System.Threading.Thread.Sleep(2000);
-                                        Close();
+                                        try
+                                        {
+                                            Close();
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
                                     }
                                     GenericTools.RunUI(() =>
                                     {
                                         if (pendingwin.result == false)
                                         {
-                                            Close();
+                                            try
+                                            {
+                                                Close();
+                                            }
+                                            catch (Exception)
+                                            {
+                                            }
                                         }
                                     });
                                 }
-                                GenericTools.RunUI(() =>
-                                {
-                                    Show();
-                                    pendingwin.Close();
-                                    pendingwin = null;
-                                });
                             }
                             catch (Exception ex)
                             {
@@ -1324,7 +1336,16 @@ namespace OpenRPA
                             }
                             finally
                             {
-                                Show();
+                                if (!string.IsNullOrEmpty(jwt)) Show();
+                                if (string.IsNullOrEmpty(jwt))
+                                {   
+                                    if (global.webSocketClient != null && global.webSocketClient.isConnected) Show();
+                                }
+                                GenericTools.RunUI(() =>
+                                {
+                                    if(pendingwin != null) pendingwin.Close();
+                                    pendingwin = null;
+                                });
                             }
 
                             if (!string.IsNullOrEmpty(jwt))
@@ -1423,7 +1444,10 @@ namespace OpenRPA
             }
             try
             {
-                CreateMainWindow();
+                if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.user != null)
+                {
+                    CreateMainWindow();
+                }                    
             }
             catch (Exception ex)
             {
@@ -1534,7 +1558,7 @@ namespace OpenRPA
                 {
                     Window.MainWindow_WebSocketClient_OnOpen();
                 }
-                CreateMainWindow();
+                if (Config.local.jwt != null && Config.local.jwt.Length > 0) CreateMainWindow();
                 GenericTools.RunUI(() =>
                 {
                     if (App.splash != null)

@@ -1300,6 +1300,7 @@ namespace OpenRPA
                                     {
                                         Log.Error(ex.Message);
                                         System.Threading.Thread.Sleep(2000);
+                                        Close();
                                     }
                                     GenericTools.RunUI(() =>
                                     {

@@ -108,44 +108,12 @@ namespace OpenRPA
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
             try
             {
-                InitializeCefSharp();
                 var iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources/open_rpa.ico")).Stream;
                 notifyIcon.Icon = new System.Drawing.Icon(iconStream);
                 notifyIcon.Visible = false;
                 //notifyIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
                 notifyIcon.Click += nIcon_Click;
                 notifyIcon.DoubleClick += nIcon_Click;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-        }
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void InitializeCefSharp()
-        {
-            try
-            {
-                //Perform dependency check to make sure all relevant resources are in our output directory.
-                var settings = new CefSharp.Wpf.CefSettings();
-                settings.CachePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache");
-                if (!System.IO.Directory.Exists(settings.CachePath))
-                {
-                    System.IO.Directory.CreateDirectory(settings.CachePath);
-                }
-                // We need to update useragent to be of one of the supported browsers on googles signin page
-                settings.UserAgent = Config.local.cef_useragent;
-                if (string.IsNullOrEmpty(Config.local.cef_useragent))
-                {
-                    // We use firefox, since google often check if chrome is uptodate
-                    // Syntax
-                    // Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0
-                    // example
-                    // Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0
-                    // latest ?
-                    settings.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:54.0) Gecko/20100101 Firefox/72.0";
-                }
-                CefSharp.Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
             }
             catch (Exception ex)
             {

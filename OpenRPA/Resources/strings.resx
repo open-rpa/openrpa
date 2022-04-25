@@ -1020,6 +1020,9 @@
   <data name="packages" xml:space="preserve">
     <value>Packages</value>
   </data>
+  <data name="pendingtokenwindows_message" xml:space="preserve">
+    <value>A browser window has been opened, please login to autenticate this robot</value>
+  </data>
   <data name="permissions" xml:space="preserve">
     <value>Permissions</value>
   </data>

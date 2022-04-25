@@ -63,7 +63,6 @@ namespace OpenRPA
         public bool remote_allowed_killing_any { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public int remote_allow_multiple_running_max { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public string cef_useragent { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
-        public bool show_getting_started { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public string getting_started_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool notify_on_workflow_remote_start { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool notify_on_workflow_end { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
@@ -236,7 +235,6 @@ namespace OpenRPA
                 _ = remote_allow_multiple_running_max;
                 _ = remote_allowed;
                 _ = cef_useragent;
-                _ = show_getting_started;
                 _ = getting_started_url;
                 _ = notify_on_workflow_remote_start;
                 _ = notify_on_workflow_end;

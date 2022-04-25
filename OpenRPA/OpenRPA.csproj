@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.4.16</Version>
+		<Version>1.4.17</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>open_rpa128.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -64,7 +64,6 @@
 		<None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CefSharp.Wpf" Version="92.0.260" />
 		<PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
 		<PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
 		<PackageReference Include="Grpc.Core" Version="2.43.0" />
@@ -341,18 +340,17 @@
 		<None Remove="Views\CloseableHeader.xaml" />
 		<None Remove="Views\DetectorsView.xaml" />
 		<None Remove="Views\EditXAML.xaml" />
-		<None Remove="Views\GettingStarted.xaml" />
 		<None Remove="Views\InsertSelect.xaml" />
 		<None Remove="Views\InsertText.xaml" />
 		<None Remove="Views\KeyboardSeqWindow.xaml" />
 		<None Remove="Views\OpenProject.xaml" />
 		<None Remove="Views\PackageManager.xaml" />
+		<None Remove="Views\PendingToken.xaml" />
 		<None Remove="Views\PermissionsWindow.xaml" />
 		<None Remove="Views\RecorderPlugins.xaml" />
 		<None Remove="Views\RunPlugins.xaml" />
 		<None Remove="Views\selectUserWindow.xaml" />
 		<None Remove="Views\showVariables.xaml" />
-		<None Remove="Views\SigninWindow.xaml" />
 		<None Remove="Views\Snippets.xaml" />
 		<None Remove="Views\SplashScreen.xaml" />
 		<None Remove="Views\WFDesigner.xaml" />
@@ -472,6 +470,7 @@
 		<Page Include="Views\ChildSession.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="Views\PendingToken.xaml" />
 		<Page Include="Views\WorkitemQueue.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -496,13 +495,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\RunPlugins.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Views\GettingStarted.xaml">
-			<SubType>Designer</SubType>
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Views\SigninWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\Snippets.xaml">

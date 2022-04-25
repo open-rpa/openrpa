@@ -1,0 +1,20 @@
+﻿<Window x:Class="OpenRPA.Views.PendingToken"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA.Views"
+        xmlns:or="clr-namespace:OpenRPA.Resources"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        FocusManager.FocusedElement="{Binding ElementName=txtName}"
+        Title="Workitem Queue" Height="120" Width="434">
+    <StackPanel Margin="10">
+        <StackPanel>
+            <TextBlock Text="{x:Static or:strings.pendingtokenwindows_message}"></TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,7,0,0">
+            <Button Click="CancelButton_Click" MinWidth="50" Background="White" Padding="5,0,5,0" Content="{x:Static or:strings.button_cancel}"></Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -30,11 +30,12 @@ namespace OpenRPA
             });
         }
         private string _FilterText = "";
-        public string FilterText { 
+        public string FilterText
+        {
             get
             {
                 return _FilterText;
-            } 
+            }
             set
             {
                 _FilterText = value;
@@ -196,7 +197,7 @@ namespace OpenRPA
                     _instance.Workflows.AddRange(_instance.dbWorkflows.FindAll().OrderBy(x => x.name));
 
                     _instance.Workitems.AddRange(_instance.dbWorkitems.FindAll().OrderBy(x => x.name));
-                    
+
 
                     // BsonMapper.Global.Entity<Project>().DbRef(x => x.Workflows, "workflows");
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -1256,21 +1257,75 @@ namespace OpenRPA
                             errormessage = ex.Message;
                         }
                     }
-                    if (global.webSocketClient == null ||!global.webSocketClient.isConnected) return;
+                    if (global.webSocketClient == null || !global.webSocketClient.isConnected) return;
                     if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin)
                     {
                         string jwt = null;
                         try
                         {
-                            Hide();
-                            Log.Debug("Create SigninWindow " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                            GenericTools.RunUI(() =>
+                            var key = Guid.NewGuid().ToString();
+                            try
                             {
-                                var signinWindow = new Views.SigninWindow(url, true);
-                                Log.Debug("ShowDialog " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
-                                signinWindow.ShowDialog();
-                                jwt = signinWindow.jwt;
-                            });
+                                var content = new System.Net.Http.StringContent("{\"key\": \"" + key + "\"}", Encoding.UTF8, "application/json");
+
+                                var client = new System.Net.Http.HttpClient();
+                                var result = await client.PostAsync(url + "/AddTokenRequest", content);
+                                Views.PendingToken pendingwin = null;
+                                GenericTools.RunUI(() =>
+                                {
+                                    Hide();
+                                    pendingwin = new Views.PendingToken();
+                                    pendingwin.Show();
+                                });
+
+
+                                GenericTools.OpenUrl(url + "/Login?key=" + key);
+                                while (string.IsNullOrEmpty(jwt))
+                                {
+                                    try
+                                    {
+                                        var response = await client.GetAsync(url + "/GetTokenRequest?key=" + key);
+                                        response.EnsureSuccessStatusCode();
+                                        string responseBody = await response.Content.ReadAsStringAsync();
+                                        JObject res = JObject.Parse(responseBody);
+                                        if (res.ContainsKey("jwt"))
+                                        {
+                                            jwt = res.GetValue("jwt").Value<string>();
+                                        } else
+                                        {
+                                            System.Threading.Thread.Sleep(2000);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Log.Error(ex.Message);
+                                        System.Threading.Thread.Sleep(2000);
+                                    }
+                                    GenericTools.RunUI(() =>
+                                    {
+                                        if (pendingwin.result == false)
+                                        {
+                                            Close();
+                                        }
+                                    });
+                                }
+                                GenericTools.RunUI(() =>
+                                {
+                                    Show();
+                                    pendingwin.Close();
+                                    pendingwin = null;
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.Message);
+                                throw;
+                            }
+                            finally
+                            {
+                                Show();
+                            }
+
                             if (!string.IsNullOrEmpty(jwt))
                             {
                                 Config.local.jwt = Config.local.ProtectString(jwt);
@@ -1389,7 +1444,7 @@ namespace OpenRPA
             }
             try
             {
-                if(global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
+                if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
             }
             catch (Exception ex)
             {

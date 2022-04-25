@@ -152,22 +152,6 @@ namespace OpenRPA
                             SetStatus("Load layout and reopen workflows");
                             first_connect = false;
                             LoadLayout();
-
-                            if (Config.local.show_getting_started)
-                            {
-                                var url = Config.local.getting_started_url;
-                                if (string.IsNullOrEmpty(url)) url = "https://skadefro.github.io/openrpa.dk/gettingstarted.html";
-                                if (global.openflowconfig != null && !string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
-                                LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
-                                layoutDocument.ContentId = "GettingStarted";
-                                // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
-                                Views.GettingStarted view = new Views.GettingStarted(url);
-                                layoutDocument.Content = view;
-                                MainTabControl.Children.Add(layoutDocument);
-                                layoutDocument.IsSelected = true;
-                                layoutDocument.Closing += LayoutDocument_Closing;
-                            }
-
                         }
                         catch (Exception ex)
                         {
@@ -1698,9 +1682,10 @@ namespace OpenRPA
                 Config.Reload();
                 Config.local.password = new byte[] { };
                 Config.local.jwt = new byte[] { };
+                Config.Save();
                 global.webSocketClient.url = Config.local.wsurl;
                 global.webSocketClient.user = null;
-                _ = global.webSocketClient.Close();
+                global.webSocketClient.Close();
             }
             catch (Exception ex)
             {

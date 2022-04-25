@@ -2770,6 +2770,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A browser window has been opened, please login to autenticate this robot.
+        /// </summary>
+        public static string pendingtokenwindows_message {
+            get {
+                return ResourceManager.GetString("pendingtokenwindows_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Permissions.
         /// </summary>
         public static string permissions {

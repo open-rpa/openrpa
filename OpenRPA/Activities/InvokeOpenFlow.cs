@@ -131,6 +131,7 @@ namespace OpenRPA.Activities
             }
             catch (Exception ex)
             {
+                while (ex.InnerException != null) ex = ex.InnerException;
                 var i = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
                 if (i != null)
                 {

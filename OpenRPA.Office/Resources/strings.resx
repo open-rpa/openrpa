@@ -198,6 +198,30 @@
   <data name="activity_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>
+  <data name="activity_exportdocument" xml:space="preserve">
+    <value>Export Document</value>
+  </data>
+  <data name="activity_exportdocument_document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="activity_exportdocument_document_help" xml:space="preserve">
+    <value>Choose document to export by Document object</value>
+  </data>
+  <data name="activity_exportdocument_filename" xml:space="preserve">
+    <value>Filename</value>
+  </data>
+  <data name="activity_exportdocument_filename_help" xml:space="preserve">
+    <value>Choose word document to export by filename. New name will be the same but with different extension</value>
+  </data>
+  <data name="activity_exportdocument_savechanges" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+  <data name="activity_exportdocument_savechanges_help" xml:space="preserve">
+    <value>Save Changes to word document before doing export</value>
+  </data>
+  <data name="activity_exportdocument_tooltip" xml:space="preserve">
+    <value>Used to export a word document as pdf or xps</value>
+  </data>
   <data name="activity_ExportWorkbook" xml:space="preserve">
     <value>Export Workbook</value>
   </data>

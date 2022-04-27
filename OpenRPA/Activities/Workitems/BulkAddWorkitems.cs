@@ -32,21 +32,27 @@ namespace OpenRPA.WorkItems
         public InArgument<DateTime?> NextRun { get; set; }
         [LocalizedDisplayName("activity_bulkaddworkitems_filefields", typeof(Resources.strings)), LocalizedDescription("activity_bulkaddworkitems_filefields_help", typeof(Resources.strings))]
         public InArgument<string[]> Filefields { get; set; }
+        [LocalizedDisplayName("activity_bulkaddworkitems_bulksize", typeof(Resources.strings)), LocalizedDescription("activity_bulkaddworkitems_bulksize_help", typeof(Resources.strings))]
+        public InArgument<int> BulkSize { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var _wiqid = wiqid.Get(context);
             var _wiq = wiq.Get(context);
             var dt = DataTable.Get(context);
             var priority = Priority.Get<int>(context);
+            var bulksize = BulkSize.Get<int>(context);
+            if (bulksize < 1) bulksize = 50;
             var nextrun = NextRun.Get<DateTime?>(context);
             var items = new List<OpenRPA.Interfaces.AddWorkitem>();
             var filefields = Filefields.Get<string[]>(context);
             if (filefields == null) filefields = new string[] { };
             for (var i = 0; i < filefields.Length; i++) filefields[i] = filefields[i].ToLower();
             var counter = 0;
+            var bulkcounter = 0;
             foreach (DataRow row in dt.Rows)
             {
                 counter++;
+                bulkcounter++;
                 var wi = new Interfaces.AddWorkitem();
                 wi.name = "Bulk added item " + counter.ToString();
                 wi.priority = priority;
@@ -59,9 +65,9 @@ namespace OpenRPA.WorkItems
                     var columnname = field.ColumnName.ToLower();
                     wi.payload.Add(columnname, row[field.ColumnName]);
                     if (columnname == "name") wi.name = row[field.ColumnName].ToString();
-                    if(filefields.Contains(columnname))
+                    if (filefields.Contains(columnname))
                     {
-                        if(field.DataType == typeof(string))
+                        if (field.DataType == typeof(string))
                         {
                             _files.Add(new MessageWorkitemFile() { filename = row[field.ColumnName].ToString() });
                         }
@@ -69,13 +75,13 @@ namespace OpenRPA.WorkItems
                 }
                 wi.files = _files.ToArray();
                 items.Add(wi);
+                if (bulkcounter >= bulksize)
+                {
+                    await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray());
+                    items.Clear();
+                }
             }
-            //if (t.payload == null) t.payload = new Dictionary<string, object>();
-            //foreach (var item in Payload)
-            //{
-            //    t.payload.Add(item.Key, item.Value.Get(context));
-            //}
-            await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray());
+            if (items.Count > 0) await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray());
             return null;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

@@ -19,7 +19,7 @@ namespace OpenRPA.Office.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -313,11 +313,65 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_ExportWorkbook_filename {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full path and filename of Microsoft Word document to work with.
+        /// </summary>
+        public static string activity_ExportWorkbook_filename_help {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string activity_ExportWorkbook_savechanges {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_savechanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set to true, to save the workbook before exporting.
+        /// </summary>
+        public static string activity_ExportWorkbook_savechanges_help {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_savechanges_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export current open workbook as an pdf or xps format.
         /// </summary>
         public static string activity_ExportWorkbook_tooltip {
             get {
                 return ResourceManager.GetString("activity_ExportWorkbook_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workbook.
+        /// </summary>
+        public static string activity_ExportWorkbook_workbook {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_workbook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use a Microsoft Excel workbook variable to work with.
+        /// </summary>
+        public static string activity_ExportWorkbook_workbook_help {
+            get {
+                return ResourceManager.GetString("activity_ExportWorkbook_workbook_help", resourceCulture);
             }
         }
         

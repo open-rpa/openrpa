@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activity_closewindoe_element" xml:space="preserve">
+    <value>Element</value>
+  </data>
+  <data name="activity_closewindoe_element_help" xml:space="preserve">
+    <value>Element to workwith, typically gotten from "Get Windows" activity</value>
+  </data>
   <data name="activity_closewindow" xml:space="preserve">
     <value>Close Window</value>
   </data>
   <data name="activity_closewindow_tooltip" xml:space="preserve">
     <value>Used to close a window found with Get Element or Get Windows</value>
+  </data>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Displayname</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>Displayname inside the workflow designer</value>
   </data>
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>

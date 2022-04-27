@@ -169,6 +169,24 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname {
+            get {
+                return ResourceManager.GetString("activity_displayname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname inside the workflow designer.
+        /// </summary>
+        public static string activity_displayname_help {
+            get {
+                return ResourceManager.GetString("activity_displayname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Execute Non Query.
         /// </summary>
         public static string activity_executenonquery {
@@ -255,6 +273,24 @@ namespace OpenRPA.Database.Resources {
         public static string activity_executescalar_helpurl {
             get {
                 return ResourceManager.GetString("activity_executescalar_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query.
+        /// </summary>
+        public static string activity_executescalar_query {
+            get {
+                return ResourceManager.GetString("activity_executescalar_query", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The query to execute.
+        /// </summary>
+        public static string activity_executescalar_query_help {
+            get {
+                return ResourceManager.GetString("activity_executescalar_query_help", resourceCulture);
             }
         }
         

@@ -421,6 +421,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bulk Size.
+        /// </summary>
+        public static string activity_bulkaddworkitems_bulksize {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_bulksize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add workitems in batches of this size. The bigger the payload and files, the loweer this number should be. Default is 50.
+        /// </summary>
+        public static string activity_bulkaddworkitems_bulksize_help {
+            get {
+                return ResourceManager.GetString("activity_bulkaddworkitems_bulksize_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DataTable.
         /// </summary>
         public static string activity_bulkaddworkitems_datatable {

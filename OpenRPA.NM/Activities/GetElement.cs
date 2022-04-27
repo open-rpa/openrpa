@@ -246,6 +246,7 @@ namespace OpenRPA.NM
             aa.Argument = da;
             return fef;
         }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName
         {
             get

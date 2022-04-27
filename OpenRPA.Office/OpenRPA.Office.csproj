@@ -65,6 +65,7 @@
     <None Remove="Activities\ClearRangeDesigner.xaml" />
     <None Remove="Activities\CloseDocumentDesigner.xaml" />
     <None Remove="Activities\CloseWorkbookDesigner.xaml" />
+    <None Remove="Activities\ExportDocumentDesigner.xaml" />
     <None Remove="Activities\ExportWorkbookDesigner.xaml" />
     <None Remove="Activities\GetMailsDesigner.xaml" />
     <None Remove="Activities\GetParagraphDesigner.xaml" />
@@ -115,6 +116,9 @@
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\ExportDocumentDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\ExportWorkbookDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,9 +5,9 @@ using System.Windows.Media;
 
 namespace OpenRPA.Office.Activities
 {
-    public partial class CloseDocumentDesigner
+    public partial class ExportDocumentDesigner
     {
-        public CloseDocumentDesigner()
+        public ExportDocumentDesigner()
         {
             InitializeComponent();
         }

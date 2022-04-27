@@ -17,8 +17,8 @@ namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ExportDocumentDesigner), typeof(System.ComponentModel.Design.IDesigner))]
     [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.ExportDocument.png")]
-    [LocalizedToolboxTooltip("activity_ExportDocument_tooltip", typeof(Resources.strings))]
-    [LocalizedDisplayName("activity_ExportDocument", typeof(Resources.strings))]
+    [LocalizedToolboxTooltip("activity_exportdocument_tooltip", typeof(Resources.strings))]
+    [LocalizedDisplayName("activity_exportdocument", typeof(Resources.strings))]
     public class ExportDocument : CodeActivity
     {
         [System.ComponentModel.Category("Misc")]

@@ -304,6 +304,78 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export Document.
+        /// </summary>
+        public static string activity_exportdocument {
+            get {
+                return ResourceManager.GetString("activity_exportdocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Document.
+        /// </summary>
+        public static string activity_exportdocument_document {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_document", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose document to export by Document object.
+        /// </summary>
+        public static string activity_exportdocument_document_help {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_document_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string activity_exportdocument_filename {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_filename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose word document to export by filename. New name will be the same but with different extension.
+        /// </summary>
+        public static string activity_exportdocument_filename_help {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_filename_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string activity_exportdocument_savechanges {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_savechanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes to word document before doing export.
+        /// </summary>
+        public static string activity_exportdocument_savechanges_help {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_savechanges_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Used to export a word document as pdf or xps.
+        /// </summary>
+        public static string activity_exportdocument_tooltip {
+            get {
+                return ResourceManager.GetString("activity_exportdocument_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export Workbook.
         /// </summary>
         public static string activity_ExportWorkbook {

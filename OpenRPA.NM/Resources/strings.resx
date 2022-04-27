@@ -129,6 +129,12 @@
   <data name="activity_closetab_tooltip" xml:space="preserve">
     <value>Close the current tab, or close all tabs</value>
   </data>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Displayname</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>Displayname inside the workflow designer</value>
+  </data>
   <data name="activity_executescript" xml:space="preserve">
     <value>Execute Script</value>
   </data>

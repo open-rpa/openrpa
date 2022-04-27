@@ -237,6 +237,12 @@
   <data name="activity_bulkaddworkitems" xml:space="preserve">
     <value>Bulk Add Workitems</value>
   </data>
+  <data name="activity_bulkaddworkitems_bulksize" xml:space="preserve">
+    <value>Bulk Size</value>
+  </data>
+  <data name="activity_bulkaddworkitems_bulksize_help" xml:space="preserve">
+    <value>Add workitems in batches of this size. The bigger the payload and files, the loweer this number should be. Default is 50</value>
+  </data>
   <data name="activity_bulkaddworkitems_datatable" xml:space="preserve">
     <value>DataTable</value>
   </data>

@@ -61,6 +61,24 @@ namespace OpenRPA.Windows.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Element.
+        /// </summary>
+        public static string activity_closewindoe_element {
+            get {
+                return ResourceManager.GetString("activity_closewindoe_element", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Element to workwith, typically gotten from &quot;Get Windows&quot; activity.
+        /// </summary>
+        public static string activity_closewindoe_element_help {
+            get {
+                return ResourceManager.GetString("activity_closewindoe_element_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close Window.
         /// </summary>
         public static string activity_closewindow {
@@ -75,6 +93,24 @@ namespace OpenRPA.Windows.Resources {
         public static string activity_closewindow_tooltip {
             get {
                 return ResourceManager.GetString("activity_closewindow_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname {
+            get {
+                return ResourceManager.GetString("activity_displayname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname inside the workflow designer.
+        /// </summary>
+        public static string activity_displayname_help {
+            get {
+                return ResourceManager.GetString("activity_displayname_help", resourceCulture);
             }
         }
         

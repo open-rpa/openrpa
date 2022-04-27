@@ -26,7 +26,7 @@ namespace OpenRPA.Windows
                 Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<UIElement>("item")
             };
         }
-        [RequiredArgument, LocalizedDisplayName("activity_element", typeof(Resources.strings)), LocalizedDescription("activity_element_help", typeof(Resources.strings))]
+        [RequiredArgument, LocalizedDisplayName("activity_closewindoe_element", typeof(Resources.strings)), LocalizedDescription("activity_closewindoe_element_help", typeof(Resources.strings))]
         public InArgument<UIElement> Element { get; set; }
         public InArgument<bool> IgnoreErrors { get; set; }
         protected override void Execute(CodeActivityContext context)

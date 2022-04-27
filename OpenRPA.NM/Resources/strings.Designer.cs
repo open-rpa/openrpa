@@ -97,6 +97,24 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displayname.
+        /// </summary>
+        public static string activity_displayname {
+            get {
+                return ResourceManager.GetString("activity_displayname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displayname inside the workflow designer.
+        /// </summary>
+        public static string activity_displayname_help {
+            get {
+                return ResourceManager.GetString("activity_displayname_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Execute Script.
         /// </summary>
         public static string activity_executescript {

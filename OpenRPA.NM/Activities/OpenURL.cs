@@ -97,6 +97,7 @@ namespace OpenRPA.NM
         {
             base.CacheMetadata(metadata);
         }
+        [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName
         {
             get

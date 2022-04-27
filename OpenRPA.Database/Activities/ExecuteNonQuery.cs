@@ -57,6 +57,5 @@ namespace OpenRPA.Database
                 base.DisplayName = value;
             }
         }
-
     }
 }

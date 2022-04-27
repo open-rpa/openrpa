@@ -347,6 +347,7 @@ namespace OpenRPA.Interfaces
                     if (propTo.PropertyType == typeof(float)) copy = true;
                     if (propTo.PropertyType == typeof(bool)) copy = true;
                     if (propTo.PropertyType == typeof(string)) copy = true;
+                    if (propTo.PropertyType == typeof(entity.ace[])) copy = true;
                 }
                 else
                 {

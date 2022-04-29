@@ -904,6 +904,7 @@ namespace OpenRPA
                         }
                         else
                         {
+                            if (string.IsNullOrEmpty(exists.state)) exists.SetState("completed");
                             if (exists.state == "idle" || exists.state == "running")
                             {
                                 //var e = WorkflowInstance.Instances.Where(x => x.InstanceId == exists.InstanceId).FirstOrDefault();
@@ -947,7 +948,7 @@ namespace OpenRPA
                                       var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
                                       if (instance != null)
                                       {
-                                          if (instance.isCompleted)
+                                          if (!instance.isCompleted)
                                           {
                                               try
                                               {
@@ -2328,10 +2329,6 @@ namespace OpenRPA
                             }
                             if (exists != null && wiq._version != exists._version)
                             {
-                                GenericTools.RunUI(() =>
-                                {
-                                    WorkItemQueues.UpdateItem(exists, wiq);
-                                });
                                 await exists.Save(true);
                             }
                             else if (exists == null)

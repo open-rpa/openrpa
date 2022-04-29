@@ -128,7 +128,7 @@ namespace OpenRPA.Office.Activities
             {
                 for (int k = 1; k <= valueArray.GetLength(1); k++)
                 {
-                    var v = (worksheet.Cells[range.Row + 1, range.Column + (k - 1)] as Range).get_Value(Type.Missing);
+                    var v = (worksheet.Cells[range.Row , range.Column + (k - 1)] as Range).get_Value(Type.Missing);
                     Type type = typeof(string);
                     if (v != null) type = v.GetType();
                     dt.Columns.Add(k.ToString(), type);  //add columns to the data table.

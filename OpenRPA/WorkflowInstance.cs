@@ -122,6 +122,10 @@ namespace OpenRPA
                 Workflow?.SetLastState(value);
             }
         }
+        public void SetState(string State)
+        {
+            state = State;
+        }
         [JsonIgnore, LiteDB.BsonIgnore]
         public Workflow Workflow { get { return GetProperty<Workflow>(); } set { SetProperty(value); } }
         [JsonIgnore, LiteDB.BsonIgnore]
@@ -941,7 +945,7 @@ namespace OpenRPA
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
 
-                var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running") && x.fqdn == fqdn).ToList();
+                var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running" || string.IsNullOrEmpty(x.state)) && x.fqdn == fqdn).ToList();
                 if (results.Count == 0) return;
                 Log.Information("Try running " + results.Count + " pending workflows");
                 foreach (WorkflowInstance i in results)

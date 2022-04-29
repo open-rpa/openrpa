@@ -32,33 +32,29 @@ namespace OpenRPA.Office.Activities
             Microsoft.Office.Interop.Excel.Range range = worksheet.get_Range(cell);
             Formula.Set(context, range.Formula);
             Range.Set(context, range);
-            if(this.ResultType == typeof(string))
+            object value = range.Value;
+            if (range.Value2 is TResult val2)
             {
-                if(range.Value2==null) context.SetValue(Result, null);
-                try
-                {
-                    if(range.Value2 != null)
-                    {
-                        context.SetValue(Result, range.Value2.ToString());
-                    } else
-                    {
-                        context.SetValue(Result, null);
-                    }
-                }
-                catch (Exception)
-                {
-                    context.SetValue(Result, null);
-                }
+                context.SetValue(Result, val2);
+            }
+            else if (range.Value is TResult val)
+            {
+                context.SetValue(Result, val);
             }
             else
             {
-                var value = range.Value2;
-                if(value.GetType() == typeof(double) && typeof(TResult) == typeof(int)) 
+                if(value != null && typeof(TResult) == typeof(bool))
                 {
-                    if(value != null) value = int.Parse(value.ToString());
+                    if (value is double d) value = (d > 0);
+                    if (value is int i) value = (i > 0);
+                    if (value is string s) value = (s == "1" || s.ToLower() == "true");
+                }
+                if (value != null && value.GetType() == typeof(double) && typeof(TResult) == typeof(int))
+                {
+                    if (value != null) value = int.Parse(value.ToString());
                     if (value == null) value = int.Parse("0");
                 }
-                if (value!=null) context.SetValue(Result, (TResult)value);
+                if (value != null) context.SetValue(Result, (TResult)value);
                 if (value == null) context.SetValue(Result, default(TResult));
             }
             var sheetPassword = SheetPassword.Get(context);

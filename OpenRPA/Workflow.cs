@@ -122,12 +122,12 @@ namespace OpenRPA
                 if (current != value)
                 {
                     SetProperty(value);
-                }
-                if (RobotInstance.instance.Workflows.Contains(this))
-                {
-                    var index = RobotInstance.instance.Workflows.IndexOf(this);
-                    RobotInstance.instance.Workflows.Remove(this);
-                    RobotInstance.instance.Workflows.Insert(index, this);
+                    if (RobotInstance.instance.Workflows.Contains(this))
+                    {
+                        var index = RobotInstance.instance.Workflows.IndexOf(this);
+                        RobotInstance.instance.Workflows.Remove(this);
+                        RobotInstance.instance.Workflows.Insert(index, this);
+                    }
                 }
             }
         }

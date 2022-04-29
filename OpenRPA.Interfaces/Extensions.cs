@@ -101,16 +101,6 @@ namespace OpenRPA.Interfaces
         public static void AddRange<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, IEnumerable<T> range)
         {
             foreach(var item in range) collection.Add(item);
-            //GenericTools.RunUI(() =>
-            //{
-            //    List<T> addlist = new List<T>();
-            //    foreach (var item in range) addlist.Add(item);
-            //    if (range.Count() == 0) return;
-            //    foreach (var item in addlist)
-            //    {
-            //        collection.Add(item);
-            //    }
-            //});
         }
         public static void Sort<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, Comparison<T> comparison)
         {

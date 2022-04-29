@@ -23,17 +23,14 @@ namespace OpenRPA
                 if(current != value)
                 {
                     SetProperty(value);
-                }
-                if(RobotInstance.instance.WorkItemQueues.Contains(this))
-                {
-                    var index = RobotInstance.instance.WorkItemQueues.IndexOf(this);
-                    GenericTools.RunUI(() =>
+                    if(RobotInstance.instance.WorkItemQueues.Contains(this))
                     {
+                        var index = RobotInstance.instance.WorkItemQueues.IndexOf(this);
                         RobotInstance.instance.WorkItemQueues.Remove(this);
                         RobotInstance.instance.WorkItemQueues.Insert(index, this);
-                    });
+                    }
                 }
-            } 
+            }
         }
         public string workflowid { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string robotqueue { get { return GetProperty<string>(); } set { SetProperty(value); } }

@@ -29,12 +29,12 @@ namespace OpenRPA
                 if (current != value)
                 {
                     SetProperty(value);
-                }
-                if (RobotInstance.instance.Detectors.Contains(this))
-                {
-                    var index = RobotInstance.instance.Detectors.IndexOf(this);
-                    RobotInstance.instance.Detectors.Remove(this);
-                    RobotInstance.instance.Detectors.Insert(index, this);
+                    if (RobotInstance.instance.Detectors.Contains(this))
+                    {
+                        var index = RobotInstance.instance.Detectors.IndexOf(this);
+                        RobotInstance.instance.Detectors.Remove(this);
+                        RobotInstance.instance.Detectors.Insert(index, this);
+                    }
                 }
             }
         }

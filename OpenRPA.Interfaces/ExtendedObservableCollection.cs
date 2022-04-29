@@ -9,43 +9,6 @@ using System.Reflection;
 
 namespace OpenRPA.Interfaces
 {
-    //public class IBaseObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
-    //{
-    //    public T FindById(string id) => Items.Where(x => x._id == id).FirstOrDefault();
-    //    public IBaseObservableCollection() : base()
-    //    {
-    //    }
-    //    public IBaseObservableCollection(IEnumerable<T> pItems) : base()
-    //    {
-    //        foreach (var item in pItems)
-    //        {
-    //            Add(item);
-    //        }
-    //    }
-    //    public void UpdateCollectionById(IEnumerable<T> newCollection)
-    //    {
-    //        var current = newCollection.ToArray();
-    //        for (var i = 0; i < current.Count(); i++)
-    //        {
-    //            var exists = Items.Where(x => x._id == current[i]._id);
-    //            if (exists.Count() == 0) Items.Add(current[i]);
-    //        }
-    //        var list = Items.ToArray();
-    //        for (var i = 0; i < list.Count(); i++)
-    //        {
-    //            var exists = current.Where(x => x._id == list[i]._id);
-    //            if (exists.Count() == 0) Items.Remove(list[i]);
-    //        }
-    //    }
-    //    public void UpdateItem(T Item)
-    //    {
-    //        var index = Items.IndexOf(Item);
-    //         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Item, Item, index));
-    //        // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Item));
-    //        // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Item, index));
-    //    }
-    //    new public void Clear() { foreach (var item in Items) Remove(item); }
-    //}
     public class FilteredObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged, IBase
     {
         private Predicate<T> _filter;
@@ -57,23 +20,7 @@ namespace OpenRPA.Interfaces
             var _list = new List<T>();
             foreach (var item in collection) if (_filter(item) == true) Items.Add(item);
             collection.CollectionChanged += new NotifyCollectionChangedEventHandler(OnBaseCollectionChanged);
-            // basecollection.onFilterUpdated += Basecollection_onFilterUpdated;
         }
-        //private void Basecollection_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    T item = (T)sender;
-        //    if (e.PropertyName == "_id" || e.PropertyName == "projectid")
-        //    {
-        //        if (Items.Contains(item))
-        //        {
-        //            if (_filter(item) != true) base.Remove(item);
-        //        }
-        //        else
-        //        {
-        //            if (_filter(item) == true) base.Add(item);
-        //        }
-        //    }
-        //}
         public Predicate<T> Filter
         {
             get { return _filter; }

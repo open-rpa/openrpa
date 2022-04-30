@@ -1704,7 +1704,7 @@ namespace OpenRPA
                                 {
                                     i.Abort("Killed by nodered rpa node, due to killexisting");
                                 }
-                                else
+                                else if(!i.Workflow.background)
                                 {
                                     RemoteRunningCount++;
                                     RunningCount++;
@@ -1720,7 +1720,7 @@ namespace OpenRPA
                                 {
                                     i.Abort("Killed by nodered rpa node, due to killexisting");
                                 }
-                                else
+                                else if (!i.Workflow.background)
                                 {
                                     RunningCount++;
                                 }

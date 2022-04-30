@@ -38,6 +38,7 @@ namespace OpenRPA
         public string culture { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }        
         public List<workflowparameter> Parameters { get { return GetProperty<List<workflowparameter>>(); } set { SetProperty(value); } }
         public bool Serializable { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool background { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename
         {
             get

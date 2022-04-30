@@ -981,6 +981,9 @@
   <data name="openflow" xml:space="preserve">
     <value>OpenFlow</value>
   </data>
+  <data name="openproject_background" xml:space="preserve">
+    <value>Background workflow</value>
+  </data>
   <data name="openrpa" xml:space="preserve">
     <value>OpenRPA</value>
   </data>

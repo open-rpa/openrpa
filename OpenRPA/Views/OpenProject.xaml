@@ -149,7 +149,7 @@
                 <CheckBox 
                     IsChecked="{Binding ElementName=listWorkflows, Path=SelectedValue.background}" 
                     Margin="20,0,0,0" Content="{x:Static or:strings.openproject_background}"
-                    Command="{Binding Data.SerializableCommand, Source={StaticResource proxy}}" 
+                    Command="{Binding Data.BackgroundCommand, Source={StaticResource proxy}}" 
                     ></CheckBox>
             </StackPanel>
             <StackPanel x:Name="EditXAMLPanel">

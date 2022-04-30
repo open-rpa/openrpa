@@ -2761,6 +2761,15 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background workflow.
+        /// </summary>
+        public static string openproject_background {
+            get {
+                return ResourceManager.GetString("openproject_background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OpenRPA.
         /// </summary>
         public static string openrpa {

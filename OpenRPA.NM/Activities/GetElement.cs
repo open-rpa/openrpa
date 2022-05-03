@@ -144,7 +144,7 @@ namespace OpenRPA.NM
                     //}
                 }
 
-            } while (elements.Count() == 0 && sw.Elapsed < timeout);
+            } while (elements.Count() == 0 && allelements.Count() != 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
 
             if ((elements.Length + allelements.Length) < minresults)

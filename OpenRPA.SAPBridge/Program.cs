@@ -78,25 +78,16 @@ namespace OpenRPA.SAPBridge
             {
                 try
                 {
-                    // Program.log("RefreshSessions::begin");
                     SAPHook.Instance.RefreshSessions();
-                    // Program.log("RefreshSessions::end");
 
                     isMoving = false;
                     InputDriver.Instance.OnMouseMove -= OnMouseMove;
                     InputDriver.Instance.OnMouseDown -= OnMouseDown;
                     if (MouseMove)
                     {
-                        // Program.log("hook OnMouseMove");
                         InputDriver.Instance.OnMouseMove += OnMouseMove;
                     }
-                    // Program.log("hook OnMouseDown");
                     InputDriver.Instance.OnMouseDown += OnMouseDown;
-
-                    // Program.log("RefreshUIElements::begin");
-                    SAPHook.Instance.RefreshUIElements(true);
-                    // Program.log("RefreshUIElements::end");
-
                 }
                 catch (Exception ex)
                 {
@@ -112,222 +103,341 @@ namespace OpenRPA.SAPBridge
             InputDriver.Instance.OnMouseDown -= OnMouseDown;
         }
         private static object _lock = new object();
+        private static bool _isMoving = false;
         private static void OnMouseMove(InputEventArgs e)
         {
-            if (System.Threading.Monitor.TryEnter(_lock, 10000))
-            {
-                try
-                {
-                    if (isMoving) return;
-                    isMoving = true;
-                }
-                finally
-                {
-                    System.Threading.Monitor.Exit(_lock);
-                }
-            }
+            if (_isMoving) return;
             try
             {
-                if (SAPHook.Instance.Connections.Count() == 0 || SAPHook.Instance.UIElements.Count() == 0)
-                {
-                    if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                _isMoving = true;
+                var app = SAPHook.Instance.app;
+                if (app != null && app.Children != null)
+                    for (int x = 0; x < app.Children.Count; x++)
                     {
-                        try
+                        var con = app.Children.ElementAt(x) as GuiConnection;
+                        if (con.Sessions.Count == 0) continue;
+
+                        for (int j = 0; j < con.Sessions.Count; j++)
                         {
-                            isMoving = false;
-                        }
-                        finally
-                        {
-                            System.Threading.Monitor.Exit(_lock);
-                        }
-                    }
-                    return;
-                }
-                var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
-                if (Element != null)
-                {
-                    var ProcessId = Element.Current.ProcessId;
-                    if (ProcessId < 1)
-                    {
-                        if (System.Threading.Monitor.TryEnter(_lock, 10000))
-                        {
+                            var session = con.Children.ElementAt(j) as GuiSession;
+                            var SystemName = session.Info.SystemName.ToLower();
+                            // var ele = session as GuiComponent;
+                            GuiCollection keys = null;
                             try
                             {
-                                isMoving = false;
-                            }
-                            finally
-                            {
-                                System.Threading.Monitor.Exit(_lock);
-                            }
-                        }
-                        return;
-                    }
-                    if (SAPProcessId > 0 && SAPProcessId != ProcessId)
-                    {
-                        if (System.Threading.Monitor.TryEnter(_lock, 10000))
-                        {
-                            try
-                            {
-                                isMoving = false;
-                            }
-                            finally
-                            {
-                                System.Threading.Monitor.Exit(_lock);
-                            }
-                        }
-                        return;
-                    }
-                    if (SAPProcessId != ProcessId)
-                    {
-                        using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
-                        {
-                            if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
-                            if (p.ProcessName.ToLower() != "saplogon")
-                            {
-                                if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                                if (System.Threading.Monitor.TryEnter(_lock, 1))
                                 {
                                     try
                                     {
-                                        isMoving = false;
+                                        var _y = session.ActiveWindow.Top;
+                                        var _x = session.ActiveWindow.Left;
+                                        var w = session.ActiveWindow.Width;
+                                        var h = session.ActiveWindow.Height;
+                                        if (e.X < _x || e.Y < _y) return;
+                                        if (e.X > (_x + w) || e.Y > (_y + h)) return;
+                                        keys = session.FindByPosition(e.X, e.Y);
                                     }
                                     finally
                                     {
                                         System.Threading.Monitor.Exit(_lock);
                                     }
                                 }
-                                return;
-                            }
-                        }
-                    }
-                    if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
-                    if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements(true);
-                    SAPEventElement[] elements = new SAPEventElement[] { };
-                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 10000))
-                    {
-                        try
-                        {
-                            elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
-                        }
-                        finally
-                        {
-                            System.Threading.Monitor.Exit(SAPHook.Instance.UIElements);
-                        }
-                    }
-                    if (elements.Count() > 0)
-                    {
-                        //Program.log("[mousemove] " + e.X + " " + e.Y);
-                        //foreach(var ele in elements)
-                        //{
-                        //    Program.log("[element] " + ele.ToString());
-                        //}
-                        var found = elements.OrderBy(x => x.IdPathCell.Length).Last();
-                        if (found.Items != null && found.Items.Length > 0)
-                        {
-                            elements = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
-                            if (elements != null && elements.Length > 0) found = elements.OrderBy(x => x.IdPathCell.Length).Last();
-
-                        }
-                        //Program.log("[element] " + found.ToString() + " " + found.Rectangle.ToString());
-
-                        if (found.Items != null && found.Items.Length > 0)
-                        {
-                            var found2 = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
-                            if (found2.Length > 0)
-                            {
-                                found = found2.First();
-                            }
-                        }
-
-                        if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
-                        {
-                            // form.AddText("[SKIP] mousemove " + LastElement.ToString());
-                            if (System.Threading.Monitor.TryEnter(_lock, 10000))
-                            {
-                                try
+                                else
                                 {
-                                    isMoving = false;
-                                }
-                                finally
-                                {
-                                    System.Threading.Monitor.Exit(_lock);
+                                    return;
                                 }
                             }
-                            return;
+                            catch (System.Runtime.InteropServices.COMException ex)
+                            {
+                                // OnMouseMove(e);
+                            }
+                            catch (Exception ex)
+                            {
+                                log(ex.Message);
+                            }
+                            if (keys == null) return;
+                            var _keys = new List<string>();
+                            foreach (string key in keys) _keys.Add(key);
+
+                            SAPEventElement[] elements = new SAPEventElement[] { };
+
+                            log("**************************");
+                            var children = new List<SAPEventElement>();
+                            GuiComponent last = null;
+                            foreach (string key in keys)
+                            {
+                                log(key.ToString());
+                                if (string.IsNullOrEmpty(key)) continue;
+                                if (!key.Contains("?"))
+                                {
+                                    var ele = session.FindById(key);
+                                    if (ele == null) continue;
+                                    last = ele as GuiComponent;
+                                    // last = ele as GuiVComponent;
+                                    // if(last != null) last.Visualize(true);
+                                    var _msg = new SAPEventElement(ele, SystemName, "", false);
+                                    children.Add(_msg);
+                                }
+                            }
+                            if (last != null)
+                                foreach (string key in keys)
+                                {
+                                    if (string.IsNullOrEmpty(key)) continue;
+                                    if (key.Contains("?"))
+                                    {
+                                        if (LastElement == null) continue;
+                                        var _key = key.Substring(0, key.IndexOf("?"));
+                                        log(_key);
+                                        var msg = new SAPEventElement(session, last, session.Info.SystemName, false, _key, "", false, false, 1, false);
+                                        if (msg != null)
+                                        {
+                                            children.Add(msg);
+                                            LastElement = msg;
+                                        }
+
+                                    }
+                                }
+                            LastElement = children.LastOrDefault();
+                            if (LastElement != null)
+                            {
+                                SAPEvent message = new SAPEvent("mousemove");
+                                message.Set(LastElement);
+                                if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
+                                pipe.PushMessage(message);
+
+                            }
                         }
-                        LastElement = found;
-                        SAPEvent message = new SAPEvent("mousemove");
-                        message.Set(LastElement);
-                        if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
-                        pipe.PushMessage(message);
                     }
-                    else
-                    {
-                        // log("Mouseover " + e.X + "," + e.Y + " not found in UI List");
-                    }
-                }
+
+
+                // elements = children.ToArray();
+
+                //if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //{
+                //    try
+                //    {
+                //        if (isMoving) return;
+                //        isMoving = true;
+                //    }
+                //    finally
+                //    {
+                //        System.Threading.Monitor.Exit(_lock);
+                //    }
+                //}
+                //try
+                //{
+                //    if (SAPHook.Instance.Connections.Count() == 0 || SAPHook.Instance.UIElements.Count() == 0)
+                //    {
+                //        if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //        {
+                //            try
+                //            {
+                //                isMoving = false;
+                //            }
+                //            finally
+                //            {
+                //                System.Threading.Monitor.Exit(_lock);
+                //            }
+                //        }
+                //        return;
+                //    }
+                //    var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
+                //    if (Element != null)
+                //    {
+                //        var ProcessId = Element.Current.ProcessId;
+                //        if (ProcessId < 1)
+                //        {
+                //            if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //            {
+                //                try
+                //                {
+                //                    isMoving = false;
+                //                }
+                //                finally
+                //                {
+                //                    System.Threading.Monitor.Exit(_lock);
+                //                }
+                //            }
+                //            return;
+                //        }
+                //        if (SAPProcessId > 0 && SAPProcessId != ProcessId)
+                //        {
+                //            if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //            {
+                //                try
+                //                {
+                //                    isMoving = false;
+                //                }
+                //                finally
+                //                {
+                //                    System.Threading.Monitor.Exit(_lock);
+                //                }
+                //            }
+                //            return;
+                //        }
+                //        if (SAPProcessId != ProcessId)
+                //        {
+                //            using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
+                //            {
+                //                if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
+                //                if (p.ProcessName.ToLower() != "saplogon")
+                //                {
+                //                    if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //                    {
+                //                        try
+                //                        {
+                //                            isMoving = false;
+                //                        }
+                //                        finally
+                //                        {
+                //                            System.Threading.Monitor.Exit(_lock);
+                //                        }
+                //                    }
+                //                    return;
+                //                }
+                //            }
+                //        }
+                //        if (SAPHook.Instance.Connections.Count() == 0) SAPHook.Instance.RefreshSessions();
+                //        if (SAPHook.Instance.UIElements.Count() == 0) SAPHook.Instance.RefreshUIElements(true);
+                //        SAPEventElement[] elements = new SAPEventElement[] { };
+                //        if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 10000))
+                //        {
+                //            try
+                //            {
+                //                elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                //            }
+                //            finally
+                //            {
+                //                System.Threading.Monitor.Exit(SAPHook.Instance.UIElements);
+                //            }
+                //        }
+                //        if (elements.Count() > 0)
+                //        {
+                //            //Program.log("[mousemove] " + e.X + " " + e.Y);
+                //            //foreach(var ele in elements)
+                //            //{
+                //            //    Program.log("[element] " + ele.ToString());
+                //            //}
+                //            var found = elements.OrderBy(x => x.IdPathCell.Length).Last();
+                //            if (found.Items != null && found.Items.Length > 0)
+                //            {
+                //                elements = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                //                if (elements != null && elements.Length > 0) found = elements.OrderBy(x => x.IdPathCell.Length).Last();
+
+                //            }
+                //            //Program.log("[element] " + found.ToString() + " " + found.Rectangle.ToString());
+
+                //            if (found.Items != null && found.Items.Length > 0)
+                //            {
+                //                var found2 = found.Items.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                //                if (found2.Length > 0)
+                //                {
+                //                    found = found2.First();
+                //                }
+                //            }
+
+                //            if (LastElement != null && (found.Id == LastElement.Id && found.Path == LastElement.Path && found.Cell == LastElement.Cell))
+                //            {
+                //                // form.AddText("[SKIP] mousemove " + LastElement.ToString());
+                //                if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //                {
+                //                    try
+                //                    {
+                //                        isMoving = false;
+                //                    }
+                //                    finally
+                //                    {
+                //                        System.Threading.Monitor.Exit(_lock);
+                //                    }
+                //                }
+                //                return;
+                //            }
+                //            LastElement = found;
+                //            SAPEvent message = new SAPEvent("mousemove");
+                //            message.Set(LastElement);
+                //            if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString() + " " + LastElement.Rectangle.ToString());
+                //            pipe.PushMessage(message);
+                //        }
+                //        else
+                //        {
+                //            // log("Mouseover " + e.X + "," + e.Y + " not found in UI List");
+                //        }
+                //    }
+                //}
+                //catch (Exception)
+                //{
+                //}
+                //if (System.Threading.Monitor.TryEnter(_lock, 10000))
+                //{
+                //    try
+                //    {
+                //        isMoving = false;
+                //    }
+                //    finally
+                //    {
+                //        System.Threading.Monitor.Exit(_lock);
+                //    }
+                //}
             }
-            catch (Exception)
+            finally
             {
-            }
-            if (System.Threading.Monitor.TryEnter(_lock, 10000))
-            {
-                try
-                {
-                    isMoving = false;
-                }
-                finally
-                {
-                    System.Threading.Monitor.Exit(_lock);
-                }
+                _isMoving = false;
             }
         }
         private static void OnMouseDown(InputEventArgs e)
         {
             try
             {
-                if (SAPHook.Instance.Connections.Count() == 0) return;
-                if (SAPHook.Instance.UIElements.Count() == 0) return;
-                var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
-                if (Element != null)
+                if(LastElement != null)
                 {
-                    var ProcessId = Element.Current.ProcessId;
-                    if (ProcessId < 1) return;
-                    if (SAPProcessId > 0 && SAPProcessId != ProcessId) return;
-                    if (SAPProcessId != ProcessId)
-                    {
-                        using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
-                        {
-                            if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
-                            if (p.ProcessName.ToLower() != "saplogon") return;
-                        }
-                    }
-                    SAPEventElement[] elements = new SAPEventElement[] { };
-                    if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 10000))
-                    {
-                        try
-                        {
-                            elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
-                        }
-                        finally
-                        {
-                            System.Threading.Monitor.Exit(SAPHook.Instance.UIElements);
-                        }
-                    }
-                    if (elements.Count() > 0)
-                    {
-                        var last = elements.OrderBy(x => x.Id.Length).Last();
-                        SAPEvent message = new SAPEvent("mousedown");
-                        message.Set(last);
-                        if (log_send_message) form.AddText("[send] " + message.action + " " + last.ToString());
-                        pipe.PushMessage(message);
-                        Task.Run(() => { if (recordstarting && !SAPHook.Instance.refreshingui) SAPHook.Instance.RefreshUIElements(true); });
-                        // 
-                    }
-                    else
-                    {
-                        log("OnMouseDown " + e.X + "," + e.Y + " not found in UI List");
-                    }
+                    SAPEvent message = new SAPEvent("mousedown");
+                    message.Set(LastElement);
+                    if (log_send_message) form.AddText("[send] " + message.action + " " + LastElement.ToString());
+                    pipe.PushMessage(message);
                 }
+
+                //    if (SAPHook.Instance.UIElements.Count() == 0) return;
+                //    var Element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
+                //    if (Element != null)
+                //    {
+                //        var ProcessId = Element.Current.ProcessId;
+                //        if (ProcessId < 1) return;
+                //        if (SAPProcessId > 0 && SAPProcessId != ProcessId) return;
+                //        if (SAPProcessId != ProcessId)
+                //        {
+                //            using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
+                //            {
+                //                if (p.ProcessName.ToLower() == "saplogon") SAPProcessId = p.Id;
+                //                if (p.ProcessName.ToLower() != "saplogon") return;
+                //            }
+                //        }
+                //        SAPEventElement[] elements = new SAPEventElement[] { };
+                //        if (System.Threading.Monitor.TryEnter(SAPHook.Instance.UIElements, 10000))
+                //        {
+                //            try
+                //            {
+                //                elements = SAPHook.Instance.UIElements.Where(x => x.Rectangle.Contains(e.X, e.Y)).ToArray();
+                //            }
+                //            finally
+                //            {
+                //                System.Threading.Monitor.Exit(SAPHook.Instance.UIElements);
+                //            }
+                //        }
+                //        if (elements.Count() > 0)
+                //        {
+                //            var last = elements.OrderBy(x => x.Id.Length).Last();
+                //            SAPEvent message = new SAPEvent("mousedown");
+                //            message.Set(last);
+                //            if (log_send_message) form.AddText("[send] " + message.action + " " + last.ToString());
+                //            pipe.PushMessage(message);
+                //            Task.Run(() => { if (recordstarting && !SAPHook.Instance.refreshingui) SAPHook.Instance.RefreshUIElements(true); });
+                //            // 
+                //        }
+                //        else
+                //        {
+                //            log("OnMouseDown " + e.X + "," + e.Y + " not found in UI List");
+                //        }
+                //    }
             }
             catch (Exception)
             {

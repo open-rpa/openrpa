@@ -574,10 +574,6 @@ namespace OpenRPA.SAPBridge
                     }
                     Children = children.ToArray();
                 }
-                //else
-                //{
-                //    throw new Exception("Unknown container type " + comp.Type + "!");
-                //}
 
             }
             if (Properties == null || Properties.Count() == 0)
@@ -671,58 +667,6 @@ namespace OpenRPA.SAPBridge
             p.Add(new SAPElementProperty("Value", Element.Value, true));
             Properties = p.ToArray();
         }
-        //public SAPEventElement(SAPEventElement msg, SAPFEWSELib.GuiGridView grid, string parentpath, int Row, string SystemName)
-        //{
-        //    if (String.IsNullOrEmpty(SystemName)) throw new ArgumentException("SystemName is mandatory");
-        //    Id = grid.Id;
-        //    // Path = parentpath + "/" + key;
-        //    Path = Row.ToString();
-        //    if (string.IsNullOrEmpty(parentpath)) Path = Row.ToString();
-        //    this.SystemName = SystemName;
-        //    ContainerType = false;
-        //    type = "GuiGridView";
-        //    Parent = grid.Id;
-        //    Name = Row.ToString();
-
-
-
-        //    var keys = grid.ColumnOrder as SAPFEWSELib.GuiCollection;
-        //    var items = new List<SAPEventElement>();
-        //    foreach (string key in keys)
-        //    {
-        //        var column = new SAPEventElement();
-        //        column.SystemName = SystemName;
-        //        column.Name = key;
-        //        column.type = "GuiGridCell";
-        //        int Left = grid.GetCellLeft(Row, key);
-        //        int Top = grid.GetCellTop(Row, key);
-        //        int Width = grid.GetCellWidth(Row, key);
-        //        int Height = grid.GetCellHeight(Row, key);
-        //        var ScreenLeft = Left + msg.Rectangle.X;
-        //        var ScreenTop = Top + msg.Rectangle.Y;
-
-        //        var tooltip = grid.GetCellTooltip(Row, key);
-
-        //        string Value = grid.GetCellValue(Row, key);
-
-        //        var properties = new List<SAPElementProperty>();
-        //        properties.Add(new SAPElementProperty("Left", Left.ToString(), true));
-        //        properties.Add(new SAPElementProperty("Top", Top.ToString(), true));
-        //        properties.Add(new SAPElementProperty("ScreenLeft", ScreenLeft.ToString(), true));
-        //        properties.Add(new SAPElementProperty("ScreenTop", ScreenTop.ToString(), true));
-        //        properties.Add(new SAPElementProperty("Width", Width.ToString(), true));
-        //        properties.Add(new SAPElementProperty("Height", Height.ToString(), true));
-        //        properties.Add(new SAPElementProperty("Key", key, true));
-        //        properties.Add(new SAPElementProperty("Value", Value, false));
-        //        properties.Add(new SAPElementProperty("ToolTip", tooltip, true));
-
-        //        column._Rectangle = new Rectangle(ScreenLeft, ScreenTop, Width, Height);
-        //        column.Properties = properties.ToArray();
-        //        items.Add(column);
-        //    }
-        //    Items = items.ToArray();
-
-        //}
         private static string[] limitedProperties = { "Changeable", "Modified", "Text", "ScreenTop", "ScreenLeft", "Height", "Width", "Top", "Left", "Tooltip", "DefaultTooltip" };
         private static Dictionary<Type, System.Reflection.PropertyInfo[]> typeProperties = new Dictionary<Type, System.Reflection.PropertyInfo[]>();
         public static void PropogateTypeCache()
@@ -735,7 +679,6 @@ namespace OpenRPA.SAPBridge
                 typeProperties.Add(t, tproperties);
             }
             Program.log("PropogateTypeCache:: End with " + typeProperties.Count + " types");
-            SAPHook.Instance.RefreshUIElements(true);
         }
         public void LoadProperties(SAPFEWSELib.GuiComponent Element, bool all)
         {

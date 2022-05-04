@@ -51,7 +51,7 @@ namespace OpenRPA.SAPBridge
         {
             _ = app;
         }
-        public SAPEventElement[] UIElements = new SAPEventElement[] { };
+        // public SAPEventElement[] UIElements = new SAPEventElement[] { };
         private void GetUIElements(List<SAPEventElement> list, GuiSession session, string Parent, SAPEventElement ele, bool VisibleOnly)
         {
             list.Add(ele);
@@ -75,105 +75,6 @@ namespace OpenRPA.SAPBridge
             {
                 GetUIElements(list, session, ele.Id, child, VisibleOnly);
             }
-
-            //var msg = new SAPEventElement(Element, session.Info.SystemName, Parent, false);
-            //list.Add(msg);
-            //if (Element.ContainerType)
-            //{
-            //    if (Element is GuiVContainer vcon)
-            //    {
-            //        for (var i = 0; i < vcon.Children.Count; i++)
-            //        {
-            //            GetUIElements(list, session, Element.Id, vcon.Children.ElementAt(i));
-            //        }
-            //    }
-            //    else if (Element is GuiContainer con)
-            //    {
-            //        for (var i = 0; i < con.Children.Count; i++)
-            //        {
-            //            GetUIElements(list, session, Element.Id, con.Children.ElementAt(i));
-            //        }
-            //    }
-            //    else if (Element is GuiStatusbar sbar)
-            //    {
-            //        for (var i = 0; i < sbar.Children.Count; i++)
-            //        {
-            //            GetUIElements(list, session, Element.Id, sbar.Children.ElementAt(i));
-            //        }
-            //    }
-            //}
-        }
-        public bool refreshingui = false;
-        public void RefreshUIElements(bool VisibleOnly)
-        {
-            if (!Recording || !VisualizationEnabled) return;
-            Program.log("RefreshUIElements:: Begin with " + UIElements.Length + " in cache");
-            if (refreshingui)
-            {
-                Program.log("RefreshUIElements:: all ready mapping ui");
-                return;
-            }
-            // Stop highlighing "old" UI ???
-            if (System.Threading.Monitor.TryEnter(UIElements, 1000))
-            {
-                try
-                {
-                    UIElements = new SAPEventElement[] { };
-                }
-                finally
-                {
-                    System.Threading.Monitor.Exit(UIElements);
-                }
-            }
-            try
-            {
-                if (app == null) UIElements = new SAPEventElement[] { };
-                refreshingui = true;
-                var result = new List<SAPEventElement>();
-                try
-                {
-                    if (app != null && app.Children != null)
-                        for (int x = 0; x < app.Children.Count; x++)
-                        {
-                            var con = app.Children.ElementAt(x) as GuiConnection;
-                            if (con.Sessions.Count == 0) continue;
-
-                            for (int j = 0; j < con.Sessions.Count; j++)
-                            {
-                                var session = con.Children.ElementAt(j) as GuiSession;
-                                var ele = session as GuiComponent;
-                                GetUIElements(result, session, session.Id, ele, VisibleOnly);
-                                //for (var i = 0; i < session.Children.Count; i++)
-                                //{
-                                //    GetUIElements(result, session, session.Id, session.Children.ElementAt(i), VisibleOnly);
-                                //}
-                            }
-                        }
-                    Program.log("RefreshUIElements:: Refresh complete");
-                }
-                catch (Exception ex)
-                {
-                    Program.log(ex.ToString());
-                }
-                if (System.Threading.Monitor.TryEnter(UIElements, 1000))
-                {
-                    try
-                    {
-                        UIElements = result.ToArray();
-                    }
-                    finally
-                    {
-                        System.Threading.Monitor.Exit(UIElements);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            refreshingui = false;
-            Program.log("RefreshUIElements:: end with " + UIElements.Length + " in cache");
         }
         public SAPSession[] Sessions { get; private set; } = new SAPSession[] { };
         public SAPConnection[] Connections { get; private set; } = new SAPConnection[] { };

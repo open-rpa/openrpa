@@ -82,7 +82,7 @@ namespace OpenRPA.SAP
             if (SAPhook.Instance.Sessions != null)
                 foreach (var session in SAPhook.Instance.Sessions)
                 {
-                    if (string.IsNullOrEmpty(SystemName) || (SystemName == session.Info.SystemName))
+                    if (string.IsNullOrEmpty(SystemName) || (SystemName.ToLower() == session.Info.SystemName.ToLower()))
                     {
                         result.AddRange(GetElementsWithuiSelector(session, selector, fromElement, skip, maxresults, FlatternGuiTree));
                         if (result.Count > maxresults) return result.ToArray();

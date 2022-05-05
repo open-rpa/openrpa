@@ -417,8 +417,8 @@ namespace OpenRPA.Views
             if (isUpdating) return;
             //NotifyPropertyChanged("Workflow");
             //NotifyPropertyChanged("Project");
-            //NotifyPropertyChanged("IsWorkflowSelected");
-            //NotifyPropertyChanged("IsWorkflowOrProjectSelected");
+            NotifyPropertyChanged("IsWorkflowSelected");
+            NotifyPropertyChanged("IsWorkflowOrProjectSelected");
             // NotifyPropertyChanged("Projects");
             onSelectedItemChanged?.Invoke();
         }

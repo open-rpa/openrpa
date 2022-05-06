@@ -1519,6 +1519,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder.
+        /// </summary>
+        public static string activity_popworkitem_folder {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default workitem files are saved in project folder, set this to override where to save WorkItem files.
+        /// </summary>
+        public static string activity_popworkitem_folder_help {
+            get {
+                return ResourceManager.GetString("activity_popworkitem_folder_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#pop-workitem.
         /// </summary>
         public static string activity_popworkitem_helpurl {

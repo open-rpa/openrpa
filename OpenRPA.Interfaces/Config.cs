@@ -126,9 +126,17 @@ namespace OpenRPA
                 var fi = new System.IO.FileInfo(filename);
                 var _fileName = System.IO.Path.GetFileName(filename);
                 var di = fi.Directory;
-                if (System.IO.File.Exists(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json")))
+                var MyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var MyDocumentsOpenRPA = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                var AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var AppDataOpenRPA = System.IO.Path.Combine(AppData, "OpenRPA");
+
+                if (System.IO.File.Exists(System.IO.Path.Combine(AppDataOpenRPA, "settings.json")))
                 {
                     filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                } else if (System.IO.File.Exists(System.IO.Path.Combine(MyDocumentsOpenRPA, "settings.json")))
+                {
+                    filename = System.IO.Path.Combine(MyDocumentsOpenRPA, "settings.json");
                 }
                 else if (System.IO.File.Exists(filename))
                 {
@@ -140,7 +148,7 @@ namespace OpenRPA
                 else
                 {
                     // Will create a new file in ProjectsDirectory
-                    filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                    filename = System.IO.Path.Combine(MyDocumentsOpenRPA, "settings.json");
                 }
                 return filename;
             }

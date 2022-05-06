@@ -239,26 +239,6 @@ namespace OpenRPA.Interfaces
                 return dir;
             }
         }
-        public static string MyDocuments
-        {
-            get
-            {
-                var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                if (!string.IsNullOrEmpty(dir))
-                {
-                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(dir)))
-                        System.IO.Directory.CreateDirectory(dir);
-                }
-                else
-                {
-                    string filename = "settings.json";
-                    var fi = new System.IO.FileInfo(filename);
-                    return System.IO.Path.GetDirectoryName(fi.FullName);
-
-                }
-                return dir;
-            }
-        }
         public static string MyPictures
         {
             get
@@ -284,16 +264,17 @@ namespace OpenRPA.Interfaces
         {
             get
             {
-                if (string.IsNullOrEmpty(_ProjectsDirectory))
+                if (!string.IsNullOrEmpty(_ProjectsDirectory)) return _ProjectsDirectory;
+                var MyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var MyDocumentsOpenRPA = System.IO.Path.Combine(MyDocuments, "OpenRPA");
+                var AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var AppDataOpenRPA = System.IO.Path.Combine(AppData, "OpenRPA");
+                if (System.IO.File.Exists(System.IO.Path.Combine(AppDataOpenRPA, "settings.json")))
                 {
-                    //var asm = System.Reflection.Assembly.GetEntryAssembly();
-                    //var filepath = asm.CodeBase.Replace("file:///", "");
-                    //var path = System.IO.Path.GetDirectoryName(filepath);
-                    //if (path.ToLower().Contains("program")) path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
-                    var path = System.IO.Path.Combine(MyDocuments, "OpenRPA");
-                    if (!System.IO.Directory.Exists(System.IO.Path.Combine(path))) System.IO.Directory.CreateDirectory(path);
-                    _ProjectsDirectory = path;
-
+                    _ProjectsDirectory = AppDataOpenRPA;
+                } else if (System.IO.File.Exists(System.IO.Path.Combine(MyDocumentsOpenRPA, "settings.json")))
+                {
+                    _ProjectsDirectory = MyDocumentsOpenRPA;
                 }
                 return _ProjectsDirectory;
             }

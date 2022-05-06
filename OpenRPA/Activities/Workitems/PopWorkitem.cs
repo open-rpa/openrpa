@@ -25,14 +25,19 @@ namespace OpenRPA.WorkItems
         public InArgument<string> wiq { get; set; }
         [LocalizedDisplayName("activity_popworkitem_workitem", typeof(Resources.strings)), LocalizedDescription("activity_popworkitem_workitem_help", typeof(Resources.strings))]
         public OutArgument<IWorkitem> Workitem { get; set; }
+        [LocalizedDisplayName("activity_popworkitem_folder", typeof(Resources.strings)), LocalizedDescription("activity_popworkitem_folder_help", typeof(Resources.strings))]
+        public InArgument<string> Folder { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            var folder = Folder.Get(context);
+            if (!string.IsNullOrEmpty(folder)) folder = Environment.ExpandEnvironmentVariables(folder);
+            if (string.IsNullOrEmpty(folder)) folder = Interfaces.Extensions.ProjectsDirectory;
             var result = await global.webSocketClient.PopWorkitem<Workitem>(wiq.Get(context), wiqid.Get(context));
             if(result != null)
             {
                 foreach (var file in result.files)
                 {
-                    await global.webSocketClient.DownloadFileAndSave(null, file._id, Interfaces.Extensions.ProjectsDirectory, false, false);
+                    await global.webSocketClient.DownloadFileAndSave(null, file._id, folder, false, false);
                 }
             }
             return result;

@@ -603,6 +603,12 @@
   <data name="activity_popworkitem" xml:space="preserve">
     <value>Pop Workitem</value>
   </data>
+  <data name="activity_popworkitem_folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="activity_popworkitem_folder_help" xml:space="preserve">
+    <value>By default workitem files are saved in project folder, set this to override where to save WorkItem files</value>
+  </data>
   <data name="activity_popworkitem_helpurl" xml:space="preserve">
     <value>https://github.com/open-rpa/openrpa/wiki/Workitems#pop-workitem</value>
   </data>

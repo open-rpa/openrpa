@@ -269,6 +269,7 @@ namespace OpenRPA.Interfaces
                 var MyDocumentsOpenRPA = System.IO.Path.Combine(MyDocuments, "OpenRPA");
                 var AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 var AppDataOpenRPA = System.IO.Path.Combine(AppData, "OpenRPA");
+                _ProjectsDirectory = MyDocumentsOpenRPA;
                 if (System.IO.File.Exists(System.IO.Path.Combine(AppDataOpenRPA, "settings.json")))
                 {
                     _ProjectsDirectory = AppDataOpenRPA;

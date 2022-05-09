@@ -121,6 +121,11 @@ namespace OpenRPA
                     {
                         Log.Debug(ex.Message);
                     }
+                    if(!System.IO.Directory.Exists(Interfaces.Extensions.ProjectsDirectory))
+                    {
+                        System.IO.Directory.CreateDirectory(Interfaces.Extensions.ProjectsDirectory);
+
+                    }
                     var dbfilename = "offline.db";
                     var logfilename = "offline-log.db";
                     if (!string.IsNullOrEmpty(Config.local.wsurl))

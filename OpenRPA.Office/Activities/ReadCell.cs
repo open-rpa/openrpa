@@ -54,6 +54,18 @@ namespace OpenRPA.Office.Activities
                     if (value != null) value = int.Parse(value.ToString());
                     if (value == null) value = int.Parse("0");
                 }
+                if (value != null && value.GetType() == typeof(DateTime) && typeof(TResult) == typeof(string))
+                {
+                    value = value.ToString();
+                }
+                if (value != null && value.GetType() == typeof(int) && typeof(TResult) == typeof(string))
+                {
+                    value = value.ToString();
+                }
+                if (value != null && value.GetType() == typeof(double) && typeof(TResult) == typeof(string))
+                {
+                    value = value.ToString();
+                }
                 if (value != null) context.SetValue(Result, (TResult)value);
                 if (value == null) context.SetValue(Result, default(TResult));
             }

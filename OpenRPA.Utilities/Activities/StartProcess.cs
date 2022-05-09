@@ -41,6 +41,7 @@ namespace OpenRPA.Utilities
             var waitforexit = WaitForExit.Get(context);
             var waitforexittimeout = WaitForExitTimeout.Get(context);
             ProcessStartInfo startInfo = new ProcessStartInfo();
+            filename = Environment.ExpandEnvironmentVariables(filename);
             startInfo.FileName = filename;
             startInfo.Arguments = arguments;
             startInfo.WorkingDirectory = workingdirectory;

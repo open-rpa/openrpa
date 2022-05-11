@@ -33,6 +33,11 @@ namespace OpenRPA.Office.Activities
         [Category("Misc")]
         [LocalizedDisplayName("activity_readrange_clearformats", typeof(Resources.strings)), LocalizedDescription("activity_readrange_clearformats_help", typeof(Resources.strings))]
         public InArgument<bool> ClearFormats { get; set; }
+
+        [Category("Misc")]
+        [LocalizedDisplayName("activity_readrange_guesscolumntype", typeof(Resources.strings)), LocalizedDescription("activity_readrange_guesscolumntype_help", typeof(Resources.strings))]
+        public InArgument<bool> GuessColumnType { get; set; }
+
         public InArgument<bool> IgnoreEmptyRows { get; set; }
         //[RequiredArgument]
         [System.ComponentModel.Category("Input")]
@@ -46,8 +51,9 @@ namespace OpenRPA.Office.Activities
         protected override void Execute(CodeActivityContext context)
         {
             //Range xlActiveRange = base.worksheet.UsedRange;
-            var ignoreEmptyRows = (IgnoreEmptyRows != null ? IgnoreEmptyRows.Get(context) : false); 
-            var useHeaderRow = (UseHeaderRow != null? UseHeaderRow.Get(context)  : false);
+            var ignoreEmptyRows = (IgnoreEmptyRows != null ? IgnoreEmptyRows.Get(context) : false);
+            var useHeaderRow = (UseHeaderRow != null ? UseHeaderRow.Get(context) : false);
+            var guessColumnType = (GuessColumnType != null ? GuessColumnType.Get(context) : false);
             base.Execute(context);
             var cells = Cells.Get(context);
             Microsoft.Office.Interop.Excel.Range range = null;
@@ -63,7 +69,7 @@ namespace OpenRPA.Office.Activities
             object[,] valueArray = (object[,])range.get_Value(Microsoft.Office.Interop.Excel.XlRangeValueDataType.xlRangeValueDefault);
             if(valueArray != null)
             {
-                var o = ProcessObjects(range, useHeaderRow, ignoreEmptyRows, valueArray);
+                var o = ProcessObjects(range, useHeaderRow, guessColumnType, ignoreEmptyRows, valueArray);
 
                 System.Data.DataTable dt = o as System.Data.DataTable;
                 dt.TableName = base.worksheet.Name;
@@ -108,7 +114,7 @@ namespace OpenRPA.Office.Activities
             }
             return colLetter;
         }
-        private System.Data.DataTable ProcessObjects(Microsoft.Office.Interop.Excel.Range range, bool useHeaderRow, bool ignoreEmptyRows, object[,] valueArray)
+        private System.Data.DataTable ProcessObjects(Microsoft.Office.Interop.Excel.Range range, bool useHeaderRow, bool guessColumnType, bool ignoreEmptyRows, object[,] valueArray)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
             var beginat = 1;
@@ -119,7 +125,7 @@ namespace OpenRPA.Office.Activities
                     var v = (worksheet.Cells[range.Row + 1, range.Column + (k - 1)] as Range).get_Value(Type.Missing);
                     if (v == null) v = (worksheet.Cells[range.Row, range.Column + (k - 1)] as Range).get_Value(Type.Missing);
                     Type type = typeof(string);
-                    if (v != null) type = v.GetType();
+                    if (guessColumnType && v != null) type = v.GetType();
                     dt.Columns.Add((string)valueArray[1, k], type);  //add columns to the data table.
                 }
                 beginat = 2;
@@ -130,7 +136,7 @@ namespace OpenRPA.Office.Activities
                 {
                     var v = (worksheet.Cells[range.Row , range.Column + (k - 1)] as Range).get_Value(Type.Missing);
                     Type type = typeof(string);
-                    if (v != null) type = v.GetType();
+                    if (guessColumnType && v != null) type = v.GetType();
                     dt.Columns.Add(k.ToString(), type);  //add columns to the data table.
                 }
                 beginat = 1;

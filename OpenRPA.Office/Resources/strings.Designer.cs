@@ -754,6 +754,24 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Guess Column Type.
+        /// </summary>
+        public static string activity_readrange_guesscolumntype {
+            get {
+                return ResourceManager.GetString("activity_readrange_guesscolumntype", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All columns will be of type string. Set this to true, to guess column type based on first row of data.
+        /// </summary>
+        public static string activity_readrange_guesscolumntype_help {
+            get {
+                return ResourceManager.GetString("activity_readrange_guesscolumntype_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read a range from a Microsoft Excel sheet.
         /// </summary>
         public static string activity_readrange_tooltip {

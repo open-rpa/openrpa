@@ -348,6 +348,12 @@
   <data name="activity_readrange_clearformats_help" xml:space="preserve">
     <value>Set to true to remove all formatting from the select worksheet</value>
   </data>
+  <data name="activity_readrange_guesscolumntype" xml:space="preserve">
+    <value>Guess Column Type</value>
+  </data>
+  <data name="activity_readrange_guesscolumntype_help" xml:space="preserve">
+    <value>All columns will be of type string. Set this to true, to guess column type based on first row of data</value>
+  </data>
   <data name="activity_readrange_tooltip" xml:space="preserve">
     <value>Read a range from a Microsoft Excel sheet</value>
   </data>

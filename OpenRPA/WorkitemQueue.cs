@@ -56,8 +56,11 @@ namespace OpenRPA
                 throw new Exception("Failed adding WorkitemQueue, not online!");
             } else if(!string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
             {
-                var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false);
-                EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
+                if (!skipOnline)
+                {
+                    var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false);
+                    EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
+                }
             }
             var ___id = _id;
             bool hadError = true;

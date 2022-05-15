@@ -17,22 +17,20 @@ using OpenRPA.Interfaces;
 using System.Collections.ObjectModel;
 using System.Activities.Presentation;
 
-namespace OpenRPA.WorkItems
+namespace OpenRPA.WorkItems.Activities
 {
     public partial class AddWorkitemDesigner
     {
         public AddWorkitemDesigner()
         {
             InitializeComponent();
+            _ = RobotInstance.instance;
             DataContext = this;
         }
-
-        public ObservableCollection<IWorkitemQueue> WorkItemQueues { get { return global.OpenRPAClient.WorkItemQueuesSource;  } }
-
+        public ObservableCollection<IWorkitemQueue> WorkItemQueues { get { return global.OpenRPAClient.WorkItemQueues;  } }
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string PropertyName = "Payload";
@@ -41,7 +39,7 @@ namespace OpenRPA.WorkItems
             DynamicArgumentDesignerOptions options = options1;
             if (!ModelItem.Properties[PropertyName].IsSet)
             {
-                Log.Output(PropertyName + " is not set");
+                Log.Warning(PropertyName + " is not set");
                 return;
             }
             ModelItem collection = ModelItem.Properties[PropertyName].Collection;
@@ -51,7 +49,7 @@ namespace OpenRPA.WorkItems
             }
             if (collection == null)
             {
-                Log.Output(PropertyName + " is not a Collection or Dictionary");
+                Log.Warning(PropertyName + " is not a Collection or Dictionary");
                 return;
             }
             using (ModelEditingScope scope = collection.BeginEdit(PropertyName + "Editing"))

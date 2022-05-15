@@ -2334,7 +2334,9 @@ namespace OpenRPA
                             }
                             if (exists != null && wiq._version != exists._version)
                             {
-                                await exists.Save(true);
+                                EnumerableExtensions.CopyPropertiesTo(wiq, exists, true);
+                                exists.isDirty = false;
+                                await wiq.Save(true);
                             }
                             else if (exists == null)
                             {

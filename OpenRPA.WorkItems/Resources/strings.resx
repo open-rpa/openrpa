@@ -171,6 +171,63 @@
   <data name="activity_addworkitem_wiq_help" xml:space="preserve">
     <value>Name of queue to add Workitem too</value>
   </data>
+  <data name="activity_addworkitem_workitem" xml:space="preserve">
+    <value>Workitem</value>
+  </data>
+  <data name="activity_addworkitem_workitem_help" xml:space="preserve">
+    <value>The added Workitem</value>
+  </data>
+  <data name="activity_bulkaddworkitems" xml:space="preserve">
+    <value>Bulk Add Workitems</value>
+  </data>
+  <data name="activity_bulkaddworkitems_bulksize" xml:space="preserve">
+    <value>Bulk Size</value>
+  </data>
+  <data name="activity_bulkaddworkitems_bulksize_help" xml:space="preserve">
+    <value>Add workitems in batches of this size. The bigger the payload and files, the loweer this number should be. Default is 50</value>
+  </data>
+  <data name="activity_bulkaddworkitems_datatable" xml:space="preserve">
+    <value>DataTable</value>
+  </data>
+  <data name="activity_bulkaddworkitems_datatable_help" xml:space="preserve">
+    <value>DataTable containing the data to be used for creating the Workitems.</value>
+  </data>
+  <data name="activity_bulkaddworkitems_filefields" xml:space="preserve">
+    <value>File Columns</value>
+  </data>
+  <data name="activity_bulkaddworkitems_filefields_help" xml:space="preserve">
+    <value>Array of Column names that contains full path and filename to be attached to that workitem</value>
+  </data>
+  <data name="activity_bulkaddworkitems_helpurl" xml:space="preserve">
+    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#bulk-add-workitems</value>
+  </data>
+  <data name="activity_bulkaddworkitems_nextrun" xml:space="preserve">
+    <value>Next Run</value>
+  </data>
+  <data name="activity_bulkaddworkitems_nextrun_help" xml:space="preserve">
+    <value>By default Workitems run right away or with the number of seconds delay set in initial delay on the queue. Use this field to only run the Work Item after the given datetime</value>
+  </data>
+  <data name="activity_bulkaddworkitems_priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="activity_bulkaddworkitems_priority_help" xml:space="preserve">
+    <value>Set priority to a non zero number for this item. The lower the number the higher the proirity</value>
+  </data>
+  <data name="activity_bulkaddworkitems_tooltip" xml:space="preserve">
+    <value>Add a new Workitem for each row in a DataTable</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiq" xml:space="preserve">
+    <value>Queue Name</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiqid" xml:space="preserve">
+    <value>Queue ID</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiqid_help" xml:space="preserve">
+    <value>ID of queue to add Workitem too</value>
+  </data>
+  <data name="activity_bulkaddworkitems_wiq_help" xml:space="preserve">
+    <value>Name of queue to add Workitem too</value>
+  </data>
   <data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
@@ -198,6 +255,15 @@
   <data name="activity_popworkitem" xml:space="preserve">
     <value>Pop Workitem</value>
   </data>
+  <data name="activity_popworkitem_folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="activity_popworkitem_folder_help" xml:space="preserve">
+    <value>By default workitem files are saved in project folder, set this to override where to save WorkItem files</value>
+  </data>
+  <data name="activity_popworkitem_helpurl" xml:space="preserve">
+    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#pop-workitem</value>
+  </data>
   <data name="activity_popworkitem_result" xml:space="preserve">
     <value>Result</value>
   </data>
@@ -219,14 +285,47 @@
   <data name="activity_popworkitem_wiq_help" xml:space="preserve">
     <value>Name of queue to pop an Workitem from</value>
   </data>
+  <data name="activity_popworkitem_workitem" xml:space="preserve">
+    <value>Workitem</value>
+  </data>
+  <data name="activity_popworkitem_workitem_help" xml:space="preserve">
+    <value>The Workitem checked out to you, returns nothing if no more items</value>
+  </data>
+  <data name="activity_throwbusinessruleexception" xml:space="preserve">
+    <value>Throw Business Rule Exception</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_helpurl" xml:space="preserve">
+    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#throw-business-rule-exception</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_message_help" xml:space="preserve">
+    <value>Short describtion of why this workflow failed due to an Business Rule Exception. What data was missing, incomplete or invalid ? We recommend using payload for more detailed information</value>
+  </data>
+  <data name="activity_throwbusinessruleexception_tooltip" xml:space="preserve">
+    <value>Throw a Business Rule Exception. The workflow is failing due to missing, incomplete or invalid data</value>
+  </data>
   <data name="activity_updateworkitem" xml:space="preserve">
     <value>Update Workitem</value>
+  </data>
+  <data name="activity_updateworkitem_exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="activity_updateworkitem_exception_help" xml:space="preserve">
+    <value>Attach exception to Workitem in case of error</value>
   </data>
   <data name="activity_updateworkitem_files" xml:space="preserve">
     <value>Files</value>
   </data>
   <data name="activity_updateworkitem_files_help" xml:space="preserve">
     <value>Add or Update files associated with this Workitem</value>
+  </data>
+  <data name="activity_updateworkitem_ignoremaxretries" xml:space="preserve">
+    <value>Ignore Max Retries</value>
+  </data>
+  <data name="activity_updateworkitem_ignoremaxretries_help" xml:space="preserve">
+    <value>By default a Workitem will fail, once max retries has been reached. Set this to true to resubmit even if max retries have been reached</value>
   </data>
   <data name="activity_updateworkitem_state" xml:space="preserve">
     <value>State</value>

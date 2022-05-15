@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using OpenRPA.Interfaces;
 using System.Collections.ObjectModel;
 
-namespace OpenRPA.WorkItems
+namespace OpenRPA.WorkItems.Activities
 {
     public class workitemstatus
     {
@@ -34,6 +34,7 @@ namespace OpenRPA.WorkItems
         public UpdateWorkitemDesigner()
         {
             InitializeComponent();
+            _ = RobotInstance.instance;
             WIQStates.Add(new workitemstatus("Successful", "Successful"));
             WIQStates.Add(new workitemstatus("Failed", "Failed"));
             WIQStates.Add(new workitemstatus("Processing", "Processing"));

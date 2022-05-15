@@ -1,0 +1,234 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net46</TargetFramework>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<Version>1.0.21</Version>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\debug</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Activities\AddWorkitemDesigner.xaml" />
+		<None Remove="Activities\BulkAddWorkitemsDesigner.xaml" />
+		<None Remove="Activities\DeleteWorkitemDesigner.xaml" />
+		<None Remove="Activities\PopWorkitemDesigner.xaml" />
+		<None Remove="Activities\ThrowBusinessRuleExceptionDesigner.xaml" />
+		<None Remove="Activities\UpdateWorkitemDesigner.xaml" />
+		<None Remove="Resources\designer\AddWorkitem.png" />
+		<None Remove="Resources\designer\bulkaddworkitems.png" />
+		<None Remove="Resources\designer\deleteworkitem.png" />
+		<None Remove="Resources\designer\popworkitem.png" />
+		<None Remove="Resources\designer\throwbusinessruleexception.png" />
+		<None Remove="Resources\designer\updateworkitem.png" />
+		<None Remove="Resources\toolbox\AddWorkitem.png" />
+		<None Remove="Resources\toolbox\bulkaddworkitems.png" />
+		<None Remove="Resources\toolbox\deleteworkitem.png" />
+		<None Remove="Resources\toolbox\popworkitem.png" />
+		<None Remove="Resources\toolbox\throwbusinessruleexception.png" />
+		<None Remove="Resources\toolbox\updateworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\toolbox\bulkaddworkitems.png" />
+	  <EmbeddedResource Include="Resources\toolbox\deleteworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\toolbox\addworkitem.png" />
+	  <EmbeddedResource Include="Resources\toolbox\popworkitem.png" />
+	  <EmbeddedResource Include="Resources\toolbox\updateworkitem.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Resources\designer\addworkitem.png" />
+	  <Resource Include="Resources\designer\bulkaddworkitems.png" />
+	  <Resource Include="Resources\designer\deleteworkitem.png" />
+	  <Resource Include="Resources\designer\popworkitem.png" />
+	  <Resource Include="Resources\designer\throwbusinessruleexception.png" />
+	  <Resource Include="Resources\designer\updateworkitem.png" />
+	  <EmbeddedResource Include="Resources\toolbox\throwbusinessruleexception.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="FlaUI.Core">
+		  <HintPath>lib\FlaUI.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="FlaUI.UIA3">
+		  <HintPath>lib\FlaUI.UIA3.dll</HintPath>
+		</Reference>
+		<Reference Include="Interop.UIAutomationClient">
+		  <HintPath>lib\Interop.UIAutomationClient.dll</HintPath>
+		</Reference>
+		<Reference Include="Newtonsoft.Json">
+		  <HintPath>lib\Newtonsoft.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="NLog">
+		  <HintPath>lib\NLog.dll</HintPath>
+		</Reference>
+		<Reference Include="OpenRPA.Interfaces">
+		  <HintPath>lib\OpenRPA.Interfaces.dll</HintPath>
+		</Reference>
+		<Reference Include="OpenRPA.NamedPipeWrapper">
+		  <HintPath>lib\OpenRPA.NamedPipeWrapper.dll</HintPath>
+		</Reference>
+		<Reference Include="OpenRPA.Net">
+		  <HintPath>lib\OpenRPA.Net.dll</HintPath>
+		</Reference>
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="System.Activities" />
+		<Reference Include="System.Activities.Core.Presentation" />
+		<Reference Include="System.Activities.Presentation" />
+		<Reference Include="System.Buffers">
+		  <HintPath>lib\System.Buffers.dll</HintPath>
+		</Reference>
+		<Reference Include="System.ComponentModel.Composition" />
+		<Reference Include="System.Net.WebSockets.Client.Managed">
+		  <HintPath>lib\System.Net.WebSockets.Client.Managed.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Numerics.Vectors">
+		  <HintPath>lib\System.Numerics.Vectors.dll</HintPath>
+		</Reference>
+		<Reference Include="System.Windows" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Xaml" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="lib\FlaUI.Core.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\FlaUI.UIA3.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\Interop.UIAutomationClient.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\Newtonsoft.Json.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\NLog.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\OpenRPA.Interfaces.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\OpenRPA.NamedPipeWrapper.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\OpenRPA.Net.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\System.Buffers.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\System.Net.WebSockets.Client.Managed.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+		<Content Include="lib\System.Numerics.Vectors.dll">
+			<Pack>true</Pack>
+			<PackagePath>lib\$(TargetFramework)</PackagePath>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resources\strings.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>strings.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\strings.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>strings.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Include="Activities\AddWorkitemDesigner.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="Activities\BulkAddWorkitemsDesigner.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="Activities\DeleteWorkitemDesigner.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="Activities\PopWorkitemDesigner.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="Activities\ThrowBusinessRuleExceptionDesigner.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="Activities\UpdateWorkitemDesigner.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="lib\FlaUI.Core.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\FlaUI.UIA3.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\Interop.UIAutomationClient.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\Newtonsoft.Json.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\NLog.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\OpenRPA.Interfaces.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\OpenRPA.Interfaces.pdb">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\OpenRPA.NamedPipeWrapper.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\OpenRPA.NamedPipeWrapper.pdb">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\OpenRPA.Net.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\OpenRPA.Net.pdb">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\System.Buffers.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\System.Net.WebSockets.Client.Managed.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="lib\System.Numerics.Vectors.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+  <Target Name="AddNugetPackage" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="nuget.exe add $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -Source C:\nuget" />
+    <Exec Command="nuget.exe push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -skipDuplicate -Source nuget.org" />
+  
+  </Target>
+</Project>

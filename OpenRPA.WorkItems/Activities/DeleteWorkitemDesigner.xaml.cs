@@ -16,13 +16,14 @@ using System.Windows.Media.Imaging;
 using OpenRPA.Interfaces;
 using System.Collections.ObjectModel;
 
-namespace OpenRPA.WorkItems
+namespace OpenRPA.WorkItems.Activities
 {
     public partial class DeleteWorkitemDesigner
     {
         public DeleteWorkitemDesigner()
         {
             InitializeComponent();
+            _ = RobotInstance.instance;
         }
     }
 }

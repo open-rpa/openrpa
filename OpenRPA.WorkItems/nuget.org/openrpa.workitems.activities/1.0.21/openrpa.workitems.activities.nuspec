@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>OpenRPA.WorkItems.Activities</id>
+    <version>1.0.21</version>
+    <authors>OpenRPA.WorkItems.Activities</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="PresentationCore" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="PresentationFramework" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.Activities.Core.Presentation" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.Activities" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.Activities.Presentation" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.Windows" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="System.Xaml" targetFramework=".NETFramework4.6" />
+      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.6" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

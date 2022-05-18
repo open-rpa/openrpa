@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenRPA
+namespace OpenRPA.WorkItems.Activities
 {
-    public class WorkitemQueue : LocallyCached , IWorkitemQueue
+    public class WorkitemQueue : Interfaces.entity.apibase, IWorkitemQueue
     {
         public WorkitemQueue()
         {
@@ -67,7 +67,7 @@ namespace OpenRPA
             try
             {
                 isDirty = false;
-                await Save<WorkitemQueue>(skipOnline);
+                // await Save<WorkitemQueue>(skipOnline);
                 hadError = false;
             }
             catch (Exception ex)
@@ -118,18 +118,10 @@ namespace OpenRPA
                 RobotInstance.instance.WorkItemQueues.UpdateItem(this, item);
             });
             isDirty = false;
-            await Save<WorkitemQueue>(skipOnline);
+            // await Save<WorkitemQueue>(skipOnline);
         }
         public async Task Delete(bool skipOnline = false)
         {
-            try
-            {
-                if (!skipOnline) await Delete<WorkitemQueue>();
-            }
-            catch (Exception ex)
-            {
-                if (!ex.Message.Contains("not found") && !ex.Message.Contains("denied")) throw;
-            }
             if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
             {
                 try
@@ -154,9 +146,9 @@ namespace OpenRPA
                 var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true); ;
             } else if (string.IsNullOrEmpty( Config.local.wsurl))
             {
-                RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);
+                //RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);
                 RobotInstance.instance.Workitems.Clear();
-                RobotInstance.instance.Workitems.AddRange(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
+                //RobotInstance.instance.Workitems.AddRange(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
             }
         }
         public override string ToString()
@@ -165,7 +157,7 @@ namespace OpenRPA
             return name;
         }
     }
-    public class Workitem : LocallyCached, IWorkitem
+    public class Workitem : Interfaces.entity.apibase, IWorkitem
     {
         public Workitem()
         {
@@ -188,17 +180,6 @@ namespace OpenRPA
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
-        public async Task Save(bool skipOnline = false)
-        {
-            await Save<Workitem>(skipOnline);
-            if (string.IsNullOrEmpty(Config.local.wsurl))
-            {
-                GenericTools.RunUI(() => {
-                    RobotInstance.instance.Workitems.Add(this);
-                });
-                
-            }
-        }
     }
     public class WorkitemFile : Interfaces.WorkitemFile
     {

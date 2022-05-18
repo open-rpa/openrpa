@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 using OpenRPA.Interfaces.Input;
 using OpenRPA.Interfaces.entity;
 
-namespace OpenRPA.WorkItems
+namespace OpenRPA.WorkItems.Activities
 {
     [System.ComponentModel.Designer(typeof(DeleteWorkitemDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(DeleteWorkitem), "Resources.toolbox.deleteworkitem.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteworkitem.png")]
     [LocalizedToolboxTooltip("activity_deleteworkitem_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_deleteworkitem", typeof(Resources.strings))]
+    [LocalizedHelpURL("activity_deleteworkitem_helpurl", typeof(Resources.strings))]
     public class DeleteWorkitem : AsyncTaskCodeActivity
     {
         [LocalizedDisplayName("activity_deleteworkitem_workitem", typeof(Resources.strings)), LocalizedDescription("activity_deleteworkitem_workitem_help", typeof(Resources.strings))]
@@ -27,6 +28,7 @@ namespace OpenRPA.WorkItems
             if (t == null) throw new Exception("Missing Workitem");
             t.state = t.state.ToLower();
             if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be failed, successful, abandoned or retry");
+            await RobotInstance.instance.WaitForSignedIn(TimeSpan.FromSeconds(10));
             await global.webSocketClient.DeleteWorkitem(t._id);
             return null;
         }
@@ -51,6 +53,5 @@ namespace OpenRPA.WorkItems
                 base.DisplayName = value;
             }
         }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿<sap:ActivityDesigner x:Class="OpenRPA.WorkItems.Activities.UpdateWorkitemDesigner"
+﻿<sap:ActivityDesigner x:Class="OpenRPA.WorkItems.Activities.ThrowBusinessRuleExceptionDesigner"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
@@ -7,7 +7,7 @@
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
     xmlns:or="clr-namespace:OpenRPA.WorkItems.Activities.Resources"
-    xmlns:c="clr-namespace:OpenRPA.Interfaces;assembly=OpenRPA.Interfaces"
+                      xmlns:c="clr-namespace:OpenRPA.Interfaces;assembly=OpenRPA.Interfaces"
     >
 
 
@@ -19,7 +19,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA.WorkItems.Activities;component/Resources/designer/updateworkitem.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.WorkItems.Activities;component/Resources/designer/throwbusinessruleexception.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>
@@ -37,25 +37,8 @@
             <StackPanel>
                 <sapv:ExpressionTextBox HintText="Hint" MaxWidth="180" Margin="5"
                             OwnerActivity="{Binding Path=ModelItem}"
-                            Expression="{Binding Path=ModelItem.Workitem, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
-                            ExpressionType="c:IWorkitem" HorizontalAlignment="Stretch" />
-
-                <ComboBox 
-                ItemsSource="{Binding WIQStates}"
-                DisplayMemberPath="Name"
-                SelectedValuePath="Value"
-                SelectedValue="{Binding Path=ModelItem.State, Mode=TwoWay, Converter={StaticResource InArgumentStringConverter}}"
-                >
-                </ComboBox>
-
-                <!--<ComboBox 
-                    SelectedValuePath="content"
-                Text="{Binding Path=ModelItem.State, Mode=TwoWay, Converter={StaticResource InArgumentStringConverter}}">
-                    <ComboBoxItem>Successful</ComboBoxItem>
-                    <ComboBoxItem>Failed</ComboBoxItem>
-                    <ComboBoxItem>Processing</ComboBoxItem>
-                    <ComboBoxItem>Retry</ComboBoxItem>
-                </ComboBox>-->
+                            Expression="{Binding Path=ModelItem.Message, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}"
+                            ExpressionType="s:String" HorizontalAlignment="Stretch" />
 
             </StackPanel>
         </DataTemplate>

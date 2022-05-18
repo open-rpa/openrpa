@@ -15,24 +15,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OpenRPA.Interfaces;
 using System.Collections.ObjectModel;
+using System.Activities.Presentation;
 
 namespace OpenRPA.WorkItems.Activities
 {
-    public partial class PopWorkitemDesigner
+    public partial class BulkAddWorkitemsDesigner
     {
-        public PopWorkitemDesigner()
+        public BulkAddWorkitemsDesigner()
         {
             InitializeComponent();
-            DataContext = this;
             _ = RobotInstance.instance;
+            DataContext = this;
         }
         public ObservableCollection<IWorkitemQueue> WorkItemQueues { get { return global.OpenRPAClient.WorkItemQueues;  } }
-        private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

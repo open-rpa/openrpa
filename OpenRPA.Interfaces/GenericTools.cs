@@ -167,6 +167,12 @@ namespace OpenRPA.Interfaces
         {
             try
             {
+                if(AutomationHelper.syncContext == null)
+                {
+                    AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+                }
+                
+
                 AutomationHelper.syncContext.Send(o =>
                 {
                     try

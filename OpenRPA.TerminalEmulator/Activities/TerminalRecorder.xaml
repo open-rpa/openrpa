@@ -1,0 +1,63 @@
+﻿<Window x:Class="OpenRPA.TerminalEmulator.TerminalRecorder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmc:\code\openrpa\open3270\src\samplewpf\terminalrecorder.xaml
+c:\code\openrpa\open3270\src\samplewpf\terminalrecorder.xaml.cs
+lformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenRPA.TerminalEmulator"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="TerminalRecorder" Height="640" Width="800"
+        PreviewKeyUp="Window_PreviewKeyUp"
+        TextInput="Window_TextInput"
+        Closing="Window_Closing"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="7,7,7,7">
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Connect"
+                    Command="{Binding ConnectCommand}"
+                    ></Button>
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Refresh"
+                    Command="{Binding RefreshCommand}"></Button>
+            <Button MinWidth="50" Background="White" Padding="5,0,5,0" Content="Disconnect"
+                    Command="{Binding DisconnectCommand}"></Button>
+            <Button Click="CloseButton_Click"  MinWidth="50" Background="White" Padding="5,0,5,0" Content="Close"></Button>
+            <TextBlock Text="Host" Padding="5,0,5,0"></TextBlock>
+            <TextBox Text="{Binding Config.Hostname}" MinWidth="100" Padding="5,0,5,0" />
+            <TextBlock Text="Port" Padding="5,0,5,0"></TextBlock>
+            <TextBox Text="{Binding Config.Port}" MinWidth="100" Padding="5,0,5,0" PreviewTextInput="NumberValidationTextBox" />
+            <TextBlock Text="UseSSL" Padding="5,0,5,0"></TextBlock>
+            <CheckBox IsChecked="{Binding Config.UseSSL}" MinWidth="25" Padding="5,0,5,0" />
+            <TextBlock Text="TerminalType" Padding="5,0,5,0"></TextBlock>
+            <TextBox Text="{Binding Config.TermType}" MinWidth="100" Padding="5,0,5,0" />
+        </StackPanel>
+
+
+        <RichTextBox Background="Black" Foreground="Green" x:Name="rtbConsole" Margin="0,0,0,0" BorderBrush="Gray" Padding="10"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          PreviewTextInput="Window_TextInput"
+                          PreviewMouseUp="rtbConsole_PreviewMouseUp"
+                          PreviewMouseMove="rtbConsole_PreviewMouseMove"
+                          Grid.Row="1"
+                          AcceptsTab="True"
+                          PreviewKeyUp="rtbConsole_PreviewKeyUp"
+                          >
+        </RichTextBox>
+        <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray" Margin="0,0,0,0">
+            <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
+                <StatusBarItem Content="Line number" />
+                <StatusBarItem Content="{Binding Terminal.CursorY}" />
+                <StatusBarItem Content="Column" />
+                <StatusBarItem Content="{Binding Terminal.CursorX}" />
+                <StatusBarItem Content="Field no" />
+                <StatusBarItem Content="{Binding Terminal.CurrentField}" />
+            </StatusBar>
+        </StatusBar>
+
+    </Grid>
+</Window>

@@ -29,5 +29,6 @@ namespace OpenRPA.Interfaces
         void Run(bool VisualTracking, bool SlowMotion, IWorkflowInstance instance);
         ModelItem AddRecordingActivity(System.Activities.Activity a, IPlugin plugin);
         ModelItem AddActivity(System.Activities.Activity a);
+        ModelItem SelectedActivity { get; set; }
     }
 }

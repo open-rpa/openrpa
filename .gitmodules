@@ -1,3 +1,9 @@
 [submodule "LiteDB"]
 	path = LiteDB
 	url = https://github.com/open-rpa/LiteDB.git
+[submodule "Open3270"]
+	path = Open3270
+	url = https://github.com/open-rpa/Open3270
+[submodule "vb5250"]
+	path = vb5250
+	url = https://github.com/open-rpa/vb5250.git

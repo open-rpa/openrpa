@@ -47,6 +47,7 @@
 		<WixVariable Id="ImageSource" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
 		<WixVariable Id="JavaSource" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
 		<WixVariable Id="ScriptSource" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
+		<WixVariable Id="TerminalEmulator" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
 		<WixVariable Id="AviRecorderSource" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
 		<WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
 		<WixVariable Id="RDServicePluginSource" Overridable="yes" Value="$(var.ProjectDir)..\dist\$(var.netver)"/>
@@ -118,6 +119,9 @@
 		</Feature>
 		<Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
 			<ComponentGroupRef Id="ScriptComponents" />
+		</Feature>
+		<Feature Id="TerminalEmulator" Title="(BETA) Mainframe Terminal Emulator" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+			<ComponentGroupRef Id="TerminalEmulators" />
 		</Feature>
 		<Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
 			<ComponentGroupRef Id="DatabaseComponents" />

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="TerminalEmulators">
+      <Component Id='TerminalEmulator' Guid='{F90F9859-A79D-4A67-B5C1-D6D5D1D2EA28}' Win64='yes' Directory="INSTALLDIR">
+		  <File Id="IBM5250.dll" Source="!(wix.TerminalEmulator)\IBM5250.dll" />
+		  <File Id="IBM5250.pdb" Source="!(wix.TerminalEmulator)\IBM5250.pdb" />
+		  <File Id="IBMiClient.dll" Source="!(wix.TerminalEmulator)\IBMiClient.dll" />
+		  <File Id="IBMiClient.pdb" Source="!(wix.TerminalEmulator)\IBMiClient.pdb" />
+		  <File Id="NSspi.dll" Source="!(wix.TerminalEmulator)\NSspi.dll" />
+		  <File Id="NSspi.pdb" Source="!(wix.TerminalEmulator)\NSspi.pdb" />
+		  <File Id="Open3270.dll" Source="!(wix.TerminalEmulator)\Open3270.dll" />
+		  <!--<File Id="Open3270.pdb" Source="!(wix.TerminalEmulator)\Open3270.pdb" />-->
+		  <File Id="OpenRPA.TerminalEmulator.dll" Source="!(wix.TerminalEmulator)\OpenRPA.TerminalEmulator.dll" />
+		  <File Id="OpenRPA.TerminalEmulator.pdb" Source="!(wix.TerminalEmulator)\OpenRPA.TerminalEmulator.pdb" />
+		  <File Id="Telnet.dll" Source="!(wix.TerminalEmulator)\Telnet.dll" />
+		  <File Id="Telnet.pdb" Source="!(wix.TerminalEmulator)\Telnet.pdb" />
+	  </Component>
+
+
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>

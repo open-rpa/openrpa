@@ -49,7 +49,17 @@ lformats.org/markup-compatibility/2006"
             <!--<TextBlock Text="UseSSL" Padding="5,0,5,0"></TextBlock>
             <CheckBox IsChecked="{Binding Config.UseSSL}" MinWidth="25" Padding="5,0,5,0" />-->
             <TextBlock Text="TerminalType" Padding="5,0,5,0"></TextBlock>
-            <TextBox Text="{Binding Config.TermType}" MinWidth="100" Padding="5,0,5,0" />
+            <!--<TextBox Text="{Binding Config.TermType}" MinWidth="100" Padding="5,0,5,0" />-->
+            <ComboBox 
+                SelectedValue="{Binding Config.TermType}"
+                SelectedValuePath="Content"
+                      >
+                <ComboBoxItem>IBM-3278-2</ComboBoxItem>
+                <ComboBoxItem>IBM-3477-FC</ComboBoxItem>
+                <ComboBoxItem>IBM-3477-FG</ComboBoxItem>
+                <ComboBoxItem>IBM-3180-2</ComboBoxItem>
+                <ComboBoxItem>IBM-3179-2</ComboBoxItem>
+            </ComboBox>
         </StackPanel>
 
 

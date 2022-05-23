@@ -89,6 +89,7 @@ namespace OpenRPA.TerminalEmulator
         {
             IsConnected = false;
             IsConnecting = false;
+            GenericTools.RunUI(Redraw);
         }
         private void Telnet_DataAvailable(object sender, Telnet.Net.Graphite.Telnet.DataAvailableEventArgs e)
         {
@@ -150,18 +151,18 @@ namespace OpenRPA.TerminalEmulator
                             default:
                                 {
                                     // XXX more opcodes to handle here instead of hitting the Else?
-                                    Console.WriteLine("Unknown TN5250 Opcode: &H" + Hex((ushort)h.OpCode));
+                                    Log.Error("Unknown TN5250 Opcode: &H" + Hex((ushort)h.OpCode));
                                     break;
                                 }
                         }
                         if (!Success)
-                            Console.WriteLine("There was an error while parsing the 5250 data stream");
+                            Log.Error("There was an error while parsing the 5250 data stream");
                         break;
                     }
 
                 default:
                     {
-                        Console.WriteLine("Record Type is invalid: 0x" + Hex((ushort)h.RecType));
+                        Log.Error("Record Type is invalid: 0x" + Hex((ushort)h.RecType));
                         break;
                     }
             }
@@ -211,21 +212,8 @@ namespace OpenRPA.TerminalEmulator
         {
             byte[] b = System.Text.Encoding.UTF8.GetBytes(text);
             b = emulator.UTF8_To_EBCDIC(b);
-
-
             emulator.Screen.WriteTextBuffer(b);
-
-            //emulator.Screen.WriteTextBuffer((byte)CursorY, (byte)CursorX, b);
-            //emulator.Screen.Column = emulator.Screen.Column + text.Length;
-
             emulator.Screen.UpdateStrings(true);
-
-            //emulator.Keyboard.Insert = text;
-
-            //telnet.Send()
-            //emu.SetText(text);
-            Console.WriteLine("SendText " + text);
-            // ScreenText = emu.CurrentScreenXML.Dump();
             Redraw();
         }
         public void SendText(int field, string text)
@@ -239,7 +227,7 @@ namespace OpenRPA.TerminalEmulator
             emulator.Screen.Column = f.Location.Column + text.TrimEnd().Length;
             CursorX = emulator.Screen.Column;
             emulator.Screen.UpdateStrings(true);
-            // Console.WriteLine("SendText " + text + " for field #" + field);
+            Log.Debug("SendText " + text + " for field #" + field);
             Redraw();
         }
         public void SendKey(Key key)
@@ -247,7 +235,7 @@ namespace OpenRPA.TerminalEmulator
             switch (key)
             {
                 case Key.Back:
-                    Console.WriteLine("SendKey " + key);
+                    Log.Debug("SendKey " + key);
                     var bindex = GetFieldByLocation(CursorX, CursorY);
                     if (bindex == -1) return;
                     var _f = GetField(bindex);
@@ -295,7 +283,7 @@ namespace OpenRPA.TerminalEmulator
                         //                break;
                         //            }
                         //    }
-                        Console.WriteLine("SendKey " + key);
+                        Log.Debug("SendKey " + key);
                         var buff = new byte[] { };
                         SendBytes(ref buff, IBM5250.TN5250.OpCodes.None, (ushort)IBM5250.TN5250.Flag.ATN);
                         break;
@@ -347,7 +335,6 @@ namespace OpenRPA.TerminalEmulator
                                         //byte[] _b = System.Text.Encoding.UTF8.GetBytes(s);
                                         //_b = emulator.UTF8_To_EBCDIC(b);
                                         //emulator.Screen.WriteTextBuffer(_b);
-                                        // Console.WriteLine(emulator.Screen.Row + "," + emulator.Screen.Column);
                                         var orgindex = GetFieldByLocation(emulator.Screen.Column, emulator.Screen.Row);
                                         if (orgindex == -1) return;
                                         var newindex = emulator.Screen.NextVerticalFieldIndex(orgindex, false);
@@ -357,10 +344,10 @@ namespace OpenRPA.TerminalEmulator
                                         CursorX = nfield.Location.Column + nfield.Text.Length;
                                         emulator.Screen.Column = CursorX;
                                         emulator.Screen.Row = CursorY;
-                                        Console.WriteLine("Selected field #" + newindex + " at " + CursorX + "," + CursorY + " i was at field #" + orgindex);
+                                        Log.Verbose("Selected field #" + newindex + " at " + CursorX + "," + CursorY + " i was at field #" + orgindex);
                                         Refresh();
 
-                                        // Console.WriteLine(emulator.Screen.Row + "," + emulator.Screen.Column);
+                                        Log.Verbose(emulator.Screen.Row + "," + emulator.Screen.Column);
 
                                         //SendBytes(ref b, IBM5250.TN5250.OpCodes.PutOrGet);
                                         //emulator.Screen.Read.Pending = false;
@@ -436,7 +423,7 @@ namespace OpenRPA.TerminalEmulator
                                             break;
                                     }
                                 }
-                                Console.WriteLine("SendKey " + key);
+                                Log.Debug("SendKey " + key);
                                 SendBytes(ref b, IBM5250.TN5250.OpCodes.PutOrGet);
                                 emulator.Screen.Read.Pending = false;
                             }
@@ -470,7 +457,7 @@ namespace OpenRPA.TerminalEmulator
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
             }
 
         }
@@ -496,6 +483,51 @@ namespace OpenRPA.TerminalEmulator
             //This helps prevent blank screens, etc.
             // while (!emu.Refresh(true, screenCheckInterval)) { }
             Redraw();
+        }
+        public bool WaitForText(string Text, TimeSpan Timeout)
+        {
+            if (string.IsNullOrEmpty(Text)) return true;
+            try
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                do
+                {
+                    foreach (var field in emulator.Screen.Strings)
+                    {
+                        if (!string.IsNullOrEmpty(field.Text))
+                        {
+                            if (field.Text.Contains(Text)) return true;
+                        }
+                    }
+                    foreach (var field in emulator.Screen.Fields)
+                    {
+                        if (!string.IsNullOrEmpty(field.Text))
+                        {
+                            if (field.Text.Contains(Text)) return true;
+                        }
+                    }
+                    System.Threading.Thread.Sleep(250);
+                    GenericTools.RunUI(Refresh);
+                } while (sw.Elapsed < Timeout);
+                return false;
+            }
+            finally
+            {
+                GenericTools.RunUI(Redraw);
+            }
+        }
+        public bool WaitForKeyboardUnlocked(TimeSpan Timeout)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            do
+            {
+                if (!emulator.Keyboard.Locked) return true;
+                System.Threading.Thread.Sleep(250);
+                Refresh();
+            } while (sw.Elapsed < Timeout);
+            return false;
         }
         private int _CursorY;
         public int CursorY
@@ -584,6 +616,7 @@ namespace OpenRPA.TerminalEmulator
                                 p.Inlines.Add(subr);
                                 text += subtext;
                             }
+                            if (field.Text == null) field.Text = "";
                             var newtext = field.Text.PadRight(field.Location.Length);
                             // var newtext = string.Format("{0," + field.Location.Length + "}", field.Text);
                             if (text.Length > field.Location.Column)
@@ -593,6 +626,8 @@ namespace OpenRPA.TerminalEmulator
                             text += newtext;
                             var r = new Run(newtext);
                             r.FontFamily = new System.Windows.Media.FontFamily("Consolas");
+
+
 
                             Color clr = Color.FromName(field.Attribute.ForeColor);
                             if (field.Attribute.ForeColor == "Background") clr = Color.Black;
@@ -641,6 +676,15 @@ namespace OpenRPA.TerminalEmulator
                                     //r.BorderThickness = new System.Windows.Thickness(1, 1, 1, 3);
                                 }
                             }
+                            if(!IsConnected)
+                            {
+                                bck = Color.Black;
+                                clr = Color.Gray;
+                                r.Background = new System.Windows.Media.SolidColorBrush(
+                                    System.Windows.Media.Color.FromRgb(bck.R, bck.G, bck.B));
+                                r.Foreground = new System.Windows.Media.SolidColorBrush(
+                                    System.Windows.Media.Color.FromRgb(clr.R, clr.G, clr.B));
+                            }
                         }
                         //if (text.Length < 80)
                         //{
@@ -659,12 +703,11 @@ namespace OpenRPA.TerminalEmulator
                         }
 
                     }
-                    NotifyPropertyChanged("ScreenText");
                     CursorPositionSet?.Invoke(this, new EventArgs());
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Log.Error(ex.ToString());
                     return;
                 }
             });

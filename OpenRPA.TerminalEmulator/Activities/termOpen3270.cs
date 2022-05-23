@@ -37,6 +37,7 @@ namespace OpenRPA.TerminalEmulator
             IsConnecting = false;
             NotifyPropertyChanged("Connect");
             System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+            GenericTools.RunUI(Redraw);
         }
         private void Emu_CursorLocationChanged(object sender, EventArgs e)
         {
@@ -70,6 +71,7 @@ namespace OpenRPA.TerminalEmulator
         {
             emu.Connect();
             // emu.Refresh(true, 1000);
+            isConnected = emu.IsConnected;
             Refresh(1000);
         }
         public bool IsConnecting
@@ -138,21 +140,21 @@ namespace OpenRPA.TerminalEmulator
             sw.Start();
             try
             {
-                Console.WriteLine("SetText::begin");
+                Log.Debug("SetText::begin");
                 lock (_lock) emu.SetText(text);
-                Console.WriteLine("SetText::end");
+                Log.Verbose("SetText::end");
                 Refresh();
                 // Redraw();
                 // CursorPositionSet?.Invoke(this, new EventArgs());
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
                 return;
             }
             finally
             {
-                Console.WriteLine(string.Format("SendText::END {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Verbose(string.Format("SendText::END {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
         }
         public void SendText(int field, string text)
@@ -170,21 +172,22 @@ namespace OpenRPA.TerminalEmulator
                     if (i == field) break;
                 }
                 Fields[field].Text = text;
-                Console.WriteLine("SetField::begin");
+                Log.Verbose("SetField::begin");
+                Log.Debug("SendText " + text + " to field #" + field);
                 lock (_lock) emu.SetField(index, text);
-                Console.WriteLine("SetField::end");
+                Log.Verbose("SetField::end");
                 Refresh();
                 // Redraw();
                 // CursorPositionSet?.Invoke(this, new EventArgs());
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
                 return;
             }
             finally
             {
-                Console.WriteLine(string.Format("SendText::END {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Verbose(string.Format("SendText::END {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
         }
         public void SendKey(System.Windows.Input.Key key)
@@ -212,12 +215,12 @@ namespace OpenRPA.TerminalEmulator
                     }
                     if (!string.IsNullOrEmpty(text)) text = text.Substring(0, text.Length - 1);
                     text = text.PadRight(_f.Location.Length);
-                    Console.WriteLine("Send '" + text + "' to field #" + bindex);
+                    Log.Debug("Send '" + text + "' to field #" + bindex);
                     SendText(bindex, text);
                     Refresh();
                     return;
                 }
-                Console.WriteLine("SendKey::begin");
+                Log.Verbose("SendKey::begin");
                 lock (_lock)
                     switch (key)
                     {
@@ -257,19 +260,19 @@ namespace OpenRPA.TerminalEmulator
                         case System.Windows.Input.Key.Up: emu.SendKey(true, Open3270.TnKey.Up, 2000); break;
                         default: return;
                     }
-                Console.WriteLine("SendKey::end");
-                Console.WriteLine("SendKey " + key);
+                Log.Verbose("SendKey::end");
+                Log.Debug("SendKey " + key);
                 // if (key != System.Windows.Input.Key.Tab) Refresh();
                 Refresh();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
                 return;
             }
             finally
             {
-                Console.WriteLine(string.Format("SendKey::END {0:mm\\:ss\\.fff}", sw.Elapsed));
+                Log.Verbose(string.Format("SendKey::END {0:mm\\:ss\\.fff}", sw.Elapsed));
             }
         }
         public void Refresh()
@@ -278,7 +281,7 @@ namespace OpenRPA.TerminalEmulator
         }
         public void Refresh(int screenCheckInterval)
         {
-            // Console.WriteLine("Refresh::BEGIN");
+            Log.Verbose("Refresh::BEGIN");
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             //This line keeps checking to see when we've received a valid screen of data from the mainframe.
@@ -290,10 +293,25 @@ namespace OpenRPA.TerminalEmulator
             }
             _Fields = null;
             _Strings = null;
-            // ScreenText = emu.CurrentScreenXML.Dump();
-            // Console.WriteLine(string.Format("Refresh::END {0:mm\\:ss\\.fff}", sw.Elapsed));
+            Log.Verbose(string.Format("Refresh::END {0:mm\\:ss\\.fff}", sw.Elapsed));
             Redraw();
             CursorPositionSet?.Invoke(this, new EventArgs());
+        }
+        public bool WaitForText(string Text, TimeSpan Timeout)
+        {
+            try
+            {
+                return emu.WaitForTextOnScreen((int)Timeout.TotalMilliseconds, Text) > -1;
+            }
+            finally
+            {
+                GenericTools.RunUI(Refresh);
+            }
+        }
+        public bool WaitForKeyboardUnlocked(TimeSpan Timeout)
+        {
+            emu.WaitTillKeyboardUnlocked((int)Timeout.TotalMilliseconds);
+            return emu.KeyboardLocked != 0;
         }
         private int _CursorY;
         public int CursorY
@@ -359,16 +377,20 @@ namespace OpenRPA.TerminalEmulator
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Log.Error(ex.ToString());
                     return;
                 }
             });
         }
         public void Redraw()
         {
-            var sw = new System.Diagnostics.Stopwatch();
+            if (!IsConnected)
+            {
+                Log.Verbose("");
+            }
+                var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            // Console.WriteLine("Redraw::BEGIN");
+            Log.Verbose("Redraw::BEGIN");
             GenericTools.RunUI(() =>
             {
                 try
@@ -461,19 +483,28 @@ namespace OpenRPA.TerminalEmulator
                                     }
                                 }
                             }
+                            if (!IsConnected)
+                            {
+                                bck = Color.Black;
+                                clr = Color.Gray;
+                                r.Background = new System.Windows.Media.SolidColorBrush(
+                                    System.Windows.Media.Color.FromRgb(bck.R, bck.G, bck.B));
+                                r.Foreground = new System.Windows.Media.SolidColorBrush(
+                                    System.Windows.Media.Color.FromRgb(clr.R, clr.G, clr.B));
+                            }
                         }
                         rtb.Document.Blocks.Add(p);
                     }
-                    // CursorPositionSet?.Invoke(this, new EventArgs());
+                    CursorPositionSet?.Invoke(this, new EventArgs());
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Log.Error(ex.ToString());
                     return;
                 }
                 finally
                 {
-                    // Console.WriteLine(string.Format("Redraw::END {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    Log.Verbose(string.Format("Redraw::END {0:mm\\:ss\\.fff}", sw.Elapsed));
                 }
             });
         }

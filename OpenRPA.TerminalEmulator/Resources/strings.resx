@@ -132,7 +132,193 @@
   <data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>
+  <data name="activity_gettext" xml:space="preserve">
+    <value>Get Text</value>
+  </data>
+  <data name="activity_gettext_field" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="activity_gettext_field_help" xml:space="preserve">
+    <value>Get text by field ( input field )</value>
+  </data>
+  <data name="activity_gettext_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="activity_gettext_result_help" xml:space="preserve">
+    <value>Resulting text from field or string</value>
+  </data>
+  <data name="activity_gettext_string" xml:space="preserve">
+    <value>String</value>
+  </data>
+  <data name="activity_gettext_string_help" xml:space="preserve">
+    <value>Get by string field</value>
+  </data>
+  <data name="activity_gettext_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_gettext_timeout_help" xml:space="preserve">
+    <value>Timeout while waiting on field or string to appear</value>
+  </data>
+  <data name="activity_gettext_tooltip" xml:space="preserve">
+    <value>Get Text by field or string index</value>
+  </data>
+  <data name="activity_gettext_waitforkeyboard" xml:space="preserve">
+    <value>Wait for Keyboard</value>
+  </data>
+  <data name="activity_gettext_waitforkeyboard_help" xml:space="preserve">
+    <value>If true, will wait for keyboard to be unlocked before getting text</value>
+  </data>
+  <data name="activity_open_recorder" xml:space="preserve">
+    <value>Open Recorder</value>
+  </data>
   <data name="activity_recorder" xml:space="preserve">
     <value>Recorder</value>
+  </data>
+  <data name="activity_sendkey" xml:space="preserve">
+    <value>Send Key</value>
+  </data>
+  <data name="activity_sendkey_key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="activity_sendkey_key_help" xml:space="preserve">
+    <value>Key to send to terminal</value>
+  </data>
+  <data name="activity_sendkey_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_sendkey_timeout_help" xml:space="preserve">
+    <value>Timeout while waiting for keyboard ready</value>
+  </data>
+  <data name="activity_sendkey_tooltip" xml:space="preserve">
+    <value>Send specific Key to terminal</value>
+  </data>
+  <data name="activity_sendkey_waitforkeyboard" xml:space="preserve">
+    <value>Wait for Keyboard</value>
+  </data>
+  <data name="activity_sendkey_waitforkeyboard_help" xml:space="preserve">
+    <value>If true, will wait for keyboard to be unlocked before sending key</value>
+  </data>
+  <data name="activity_sendtext" xml:space="preserve">
+    <value>Send Text</value>
+  </data>
+  <data name="activity_sendtext_text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="activity_sendtext_text_help" xml:space="preserve">
+    <value>The text to send to the terminal</value>
+  </data>
+  <data name="activity_sendtext_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_sendtext_timeout_help" xml:space="preserve">
+    <value>How long to wait for the text to appear</value>
+  </data>
+  <data name="activity_sendtext_tooltip" xml:space="preserve">
+    <value>Send text to terminal</value>
+  </data>
+  <data name="activity_sendtext_waitforkeyboard" xml:space="preserve">
+    <value>Wait for Keyboard</value>
+  </data>
+  <data name="activity_sendtext_waitforkeyboard_help" xml:space="preserve">
+    <value>If true, will wait for keyboard to be unlocked before sending text</value>
+  </data>
+  <data name="activity_settext" xml:space="preserve">
+    <value>Set Text</value>
+  </data>
+  <data name="activity_settext_field" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="activity_settext_field_help" xml:space="preserve">
+    <value>Field index to set text for</value>
+  </data>
+  <data name="activity_settext_text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="activity_settext_text_help" xml:space="preserve">
+    <value>Text to assign to field</value>
+  </data>
+  <data name="activity_settext_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_settext_timeout_help" xml:space="preserve">
+    <value>Set Text will wait this long, for a field with this index to appear</value>
+  </data>
+  <data name="activity_settext_tooltip" xml:space="preserve">
+    <value>Set text to specefied field in a Terminal Session</value>
+  </data>
+  <data name="activity_settext_waitforkeyboard" xml:space="preserve">
+    <value>Wait for Keyboard</value>
+  </data>
+  <data name="activity_settext_waitforkeyboard_help" xml:space="preserve">
+    <value>If true, will wait for keyboard to be unlocked before setting text</value>
+  </data>
+  <data name="activity_terminalsession" xml:space="preserve">
+    <value>Terminal Session</value>
+  </data>
+  <data name="activity_terminalsession_hideui" xml:space="preserve">
+    <value>Hide UI</value>
+  </data>
+  <data name="activity_terminalsession_hideui_help" xml:space="preserve">
+    <value>Hide terminal UI while running</value>
+  </data>
+  <data name="activity_terminalsession_hostname" xml:space="preserve">
+    <value>Hostname</value>
+  </data>
+  <data name="activity_terminalsession_hostname_help" xml:space="preserve">
+    <value>Hostname or IP of Mainframe to connnect to</value>
+  </data>
+  <data name="activity_terminalsession_port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="activity_terminalsession_port_help" xml:space="preserve">
+    <value>Port number of mainframe to connect to</value>
+  </data>
+  <data name="activity_terminalsession_termtype" xml:space="preserve">
+    <value>TermType</value>
+  </data>
+  <data name="activity_terminalsession_termtype_help" xml:space="preserve">
+    <value>Terminal type to repport to the mainframe ( and the type of mainframe parser to use )</value>
+  </data>
+  <data name="activity_terminalsession_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_terminalsession_timeout_help" xml:space="preserve">
+    <value>Connection Timeout</value>
+  </data>
+  <data name="activity_waitfortext" xml:space="preserve">
+    <value>Wait For Text</value>
+  </data>
+  <data name="activity_waitfortext_found" xml:space="preserve">
+    <value>Found</value>
+  </data>
+  <data name="activity_waitfortext_found_help" xml:space="preserve">
+    <value>If text was found before timeout, returns True</value>
+  </data>
+  <data name="activity_waitfortext_text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="activity_waitfortext_text_help" xml:space="preserve">
+    <value>Text to look for</value>
+  </data>
+  <data name="activity_waitfortext_throw" xml:space="preserve">
+    <value>Throw</value>
+  </data>
+  <data name="activity_waitfortext_throw_help" xml:space="preserve">
+    <value>Throw exception if text was not found</value>
+  </data>
+  <data name="activity_waitfortext_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_waitfortext_timeout_help" xml:space="preserve">
+    <value>How long to wait for the text to appear</value>
+  </data>
+  <data name="activity_waitfortext_tooltip" xml:space="preserve">
+    <value>Wait for Text to appear somewhere on terminal screen</value>
+  </data>
+  <data name="plugin_auto_close" xml:space="preserve">
+    <value>Auto close</value>
+  </data>
+  <data name="plugin_auto_close_help" xml:space="preserve">
+    <value>After workflow completes or fails, auto close all terminal sessions ( usefull to disable doing development )</value>
   </data>
 </root>

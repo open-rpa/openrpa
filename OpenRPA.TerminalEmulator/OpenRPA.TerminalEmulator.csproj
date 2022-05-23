@@ -7,10 +7,19 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Activities\GetTextDesigner.xaml" />
+    <None Remove="Activities\InsertText.xaml" />
+    <None Remove="Activities\SendKeyDesigner.xaml" />
+    <None Remove="Activities\SendTextDesigner.xaml" />
+    <None Remove="Activities\SetTextDesigner.xaml" />
     <None Remove="Activities\TerminalRecorder.xaml" />
     <None Remove="Activities\TerminalSessionDesigner.xaml" />
+    <None Remove="Activities\WaitForTextDesigner.xaml" />
+    <None Remove="Resources\designer\settext.png" />
     <None Remove="Resources\designer\terminalsession.png" />
+    <None Remove="Resources\toolbox\settext.png" />
     <None Remove="Resources\toolbox\terminalsession.png" />
+    <None Remove="Views\RunPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Open3270\src\Open3270Library\Open3270Library.csproj" />
@@ -52,7 +61,29 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\SendTextDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SendKeyDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\GetTextDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\WaitForTextDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\TerminalSessionDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\InsertText.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\SetTextDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -60,10 +91,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\RunPluginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\terminalsession.png" />
+    <Resource Include="Resources\designer\settext.png" />
     <EmbeddedResource Include="Resources\toolbox\terminalsession.png" />
+    <EmbeddedResource Include="Resources\toolbox\settext.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

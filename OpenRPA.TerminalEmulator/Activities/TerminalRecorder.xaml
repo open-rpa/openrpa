@@ -11,9 +11,11 @@ lformats.org/markup-compatibility/2006"
         PreviewKeyUp="Window_PreviewKeyUp"
         TextInput="Window_TextInput"
         Closing="Window_Closing"
+        Loaded="Window_Loaded"
         >
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="35"/>
@@ -24,15 +26,28 @@ lformats.org/markup-compatibility/2006"
                     ></Button>
             <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Refresh"
                     Command="{Binding RefreshCommand}"></Button>
-            <Button MinWidth="50" Background="White" Padding="5,0,5,0" Content="Disconnect"
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Disconnect"
                     Command="{Binding DisconnectCommand}"></Button>
-            <Button Click="CloseButton_Click"  MinWidth="50" Background="White" Padding="5,0,5,0" Content="Close"></Button>
+            <Button Click="CloseButton_Click"  MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Close"></Button>
+            <TextBlock Text="HI on Move" Padding="5,0,5,0"></TextBlock>
+            <CheckBox IsChecked="{Binding HighlightOnMove}" MinWidth="25" Padding="5,0,5,0" />
+            <TextBlock Text="Catch Keys" Padding="5,0,5,0"></TextBlock>
+            <CheckBox IsChecked="{Binding CatchKeys}" MinWidth="25" Padding="5,0,5,0" />
+
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Set Text"
+                    Command="{Binding SetTextCommand}"></Button>
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Send Text"
+                    Command="{Binding SendTextCommand}"></Button>
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Get Text"
+                    Command="{Binding GetTextCommand}"></Button>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="7,7,7,7">
             <TextBlock Text="Host" Padding="5,0,5,0"></TextBlock>
             <TextBox Text="{Binding Config.Hostname}" MinWidth="100" Padding="5,0,5,0" />
             <TextBlock Text="Port" Padding="5,0,5,0"></TextBlock>
             <TextBox Text="{Binding Config.Port}" MinWidth="100" Padding="5,0,5,0" PreviewTextInput="NumberValidationTextBox" />
-            <TextBlock Text="UseSSL" Padding="5,0,5,0"></TextBlock>
-            <CheckBox IsChecked="{Binding Config.UseSSL}" MinWidth="25" Padding="5,0,5,0" />
+            <!--<TextBlock Text="UseSSL" Padding="5,0,5,0"></TextBlock>
+            <CheckBox IsChecked="{Binding Config.UseSSL}" MinWidth="25" Padding="5,0,5,0" />-->
             <TextBlock Text="TerminalType" Padding="5,0,5,0"></TextBlock>
             <TextBox Text="{Binding Config.TermType}" MinWidth="100" Padding="5,0,5,0" />
         </StackPanel>
@@ -43,15 +58,15 @@ lformats.org/markup-compatibility/2006"
                           PreviewTextInput="Window_TextInput"
                           PreviewMouseUp="rtbConsole_PreviewMouseUp"
                           PreviewMouseMove="rtbConsole_PreviewMouseMove"
-                          Grid.Row="1"
+                          Grid.Row="2"
                           AcceptsTab="True"
                           PreviewKeyUp="rtbConsole_PreviewKeyUp"
                           >
         </RichTextBox>
-        <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2" Height="25" Background="Gray" Margin="0,0,0,0">
+        <StatusBar HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="3" Height="25" Background="Gray" Margin="0,0,0,0">
             <StatusBar FocusManager.IsFocusScope="True" x:Name="StatusBar">
                 <StatusBarItem Content="Line number" />
-                <StatusBarItem Content="{Binding Terminal.CursorY}" />
+                <StatusBarItem Content="{Binding Terminal.CursorY, UpdateSourceTrigger=PropertyChanged}" />
                 <StatusBarItem Content="Column" />
                 <StatusBarItem Content="{Binding Terminal.CursorX}" />
                 <StatusBarItem Content="Field no" />

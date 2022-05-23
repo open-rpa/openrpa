@@ -5,7 +5,6 @@ using System.Activities;
 using System.Activities.Expressions;
 using System.Activities.Presentation.Model;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,6 +41,12 @@ namespace OpenRPA.TerminalEmulator
                 win.Config.TermType = "IBM-3179-2";
             }
 
+            var body = ModelItem.Properties["Body"].Value;
+            var handler = body.Properties["Handler"].Value;
+            global.OpenRPAClient.CurrentDesigner.SelectedActivity = handler;
+            //body.Focus(20);
+            //handler.Focus(20);
+
             string Hostname = ModelItem.GetValue<string>("Hostname");
             string TermType = ModelItem.GetValue<string>("TermType");
             int Port = ModelItem.GetValue<int>("Port");
@@ -51,6 +56,8 @@ namespace OpenRPA.TerminalEmulator
             if (Port > 0) win.Config.Port = Port;
             win.Config.UseSSL = UseSSL;
             win.Show();
+            //win.ShowDialog();
+            win.Focus();
             win.Closed += Win_Closed;
         }
         private void Win_Closed(object sender, EventArgs e)

@@ -107,7 +107,7 @@ namespace OpenRPA.Views
         public Workflow Workflow { get; private set; }
         public bool HasChanged { get; set; }
         public void forceHasChanged(bool value) { HasChanged = value; }
-        public ModelItem SelectedActivity { get; private set; }
+        public ModelItem SelectedActivity { get; set; }
         private void OnCancel()
         {
             foreach (var i in WorkflowInstance.Instances.ToList())

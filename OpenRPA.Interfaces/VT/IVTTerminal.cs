@@ -32,6 +32,17 @@ namespace OpenRPA.Interfaces.VT
         int Row { get; set; }
         int Length { get; set; }
     }
+    public interface ITerminalSession : INotifyPropertyChanged
+    {
+        ITerminal Terminal { get; set; }
+        ITerminalConfig Config { get; set; }
+        void Connect();
+        void Disconnect();
+        void Refresh();
+        void Show();
+        void Close();
+        string WorkflowInstanceId { get; set; }
+    }
     public interface ITerminal : INotifyPropertyChanged
     {
         event EventHandler CursorPositionSet;
@@ -53,5 +64,7 @@ namespace OpenRPA.Interfaces.VT
         IField GetString(int field);
         void SendKey(Key key);
         void Close();
+        bool WaitForText(string Text, TimeSpan Timeout);
+        bool WaitForKeyboardUnlocked(TimeSpan Timeout);
     }
 }

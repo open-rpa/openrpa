@@ -54,12 +54,16 @@ namespace OpenRPA.TerminalEmulator
                 if (sw.Elapsed > timeout) throw new Exception("Failed locating field #" + field);
             } while (_f == null || (_f.Location.Column == 0 && _f.Location.Row == 0));
             if (_f == null) throw new ArgumentException("Field not found");
-            GenericTools.RunUI(session.Refresh);
+            session.Refresh();
             if (WaitForKeyboard.Get(context))
             {
                 session.Terminal.WaitForKeyboardUnlocked(timeout);
             }
             session.Terminal.SendText(field, text);
+            if (WaitForKeyboard.Get(context))
+            {
+                session.Terminal.WaitForKeyboardUnlocked(timeout);
+            }
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

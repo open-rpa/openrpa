@@ -41,12 +41,16 @@ namespace OpenRPA.TerminalEmulator
             if (session == null) throw new ArgumentException("Failed locating terminal session");
             if (session.Terminal == null) throw new ArgumentException("Terminal Sessoin not initialized");
             if (!session.Terminal.IsConnected) throw new ArgumentException("Terminal Sessoin not connected");
-            GenericTools.RunUI(session.Refresh);
+            session.Refresh();
             if (WaitForKeyboard.Get(context))
             {
                 session.Terminal.WaitForKeyboardUnlocked(timeout);
             }
             session.Terminal.SendText(text);
+            if (WaitForKeyboard.Get(context))
+            {
+                session.Terminal.WaitForKeyboardUnlocked(timeout);
+            }
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]
         public new string DisplayName

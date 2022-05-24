@@ -53,10 +53,14 @@ namespace OpenRPA.TerminalEmulator
             {
                 if(field > -1) _f = session.Terminal.GetField(field);
                 if (_string > -1) _f = session.Terminal.GetString(_string);
+                if(_f == null)
+                {
+                    System.Threading.Thread.Sleep(250);
+                    session.Refresh();
+                }
                 if (sw.Elapsed > timeout) throw new Exception("Failed locating field #" + field);
             } while (_f == null || (_f.Location.Column == 0 && _f.Location.Row == 0));
             if (_f == null) throw new ArgumentException("Field not found");
-            GenericTools.RunUI(session.Refresh);
             if (WaitForKeyboard.Get(context))
             {
                 session.Terminal.WaitForKeyboardUnlocked(timeout);

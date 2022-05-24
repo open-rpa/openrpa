@@ -550,6 +550,7 @@ namespace OpenRPA.TerminalEmulator
         }
         public IField GetString(int index)
         {
+            if (index >= Strings.Length) return null;
             var f = Strings[index];
             return new Field(f);
         }

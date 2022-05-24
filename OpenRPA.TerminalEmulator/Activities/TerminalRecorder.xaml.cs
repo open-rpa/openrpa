@@ -39,7 +39,11 @@ namespace OpenRPA.TerminalEmulator
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataContext = this;
+            AllowSetForegroundWindow(System.Diagnostics.Process.GetCurrentProcess().Id);
         }
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool AllowSetForegroundWindow(int dwProcessId);
+
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
@@ -241,7 +245,7 @@ namespace OpenRPA.TerminalEmulator
         public void Refresh()
         {
             if (Terminal != null) Terminal.Refresh();
-            rtbConsole.Focus();
+            GenericTools.RunUI(()=>ForceFocus(true));
         }
         public ICommand SetTextCommand { get; set; }
         public bool CanSetText()
@@ -283,7 +287,7 @@ namespace OpenRPA.TerminalEmulator
                             text = win.Text;
                             if (_f.UpperCase) text = text.ToUpper();
                             global.OpenRPAClient.CurrentDesigner.AddActivity(new SetText() { DisplayName = "SetText #" + index, Text = text, Field = index });
-                            Focus();
+                            ForceFocus();
                             Terminal.SendText(index, text);
                         }
                     }
@@ -321,7 +325,7 @@ namespace OpenRPA.TerminalEmulator
                     {
                         SkipNextKey = true;
                         var text = win.Text;
-                        this.Focus();
+                        ForceFocus();
                         Terminal.SendText(text);
                     }
                 }
@@ -341,6 +345,19 @@ namespace OpenRPA.TerminalEmulator
             if (Terminal == null) { return false; }
             return Terminal.IsConnected;
         }
+        public void ForceFocus(bool redo = true)
+        {
+            Activate();
+            Focus();
+            Topmost = true;
+            Topmost = false;
+            rtbConsole.Focus();
+            if(redo) Task.Run(async () =>
+            {
+                await Task.Delay(500);
+                GenericTools.RunUI(()=> ForceFocus(false));
+            });
+        }
         public void GetText()
         {
             if (Terminal != null && Terminal.IsConnected)
@@ -354,13 +371,15 @@ namespace OpenRPA.TerminalEmulator
                         index = Terminal.GetStringByLocation(Terminal.HighlightCursorX, Terminal.HighlightCursorY);
                         if (index > -1)
                         {
-                            global.OpenRPAClient.CurrentDesigner.AddActivity(new GetText() { DisplayName = "GetText string #" + index, String = index });
-                            Focus();
+                            var svariable = global.OpenRPAClient.CurrentDesigner.GetVariableOf<string>("string" + index);
+                            global.OpenRPAClient.CurrentDesigner.AddActivity(new GetText() { DisplayName = "GetText string #" + index, String = index, Result = svariable });
+                            ForceFocus();
                         }
                         return;
                     }
-                    global.OpenRPAClient.CurrentDesigner.AddActivity(new GetText() { DisplayName = "GetText field #" + index, Field = index });
-                    Focus();
+                    var fvariable = global.OpenRPAClient.CurrentDesigner.GetVariableOf<string>("field" + index);
+                    global.OpenRPAClient.CurrentDesigner.AddActivity(new GetText() { DisplayName = "GetText field #" + index, Field = index, Result = fvariable });
+                    ForceFocus();
                 }
                 catch (Exception)
                 {
@@ -475,8 +494,7 @@ namespace OpenRPA.TerminalEmulator
                         if(CatchKeys)
                         {
                             global.OpenRPAClient.CurrentDesigner.AddActivity(new SendKey() { DisplayName = "Send Key " + e.Key.ToString(), Key = e.Key.ToString() });
-                            Focus();
-
+                            ForceFocus();
                         }
                         Terminal.SendKey(e.Key);
                     }

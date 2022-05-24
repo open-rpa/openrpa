@@ -67,7 +67,7 @@ namespace OpenRPA.TerminalEmulator
             {
                 throw new Exception("Timeout connecting to " + Hostname.Get(context) + ":" + Port.Get(context));
             }
-            GenericTools.RunUI(session.Refresh);
+            session.Refresh();
             context.ScheduleAction(Body, session, OnBodyComplete);
         }
         private void OnBodyComplete(NativeActivityContext context, ActivityInstance completedInstance)

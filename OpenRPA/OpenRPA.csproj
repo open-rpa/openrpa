@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.4.26</Version>
+		<Version>1.4.27</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>open_rpa128.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>

@@ -7,7 +7,7 @@ c:\code\openrpa\open3270\src\samplewpf\terminalrecorder.xaml.cs
 lformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenRPA.TerminalEmulator"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="TerminalRecorder" Height="640" Width="800"
+        Title="TerminalRecorder" Height="660" Width="800"
         PreviewKeyUp="Window_PreviewKeyUp"
         TextInput="Window_TextInput"
         Closing="Window_Closing"

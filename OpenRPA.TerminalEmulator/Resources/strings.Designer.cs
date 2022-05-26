@@ -97,6 +97,15 @@ namespace OpenRPA.TerminalEmulator.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get now.
+        /// </summary>
+        public static string activity_get_now {
+            get {
+                return ResourceManager.GetString("activity_get_now", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {

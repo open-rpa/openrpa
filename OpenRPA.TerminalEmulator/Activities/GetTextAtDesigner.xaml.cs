@@ -20,5 +20,22 @@ namespace OpenRPA.TerminalEmulator
         {
             InitializeComponent();
         }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var Row = ModelItem.GetValue<int>("Row");
+            var Column = ModelItem.GetValue<int>("Column");
+            var Length = ModelItem.GetValue<int>("Length");
+            if(Length > 0 && Column > -1 && Row > -1)
+            {
+                if(RunPlugin.Sessions.Count == 0) { Log.Output("No active sessions to test in."); return; }
+                var session = RunPlugin.Sessions.First();
+                if (RunPlugin.Sessions.Count > 1) { Log.Output("Found more than one session, getting from session " + session.WorkflowInstanceId); }
+                var result = session.Terminal.GetTextAt(Column, Row, Length);
+                Log.Output(result);
+                if (string.IsNullOrEmpty(result)) MessageBox.Show("Empty string returned");
+                if (!string.IsNullOrEmpty(result)) MessageBox.Show(result);
+            }
+
+        }
     }
 }

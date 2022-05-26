@@ -210,6 +210,9 @@
   <data name="activity_gettext_waitforkeyboard_help" xml:space="preserve">
     <value>If true, will wait for keyboard to be unlocked before getting text</value>
   </data>
+  <data name="activity_get_now" xml:space="preserve">
+    <value>Get now</value>
+  </data>
   <data name="activity_open_recorder" xml:space="preserve">
     <value>Open Recorder</value>
   </data>

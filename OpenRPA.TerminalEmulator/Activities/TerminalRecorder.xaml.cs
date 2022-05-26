@@ -416,9 +416,30 @@ namespace OpenRPA.TerminalEmulator
                     var index = Terminal.GetStringByLocation(x, y);
                     if (index > -1)
                     {
-                        var field = Terminal.GetField(index);
-                        if(field == null) field = Terminal.GetString(index);
-                        if (field != null && field.Location.Length > 0) length = field.Location.Length;
+                        var field = Terminal.GetString(index);
+                        if (field != null && field.Location.Length > 0)
+                        {
+                            length = field.Location.Length;
+                            x = field.Location.Column;
+                            y = field.Location.Row;
+                            var result = Terminal.GetTextAt(x, y, length);
+                            if (result != field.Text) MessageBox.Show("Testing location did not return expected result!");
+                        }
+                    } else
+                    {
+                        index = Terminal.GetFieldByLocation(x, y);
+                        if (index > -1)
+                        {
+                            var field = Terminal.GetField(index);
+                            if (field != null && field.Location.Length > 0)
+                            {
+                                length = field.Location.Length;
+                                x = field.Location.Column;
+                                y = field.Location.Row;
+                                var result = Terminal.GetTextAt(x, y, length);
+                                if (result != field.Text) MessageBox.Show("Testing location did not return expected result!");
+                            }
+                        }                        
                     }
 
                     var variable = global.OpenRPAClient.CurrentDesigner.GetVariableOf<string>("text");

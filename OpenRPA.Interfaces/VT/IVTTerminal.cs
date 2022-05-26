@@ -63,7 +63,7 @@ namespace OpenRPA.Interfaces.VT
         IField GetField(int field);
         IField GetString(int field);
         void SendKey(Key key);
-        string GetTextAt(int Row, int Column, int length);
+        string GetTextAt(int Column, int Row, int length);
         void Close();
         bool WaitForText(string Text, TimeSpan Timeout);
         bool WaitForKeyboardUnlocked(TimeSpan Timeout);

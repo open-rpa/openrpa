@@ -759,6 +759,7 @@ namespace OpenRPA.TerminalEmulator
             for (var i = 0; i < emulator.Screen.Fields.Length; i++)
             {
                 var field = emulator.Screen.Fields[i];
+                if (!field.Allocated) continue;
                 var ColumnStart = field.Location.Column;
                 var ColumnEnd = field.Location.Column + field.Location.Length;
                 if (Column >= ColumnStart && Column <= ColumnEnd && field.Location.Row == Row)
@@ -766,18 +767,6 @@ namespace OpenRPA.TerminalEmulator
                     return i;
                 }
             }
-            //var fields = new List<IBM5250.Emulator.EmulatorScreen.Field>();
-            //fields.AddRange(emulator.Screen.Strings.Where(l => l.Location.Row == Row));
-            //fields.AddRange(emulator.Screen.Fields.Where(l => l.Location.Row == Row));
-            //foreach (var field in fields)
-            //{
-            //    var ColumnStart = field.Location.Column;
-            //    var ColumnEnd = field.Location.Column + field.Location.Length;
-            //    if (Column >= ColumnStart && Column <= ColumnEnd)
-            //    {
-            //        var idx = emulator.Screen.Fields
-            //    }
-            //}
             return -1;
         }
         public int GetStringByLocation(int Column, int Row)
@@ -785,6 +774,7 @@ namespace OpenRPA.TerminalEmulator
             for (var i = 0; i < emulator.Screen.Strings.Length; i++)
             {
                 var field = emulator.Screen.Strings[i];
+                if (!field.Allocated) continue;
                 var ColumnStart = field.Location.Column;
                 var ColumnEnd = field.Location.Column + field.Location.Length;
                 if (Column >= ColumnStart && Column <= ColumnEnd && field.Location.Row == Row)
@@ -794,7 +784,7 @@ namespace OpenRPA.TerminalEmulator
             }
             return -1;
         }
-        public string GetTextAt(int Row, int Column, int length)
+        public string GetTextAt(int Column, int Row, int length)
         {
             return emulator.Screen.GetText(Row, Column, length);
         }

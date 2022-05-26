@@ -46,15 +46,17 @@ namespace OpenRPA.TerminalEmulator
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
             GenericTools.RunUI(() =>
             {
-                session = new TerminalRecorder() { WorkflowInstanceId = WorkflowInstanceId };
-                RunPlugin.Sessions.Add(session);
+                // 
+                termOpen3270Config Config = new termOpen3270Config();
+                Config.Hostname = Hostname.Get(context);
+                Config.TermType = TermType.Get(context);
+                Config.Port = Port.Get(context);
+
+                session = RunPlugin.GetRecorderWindow(Config);
+                if (string.IsNullOrEmpty(session.WorkflowInstanceId)) session.WorkflowInstanceId = WorkflowInstanceId;
                 context.SetValue(_elements, session);
-                session.Config = new termOpen3270Config();
-                session.Config.Hostname = Hostname.Get(context);
-                session.Config.TermType = TermType.Get(context);
-                session.Config.Port = Port.Get(context);
                 if(!HideUI.Get(context)) session.Show();
-                session.Connect();
+                if(session.Terminal == null || !session.Terminal.IsConnected) session.Connect();
             });
             var sw = new Stopwatch();
             sw.Start();
@@ -74,8 +76,11 @@ namespace OpenRPA.TerminalEmulator
         {
             var session = _elements.Get(context);
             if (session == null) return;
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            if (session.WorkflowInstanceId != WorkflowInstanceId) return;
             session.Disconnect();
             GenericTools.RunUI(session.Close);
+            RunPlugin.Sessions.Remove(session);
         }
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {

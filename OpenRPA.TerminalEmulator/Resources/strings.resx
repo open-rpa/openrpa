@@ -135,6 +135,48 @@
   <data name="activity_gettext" xml:space="preserve">
     <value>Get Text</value>
   </data>
+  <data name="activity_gettextatat" xml:space="preserve">
+    <value>Get Text At</value>
+  </data>
+  <data name="activity_gettextatat_tooltip" xml:space="preserve">
+    <value>Read a certain number of charecter from the specefied location on the screen</value>
+  </data>
+  <data name="activity_gettextat_column" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="activity_gettextat_column_help" xml:space="preserve">
+    <value>Column to start reading from ( X )</value>
+  </data>
+  <data name="activity_gettextat_length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="activity_gettextat_length_help" xml:space="preserve">
+    <value>Number of charecter to read of the string</value>
+  </data>
+  <data name="activity_gettextat_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="activity_gettextat_result_help" xml:space="preserve">
+    <value>Result of read operation</value>
+  </data>
+  <data name="activity_gettextat_row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="activity_gettextat_row_help" xml:space="preserve">
+    <value>Row to start reading from ( Y )</value>
+  </data>
+  <data name="activity_gettextat_timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="activity_gettextat_timeout_help" xml:space="preserve">
+    <value>Wait this long for keyboard to be ready, if enabled</value>
+  </data>
+  <data name="activity_gettextat_waitforkeyboard" xml:space="preserve">
+    <value>Wait for Keyboard</value>
+  </data>
+  <data name="activity_gettextat_waitforkeyboard_help" xml:space="preserve">
+    <value>If true, will wait for keyboard to be unlocked before getting text</value>
+  </data>
   <data name="activity_gettext_field" xml:space="preserve">
     <value>Field</value>
   </data>

@@ -21,24 +21,23 @@ namespace OpenRPA.TerminalEmulator
             InitializeComponent();
         }
         public Interfaces.VT.ITerminalConfig Config = null;
+        public string sessionid;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var win = new TerminalRecorder();
             Config = new termVB5250Config();
-            win.Config = Config;
 
             bool as400 = false;
             if (as400)
             {
-                win.Config.Hostname = "PUB400.COM";
-                win.Config.Port = 23;
-                win.Config.TermType = "IBM-3278-2";
+                Config.Hostname = "PUB400.COM";
+                Config.Port = 23;
+                Config.TermType = "IBM-3278-2";
             }
             else
             {
-                win.Config.Hostname = "localhost";
-                win.Config.Port = 3270;
-                win.Config.TermType = "IBM-3179-2";
+                Config.Hostname = "localhost";
+                Config.Port = 3270;
+                Config.TermType = "IBM-3179-2";
             }
 
             var body = ModelItem.Properties["Body"].Value;
@@ -51,10 +50,24 @@ namespace OpenRPA.TerminalEmulator
             string TermType = ModelItem.GetValue<string>("TermType");
             int Port = ModelItem.GetValue<int>("Port");
             bool UseSSL = ModelItem.GetValue<bool>("UseSSL");
-            if (!string.IsNullOrEmpty(Hostname)) win.Config.Hostname = Hostname;
-            if (!string.IsNullOrEmpty(TermType)) win.Config.TermType = TermType;
-            if (Port > 0) win.Config.Port = Port;
-            win.Config.UseSSL = UseSSL;
+            if (!string.IsNullOrEmpty(Hostname)) Config.Hostname = Hostname;
+            if (!string.IsNullOrEmpty(TermType)) Config.TermType = TermType;
+            if (Port > 0) Config.Port = Port;
+            Config.UseSSL = UseSSL;
+
+            TerminalRecorder win = null;
+            if (string.IsNullOrEmpty(Hostname) && string.IsNullOrEmpty(TermType))
+            {
+                win = new TerminalRecorder();
+                win.Config = Config;
+                RunPlugin.Sessions.Add(win);
+            }
+            else
+            {
+                win = RunPlugin.GetRecorderWindow(Config);
+            }
+            sessionid = Guid.NewGuid().ToString();
+            if (string.IsNullOrEmpty(win.WorkflowInstanceId)) win.WorkflowInstanceId = sessionid;
             win.Show();
             //win.ShowDialog();
             win.Focus();
@@ -62,6 +75,9 @@ namespace OpenRPA.TerminalEmulator
         }
         private void Win_Closed(object sender, EventArgs e)
         {
+            var win = sender as TerminalRecorder;
+            if(win == null) return;
+            if (win.WorkflowInstanceId != sessionid) return;
             string Hostname = ModelItem.GetValue<string>("Hostname");
             string TermType = ModelItem.GetValue<string>("TermType");
             int Port = ModelItem.GetValue<int>("Port");
@@ -70,6 +86,7 @@ namespace OpenRPA.TerminalEmulator
             if (TermType != Config.TermType) ModelItem.Properties["TermType"].SetValue(new InArgument<string>() { Expression = new Literal<string>(Config.TermType) });
             if (Port != Config.Port) ModelItem.Properties["Port"].SetValue(new InArgument<int>() { Expression = new Literal<int>(Config.Port) });
             if (UseSSL != Config.UseSSL) ModelItem.Properties["UseSSL"].SetValue(new InArgument<bool>() { Expression = new Literal<bool>(Config.UseSSL) });
+            RunPlugin.Sessions.Remove(win);
         }
     }
 }

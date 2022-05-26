@@ -214,6 +214,132 @@ namespace OpenRPA.TerminalEmulator.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Column.
+        /// </summary>
+        public static string activity_gettextat_column {
+            get {
+                return ResourceManager.GetString("activity_gettextat_column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Column to start reading from ( X ).
+        /// </summary>
+        public static string activity_gettextat_column_help {
+            get {
+                return ResourceManager.GetString("activity_gettextat_column_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string activity_gettextat_length {
+            get {
+                return ResourceManager.GetString("activity_gettextat_length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of charecter to read of the string.
+        /// </summary>
+        public static string activity_gettextat_length_help {
+            get {
+                return ResourceManager.GetString("activity_gettextat_length_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string activity_gettextat_result {
+            get {
+                return ResourceManager.GetString("activity_gettextat_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result of read operation.
+        /// </summary>
+        public static string activity_gettextat_result_help {
+            get {
+                return ResourceManager.GetString("activity_gettextat_result_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row.
+        /// </summary>
+        public static string activity_gettextat_row {
+            get {
+                return ResourceManager.GetString("activity_gettextat_row", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row to start reading from ( Y ).
+        /// </summary>
+        public static string activity_gettextat_row_help {
+            get {
+                return ResourceManager.GetString("activity_gettextat_row_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout.
+        /// </summary>
+        public static string activity_gettextat_timeout {
+            get {
+                return ResourceManager.GetString("activity_gettextat_timeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait this long for keyboard to be ready, if enabled.
+        /// </summary>
+        public static string activity_gettextat_timeout_help {
+            get {
+                return ResourceManager.GetString("activity_gettextat_timeout_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for Keyboard.
+        /// </summary>
+        public static string activity_gettextat_waitforkeyboard {
+            get {
+                return ResourceManager.GetString("activity_gettextat_waitforkeyboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, will wait for keyboard to be unlocked before getting text.
+        /// </summary>
+        public static string activity_gettextat_waitforkeyboard_help {
+            get {
+                return ResourceManager.GetString("activity_gettextat_waitforkeyboard_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Text At.
+        /// </summary>
+        public static string activity_gettextatat {
+            get {
+                return ResourceManager.GetString("activity_gettextatat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read a certain number of charecter from the specefied location on the screen.
+        /// </summary>
+        public static string activity_gettextatat_tooltip {
+            get {
+                return ResourceManager.GetString("activity_gettextatat_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Recorder.
         /// </summary>
         public static string activity_open_recorder {

@@ -30,6 +30,7 @@ namespace OpenRPA.TerminalEmulator
             SetTextCommand = new CommandHandler(() => SetText(), () => CanSetText());
             SendTextCommand = new CommandHandler(() => SendText(), () => CanSendText());
             GetTextCommand = new CommandHandler(() => GetText(), () => CanGetText());
+            GetTextAtCommand = new CommandHandler(() => GetTextAt(), () => CanGetTextAt());
             InitializeComponent();
             rtbConsole.Focus();
             timer = new System.Timers.Timer(1000);
@@ -339,12 +340,6 @@ namespace OpenRPA.TerminalEmulator
                 }
             }
         }
-        public ICommand GetTextCommand { get; set; }
-        public bool CanGetText()
-        {
-            if (Terminal == null) { return false; }
-            return Terminal.IsConnected;
-        }
         public void ForceFocus(bool redo = true)
         {
             Activate();
@@ -352,11 +347,17 @@ namespace OpenRPA.TerminalEmulator
             Topmost = true;
             Topmost = false;
             rtbConsole.Focus();
-            if(redo) Task.Run(async () =>
+            if (redo) Task.Run(async () =>
             {
                 await Task.Delay(500);
-                GenericTools.RunUI(()=> ForceFocus(false));
+                GenericTools.RunUI(() => ForceFocus(false));
             });
+        }
+        public ICommand GetTextCommand { get; set; }
+        public bool CanGetText()
+        {
+            if (Terminal == null) { return false; }
+            return Terminal.IsConnected;
         }
         public void GetText()
         {
@@ -379,6 +380,56 @@ namespace OpenRPA.TerminalEmulator
                     }
                     var fvariable = global.OpenRPAClient.CurrentDesigner.GetVariableOf<string>("field" + index);
                     global.OpenRPAClient.CurrentDesigner.AddActivity(new GetText() { DisplayName = "GetText field #" + index, Field = index, Result = fvariable });
+                    ForceFocus();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    HandlingInput = false;
+                }
+            }
+        }
+        public ICommand GetTextAtCommand { get; set; }
+        public bool CanGetTextAt()
+        {
+            if (Terminal == null) { return false; }
+            return Terminal.IsConnected;
+        }
+        public void GetTextAt()
+        {
+            if (Terminal != null && Terminal.IsConnected)
+            {
+                HandlingInput = true;
+                try
+                {
+                    var x = Terminal.HighlightCursorX;
+                    var y = Terminal.HighlightCursorY;
+                    var length = 10;
+                    if(x < 1 && y < 1)
+                    {
+                        x = Terminal.CursorX;
+                        y = Terminal.CursorY;
+                    }
+                    var index = Terminal.GetStringByLocation(x, y);
+                    if (index > -1)
+                    {
+                        var field = Terminal.GetField(index);
+                        if(field == null) field = Terminal.GetString(index);
+                        if (field != null && field.Location.Length > 0) length = field.Location.Length;
+                    }
+
+                    var variable = global.OpenRPAClient.CurrentDesigner.GetVariableOf<string>("text");
+                    global.OpenRPAClient.CurrentDesigner.AddActivity(new GetTextAt()
+                    {
+                        DisplayName = "GetTextAt at " + x + "," + y,
+                        Column = x,
+                        Row = y,
+                        Length = length,
+                        Result = variable
+                    });
                     ForceFocus();
                 }
                 catch (Exception)
@@ -495,6 +546,13 @@ namespace OpenRPA.TerminalEmulator
                         {
                             global.OpenRPAClient.CurrentDesigner.AddActivity(new SendKey() { DisplayName = "Send Key " + e.Key.ToString(), Key = e.Key.ToString() });
                             ForceFocus();
+                        } else
+                        {
+                            if(e.Key == Key.Enter || e.Key == Key.Escape)
+                            {
+                                Terminal.HighlightCursorX = -1;
+                                Terminal.HighlightCursorY = -1;
+                            }
                         }
                         Terminal.SendKey(e.Key);
                     }

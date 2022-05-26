@@ -40,6 +40,8 @@ lformats.org/markup-compatibility/2006"
                     Command="{Binding SendTextCommand}"></Button>
             <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Get Text"
                     Command="{Binding GetTextCommand}"></Button>
+            <Button MinWidth="50" Background="White" Margin="0,0,7,0" Padding="5,0,5,0" Content="Get Text At"
+                    Command="{Binding GetTextAtCommand}"></Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="7,7,7,7">
             <TextBlock Text="Host" Padding="5,0,5,0"></TextBlock>

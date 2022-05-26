@@ -584,6 +584,9 @@ namespace OpenRPA.TerminalEmulator
             }
             return -1;
         }
-
+        public string GetTextAt(int Column, int Row, int length)
+        {
+            return emu.GetText(Column, Row, length);
+        }
     }
 }

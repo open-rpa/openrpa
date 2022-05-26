@@ -32,6 +32,29 @@ namespace OpenRPA.TerminalEmulator
         public string Name => PluginName;
         public static List<Interfaces.VT.ITerminalSession> Sessions = new List<Interfaces.VT.ITerminalSession>();
         public IOpenRPAClient client;
+        public static TerminalRecorder GetRecorderWindow(Interfaces.VT.ITerminalConfig Config)
+        {
+            TerminalRecorder win = null;
+            foreach (var session in RunPlugin.Sessions)
+            {
+                if (session is TerminalRecorder _win)
+                {
+                    if (_win.Config.Hostname == Config.Hostname &&
+                        _win.Config.Port == Config.Port &&
+                        _win.Config.TermType == Config.TermType)
+                    {
+                        win = _win;
+                    }
+                }
+            }
+            if (win == null)
+            {
+                win = new TerminalRecorder();
+                win.Config = Config;
+                Sessions.Add(win);
+            }
+            return win;
+        }
         public void Initialize(IOpenRPAClient client)
         {
             _ = PluginConfig.auto_close;
@@ -73,5 +96,6 @@ namespace OpenRPA.TerminalEmulator
         {
             return true;
         }
+        
     }
 }

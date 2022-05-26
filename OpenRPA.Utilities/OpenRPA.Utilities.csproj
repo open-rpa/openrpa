@@ -61,6 +61,7 @@
     <None Remove="Activities\ExpandArchiveDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
     <None Remove="Activities\JArrayToDataTableDesigner.xaml" />
+    <None Remove="Activities\KillProcessDesigner.xaml" />
     <None Remove="Activities\MatchDesigner.xaml" />
     <None Remove="Activities\MatchesDesigner.xaml" />
     <None Remove="Activities\ReadCSVDesigner.xaml" />
@@ -83,6 +84,7 @@
     <None Remove="Resources\designer\downloadfile.png" />
     <None Remove="Resources\designer\entity.png" />
     <None Remove="Resources\designer\expandarchive.png" />
+    <None Remove="Resources\designer\killprocess.png" />
     <None Remove="Resources\designer\newemail.png" />
     <None Remove="Resources\designer\outlook.png" />
     <None Remove="Resources\designer\play.png" />
@@ -102,6 +104,7 @@
     <None Remove="Resources\toolbox\downloadfile.png" />
     <None Remove="Resources\toolbox\entity.png" />
     <None Remove="Resources\toolbox\expandarchive.png" />
+    <None Remove="Resources\toolbox\killprocess.png" />
     <None Remove="Resources\toolbox\newemail.png" />
     <None Remove="Resources\toolbox\outlook.png" />
     <None Remove="Resources\toolbox\play.png" />
@@ -119,10 +122,12 @@
     <Resource Include="Resources\designer\compressarchive.png" />
     <Resource Include="Resources\designer\database.png" />
     <Resource Include="Resources\designer\expandarchive.png" />
+    <Resource Include="Resources\designer\killprocess.png" />
     <Resource Include="Resources\designer\selectfolder.png" />
     <Resource Include="Resources\designer\selectfile.png" />
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
     <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\killprocess.png" />
     <EmbeddedResource Include="Resources\toolbox\selectfile.png" />
     <EmbeddedResource Include="Resources\toolbox\play.png" />
     <EmbeddedResource Include="Resources\toolbox\readjson.png" />
@@ -213,6 +218,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\CreateDataTableDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\KillProcessDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

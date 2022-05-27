@@ -363,7 +363,7 @@ namespace OpenRPA.NM
             if (e.UIElement.ProcessId < 1) return false;
             using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
             {
-                if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox") return false;
+                if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
             }                
             if (LastElement == null) return false;
             e.Element = LastElement;

@@ -788,6 +788,7 @@ namespace OpenRPA.NM
             //    return eq.Equals(this, nm);
             //}
             //return base.Equals(obj);
+            if (obj == null) return false;
             return hashCode == obj.GetHashCode();
         }
         private int hashCode = 0;

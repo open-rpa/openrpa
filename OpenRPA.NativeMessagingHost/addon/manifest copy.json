@@ -3,7 +3,7 @@
   "name": "openrpa",
   "version": "1.0.0.1",
   "description": "Support extension for OpenRPA",
-  "permissions": [ "tabs", "nativeMessaging", "<all_urls>", "webNavigation", "cookies", "downloads" ],
+  "permissions": [ "tabs", "nativeMessaging", "<all_urls>", "webNavigation", "cookies", "webRequest", "file:///*", "downloads" ],
   "background": {
     "scripts": [ "background.js" ]
   },
@@ -11,10 +11,7 @@
     {
       "all_frames": true,
       "js": [ "content.js" ],
-      "matches": [
-        "http://*/*",
-        "https://*/*"
-      ],
+      "matches": [ "http://*/*", "https://*/*", "file://*/*" ],
       "run_at": "document_start"
     }
   ],

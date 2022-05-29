@@ -441,6 +441,7 @@ if (true == false) {
                     return test;
                 },
                 updateelementvalue: function (message) {
+                    console.log("before", message);
                     var ele = null;
                     if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
                         message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
@@ -509,10 +510,14 @@ if (true == false) {
                         //    simulate(ele, events[i]);
                         //}
                     }
+                    delete message.result;
+                    delete message.results;
+                    console.log("after", message);
                     var test = JSON.parse(JSON.stringify(message));
                     return test;
                 },
                 updateelementvalues: function (message) {
+                    console.log("before", message);
                     var ele = null;
                     if (ele === null && message.zn_id !== null && message.zn_id !== undefined && message.zn_id > -1) {
                         message.xPath = '//*[@zn_id="' + message.zn_id + '"]';
@@ -571,6 +576,9 @@ if (true == false) {
                         //    simulate(ele, events[i]);
                         //}
                     }
+                    console.log("after", message);
+                    delete message.result;
+                    delete message.results;
                     var test = JSON.parse(JSON.stringify(message));
                     return test;
                 },

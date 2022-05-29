@@ -120,6 +120,12 @@
   <data name="activity_addworkitem" xml:space="preserve">
     <value>Add Workitem</value>
   </data>
+  <data name="activity_addworkitem_failed_wiq" xml:space="preserve">
+    <value>Failed Queue</value>
+  </data>
+  <data name="activity_addworkitem_failed_wiq_help" xml:space="preserve">
+    <value>If failed, add new workitem to this queue</value>
+  </data>
   <data name="activity_addworkitem_files" xml:space="preserve">
     <value>Files</value>
   </data>
@@ -152,6 +158,12 @@
   </data>
   <data name="activity_addworkitem_priority_help" xml:space="preserve">
     <value>Set priority to a non zero number for this item. The lower the number the higher the proirity</value>
+  </data>
+  <data name="activity_addworkitem_success_wiq" xml:space="preserve">
+    <value>Success Queue</value>
+  </data>
+  <data name="activity_addworkitem_success_wiq_help" xml:space="preserve">
+    <value>If successfull, add new workitem to this queue</value>
   </data>
   <data name="activity_addworkitem_tooltip" xml:space="preserve">
     <value>Add new Workitem to Queue</value>

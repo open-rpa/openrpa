@@ -44,6 +44,10 @@ namespace OpenRPA.WorkItems.Activities
         public InArgument<int> Priority { get; set; }
         [LocalizedDisplayName("activity_addworkitem_nextrun", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_nextrun_help", typeof(Resources.strings))]
         public InArgument<DateTime?> NextRun { get; set; }
+        [LocalizedDisplayName("activity_addworkitem_success_wiq", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_success_wiq_help", typeof(Resources.strings))]
+        public InArgument<string> Success_wiq { get; set; }
+        [LocalizedDisplayName("activity_addworkitem_failed_wiq", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_failed_wiq_help", typeof(Resources.strings))]
+        public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var files = Files.Get<string[]>(context);
@@ -53,6 +57,8 @@ namespace OpenRPA.WorkItems.Activities
             t.name = Name.Get<string>(context);
             t.priority = Priority.Get<int>(context);
             t.nextrun = NextRun.Get<DateTime?>(context);
+            t.success_wiq = Success_wiq.Get<string>(context);
+            t.failed_wiq = Failed_wiq.Get<string>(context);
             if (t.payload == null) t.payload = new Dictionary<string, object>();
             foreach (var item in Payload)
             {

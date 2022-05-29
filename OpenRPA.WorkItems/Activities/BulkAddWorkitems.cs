@@ -34,6 +34,10 @@ namespace OpenRPA.WorkItems.Activities
         public InArgument<string[]> Filefields { get; set; }
         [LocalizedDisplayName("activity_bulkaddworkitems_bulksize", typeof(Resources.strings)), LocalizedDescription("activity_bulkaddworkitems_bulksize_help", typeof(Resources.strings))]
         public InArgument<int> BulkSize { get; set; }
+        [LocalizedDisplayName("activity_addworkitem_success_wiq", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_success_wiq_help", typeof(Resources.strings))]
+        public InArgument<string> Success_wiq { get; set; }
+        [LocalizedDisplayName("activity_addworkitem_failed_wiq", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_failed_wiq_help", typeof(Resources.strings))]
+        public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var _wiqid = wiqid.Get(context);
@@ -82,7 +86,8 @@ namespace OpenRPA.WorkItems.Activities
                     items.Clear();
                 }
             }
-            if (items.Count > 0) await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray());
+            if (items.Count > 0) await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray(),
+                Success_wiq.Get<string>(context), null, Failed_wiq.Get<string>(context), null);
             return null;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

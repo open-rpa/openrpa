@@ -38,6 +38,10 @@ namespace OpenRPA
         public int maxretries { get { return GetProperty<int>(); } set { SetProperty(value); } }
         public int retrydelay { get { return GetProperty<int>(); } set { SetProperty(value); } }
         public int initialdelay { get { return GetProperty<int>(); } set { SetProperty(value); } }
+        public string success_wiqid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string failed_wiqid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string success_wiq { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string failed_wiq { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public async Task Save(bool skipOnline = false)
         {
             if(string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
@@ -187,7 +191,10 @@ namespace OpenRPA
         public string errormessage { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string errortype { get { return GetProperty<string>(); } set { SetProperty(value); } }
-
+        public string success_wiqid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string failed_wiqid { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string success_wiq { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string failed_wiq { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public async Task Save(bool skipOnline = false)
         {
             await Save<Workitem>(skipOnline);

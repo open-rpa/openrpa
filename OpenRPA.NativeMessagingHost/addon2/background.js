@@ -404,7 +404,7 @@ async function OnPortMessage(message) {
     console.debug(message);
 };
 function OnPortDisconnect(message) {
-    console.log("OnPortDisconnect: " + message);
+    console.log("OnPortDisconnect", message);
     port = null;
     if (chrome.runtime.lastError) {
         console.warn("onDisconnect: " + chrome.runtime.lastError.message);

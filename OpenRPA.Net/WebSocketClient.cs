@@ -1218,6 +1218,8 @@ namespace OpenRPA.Net
         {
             var q = new AddWorkitemMessage<T>(); q.msg.command = "addworkitem";
             q.wiqid = item.wiqid; q.wiq = item.wiq; q.name = item.name; q.nextrun = item.nextrun; q.priority = item.priority;
+            q.success_wiq = item.success_wiq; q.success_wiqid = item.success_wiqid;
+            q.failed_wiq = item.failed_wiq; q.failed_wiqid = item.failed_wiqid;
             q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
             var _files = new List<MessageWorkitemFile>();
             if(files != null)
@@ -1237,12 +1239,14 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items)
+        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items, string success_wiq, string success_wiqid, string failed_wiq, string failed_wiqid)
         {
             var q = new AddWorkitemsMessage(); q.msg.command = "addworkitems";
-            q.wiqid = wiqid; q.wiq = wiq; 
+            q.wiqid = wiqid; q.wiq = wiq;
+            q.success_wiq = success_wiq; q.success_wiqid = success_wiqid;
+            q.failed_wiq = failed_wiq; q.failed_wiqid = failed_wiqid;
             q.items = items;
-            foreach(var item in q.items)
+            foreach (var item in q.items)
                 if (item.files != null)
                     foreach (var f in item.files)
                     {
@@ -1256,12 +1260,18 @@ namespace OpenRPA.Net
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
+        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items)
+        {
+            await AddWorkitems(wiqid, wiq, items, null, null, null, null);
+        }
         public async Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files, bool ignoremaxretries) where T : IWorkitem
         {
             var q = new UpdateWorkitemMessage<T>(); q.msg.command = "updateworkitem";
             q._id = item._id; q.name = item.name; q.state = item.state; q.nextrun = item.nextrun;
             q.errormessage = item.errormessage; q.errorsource = item.errorsource; q.ignoremaxretries = ignoremaxretries;
             q.errortype = item.errortype;
+            q.success_wiq = item.success_wiq; q.success_wiqid = item.success_wiqid;
+            q.failed_wiq = item.failed_wiq; q.failed_wiqid = item.failed_wiqid;
             q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
             var _files = new List<MessageWorkitemFile>();
             if (files != null)

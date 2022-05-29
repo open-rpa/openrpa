@@ -30,6 +30,10 @@ namespace OpenRPA.WorkItems.Activities
         public InArgument<string[]> Files { get; set; }
         [LocalizedDisplayName("activity_updateworkitem_ignoremaxretries", typeof(Resources.strings)), LocalizedDescription("activity_updateworkitem_ignoremaxretries_help", typeof(Resources.strings))]
         public InArgument<bool> IgnoreMaxretries { get; set; }
+        [LocalizedDisplayName("activity_addworkitem_success_wiq", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_success_wiq_help", typeof(Resources.strings))]
+        public InArgument<string> Success_wiq { get; set; }
+        [LocalizedDisplayName("activity_addworkitem_failed_wiq", typeof(Resources.strings)), LocalizedDescription("activity_addworkitem_failed_wiq_help", typeof(Resources.strings))]
+        public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
             var status = new string[] { "failed", "successful", "abandoned", "retry", "processing" };
@@ -38,17 +42,23 @@ namespace OpenRPA.WorkItems.Activities
             var ex = Exception.Get(context);
             var ignoremaxretries = IgnoreMaxretries.Get(context);
             if (t == null) throw new Exception("Missing Workitem");
-            if(State != null && State.Expression != null)
+            t.success_wiq = Success_wiq.Get<string>(context);
+            t.failed_wiq = Failed_wiq.Get<string>(context);
+            if (State != null && State.Expression != null)
             {
                 var state = State.Get(context);
                 if (!string.IsNullOrEmpty(state)) t.state = state;
             }
-            if (ex != null) { t.errormessage = ex.Message; t.errortype = "application"; }
-            if (ex != null) t.errorsource = ex.Source;
-            if(ex is BusinessRuleException)
+            if(ex != null)
             {
-                t.errortype = "business";
-                if (t.state == "retry") t.state = "failed";
+                while (ex.InnerException != null) ex = ex.InnerException;
+                t.errormessage = ex.Message; t.errortype = "application";
+                t.errorsource = ex.Source;
+                if (ex is BusinessRuleException)
+                {
+                    t.errortype = "business";
+                    if (t.state == "retry") t.state = "failed";
+                }
             }
             t.state = t.state.ToLower();
             if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be failed, successful, abandoned or retry");

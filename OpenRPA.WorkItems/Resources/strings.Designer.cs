@@ -70,6 +70,24 @@ namespace OpenRPA.WorkItems.Activities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed Queue.
+        /// </summary>
+        public static string activity_addworkitem_failed_wiq {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_failed_wiq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If failed, add new workitem to this queue.
+        /// </summary>
+        public static string activity_addworkitem_failed_wiq_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_failed_wiq_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
         public static string activity_addworkitem_files {
@@ -174,6 +192,24 @@ namespace OpenRPA.WorkItems.Activities.Resources {
         public static string activity_addworkitem_result_help {
             get {
                 return ResourceManager.GetString("activity_addworkitem_result_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success Queue.
+        /// </summary>
+        public static string activity_addworkitem_success_wiq {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_success_wiq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If successfull, add new workitem to this queue.
+        /// </summary>
+        public static string activity_addworkitem_success_wiq_help {
+            get {
+                return ResourceManager.GetString("activity_addworkitem_success_wiq_help", resourceCulture);
             }
         }
         

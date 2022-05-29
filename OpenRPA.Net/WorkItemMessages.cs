@@ -20,6 +20,10 @@ namespace OpenRPA.Net
         public string wiq { get; set; }
         public string name { get; set; }
         public MessageWorkitemFile[] files { get; set; }
+        public string success_wiqid { get; set; }
+        public string failed_wiqid { get; set; }
+        public string success_wiq { get; set; }
+        public string failed_wiq { get; set; }
         public T result { get; set; }
         public DateTime? nextrun { get; set; }
         public int priority { get; set; }
@@ -33,6 +37,10 @@ namespace OpenRPA.Net
         public AddWorkitem[] items { get; set; }
         public string wiqid { get; set; }
         public string wiq { get; set; }
+        public string success_wiqid { get; set; }
+        public string failed_wiqid { get; set; }
+        public string success_wiq { get; set; }
+        public string failed_wiq { get; set; }
     }
     public class UpdateWorkitemMessage<T> : SocketCommand where T : IWorkitem
     {
@@ -45,6 +53,10 @@ namespace OpenRPA.Net
         public string name { get; set; }
         public string state { get; set; }
         public MessageWorkitemFile[] files { get; set; }
+        public string success_wiqid { get; set; }
+        public string failed_wiqid { get; set; }
+        public string success_wiq { get; set; }
+        public string failed_wiq { get; set; }
         public T result { get; set; }
         public DateTime? nextrun { get; set; }
         public bool ignoremaxretries { get; set; }
@@ -85,6 +97,10 @@ namespace OpenRPA.Net
         public int retrydelay { get; set; }
         public int initialdelay { get; set; }
         public bool skiprole { get; set; }
+        public string success_wiqid { get; set; }
+        public string failed_wiqid { get; set; }
+        public string success_wiq { get; set; }
+        public string failed_wiq { get; set; }
         public ace[] _acl { get; set; }
         public T result { get; set; }
     }
@@ -113,6 +129,10 @@ namespace OpenRPA.Net
         public int maxretries { get; set; }
         public int retrydelay { get; set; }
         public int initialdelay { get; set; }
+        public string success_wiqid { get; set; }
+        public string failed_wiqid { get; set; }
+        public string success_wiq { get; set; }
+        public string failed_wiq { get; set; }
         public bool purge { get; set; }
         public ace[] _acl { get; set; }
         public T result { get; set; }

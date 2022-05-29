@@ -22,7 +22,11 @@ namespace OpenRPA.Interfaces
         DateTime? nextrun { get; set; }
         string errormessage { get; set; }
         string errorsource { get; set; }
-        string errortype { get; set; }        
+        string errortype { get; set; }
+        string success_wiqid { get; set; }
+        string failed_wiqid { get; set; }
+        string success_wiq { get; set; }
+        string failed_wiq { get; set; }
     }
     public interface IWorkitemQueue : IProjectableBase
     {
@@ -32,6 +36,10 @@ namespace OpenRPA.Interfaces
         int maxretries { get; set; }
         int retrydelay { get; set; }
         int initialdelay { get; set; }
+        string success_wiqid { get; set; }
+        string failed_wiqid { get; set; }
+        string success_wiq { get; set; }
+        string failed_wiq { get; set; }
         Task Delete(bool skipOnline = false);
         Task Save(bool skipOnline = false);
         Task Update(IWorkitemQueue item, bool skipOnline = false);

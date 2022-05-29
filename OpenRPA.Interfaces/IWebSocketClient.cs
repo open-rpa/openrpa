@@ -102,6 +102,7 @@ namespace OpenRPA.Interfaces
         Task DeleteWorkitem(string _id);
         Task<T> AddWorkitemQueue<T>(T item) where T : IWorkitemQueue;
         Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items);
+        Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items, string success_wiq, string success_wiqid, string failed_wiq, string failed_wiqid);
         Task<T> UpdateWorkitemQueue<T>(T item, bool purge) where T : IWorkitemQueue;
         Task DeleteWorkitemQueue(IWorkitemQueue item, bool purge);
     }

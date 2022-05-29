@@ -3,17 +3,5 @@
   "description": "OpenRPA messaging host",
   "path": "REPLACEPATH\\OpenRPA.NativeMessagingHost.exe",
   "type": "stdio",
-  "allowed_origins": [
-    "chrome-extension://cjjehhadngahcdkbkeopdlmjedddkedh/",
-    "chrome-extension://meoobaegjobjgfnlfndegpnpdmonbnbe/",
-    "chrome-extension://eglkkjllkdooicijpbolleoemogkagbp/",
-    "chrome-extension://inhepbikmioclaolbahmnieiinemlmfp/",
-    "chrome-extension://ijabkdeadobnodfdgilkjhbploikblbg/",
-    "chrome-extension://cfhdojbkjhnklbpkdaibdccddilifddb/",
-    "chrome-extension://hpnihnhlcnfejboocnckgchjdofeaphe/",
-    "chrome-extension://ebbbjigjoglkolagcfjdnginmfknnmmg/",
-    "chrome-extension://ennlpladclaaogmhlddghpneajafmgln/",
-    "chrome-extension://fdpjjldghhdjaakadnkiepghjdfjllmg/",
-    "chrome-extension://hkjbghcanbbkhldlfkddbiiooadknael/"
-  ]
+  "allowed_extensions": [ "info@openrpa.dk" ]
 }

@@ -7,7 +7,8 @@
     "tabs",
     "nativeMessaging",
     "webNavigation",
-    "downloads"
+    "downloads",
+    "debugger"
   ],
   "host_permissions": [
     "http://*/*",

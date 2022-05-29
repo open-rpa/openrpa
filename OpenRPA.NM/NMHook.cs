@@ -106,7 +106,7 @@ namespace OpenRPA.NM
             message.browser = browser; message.frameId = frameid;
             message.script = script;
             result = sendMessageResult(message, timeout);
-            if (result.error != null)
+            if (result != null && result.error != null)
             {
                 var error = result.error.ToString();
                 if (!string.IsNullOrEmpty(error)) throw new ArgumentException(error);

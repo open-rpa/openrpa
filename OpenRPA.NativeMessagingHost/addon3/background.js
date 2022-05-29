@@ -170,17 +170,6 @@ async function OnPortMessage(message) {
         if (isChromeEdge) message.browser = "edge";
         console.log("[resc][" + message.messageid + "]" + message.functionName);
         if (message.functionName === "openrpautilscript") {
-            //openrpautil_script = message.script;
-
-            //var subtabsList = await tabsquery();
-            //for (var l in subtabsList) {
-            //    try {
-            //        if (!allowExecuteScript(subtabsList[l])) continue;
-            //        await tabsexecuteScript(subtabsList[l].id, { code: openrpautil_script, allFrames: true });
-            //    } catch (e) {
-            //        console.log(e);
-            //    }
-            //}
             return;
         }
         if (message.functionName === "contentscript") {
@@ -382,22 +371,73 @@ async function OnPortMessage(message) {
         if (message.functionName === "executescript") {
             console.log("executescript tab #" + message.tabid + " frameId: " + message.frameId, message);
             // var script = "(" + message.script + ")()";
+            var script = message.script;
+
+            var detatch = false;
             try {
-                var script = message.script;
-                if (message.frameId > -1) {
-                    message.result = await tabsexecuteScript(message.tabid, { code: script, frameId: message.frameId });
-                } else {
-                    message.result = await tabsexecuteScript(message.tabid, { code: script, allFrames: true });
+                console.log("attach to " + message.tabid);
+                await debuggerattach(message.tabid);
+                detatch = true;
+                console.log("eval", message.script);
+                message.result = await debuggerEvaluate(message.tabid, script);
+                if (message.result && message.result.result && message.result.result.value) {
+                    message.result = [message.result.result.value];
+                } else if (!Array.isArray(message.result)) {
+                    message.result = [message.result];
                 }
-                console.log(message.result);
+
+                console.log("result", message.result);
+                // message.results = [message.result];
             } catch (e) {
                 console.error(e);
                 message.error = e.message;
             }
+            if (detatch) {
+                try {
+                    console.log("detach to " + message.tabid);
+                    await debuggerdetach(message.tabid);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
             console.log("[send][" + message.messageid + "]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));
             return;
         }
+
+        //if (message.functionName === "executescript") {
+        //    console.log("executescript tab #" + message.tabid + " frameId: " + message.frameId, message);
+
+        //    var detatch = false;
+        //    try {
+        //        console.log("attach to " + message.tabid);
+        //        await debuggerattach(message.tabid);
+        //        detatch = true;
+        //        console.log("eval", message.script);
+        //        message.result = await debuggerEvaluate(message.tabid, message.script);
+        //        if (message.result && message.result.result && message.result.result.value) {
+        //            message.result = message.result.result.value;
+        //        }
+
+        //        console.log("result", message.result);
+        //        message.results = [message.result];
+        //    } catch (e) {
+        //        console.error(e);
+        //        message.error = e.message;
+        //    }
+        //    if (detatch) {
+        //        try {
+        //            console.log("detach to " + message.tabid);
+        //            await debuggerdetach(message.tabid);
+        //        } catch (e) {
+        //            console.error(e);
+        //        }
+        //    }
+        //    console.log("[send][" + message.messageid + "]" + message.functionName);
+        //    if (port != null) port.postMessage(JSON.parse(JSON.stringify(message)));
+        //    return;
+        //}
 
         message = await SendToTab(windowId, message);
 
@@ -410,7 +450,7 @@ async function OnPortMessage(message) {
     console.debug(message);
 };
 function OnPortDisconnect(message) {
-    console.log("OnPortDisconnect: " + message);
+    console.log("OnPortDisconnect", message);
     port = null;
     if (chrome.runtime.lastError) {
         console.warn("onDisconnect: " + chrome.runtime.lastError.message);
@@ -959,4 +999,31 @@ async function downloadsOnChanged(delta) {
     console.debug("[send]" + message.functionName);
     if(port!=null) port.postMessage(JSON.parse(JSON.stringify(message)));
 
+}
+
+
+
+var debuggerattach = function (tabId) {
+    if (port == null) return false;
+    return new Promise(function (resolve, reject) {
+        chrome.debugger.attach({ tabId }, "1.0", () => {
+            resolve();
+        });
+    });
+}
+var debuggerdetach = function (tabId) {
+    if (port == null) return false;
+    return new Promise(function (resolve, reject) {
+        chrome.debugger.detach({ tabId }, () => {
+            resolve();
+        });
+    });
+}
+var debuggerEvaluate = function (tabId, code) {
+    if (port == null) return false;
+    return new Promise(function (resolve, reject) {
+        chrome.debugger.sendCommand({ tabId }, "Runtime.evaluate", { expression: code }, (result) => {
+            resolve(result);
+        });
+    });
 }

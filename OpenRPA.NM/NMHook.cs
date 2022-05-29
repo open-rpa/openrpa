@@ -106,6 +106,11 @@ namespace OpenRPA.NM
             message.browser = browser; message.frameId = frameid;
             message.script = script;
             result = sendMessageResult(message, timeout);
+            if (result.error != null)
+            {
+                var error = result.error.ToString();
+                if (!string.IsNullOrEmpty(error)) throw new ArgumentException(error);
+            }
             if (result != null)
             {
                 return result.result;
@@ -667,8 +672,11 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
+                Log.Output("send openurl");
                 var result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
+                Log.Output("openurl reply, wait for tab #" + result.tab.id + " windowId " + result.tab.windowId);
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
+                Log.Output("openurl complete");
 
                 //NativeMessagingMessage result = null;
                 //NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
@@ -750,16 +758,17 @@ namespace OpenRPA.NM
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             enumtabs();
+            Log.Output("FindTabById tab#" + tabid);
             var tab = FindTabById(browser, tabid);
             do
             {
                 if (tab != null)
                 {
-                    // Log.Debug("WaitForTab: " + tabid + " " + tab.status);
+                    Log.Output("WaitForTab: " + tabid + " " + tab.status);
                 }
                 else
                 {
-                    // Log.Debug("WaitForTab, failed locating tab: " + tabid);
+                    Log.Output("WaitForTab, failed locating tab: " + tabid);
                     Log.Output("enumtabs");
                     enumtabs();
                 }

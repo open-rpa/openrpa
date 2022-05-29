@@ -1,0 +1,49 @@
+https://stackoverflow.com/questions/67439012/chrome-extension-manifest-v3-content-security-policy
+
+# myscript.js
+window.variableInMainContext = "hi"
+
+# manifest.json
+{
+  "name": "example",
+  "version": "1.0",
+  "description": "example extension",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "run_at": "document_start",
+      "js": ["inject.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "myscript.js" ],
+      "matches": [ "https://*/*" ]
+    }
+  ]
+}
+
+# inject.js
+
+const nullthrows = (v) => {
+    if (v == null) throw new Error("it's a null");
+    return v;
+}
+
+function injectCode(src) {
+    const script = document.createElement('script');
+    // This is why it works!
+    script.src = src;
+    script.onload = function() {
+        console.log("script injected");
+        this.remove();
+    };
+
+    // This script runs before the <head> element is created,
+    // so we add the script to <html> instead.
+    nullthrows(document.head || document.documentElement).appendChild(script);
+}
+
+
+injectCode(chrome.runtime.getURL('/myscript.js'));

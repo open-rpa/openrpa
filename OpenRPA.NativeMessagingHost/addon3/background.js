@@ -80,30 +80,26 @@ var lastwindowId = 1;
 var openrpadebug = false;
 
 // Opera 8.0+ (tested on Opera 42.0)
-var isOpera = !!window.opr && !!opr.addons || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 
 // Firefox 1.0+ (tested on Firefox 45 - 53)
 var isFirefox = typeof InstallTrigger !== 'undefined';
 
 // Internet Explorer 6-11
 //   Untested on IE (of course). Here because it shows some logic for isEdge.
-var isIE = /*@cc_on!@*/false || !!document.documentMode;
 
 // Edge 20+ (tested on Edge 38.14393.0.0)
-var isEdge = !isIE && !!window.StyleMedia;
 var isChromeEdge = navigator.appVersion.indexOf('Edge') > -1;
 if (!isChromeEdge) isChromeEdge = navigator.appVersion.indexOf('Edg') > -1;
 
+var isChrome = !isChromeEdge && !isFirefox;
+
 // Chrome 1+ (tested on Chrome 55.0.2883.87)
 // This does not work in an extension:
-//var isChrome = !!window.chrome && !!window.chrome.webstore;
 // The other browsers are trying to be more like Chrome, so picking
 // capabilities which are in Chrome, but not in others is a moving
 // target.  Just default to Chrome if none of the others is detected.
-var isChrome = !isOpera && !isFirefox && !isIE && !isEdge;
 
 // Blink engine detection (tested on Chrome 55.0.2883.87 and Opera 42.0)
-var isBlink = (isChrome || isOpera) && !!window.CSS;
 
 /* The above code is based on code from: https://stackoverflow.com/a/9851769/3773011 */
 
@@ -135,15 +131,19 @@ async function SendToTab(windowId, message) {
             message.uix += currentWindow.left;
             message.uiy += currentWindow.top;
         }
-        if (message.results && message.results.length > 0) {
-            message.results.forEach((item) => {
-                if (item.uix && item.uiy) {
-                    item.uix += currentWindow.left;
-                    item.uiy += currentWindow.top;
-                }
-                item.windowId = windowId;
-                item.tabid = message.tabid;
-            });
+        if (message.results) {
+            if (Array.isArray(message.results)) {
+                message.results.forEach((item) => {
+                    if (item.uix && item.uiy) {
+                        item.uix += currentWindow.left;
+                        item.uiy += currentWindow.top;
+                    }
+                    item.windowId = windowId;
+                    item.tabid = message.tabid;
+                });
+            } else {
+                delete message.results;
+            }
         }
 
     } catch (e) {
@@ -170,17 +170,17 @@ async function OnPortMessage(message) {
         if (isChromeEdge) message.browser = "edge";
         console.log("[resc][" + message.messageid + "]" + message.functionName);
         if (message.functionName === "openrpautilscript") {
-            openrpautil_script = message.script;
+            //openrpautil_script = message.script;
 
-            var subtabsList = await tabsquery();
-            for (var l in subtabsList) {
-                try {
-                    if (!allowExecuteScript(subtabsList[l])) continue;
-                    await tabsexecuteScript(subtabsList[l].id, { code: openrpautil_script, allFrames: true });
-                } catch (e) {
-                    console.log(e);
-                }
-            }
+            //var subtabsList = await tabsquery();
+            //for (var l in subtabsList) {
+            //    try {
+            //        if (!allowExecuteScript(subtabsList[l])) continue;
+            //        await tabsexecuteScript(subtabsList[l].id, { code: openrpautil_script, allFrames: true });
+            //    } catch (e) {
+            //        console.log(e);
+            //    }
+            //}
             return;
         }
         if (message.functionName === "contentscript") {
@@ -382,13 +382,19 @@ async function OnPortMessage(message) {
         if (message.functionName === "executescript") {
             console.log("executescript tab #" + message.tabid + " frameId: " + message.frameId, message);
             // var script = "(" + message.script + ")()";
-            var script = message.script;
-            if (message.frameId > -1) {
-                message.result = await tabsexecuteScript(message.tabid, { code: script, frameId: message.frameId });
-            } else {
-                message.result = await tabsexecuteScript(message.tabid, { code: script, allFrames: true });
+            try {
+                var script = message.script;
+                if (message.frameId > -1) {
+                    message.result = await tabsexecuteScript(message.tabid, { code: script, frameId: message.frameId });
+                } else {
+                    message.result = await tabsexecuteScript(message.tabid, { code: script, allFrames: true });
+                }
+                console.log(message.result);
+            } catch (e) {
+                console.error(e);
+                message.error = e.message;
             }
-            console.log(message.result);
+            console.log("[send][" + message.messageid + "]" + message.functionName);
             port.postMessage(JSON.parse(JSON.stringify(message)));
             return;
         }
@@ -396,7 +402,7 @@ async function OnPortMessage(message) {
         message = await SendToTab(windowId, message);
 
     } catch (e) {
-        console.log(e);
+        console.error(e);
         message.error = JSON.stringify(e);
     }
     console.log("[send][" + message.messageid + "]" + message.functionName);
@@ -475,7 +481,7 @@ async function EnumWindows(message) {
     }
 }
 async function OnPageLoad(event) {
-    if (window) window.removeEventListener("load", OnPageLoad, false);
+    // if (window) window.removeEventListener("load", OnPageLoad, false);
     chrome.windows.onCreated.addListener((window) => {
         if (window.type === "normal" || window.type === "popup") { // panel
             if (window.type === "popup" && window.state == "minimized") return;
@@ -534,7 +540,9 @@ async function tabsOnUpdated(tabId, changeInfo, tab) {
     if (openrpadebug) console.log(changeInfo);
     try {
         console.debug("tabsOnUpdated: " + changeInfo.status)
-        await tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
+        if (openrpautil_script != null) {
+            // tabsexecuteScript(tab.id, { code: openrpautil_script, allFrames: true });
+        }
     } catch (e) {
     //    console.log(e);
     //    console.log(tab);
@@ -556,7 +564,6 @@ function tabsOnActivated(activeInfo) {
     console.debug("[send]" + message.functionName);
     if(port!=null) port.postMessage(JSON.parse(JSON.stringify(message)));
 }
-//window.addEventListener("load", OnPageLoad, false);
 
 var allowExecuteScript = function (tab) {
     if (port == null) return false;
@@ -627,7 +634,14 @@ var windowsgetAll = function () {
 var tabsexecuteScript = function (tabid, options) {
     return new Promise(function (resolve, reject) {
         try {
-            chrome.tabs.executeScript(tabid, options, function (results) {
+            // https://blog.bitsrc.io/what-is-chrome-scripting-api-f8dbdb6e3987
+            var opt = Object.assign(options, { target: { tabId: tabid, allFrames: true } });
+            if (opt.code) {
+                opt.func = eval(opt.code);
+                delete opt.code;
+            }
+            chrome.scripting.executeScript(
+                opt, function (results) {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError.message);
                     return;
@@ -675,7 +689,7 @@ var tabsupdate = function (tabid, updateoptions) {
 var tabshighlight = function (index) {
     return new Promise(function (resolve, reject) {
         try {
-            chrome.tabs.highlight({ 'tabs': index }, () => {
+            chrome.tabs.highlight({ 'tabs': index, windowId: lastwindowId }, () => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError.message);
                     return;

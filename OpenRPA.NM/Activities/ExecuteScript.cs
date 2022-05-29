@@ -35,7 +35,6 @@ namespace OpenRPA.NM
             var timeout = TimeSpan.FromSeconds(3);
             script = Interfaces.Selector.Selector.ReplaceVariables(script, context.DataContext);
             if (browser != "chrome" && browser != "ff" && browser != "edge") browser = "chrome";
-            if (!script.Contains(Environment.NewLine) && !script.Contains(";") && !script.Contains("return")) script = "return " + script;
             var result = NMHook.ExecuteScript(browser, frameid, -1, script, timeout);
             if (result == null) { result = "[]"; }
             var results = JsonConvert.DeserializeObject<object[]>(result.ToString());

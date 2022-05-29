@@ -119,8 +119,6 @@ namespace OpenRPA.NM
             {
                 elements = NMSelector.GetElementsWithuiSelector(sel, from, maxresults);
                 Log.Selector("BEGIN:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
-
-                // allelements = allelements.Concat(elements).ToArray();
                 if (allelements.Length > 0)
                 {
                     var newelements = new List<NMElement>();
@@ -130,18 +128,6 @@ namespace OpenRPA.NM
                         if (!allelements.Contains(element)) newelements.Insert(0, element);
                     }
                     elements = newelements.ToArray();
-                    //if(elements.Count() > 20)
-                    //{
-                    //    for(var i=0; i < allelements.Length && i < elements.Length; i++)
-                    //    {
-                    //        if (!eq.Equals(allelements[i], elements[i]) || allelements[i].GetHashCode() != elements[i].GetHashCode())
-                    //        {
-                    //            Log.Output(allelements[i].GetHashCode() + " / " + elements[i].GetHashCode());
-                    //        }
-
-                    //    }
-
-                    //}
                 }
 
             } while (elements.Count() == 0 && sw.Elapsed < timeout);

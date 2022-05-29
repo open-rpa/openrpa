@@ -93,15 +93,14 @@ namespace OpenRPA.NM.pipe
                     System.Threading.Monitor.Exit(lockobj);
                 }
             }
-            Log.Output("Send and queue message " + message.messageid);
+            // Log.Debug("Send and queue message " + message.messageid);
             using (queue.autoReset = new AutoResetEvent(false))
             {
                 pipe.PushMessage(message);
                 queue.autoReset.WaitOne(timeout);
                 queue.sw.Stop();
             }
-            Log.Output("received reply for " + message.messageid);
-            // Log.Output("received reply for " + message.messageid + " " + string.Format("Time elapsed: {0:mm\\:ss\\.fff}", queue.sw.Elapsed));
+            // Log.Debug("received reply for " + message.messageid);
             if (System.Threading.Monitor.TryEnter(lockobj, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try

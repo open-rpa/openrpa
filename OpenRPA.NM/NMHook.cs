@@ -355,7 +355,6 @@ namespace OpenRPA.NM
                 if (msg.functionName != "mousemove")
                 {
                     Log.Verbose("[nmhook][resc][" + msg.browser + "]" + msg.functionName + " for tab " + msg.tabid + " - " + msg.messageid);
-                    //Log.Output("[nmhook][resc][" + msg.browser + "]" + msg.functionName + " for tab " + msg.tabid + " - " + msg.messageid + " (" + msg.uix + "," + msg.uiy + "," + msg.uiwidth + "," + msg.uiheight + ")");
                 }
                 if (PluginConfig.compensate_for_old_addon)
                 {
@@ -672,11 +671,11 @@ namespace OpenRPA.NM
             {
                 NativeMessagingMessage message = new NativeMessagingMessage("openurl", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids) { data = url };
                 message.xPath = forceNew.ToString().ToLower();
-                Log.Output("send openurl");
+                // Log.Verbose("send openurl");
                 var result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
-                Log.Output("openurl reply, wait for tab #" + result.tab.id + " windowId " + result.tab.windowId);
+                // Log.Verbose("openurl reply, wait for tab #" + result.tab.id + " windowId " + result.tab.windowId);
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
-                Log.Output("openurl complete");
+                // Log.Verbose("openurl complete");
 
                 //NativeMessagingMessage result = null;
                 //NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
@@ -758,18 +757,16 @@ namespace OpenRPA.NM
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             enumtabs();
-            Log.Output("FindTabById tab#" + tabid);
             var tab = FindTabById(browser, tabid);
             do
             {
                 if (tab != null)
                 {
-                    Log.Output("WaitForTab: " + tabid + " " + tab.status);
+                    // Log.Verbose("WaitForTab: " + tabid + " " + tab.status);
                 }
                 else
                 {
-                    Log.Output("WaitForTab, failed locating tab: " + tabid);
-                    Log.Output("enumtabs");
+                    // Log.Verbose("WaitForTab, failed locating tab: " + tabid);
                     enumtabs();
                 }
                 System.Threading.Thread.Sleep(PluginConfig.wait_for_tab_timeout);

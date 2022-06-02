@@ -161,8 +161,14 @@ namespace OpenRPA
                         try
                         {
                             var exists = collection.FindById(_id);
-                            if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
-                            if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                            if (string.IsNullOrEmpty(Config.local.wsurl))
+                            {
+                                if (exists != null) { collection.Delete(entity._id); Log.Verbose("Deleted from local " + entity._type + " " + entity.name); }
+                            } else
+                            {
+                                if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
+                                if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
+                            }
                         }
                         finally
                         {

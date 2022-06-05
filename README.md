@@ -11,29 +11,24 @@ Join our [💬 community](https://rocket.openiap.io/) for for help or giving fee
 
 Click here for [💲🤷Commercial Support](https://openrpa.dk/)
 
-Check out the [📘documentation](https://docs.openiap.io/) or knows issue and old documentation on our [❔wiki pages](https://github.com/open-rpa/openrpa/wiki)
+Check out the [📘documentation](https://docs.openiap.io/) or knows issue and updated documentation on our [❔wiki pages](https://github.com/open-rpa/openrpa/wiki)
 
-Also checkout OpenFlow, the "backend" for managing multiple robots at [OpenFlow](https://github.com/open-rpa/OpenFlow)
+Also checkout OpenFlow, the "backend" for managing multiple robots at [OpenFlow](https://openflow.openiap.io/)
 
-Excel and browser interaction, used for vat number lookup
+[![First time installing and running OpenRPA](https://img.youtube.com/vi/A4Pdh9oI-vw/0.jpg)](https://www.youtube.com/watch?v=A4Pdh9oI-vw)  
 
-![ChromeCVRLoogup](docs/img/ChromeCVRLoogup.gif)
+[![Workflow types and doing your first recording](https://img.youtube.com/vi/HB-uHepC3xE/0.jpg)](https://www.youtube.com/watch?v=HB-uHepC3xE)  
 
-Automate creating contacts in CRM app from excel list
+[![Working with WorkItems](https://img.youtube.com/vi/_y9HU_XPD9c/0.jpg)](https://www.youtube.com/watch?v=_y9HU_XPD9c)
 
-![FillCRMApp](docs/img/FillCRMApp.gif)
+[![Recording in SAP](https://img.youtube.com/vi/4VJ2Q4mPWnk/0.jpg)](https://www.youtube.com/watch?v=4VJ2Q4mPWnk)
 
-Support for high density robots, running multiple robots in each own remote desktop session
+[![Getting table data in chrome](https://img.youtube.com/vi/rDj2VUjE0so/0.jpg)](https://www.youtube.com/watch?v=rDj2VUjE0so)
 
-![high-densityrobot](docs/img/high-densityrobot.gif)
+[![Automate using Image Recognition and OCR](https://img.youtube.com/vi/qnE5j1FFL-0/0.jpg)](https://www.youtube.com/watch?v=qnE5j1FFL-0)
 
-Easy Object detection in images using robot, OpenFlow and google vision API
+[![Install and configuring High Density robots](https://img.youtube.com/vi/VMQtr0fK3Rw/0.jpg)](https://www.youtube.com/watch?v=VMQtr0fK3Rw)
 
-![EasyObjectDetection](docs/img/EasyObjectDetection.gif)
-
-See a small video of running the robot for the first time
-
-[![First time run](https://img.youtube.com/vi/SqLHlMpQhZA/1.jpg)](https://www.youtube.com/watch?v=34-H-_EPwJg)
 
 A big thank you, goes out too
 

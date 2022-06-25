@@ -57,7 +57,6 @@ namespace OpenRPA.WorkItems.Activities
                 if (ex is BusinessRuleException)
                 {
                     t.errortype = "business";
-                    if (t.state == "retry") t.state = "failed";
                 }
             }
             t.state = t.state.ToLower();

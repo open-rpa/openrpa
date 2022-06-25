@@ -166,13 +166,23 @@ namespace OpenRPA.RDService
                             else
                             {
                                 var credentials = new UserCredentials(windowsdomain, windowsusername, client.windowspassword);
-                                Impersonation.RunAsUser(credentials, LogonType.Interactive, () =>
+                                using (var userHandle = credentials.LogonUser(LogonType.Interactive))
                                 {
-                                    ConnectionAttempts++;
-                                    Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
-                                    freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
+                                    System.Security.Principal.WindowsIdentity.RunImpersonated(userHandle,
+                                        () =>
+                                        {
+                                            ConnectionAttempts++;
+                                            Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                                            freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
 
-                                });
+                                        });
+                                }
+                                //Impersonation.RunAsUser(credentials, LogonType.Interactive, () =>
+                                //{
+                                //    ConnectionAttempts++;
+                                //    Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
+                                //    freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword);
+                                //});
                             }
                             //using (var imp = new Impersonator(windowsusername, windowsdomain, client.windowspassword))
                             //{

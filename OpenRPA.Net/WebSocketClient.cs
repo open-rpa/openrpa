@@ -983,6 +983,21 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
+        public async Task<T[]> InsertOrUpdateMany<T>(string collectionname, int w, bool j, string uniqeness, bool SkipResult, T[] items)
+        {
+            var result = new List<T>();
+            for (var i = 0; i < items.Length; i = i + 50)
+            {
+                InsertOrUpdateMany<T> q = new InsertOrUpdateMany<T>();
+                q.w = w; q.j = j; q.uniqeness = uniqeness;
+                q.collectionname = collectionname; q.skipresults = SkipResult; q.items = items.Skip(i).Take(50).ToArray();
+                q = await q.SendMessage<InsertOrUpdateMany<T>>(this);
+                if (q == null) throw new SocketException("Server returned an empty response");
+                if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+                if (q.results != null) result.AddRange(q.results);
+            }
+            return result.ToArray();
+        }
         public async Task<T> InsertOne<T>(string collectionname, int w, bool j, T item)
         {
             InsertOneMessage<T> q = new InsertOneMessage<T>();

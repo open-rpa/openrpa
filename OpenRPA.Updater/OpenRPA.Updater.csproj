@@ -71,7 +71,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NuGet.Common" Version="5.4.0" />
     <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
     <PackageReference Include="NuGet.Protocol" Version="5.4.0" />

@@ -113,6 +113,7 @@ namespace OpenRPA.FileWatcher
                 watcher.Changed += new FileSystemEventHandler(OnChanged);
                 watcher.EnableRaisingEvents = true;
                 watcher.IncludeSubdirectories = IncludeSubdirectories;
+                
             }
             catch (Exception ex)
             {

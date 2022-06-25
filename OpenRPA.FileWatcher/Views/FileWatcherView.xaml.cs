@@ -49,6 +49,7 @@ namespace OpenRPA.FileWatcher.Views
             set
             {
                 Entity.name = value;
+                Entity.isDirty = true;
                 NotifyPropertyChanged("Entity");
             }
         }
@@ -61,6 +62,7 @@ namespace OpenRPA.FileWatcher.Views
             set
             {
                 plugin.Watchpath = value;
+                Entity.isDirty = true;
                 plugin.Stop();
                 plugin.Start();
                 NotifyPropertyChanged("Entity");
@@ -75,6 +77,7 @@ namespace OpenRPA.FileWatcher.Views
             set
             {
                 plugin.WatchFilter = value;
+                Entity.isDirty = true;
                 plugin.Stop();
                 plugin.Start();
                 NotifyPropertyChanged("Entity");
@@ -89,6 +92,7 @@ namespace OpenRPA.FileWatcher.Views
             set
             {
                 plugin.IncludeSubdirectories = value;
+                Entity.isDirty = true;
                 plugin.Stop();
                 plugin.Start();
                 NotifyPropertyChanged("Entity");

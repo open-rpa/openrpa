@@ -19,7 +19,7 @@ namespace OpenRPA.OpenFlowDB.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -210,6 +210,24 @@ namespace OpenRPA.OpenFlowDB.Resources {
         public static string activity_insertone_tooltip {
             get {
                 return ResourceManager.GetString("activity_insertone_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert Or Update Many.
+        /// </summary>
+        public static string activity_insertorupdatemany {
+            get {
+                return ResourceManager.GetString("activity_insertorupdatemany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows updating (and inserting when needed) multiple items using your own unique key.
+        /// </summary>
+        public static string activity_insertorupdatemany_tooltip {
+            get {
+                return ResourceManager.GetString("activity_insertorupdatemany_tooltip", resourceCulture);
             }
         }
         

@@ -40,6 +40,7 @@ namespace OpenRPA.OpenFlowDB
 
             var dt = DataTable.Get(context);
 
+            var items = new List<JObject>();
             foreach (DataRow row in dt.Rows)
             {
                 if(row.RowState == DataRowState.Deleted)
@@ -67,10 +68,11 @@ namespace OpenRPA.OpenFlowDB
                     {
                         result["_type"] = type;
                     }
-                    var _result = await global.webSocketClient.InsertOrUpdateOne(collection, 1, false, uniqueness, result);
-                    results.Add(_result);
+                    items.Add(result);
                 }
             }
+            await global.webSocketClient.InsertOrUpdateMany<JObject>(collection, 1, false, uniqueness, true, items.ToArray());
+
             dt.AcceptChanges();
             System.Windows.Forms.Application.DoEvents();
             return new JArray(results);

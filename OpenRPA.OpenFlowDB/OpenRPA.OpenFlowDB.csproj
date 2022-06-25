@@ -51,6 +51,7 @@
     <None Remove="Activities\GetFileDesigner.xaml" />
     <None Remove="Activities\GrantPermissionDesigner.xaml" />
     <None Remove="Activities\InsertOneDesigner.xaml" />
+    <None Remove="Activities\InsertOrUpdateManyDesigner.xaml" />
     <None Remove="Activities\InsertOrUpdateOneDesigner.xaml" />
     <None Remove="Activities\QueryDesigner.xaml" />
     <None Remove="Activities\RemovePermissionDesigner.xaml" />
@@ -241,6 +242,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InsertOneDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\InsertOrUpdateManyDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\UpdateFromDataTableDesigner.xaml">

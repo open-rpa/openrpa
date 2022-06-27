@@ -319,7 +319,20 @@ namespace OpenRPA.Office.Activities
                         workbook = officewrap.application.Workbooks.Add();
                         workbook.Activate();
                         //workbook.SaveCopyAs(filename);
-                        workbook.SaveAs(Filename: filename);
+                        if(!filename.ToLower().EndsWith(".xlsm"))
+                        {
+                            workbook.SaveAs(Filename: filename);
+                        } else
+                        {
+                            try
+                            {
+                                workbook.SaveAs(Filename: filename);
+                            }
+                            catch (Exception ex)
+                            {
+                                Interfaces.Log.Information(ex.Message);
+                            }
+                        }
                     }
                     officewrap.application.DisplayAlerts = true;
 

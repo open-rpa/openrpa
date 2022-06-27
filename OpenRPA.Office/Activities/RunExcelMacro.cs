@@ -31,7 +31,7 @@ namespace OpenRPA.Office.Activities
             if (parameters != null) _params = parameters.ToList(); else _params = new List<object>();
 
             var filename = System.IO.Path.GetFileName(workbook.FullName);
-            _params.Insert(0, filename + "!" + name);
+            _params.Insert(0, "'" + workbook.FullName + "'!" + name);
             result = (TResult)RunMacro(officewrap.application, _params.ToArray());
             if(result!=null)
             {

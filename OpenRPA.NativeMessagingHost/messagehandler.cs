@@ -141,18 +141,26 @@ namespace OpenRPA.NativeMessagingHost
             }
             OpenStandardStreamOut(JsonConvert.SerializeObject(msg));
         }
+        // https://stackoverflow.com/questions/30880709/c-sharp-native-host-with-chrome-native-messaging
         private static void OpenStandardStreamOut(string msgdata)
         {
-            //// We need to send the 4 btyes of length information
-            //string msgdata = "{\"text\":\"" + stringData + "\"}";
-            int DataLength = msgdata.Length;
-            Stream stdout = Console.OpenStandardOutput();
-            stdout.WriteByte((byte)((DataLength >> 0) & 0xFF));
-            stdout.WriteByte((byte)((DataLength >> 8) & 0xFF));
-            stdout.WriteByte((byte)((DataLength >> 16) & 0xFF));
-            stdout.WriteByte((byte)((DataLength >> 24) & 0xFF));
-            //Available total length : 4,294,967,295 ( FF FF FF FF )
-            Console.Write(msgdata);
+            var bytes = System.Text.Encoding.UTF8.GetBytes(msgdata);
+
+            var stdout = Console.OpenStandardOutput();
+            stdout.WriteByte((byte)((bytes.Length >> 0) & 0xFF));
+            stdout.WriteByte((byte)((bytes.Length >> 8) & 0xFF));
+            stdout.WriteByte((byte)((bytes.Length >> 16) & 0xFF));
+            stdout.WriteByte((byte)((bytes.Length >> 24) & 0xFF));
+            stdout.Write(bytes, 0, bytes.Length);
+            stdout.Flush();
+
+            //int DataLength = msgdata.Length;
+            //Stream stdout = Console.OpenStandardOutput();
+            //stdout.WriteByte((byte)((DataLength >> 0) & 0xFF));
+            //stdout.WriteByte((byte)((DataLength >> 8) & 0xFF));
+            //stdout.WriteByte((byte)((DataLength >> 16) & 0xFF));
+            //stdout.WriteByte((byte)((DataLength >> 24) & 0xFF));
+            //Console.Write(msgdata);
         }
         public static List<int> windows = new List<int>();
         public static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();

@@ -182,7 +182,16 @@ namespace OpenRPA.NM
                     if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
                 }
                 if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
-                if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
+                if (Attributes.ContainsKey("innertext"))
+                {
+                    var text = Attributes["innertext"].ToString();
+                    if (string.IsNullOrEmpty(text) && Children.Length == 0)
+                    {
+                        var inner = innerHTML;
+                        if (!string.IsNullOrEmpty(inner)) text = inner;
+                    }
+                    return text;
+                }
                 if (!hasRefreshed)
                 {
                     Refresh();

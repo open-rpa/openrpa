@@ -523,7 +523,7 @@ namespace OpenRPA
                     }
                     else if (p.isDirty)
                     {
-                        if (p.isDeleted) await p.Delete();
+                        if (p.isDeleted) await p.Delete(true);
                         if (!p.isDeleted) await p.Save();
                     }
                 }
@@ -610,7 +610,7 @@ namespace OpenRPA
                         if (exists == null && !wf.isDirty)
                         {
                             Log.Debug("Removing local workflow " + wf.name);
-                            await wf.Delete();
+                            await wf.Delete(true);
                         }
                         else if ((wf.isDirty || wf.isLocalOnly) && exists != null && exists._version >= wf._version) // Do NOT save offline changes. LEt user do that using the right click menu
                         {
@@ -618,7 +618,7 @@ namespace OpenRPA
                             string name = wf.name;
                             string RelativeFilename = wf.RelativeFilename;
                             reload_ids.Add(wf._id);
-                            //if (wf.isDeleted) await wf.Delete();
+                            //if (wf.isDeleted) await wf.Delete(true);
                             //if (!wf.isDeleted && exists._version > wf._version)
                             //{
                             //    await wf.Update(exists, true);
@@ -724,7 +724,7 @@ namespace OpenRPA
                         }
                         else if (detector.isDirty)
                         {
-                            if (detector.isDeleted) await detector.Delete();
+                            if (detector.isDeleted) await detector.Delete(true);
                             if (!detector.isDeleted) await detector.Save();
                         }
                     }

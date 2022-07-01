@@ -409,7 +409,7 @@ namespace OpenRPA.NM
                 if (Attributes.ContainsKey("innerhtml") && string.IsNullOrEmpty(result)) result = Attributes["innerhtml"].ToString();
                 if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
                 if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
-                if (string.IsNullOrEmpty(result)) result = Text;
+                // if (string.IsNullOrEmpty(result)) result = Text;
                 return result;
             }
             set

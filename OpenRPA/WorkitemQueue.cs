@@ -139,6 +139,10 @@ namespace OpenRPA
                 try
                 {
                     RobotInstance.instance.WorkItemQueues.Remove(this);
+                    RobotInstance.instance.dbWorkItemQueues.Delete(_id);
+                }
+                catch (Exception ex) {
+                    Log.Error("Error removing " + name + "/" + _id + " " + ex.Message);
                 }
                 finally
                 {

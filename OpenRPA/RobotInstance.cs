@@ -804,6 +804,7 @@ namespace OpenRPA
                         if (exists == null)
                         {
                             var _id = WorkItemQueue._id;
+                            var name = WorkItemQueue.name;
                             Log.Debug("Removing local WorkItemQueue " + WorkItemQueue.name);
                             await WorkItemQueue.Delete(true);
                         }

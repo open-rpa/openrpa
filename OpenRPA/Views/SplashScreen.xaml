@@ -161,7 +161,7 @@
 
     <Border CornerRadius="8" Margin="15">
         <Border.Background>
-            <ImageBrush ImageSource="/OpenRPA;component/Resources/gears-1236578_1920.jpg" 
+            <ImageBrush ImageSource="/OpenRPA;component/Resources/loadingbackground.jpg" 
                         Stretch="Fill" />
         </Border.Background>
         <Border.Effect>

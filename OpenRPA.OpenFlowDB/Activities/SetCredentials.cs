@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(SetCredentialsDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.entity.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.setcredentials.png")]
     [LocalizedToolboxTooltip("activity_setcredentials_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_setcredentials", typeof(Resources.strings))]
     public sealed class SetCredentials : AsyncTaskCodeActivity

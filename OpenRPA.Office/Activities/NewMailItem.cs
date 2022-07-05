@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(NewMailItemDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.newemail.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.newmailitem.png")]
     [LocalizedToolboxTooltip("activity_newmailitem_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_newmailitem", typeof(Resources.strings))]
     public class NewMailItem : CodeActivity

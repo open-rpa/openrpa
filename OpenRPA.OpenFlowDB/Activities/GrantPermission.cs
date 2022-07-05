@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(GrantPermissionDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.addentitypermission.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.grantpermission.png")]
     [LocalizedToolboxTooltip("activity_grantpermission_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_grantpermission", typeof(Resources.strings))]
     public class GrantPermission : CodeActivity

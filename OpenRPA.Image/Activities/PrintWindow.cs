@@ -9,7 +9,7 @@ using System.Linq;
 namespace OpenRPA.Image
 {
     [Designer(typeof(PrintWindowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [ToolboxBitmap(typeof(GetImage), "Resources.toolbox.camera.png")]
+    [ToolboxBitmap(typeof(GetImage), "Resources.toolbox.printwindow.png")]
     [LocalizedToolboxTooltip("activity_printwindow_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_printwindow", typeof(Resources.strings))]
     public sealed class PrintWindow : CodeActivity

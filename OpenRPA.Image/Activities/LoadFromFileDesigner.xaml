@@ -18,7 +18,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA.Image;component/Resources/designer/getimage.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.Image;component/Resources/designer/loadfromfile.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

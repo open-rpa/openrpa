@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Script
 {
     [Designer(typeof(PipInstallDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(PipInstall), "Resources.toolbox.comment.png")]
+    [System.Drawing.ToolboxBitmap(typeof(PipInstall), "Resources.toolbox.pipinstall.png")]
     [LocalizedToolboxTooltip("activity_pipinstall_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_pipinstall", typeof(Resources.strings))]
     public class PipInstall : CodeActivity
@@ -23,6 +23,7 @@ namespace OpenRPA.Script
         protected override void Execute(CodeActivityContext context)
         {
             var modules = Modules.Get(context);
+            if (modules == null) return;
 
             if (PluginConfig.use_embedded_python)
             {

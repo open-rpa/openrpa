@@ -19,7 +19,7 @@ using System.Windows;
 namespace OpenRPA.Utilities
 {
     [Designer(typeof(ReplaceDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.regex.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.replace.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class Replace : CodeActivity
     {

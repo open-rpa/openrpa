@@ -118,11 +118,11 @@ namespace OpenRPA.SAP
             if (elements.Count() > maxresults && maxresults > 0) elements = elements.ToList().Take(maxresults).ToList();
             if (elements.Count() > 0)
             {
-                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("searchfound.png");
             }
             else
             {
-                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
+                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".searchfailed.png");
             }
             NotifyPropertyChanged("HighlightImage");
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));

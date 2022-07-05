@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(BreakableDoWhileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.foreach.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.dowhile.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_Breakabledowhile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_Breakabledowhile", typeof(Resources.strings))]

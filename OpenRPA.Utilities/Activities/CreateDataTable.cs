@@ -19,7 +19,7 @@ using System.Windows;
 namespace OpenRPA.Utilities
 {
     [Designer(typeof(CreateDataTableDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.database.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.createdatatable.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class CreateDataTable : CodeActivity
     {

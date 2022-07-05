@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace OpenRPA.TerminalEmulator
 {
     [Designer(typeof(GetTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.settext.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.gettext.png")]
     [LocalizedToolboxTooltip("activity_gettext_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettext", typeof(Resources.strings))]
     public class GetText : CodeActivity

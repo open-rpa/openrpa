@@ -55,7 +55,7 @@
 1.0.9 Added a Snippet interface, for addons to offers example snippets.
 
 1.0.8 Add generic version of AsyncTaskCodeActivity</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>openrpa.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <Description>OpenRPA interfaces and tools, used to add functionality for OpenRPA robot</Description>
     <PackageTags></PackageTags>
@@ -78,11 +78,10 @@
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Resources\check.png" />
+    <None Include="Resources\openrpa.png" Pack="true" PackagePath="\" />
     <None Remove="Resources\search.png" />
+    <None Remove="Resources\searchfailed.png" />
+    <None Remove="Resources\searchfound.png" />
     <None Remove="Resources\Selector\Button.png" />
     <None Remove="Resources\Selector\Calendar.png" />
     <None Remove="Resources\Selector\CheckBox.png" />
@@ -116,15 +115,14 @@
     <None Remove="Resources\Selector\ToolTip.png" />
     <None Remove="Resources\Selector\Tree.png" />
     <None Remove="Resources\Selector\Window.png" />
-    <None Remove="Resources\x.png" />
     <None Remove="Selector\SelectorWindow.xaml" />
     <None Remove="Views\KeyboardDetectorView.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\check.png" />
     <EmbeddedResource Include="Resources\search.png" />
-    <EmbeddedResource Include="Resources\x.png" />
+    <EmbeddedResource Include="Resources\searchfailed.png" />
+    <EmbeddedResource Include="Resources\searchfound.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FlaUI.UIA3" Version="3.2.0">

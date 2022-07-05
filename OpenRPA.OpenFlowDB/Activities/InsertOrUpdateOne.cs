@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(InsertOrUpdateOneDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.entity.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.insertorupdateone.png")]
     [LocalizedToolboxTooltip("activity_insertorupdateone_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_insertorupdateone", typeof(Resources.strings))]
     public class InsertOrUpdateOne : AsyncTaskCodeActivity<JObject>

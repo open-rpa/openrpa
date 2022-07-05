@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Image
 {
     [System.ComponentModel.Designer(typeof(GetTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetText), "Resources.toolbox.gettext.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_gettext_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettext", typeof(Resources.strings))]

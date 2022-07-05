@@ -9,7 +9,7 @@
     <Description>Windows Service to monitor Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>terminalemulator.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <Version>1.0.17</Version>
     <PackageReleaseNotes>1.0.17 Improve rdservice, add support for running without freerdp as a service
@@ -68,9 +68,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNuget|x86'">
     <OutputPath />
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FreeRDP-Sharp" Version="0.1.0" />
     <PackageReference Include="SimpleImpersonation" Version="4.2.0" />

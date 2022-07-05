@@ -13,7 +13,7 @@ using System.Threading;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(SaveFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.downloadfile.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.savefile.png")]
     [LocalizedToolboxTooltip("activity_savefile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_savefile", typeof(Resources.strings))]
     public class SaveFile : AsyncTaskCodeActivity<string>

@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 namespace OpenRPA.Database
 {
     [Designer(typeof(ExecuteScalarDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.executescalar.png")]
     [LocalizedToolboxTooltip("activity_executescalar_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executescalar", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_executescalar_helpurl", typeof(Resources.strings))]

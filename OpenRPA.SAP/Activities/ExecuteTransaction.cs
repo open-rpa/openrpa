@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace OpenRPA.SAP
 {
     [Designer(typeof(SetPropertyDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(Login), "Resources.toolbox.SAP_logo_small2.png")]
+    [System.Drawing.ToolboxBitmap(typeof(Login), "Resources.toolbox.executetransaction.png")]
     [LocalizedToolboxTooltip("activity_executetransaction_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executetransaction", typeof(Resources.strings))]
     public class ExecuteTransaction : CodeActivity

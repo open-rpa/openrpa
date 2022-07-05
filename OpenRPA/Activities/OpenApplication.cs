@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(OpenApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getapp.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.openapplication.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_openapplication_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_openapplication", typeof(Resources.strings))]

@@ -13,7 +13,7 @@ using Microsoft.VisualBasic;
 namespace OpenRPA.SAP
 {
     [Designer(typeof(LoginDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(Login), "Resources.toolbox.SAP_logo_small2.png")]
+    [System.Drawing.ToolboxBitmap(typeof(Login), "Resources.toolbox.login.png")]
     [LocalizedToolboxTooltip("activity_login_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_login", typeof(Resources.strings))]
     public class Login : CodeActivity

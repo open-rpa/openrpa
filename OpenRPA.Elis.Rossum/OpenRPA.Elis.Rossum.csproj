@@ -6,7 +6,7 @@
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <Description>Simple wrapper activites around https://elis.rossum.ai for Microsoft Workflow Foundation, specifically tested and created for OpenRPA robot</Description>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>elisrossum.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <Version>1.0.7</Version>
     <PackageReleaseNotes>1.0.7 Change target framework to 4.7.2
@@ -43,20 +43,33 @@
     </PropertyGroup>
   </Target>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\elisrossum.png" Pack="true" PackagePath="\" />
     <None Remove="Activities\AuthDesigner.xaml" />
     <None Remove="Activities\ExportFileDataDesigner.xaml" />
     <None Remove="Activities\GetFileStatusDesigner.xaml" />
     <None Remove="Activities\GetQueuesDesigner.xaml" />
     <None Remove="Activities\UploadFileDesigner.xaml" />
     <None Remove="Activities\WaitForFileStatusDesigner.xaml" />
-    <None Remove="Resources\designer\getimage.png" />
-    <None Remove="Resources\toolbox\getimage.png" />
+    <None Remove="Resources\designer\auth.png" />
+    <None Remove="Resources\designer\exportfiledata.png" />
+    <None Remove="Resources\designer\getfilestatus.png" />
+    <None Remove="Resources\designer\getqueues.png" />
+    <None Remove="Resources\designer\uploadfile.png" />
+    <None Remove="Resources\designer\waitforfilestatus.png" />
+    <None Remove="Resources\toolbox\auth.png" />
+    <None Remove="Resources\toolbox\exportfiledata.png" />
+    <None Remove="Resources\toolbox\getfilestatus.png" />
+    <None Remove="Resources\toolbox\getqueues.png" />
+    <None Remove="Resources\toolbox\uploadfile.png" />
+    <None Remove="Resources\toolbox\waitforfilestatus.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\getimage.png" />
+    <EmbeddedResource Include="Resources\toolbox\auth.png" />
+    <EmbeddedResource Include="Resources\toolbox\exportfiledata.png" />
+    <EmbeddedResource Include="Resources\toolbox\getfilestatus.png" />
+    <EmbeddedResource Include="Resources\toolbox\getqueues.png" />
+    <EmbeddedResource Include="Resources\toolbox\uploadfile.png" />
+    <EmbeddedResource Include="Resources\toolbox\waitforfilestatus.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -96,7 +109,12 @@
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\getimage.png" />
+    <Resource Include="Resources\designer\auth.png" />
+    <Resource Include="Resources\designer\exportfiledata.png" />
+    <Resource Include="Resources\designer\getfilestatus.png" />
+    <Resource Include="Resources\designer\getqueues.png" />
+    <Resource Include="Resources\designer\uploadfile.png" />
+    <Resource Include="Resources\designer\waitforfilestatus.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

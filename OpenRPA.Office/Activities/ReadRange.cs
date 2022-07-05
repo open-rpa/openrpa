@@ -14,7 +14,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ReadRangeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readrange.png")]
     [LocalizedToolboxTooltip("activity_readrange_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_readrange", typeof(Resources.strings))]
     public class ReadRange : ExcelActivity

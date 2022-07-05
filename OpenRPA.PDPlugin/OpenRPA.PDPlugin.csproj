@@ -6,7 +6,7 @@
     <Product>OpenRPA</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>pdplugin.png</PackageIcon>
     <PackageIconUrl />
     <Description>OpenRPA Process Mining Addon</Description>
     <Configurations>Debug;Release;PrepInstaller;ReleaseNuget</Configurations>
@@ -19,9 +19,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\PluginView.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\debug</OutputPath>

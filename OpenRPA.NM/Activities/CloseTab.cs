@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.NM
 {
     [System.ComponentModel.Designer(typeof(CloseTabDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(CloseTab), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(CloseTab), "Resources.toolbox.closetab.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_closetab_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_closetab", typeof(Resources.strings))]

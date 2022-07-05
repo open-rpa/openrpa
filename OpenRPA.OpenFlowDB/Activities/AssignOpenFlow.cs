@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(AssignOpenFlowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokezeniverseworkflow.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.assignopenflow.png")]
     [LocalizedToolboxTooltip("activity_assignopenflow_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_assignopenflow", typeof(Resources.strings))]
     public class AssignOpenFlow : NativeActivity

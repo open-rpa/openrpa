@@ -15,7 +15,7 @@ using System.Data;
 namespace OpenRPA.Database
 {
     [Designer(typeof(ExecuteQueryDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.executequery.png")]
     [LocalizedToolboxTooltip("activity_executequery_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executequery", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_executequery_helpurl", typeof(Resources.strings))]

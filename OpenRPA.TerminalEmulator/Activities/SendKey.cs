@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace OpenRPA.TerminalEmulator
 {
     [Designer(typeof(SendKeyDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(SendKey), "Resources.toolbox.settext.png")]
+    [System.Drawing.ToolboxBitmap(typeof(SendKey), "Resources.toolbox.sendkey.png")]
     [LocalizedToolboxTooltip("activity_sendkey_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_sendkey", typeof(Resources.strings))]
     public class SendKey : CodeActivity

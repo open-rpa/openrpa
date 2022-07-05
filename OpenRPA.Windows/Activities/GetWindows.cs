@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 namespace OpenRPA.Windows
 {
     [System.ComponentModel.Designer(typeof(GetWindowsDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetWindows), "Resources.toolbox.getuielement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetWindows), "Resources.toolbox.getwindows.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getwindows_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getwindows", typeof(Resources.strings))]

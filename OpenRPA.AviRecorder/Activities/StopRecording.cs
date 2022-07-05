@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.AviRecorder.Activities
 {
     [System.ComponentModel.Designer(typeof(StopRecordingDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.stoprecording.png")]
     [LocalizedToolboxTooltip("activity_stoprecording_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_stoprecording", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_stoprecording_helpurl", typeof(Resources.strings))]

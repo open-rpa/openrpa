@@ -117,7 +117,7 @@ namespace OpenRPA
         public string Name { get; set; }
         public Type Type { get; set; }
     } // class DynamicActivityDescriptor
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.workflow.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.snippet.png")]
     public abstract class DynamicActivityTemplateFactory : IActivityTemplateFactory
     {
         public virtual string GetActivity()

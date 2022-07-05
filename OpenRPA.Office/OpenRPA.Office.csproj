@@ -30,7 +30,7 @@
 1.0.12 update interfaces reference
 1.0.11 Update power excel snippet to auto create file
 1.0.9 update interfaces reference</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>office.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -58,9 +58,6 @@
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Activities\AddParagraphDesigner.xaml" />
     <None Remove="Activities\ClearRangeDesigner.xaml" />
     <None Remove="Activities\CloseDocumentDesigner.xaml" />
@@ -83,37 +80,76 @@
     <None Remove="Activities\UnprotectWorksheetDesigner.xaml" />
     <None Remove="Activities\WriteCellDesigner.xaml" />
     <None Remove="Activities\WriteRangeDesigner.xaml" />
+    <None Remove="Resources\designer\AddParagraph.png" />
+    <None Remove="Resources\designer\clearrange.png" />
+    <None Remove="Resources\designer\closedocument.png" />
     <None Remove="Resources\designer\closeworkbook.png" />
-    <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\exportdocument.png" />
     <None Remove="Resources\designer\ExportWorkbook.png" />
-    <None Remove="Resources\designer\newemail.png" />
-    <None Remove="Resources\designer\outlook.png" />
-    <None Remove="Resources\designer\protect.png" />
-    <None Remove="Resources\designer\readexcel.png" />
+    <None Remove="Resources\designer\getmails.png" />
+    <None Remove="Resources\designer\getparagraph.png" />
+    <None Remove="Resources\designer\getselectedrange.png" />
+    <None Remove="Resources\designer\movemailitem.png" />
+    <None Remove="Resources\designer\newmailitem.png" />
+    <None Remove="Resources\designer\protectworksheet.png" />
+    <None Remove="Resources\designer\readcell.png" />
+    <None Remove="Resources\designer\readrange.png" />
     <None Remove="Resources\designer\refresh.png" />
-    <None Remove="Resources\designer\unprotect.png" />
-    <None Remove="Resources\designer\writeexcel.png" />
+    <None Remove="Resources\designer\replymailitem.png" />
+    <None Remove="Resources\designer\runexcelmacro.png" />
+    <None Remove="Resources\designer\runslideshow.png" />
+    <None Remove="Resources\designer\savemailitem.png" />
+    <None Remove="Resources\designer\setparagraph.png" />
+    <None Remove="Resources\designer\unprotectworksheet.png" />
+    <None Remove="Resources\designer\writecell.png" />
+    <None Remove="Resources\designer\writerange.png" />
+    <None Remove="Resources\toolbox\addparagraph.png" />
+    <None Remove="Resources\toolbox\clearrange.png" />
+    <None Remove="Resources\toolbox\closedocument.png" />
     <None Remove="Resources\toolbox\closeworkbook.png" />
-    <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\exportdocument.png" />
     <None Remove="Resources\toolbox\ExportWorkbook.png" />
-    <None Remove="Resources\toolbox\newemail.png" />
-    <None Remove="Resources\toolbox\outlook.png" />
-    <None Remove="Resources\toolbox\protect.png" />
-    <None Remove="Resources\toolbox\readexcel.png" />
-    <None Remove="Resources\toolbox\unprotect.png" />
-    <None Remove="Resources\toolbox\writeexcel.png" />
+    <None Remove="Resources\toolbox\getmails.png" />
+    <None Remove="Resources\toolbox\getparagraph.png" />
+    <None Remove="Resources\toolbox\getselectedrange.png" />
+    <None Remove="Resources\toolbox\movemailitem.png" />
+    <None Remove="Resources\toolbox\newmailitem.png" />
+    <None Remove="Resources\toolbox\protectworksheet.png" />
+    <None Remove="Resources\toolbox\readcell.png" />
+    <None Remove="Resources\toolbox\readrange.png" />
+    <None Remove="Resources\toolbox\replymailitem.png" />
+    <None Remove="Resources\toolbox\runexcelmacro.png" />
+    <None Remove="Resources\toolbox\runslideshow.png" />
+    <None Remove="Resources\toolbox\savemailitem.png" />
+    <None Remove="Resources\toolbox\setparagraph.png" />
+    <None Remove="Resources\toolbox\unprotectworksheet.png" />
+    <None Remove="Resources\toolbox\writecell.png" />
+    <None Remove="Resources\toolbox\writerange.png" />
     <None Remove="Snippets\ExcelLoop.xaml" />
     <None Remove="Snippets\ExcelPowerLoop.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\toolbox\setparagraph.png" />
+    <EmbeddedResource Include="Resources\toolbox\runslideshow.png" />
+    <EmbeddedResource Include="Resources\toolbox\runexcelmacro.png" />
+    <EmbeddedResource Include="Resources\toolbox\replymailitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\readrange.png" />
+    <EmbeddedResource Include="Resources\toolbox\readcell.png" />
+    <EmbeddedResource Include="Resources\toolbox\getselectedrange.png" />
+    <EmbeddedResource Include="Resources\toolbox\getparagraph.png" />
+    <EmbeddedResource Include="Resources\toolbox\clearrange.png" />
+    <EmbeddedResource Include="Resources\toolbox\closedocument.png" />
     <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
+    <EmbeddedResource Include="Resources\toolbox\exportdocument.png" />
     <EmbeddedResource Include="Resources\toolbox\ExportWorkbook.png" />
-    <EmbeddedResource Include="Resources\toolbox\newemail.png" />
-    <EmbeddedResource Include="Resources\toolbox\outlook.png" />
-    <EmbeddedResource Include="Resources\toolbox\protect.png" />
-    <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
-    <EmbeddedResource Include="Resources\toolbox\unprotect.png" />
-    <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
+    <EmbeddedResource Include="Resources\toolbox\movemailitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\newmailitem.png" />
+    <EmbeddedResource Include="Resources\toolbox\getmails.png" />
+    <EmbeddedResource Include="Resources\toolbox\protectworksheet.png" />
+    <EmbeddedResource Include="Resources\toolbox\addparagraph.png" />
+    <EmbeddedResource Include="Resources\toolbox\unprotectworksheet.png" />
+    <EmbeddedResource Include="Resources\toolbox\writerange.png" />
+    <EmbeddedResource Include="Resources\toolbox\writecell.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\ExportDocumentDesigner.xaml">
@@ -215,16 +251,29 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\setparagraph.png" />
+    <Resource Include="Resources\designer\runslideshow.png" />
+    <Resource Include="Resources\designer\runexcelmacro.png" />
+    <Resource Include="Resources\designer\replymailitem.png" />
+    <Resource Include="Resources\designer\readrange.png" />
+    <Resource Include="Resources\designer\readcell.png" />
+    <Resource Include="Resources\designer\getselectedrange.png" />
+    <Resource Include="Resources\designer\getparagraph.png" />
+    <Resource Include="Resources\designer\clearrange.png" />
+    <Resource Include="Resources\designer\closedocument.png" />
     <Resource Include="Resources\designer\closeworkbook.png" />
-    <Resource Include="Resources\designer\commentout.png" />
+    <Resource Include="Resources\designer\savemailitem.png" />
+    <Resource Include="Resources\designer\exportdocument.png" />
     <Resource Include="Resources\designer\ExportWorkbook.png" />
-    <Resource Include="Resources\designer\newemail.png" />
-    <Resource Include="Resources\designer\outlook.png" />
-    <Resource Include="Resources\designer\protect.png" />
-    <Resource Include="Resources\designer\readexcel.png" />
+    <Resource Include="Resources\designer\movemailitem.png" />
+    <Resource Include="Resources\designer\newmailitem.png" />
+    <Resource Include="Resources\designer\getmails.png" />
+    <Resource Include="Resources\designer\protectworksheet.png" />
+    <Resource Include="Resources\designer\addparagraph.png" />
     <Resource Include="Resources\designer\refresh.png" />
-    <Resource Include="Resources\designer\unprotect.png" />
-    <Resource Include="Resources\designer\writeexcel.png" />
+    <Resource Include="Resources\designer\unprotectworksheet.png" />
+    <Resource Include="Resources\designer\writerange.png" />
+    <Resource Include="Resources\designer\writecell.png" />
     <Resource Include="Snippets\ExcelLoop.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -233,7 +282,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\savemailitem.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

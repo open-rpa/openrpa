@@ -15,7 +15,7 @@ using System.Windows;
 namespace OpenRPA.NM
 {
     [System.ComponentModel.Designer(typeof(WaitForDownloadDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(WaitForDownload), "Resources.toolbox.detector.png")]
+    [System.Drawing.ToolboxBitmap(typeof(WaitForDownload), "Resources.toolbox.waitfordownload.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_waitfordownload_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_waitfordownload", typeof(Resources.strings))]

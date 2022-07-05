@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace OpenRPA.TerminalEmulator
 {
     [Designer(typeof(WaitForTextDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(WaitForText), "Resources.toolbox.settext.png")]
+    [System.Drawing.ToolboxBitmap(typeof(WaitForText), "Resources.toolbox.waitfortext.png")]
     [LocalizedToolboxTooltip("activity_waitfortext_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_waitfortext", typeof(Resources.strings))]
     public class WaitForText : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory

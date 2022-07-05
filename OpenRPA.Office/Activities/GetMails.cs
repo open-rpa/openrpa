@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(GetMailsDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.outlook.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.getmails.png")]
     [LocalizedToolboxTooltip("activity_getmails_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getmails", typeof(Resources.strings))]
     public class GetMails : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory

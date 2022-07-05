@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Activities
 {
     [Designer(typeof(CloseApplicationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.killapp.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.closeapplication.png")]
     [LocalizedToolboxTooltip("activity_closeapplication_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_closeapplication", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_closeapplication_helpurl", typeof(Resources.strings))]

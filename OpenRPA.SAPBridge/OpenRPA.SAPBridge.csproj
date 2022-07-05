@@ -3,7 +3,7 @@
     <TargetFramework>net45</TargetFramework>
     <OutputType>WinExe</OutputType>
     <Platforms>AnyCPU;x86</Platforms>
-    <ApplicationIcon>OpenRPA.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\sapbridge.ico</ApplicationIcon>
     <Configurations>Debug;Release;PrepInstaller</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

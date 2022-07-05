@@ -29,9 +29,9 @@
                 <RibbonApplicationMenu SmallImageSource="/OpenRPA;component/Resources/Buttons/Export.png">
                     <!--<RibbonApplicationMenuItem Header="{x:Static or:strings.settingsfile}" ImageSource="/OpenRPA;component/Resources/Buttons/Open.png" 
                                                Command="{Binding Data.SettingsCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />-->
-                    <RibbonApplicationMenuItem Header="{x:Static or:strings.signout}" ImageSource="/OpenRPA;component/Resources/Buttons/Revert.png" 
+                    <RibbonApplicationMenuItem Header="{x:Static or:strings.signout}" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
                                                Command="{Binding Data.SignoutCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
-                    <RibbonApplicationMenuItem Header="{x:Static or:strings.exitapplication}" ImageSource="/OpenRPA;component/Resources/Buttons/Signout.png" 
+                    <RibbonApplicationMenuItem Header="{x:Static or:strings.exitapplication}" ImageSource="/OpenRPA;component/Resources/Buttons/Exit.png" 
                                                Command="{Binding Data.ExitAppCommand, Source={StaticResource proxy}}" CommandParameter="{Binding}" />
 
 

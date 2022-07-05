@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(GetQueuesDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetQueues), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetQueues), "Resources.toolbox.getqueues.png")]
     [LocalizedToolboxTooltip("activity_getqueues_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getqueues", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_getqueues_helpurl", typeof(Resources.strings))]

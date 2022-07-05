@@ -4,6 +4,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<Version>1.0.22</Version>
+		<PackageIcon>workitems.png</PackageIcon>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath>..\debug</OutputPath>
@@ -15,6 +16,7 @@
 		<Optimize>False</Optimize>
 	</PropertyGroup>
 	<ItemGroup>
+		<None Include="Resources\workitems.png" Pack="true" PackagePath="\" />
 		<None Remove="Activities\AddWorkitemDesigner.xaml" />
 		<None Remove="Activities\BulkAddWorkitemsDesigner.xaml" />
 		<None Remove="Activities\DeleteWorkitemDesigner.xaml" />
@@ -142,6 +144,7 @@
 			<Pack>true</Pack>
 			<PackagePath>lib\$(TargetFramework)</PackagePath>
 		</Content>
+		<Content Include="Resources\workitems.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Resources\strings.Designer.cs">

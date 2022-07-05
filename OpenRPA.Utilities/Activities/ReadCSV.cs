@@ -17,7 +17,7 @@ using Microsoft.VisualBasic.FileIO;
 namespace OpenRPA.Utilities
 {
     [Designer(typeof(ReadCSVDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.readcsv.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class ReadCSV : CodeActivity
     {

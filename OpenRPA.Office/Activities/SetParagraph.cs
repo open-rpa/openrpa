@@ -12,7 +12,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(SetParagraphDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.setparagraph.png")]
     [LocalizedToolboxTooltip("activity_setparagraph_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_setparagraph", typeof(Resources.strings))]
     public class SetParagraph : CodeActivity

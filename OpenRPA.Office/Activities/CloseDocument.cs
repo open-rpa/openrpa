@@ -15,7 +15,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(CloseDocumentDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.closeworkbook.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.closedocument.png")]
     [LocalizedToolboxTooltip("activity_closedocument_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_closedocument", typeof(Resources.strings))]
     public class CloseDocument : CodeActivity

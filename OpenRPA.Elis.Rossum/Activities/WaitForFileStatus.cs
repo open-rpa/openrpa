@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(WaitForFileStatusDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(WaitForFileStatus), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(WaitForFileStatus), "Resources.toolbox.waitforfilestatus.png")]
     [LocalizedToolboxTooltip("activity_waitforfilestatus_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_waitforfilestatus", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_waitforfilestatus_helpurl", typeof(Resources.strings))]

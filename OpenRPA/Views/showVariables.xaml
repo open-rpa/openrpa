@@ -52,13 +52,13 @@
                                                     <Image.Style>
                                                         <Style>
                                                             <Setter Property="Image.Source" 
-                                Value="/OpenRPA;component/Resources/close.png" />
+                                Value="/OpenRPA;component/Resources/icons/close.png" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsChecked, 
                                     RelativeSource={RelativeSource AncestorType=
                                     {x:Type ToggleButton}}}" Value="True">
                                                                     <Setter Property="Image.Source" 
-                                        Value="/OpenRPA;component/Resources/open.png" />
+                                        Value="/OpenRPA;component/Resources/icons/open.png" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>

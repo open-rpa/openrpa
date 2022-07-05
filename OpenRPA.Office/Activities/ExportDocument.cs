@@ -16,7 +16,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ExportDocumentDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.ExportDocument.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.exportdocument.png")]
     [LocalizedToolboxTooltip("activity_exportdocument_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_exportdocument", typeof(Resources.strings))]
     public class ExportDocument : CodeActivity

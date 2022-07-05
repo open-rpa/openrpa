@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Image
 {
     [System.ComponentModel.Designer(typeof(TakeScreenshotDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetImage), "Resources.toolbox.camera.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetImage), "Resources.toolbox.takescreenshot.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_takescreenshot_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_takescreenshot", typeof(Resources.strings))]

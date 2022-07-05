@@ -20,7 +20,7 @@
 1.0.12 update interfaces reference
 1.0.11 support for seperate images 
 1.0.10 update interfaces reference</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>java.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -49,9 +49,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
     <OutputPath />
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
@@ -64,16 +61,18 @@
   </Target>
   <ItemGroup>
     <None Remove="Activities\GetElementDesigner.xaml" />
-    <None Remove="Resources\check.png" />
-    <None Remove="Resources\designer\getjavaelement.png" />
+    <None Remove="Resources\designer\getelement.png" />
     <None Remove="Resources\search.png" />
-    <None Remove="Resources\toolbox\getjavaelement.png" />
-    <None Remove="Resources\x.png" />
+    <None Remove="Resources\searchfailed.png" />
+    <None Remove="Resources\searchfound.png" />
+    <None Remove="Resources\toolbox\getelement.png" />
     <None Remove="Views\JavaClickDetectorView.xaml" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\getjavaelement.png" />
+    <EmbeddedResource Include="Resources\searchfailed.png" />
+    <EmbeddedResource Include="Resources\searchfound.png" />
+    <EmbeddedResource Include="Resources\toolbox\getelement.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Activities\GetElementDesigner.xaml">
@@ -99,15 +98,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\check.png" />
     <EmbeddedResource Include="Resources\search.png" />
-    <EmbeddedResource Include="Resources\x.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="OpenRPA.WindowsAccessBridgeInterop" Version="1.1.9" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\getjavaelement.png" />
+    <Resource Include="Resources\designer\getelement.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

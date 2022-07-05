@@ -19,7 +19,7 @@ using System.Windows;
 namespace OpenRPA.Utilities
 {
     [Designer(typeof(StartProcessDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.play.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.startprocess.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class StartProcess : CodeActivity
     {

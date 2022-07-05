@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Database
 {
     [Designer(typeof(DatabaseScopeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(DatabaseScope), "Resources.toolbox.database.png")]
+    [System.Drawing.ToolboxBitmap(typeof(DatabaseScope), "Resources.toolbox.databasescope.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_databasescope_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_databasescope", typeof(Resources.strings))]

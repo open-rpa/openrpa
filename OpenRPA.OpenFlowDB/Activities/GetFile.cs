@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(GetFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.downloadfile.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getfile.png")]
     [LocalizedToolboxTooltip("activity_getfile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getfile", typeof(Resources.strings))]
     public class GetFile : AsyncTaskCodeActivity

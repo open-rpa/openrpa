@@ -15,7 +15,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA;component/Resources/designer/foreach.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA;component/Resources/designer/while.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

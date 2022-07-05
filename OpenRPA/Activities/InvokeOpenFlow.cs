@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(InvokeOpenFlowDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokezeniverseworkflow.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.invokeopenflow.png")]
     [LocalizedToolboxTooltip("activity_invokeopenflow_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokeopenflow", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_invokeopenflow_helpurl", typeof(Resources.strings))]

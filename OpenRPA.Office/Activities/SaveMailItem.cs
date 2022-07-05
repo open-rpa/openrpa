@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(SaveMailItemDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.commentout.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.savemailitem.png")]
     [LocalizedToolboxTooltip("activity_savemailitem_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_savemailitem", typeof(Resources.strings))]
     public sealed class SaveMailItem : CodeActivity

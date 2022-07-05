@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(UpdateFromDataTableDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.entity.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.updatefromdatatable.png")]
     [LocalizedToolboxTooltip("activity_updatefromdataTable_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_updatefromdataTable", typeof(Resources.strings))]
     public class UpdateFromDataTable : AsyncTaskCodeActivity<JArray>

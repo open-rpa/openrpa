@@ -16,7 +16,7 @@ using Forge.Forms.FormBuilding;
 namespace OpenRPA.Forms.Activities
 {
     [System.ComponentModel.Designer(typeof(InvokeFormDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.form30.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.invokeform.png")]
     [LocalizedToolboxTooltip("activity_invokeform_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokeform", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_invokeform_helpurl", typeof(Resources.strings))]

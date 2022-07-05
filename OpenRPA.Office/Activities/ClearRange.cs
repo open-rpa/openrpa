@@ -15,7 +15,7 @@ namespace OpenRPA.Office.Activities
 {
     using Microsoft.Office.Interop;
     [System.ComponentModel.Designer(typeof(ClearRangeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.clearrange.png")]
     [LocalizedToolboxTooltip("activity_clearrange_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_clearrange", typeof(Resources.strings))]
     public class ClearRange : ExcelActivity

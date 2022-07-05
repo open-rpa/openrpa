@@ -94,13 +94,13 @@ namespace OpenRPA.Java.Views
         }
         private void Highlight_Click(object sender, RoutedEventArgs e)
         {
-            HighlightImage.Source = Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage.Source = Extensions.GetImageSourceFromResource(".searchfailed.png");
             string SelectorString = plugin.Selector;
             var selector = new JavaSelector(SelectorString);
             var elements = JavaSelector.GetElementsWithuiSelector(selector, null, 10);
             if (elements.Count() > 0)
             {
-                HighlightImage.Source = Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage.Source = Extensions.GetImageSourceFromResource("searchfound.png");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }

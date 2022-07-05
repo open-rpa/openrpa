@@ -24,7 +24,7 @@
 1.0.15 update interfaces reference
 1.0.14 bugfixes
 1.0.13 update interfaces reference</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>script.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -53,9 +53,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
     <OutputPath />
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
@@ -72,13 +69,11 @@
     <None Remove="lib\Python.Runtime.NETStandard.dll" />
     <None Remove="Python.Runtime.NETStandard.dll" />
     <None Remove="Resources\Autohotkey.xshd" />
-    <None Remove="Resources\designer\autohotkey.png" />
-    <None Remove="Resources\designer\comment.png" />
-    <None Remove="Resources\designer\prompt.png" />
+    <None Remove="Resources\designer\invokecode.png" />
+    <None Remove="Resources\designer\pipinstall.png" />
     <None Remove="Resources\ICSharpCode.PythonBinding.Resources.Python.xshd" />
-    <None Remove="Resources\toolbox\autohotkey.png" />
-    <None Remove="Resources\toolbox\comment.png" />
-    <None Remove="Resources\toolbox\prompt.png" />
+    <None Remove="Resources\toolbox\invokecode.png" />
+    <None Remove="Resources\toolbox\pipinstall.png" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +82,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\autohotkey.png" />
-    <EmbeddedResource Include="Resources\toolbox\comment.png" />
-    <EmbeddedResource Include="Resources\toolbox\prompt.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokecode.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.1.3.50" />
@@ -124,9 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Autohotkey.xshd" />
-    <Resource Include="Resources\designer\autohotkey.png" />
-    <Resource Include="Resources\designer\comment.png" />
-    <Resource Include="Resources\designer\prompt.png" />
+    <Resource Include="Resources\designer\pipinstall.png" />
+    <Resource Include="Resources\designer\invokecode.png" />
+    <EmbeddedResource Include="Resources\toolbox\pipinstall.png" />
     <EmbeddedResource Include="Resources\ICSharpCode.PythonBinding.Resources.Python.xshd" />
   </ItemGroup>
   <ItemGroup>

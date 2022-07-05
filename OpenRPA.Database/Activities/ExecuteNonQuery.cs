@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 namespace OpenRPA.Database
 {
     [Designer(typeof(ExecuteNonQueryDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.executenonquery.png")]
     [LocalizedToolboxTooltip("activity_executenonquery_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_executenonquery", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_executenonquery_helpurl", typeof(Resources.strings))]

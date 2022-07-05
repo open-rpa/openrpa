@@ -12,7 +12,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(RunExcelMacroDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.runexcelmacro.png")]
     [LocalizedToolboxTooltip("activity_runexcelmacro_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_runexcelmacro", typeof(Resources.strings))]
     public class RunExcelMacro<TResult> : ExcelActivityOf<TResult>

@@ -15,7 +15,7 @@ using System.Data;
 namespace OpenRPA.Database
 {
     [Designer(typeof(UpdateFromDataTableDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.database.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ExecuteNonQuery), "Resources.toolbox.updatefromdatatable.png")]
     [LocalizedToolboxTooltip("activity_updatefromtable_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_updatefromtable", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_updatefromtable_helpurl", typeof(Resources.strings))]

@@ -8,7 +8,7 @@
     <Description>Detector plugin for speach recognition, created for OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>msspeech.png</PackageIcon>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <PackageTags>OpenRPA</PackageTags>
     <Configurations>Debug;Release;PrepInstaller</Configurations>
@@ -22,9 +22,6 @@
     <OutputPath>..\dist</OutputPath>
     <Optimize>False</Optimize>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\SpeakDesigner.xaml" />
     <None Remove="Resources\designer\speak.png" />

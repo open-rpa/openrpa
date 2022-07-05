@@ -5,7 +5,7 @@
     <Description>Plugin to manage OpenRPS'a Windows Service that monitors Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>rdserviceplugin.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageReleaseNotes>1.0.11 Fix reconnecting bug
 1.0.10 Change target framework to 4.7.2
@@ -58,9 +58,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNuget|x86'">
     <OutputPath />
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove="Views\RunPluginView.xaml" />
   </ItemGroup>

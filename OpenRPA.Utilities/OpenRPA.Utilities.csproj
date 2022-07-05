@@ -9,7 +9,7 @@
     <Description>Collection af handy activities</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>utilities.png</PackageIcon>
     <Version>1.0.18</Version>
     <PackageReleaseNotes>1.0.18 Fix issue with DeleteAllRows
 1.0.17 Fix initialDirectory for SelectFile
@@ -48,9 +48,6 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Activities\AddDataColumnDesigner.xaml" />
     <None Remove="Activities\AddDataRowDesigner.xaml" />
     <None Remove="Activities\CompressArchiveDesigner.xaml" />
@@ -77,68 +74,100 @@
     <None Remove="Activities\StartProcessDesigner.xaml" />
     <None Remove="Activities\WriteCSVDesigner.xaml" />
     <None Remove="Activities\WriteExcelDesigner.xaml" />
-    <None Remove="Resources\designer\closeworkbook.png" />
-    <None Remove="Resources\designer\commentout.png" />
+    <None Remove="Resources\designer\adddatacolumn.png" />
+    <None Remove="Resources\designer\adddatarow.png" />
     <None Remove="Resources\designer\compressarchive.png" />
-    <None Remove="Resources\designer\database.png" />
+    <None Remove="Resources\designer\createdatatable.png" />
+    <None Remove="Resources\designer\deleteallrows.png" />
+    <None Remove="Resources\designer\deleterow.png" />
     <None Remove="Resources\designer\downloadfile.png" />
-    <None Remove="Resources\designer\entity.png" />
     <None Remove="Resources\designer\expandarchive.png" />
+    <None Remove="Resources\designer\getcredentials.png" />
+    <None Remove="Resources\designer\jarraytodatatable.png" />
     <None Remove="Resources\designer\killprocess.png" />
-    <None Remove="Resources\designer\newemail.png" />
-    <None Remove="Resources\designer\outlook.png" />
-    <None Remove="Resources\designer\play.png" />
+    <None Remove="Resources\designer\match.png" />
+    <None Remove="Resources\designer\matches.png" />
+    <None Remove="Resources\designer\readcsv.png" />
     <None Remove="Resources\designer\readexcel.png" />
     <None Remove="Resources\designer\readfile.png" />
     <None Remove="Resources\designer\readjson.png" />
     <None Remove="Resources\designer\readpdf.png" />
-    <None Remove="Resources\designer\regex.png" />
+    <None Remove="Resources\designer\replace.png" />
     <None Remove="Resources\designer\selectfile.png" />
     <None Remove="Resources\designer\selectfolder.png" />
+    <None Remove="Resources\designer\setallrowsstate.png" />
+    <None Remove="Resources\designer\setautologin.png" />
+    <None Remove="Resources\designer\setcredentials.png" />
+    <None Remove="Resources\designer\startprocess.png" />
+    <None Remove="Resources\designer\writecsv.png" />
     <None Remove="Resources\designer\writeexcel.png" />
-    <None Remove="Resources\designer\writefile.png" />
-    <None Remove="Resources\toolbox\closeworkbook.png" />
-    <None Remove="Resources\toolbox\commentout.png" />
+    <None Remove="Resources\toolbox\adddatacolumn.png" />
+    <None Remove="Resources\toolbox\adddatarow.png" />
     <None Remove="Resources\toolbox\compressarchive.png" />
-    <None Remove="Resources\toolbox\database.png" />
+    <None Remove="Resources\toolbox\createdatatable.png" />
+    <None Remove="Resources\toolbox\deleteallrows.png" />
+    <None Remove="Resources\toolbox\deleterow.png" />
     <None Remove="Resources\toolbox\downloadfile.png" />
-    <None Remove="Resources\toolbox\entity.png" />
     <None Remove="Resources\toolbox\expandarchive.png" />
+    <None Remove="Resources\toolbox\getcredentials.png" />
+    <None Remove="Resources\toolbox\jarraytodatatable.png" />
     <None Remove="Resources\toolbox\killprocess.png" />
-    <None Remove="Resources\toolbox\newemail.png" />
-    <None Remove="Resources\toolbox\outlook.png" />
-    <None Remove="Resources\toolbox\play.png" />
+    <None Remove="Resources\toolbox\match.png" />
+    <None Remove="Resources\toolbox\matches.png" />
+    <None Remove="Resources\toolbox\readcsv.png" />
     <None Remove="Resources\toolbox\readexcel.png" />
     <None Remove="Resources\toolbox\readfile.png" />
     <None Remove="Resources\toolbox\readjson.png" />
     <None Remove="Resources\toolbox\readpdf.png" />
-    <None Remove="Resources\toolbox\regex.png" />
+    <None Remove="Resources\toolbox\replace.png" />
     <None Remove="Resources\toolbox\selectfile.png" />
     <None Remove="Resources\toolbox\selectfolder.png" />
+    <None Remove="Resources\toolbox\setallrowsstate.png" />
+    <None Remove="Resources\toolbox\setautologin.png" />
+    <None Remove="Resources\toolbox\setcredentials.png" />
+    <None Remove="Resources\toolbox\startprocess.png" />
+    <None Remove="Resources\toolbox\writecsv.png" />
     <None Remove="Resources\toolbox\writeexcel.png" />
-    <None Remove="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\compressarchive.png" />
-    <Resource Include="Resources\designer\database.png" />
+    <Resource Include="Resources\designer\adddatacolumn.png" />
+    <Resource Include="Resources\designer\adddatarow.png" />
+    <Resource Include="Resources\designer\createdatatable.png" />
+    <Resource Include="Resources\designer\deleterow.png" />
+    <Resource Include="Resources\designer\deleteallrows.png" />
+    <Resource Include="Resources\designer\setautologin.png" />
+    <Resource Include="Resources\designer\setallrowsstate.png" />
     <Resource Include="Resources\designer\expandarchive.png" />
+    <Resource Include="Resources\designer\getcredentials.png" />
     <Resource Include="Resources\designer\killprocess.png" />
+    <Resource Include="Resources\designer\jarraytodatatable.png" />
+    <Resource Include="Resources\designer\replace.png" />
+    <Resource Include="Resources\designer\matches.png" />
+    <Resource Include="Resources\designer\readcsv.png" />
     <Resource Include="Resources\designer\selectfolder.png" />
     <Resource Include="Resources\designer\selectfile.png" />
-    <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
-    <EmbeddedResource Include="Resources\toolbox\commentout.png" />
+    <EmbeddedResource Include="Resources\toolbox\adddatacolumn.png" />
+    <EmbeddedResource Include="Resources\toolbox\adddatarow.png" />
+    <EmbeddedResource Include="Resources\toolbox\createdatatable.png" />
+    <EmbeddedResource Include="Resources\toolbox\deleterow.png" />
+    <EmbeddedResource Include="Resources\toolbox\deleteallrows.png" />
+    <EmbeddedResource Include="Resources\toolbox\setautologin.png" />
+    <EmbeddedResource Include="Resources\toolbox\getcredentials.png" />
     <EmbeddedResource Include="Resources\toolbox\killprocess.png" />
+    <EmbeddedResource Include="Resources\toolbox\jarraytodatatable.png" />
+    <EmbeddedResource Include="Resources\toolbox\replace.png" />
+    <EmbeddedResource Include="Resources\toolbox\matches.png" />
+    <EmbeddedResource Include="Resources\toolbox\readcsv.png" />
     <EmbeddedResource Include="Resources\toolbox\selectfile.png" />
-    <EmbeddedResource Include="Resources\toolbox\play.png" />
     <EmbeddedResource Include="Resources\toolbox\readjson.png" />
-    <EmbeddedResource Include="Resources\toolbox\newemail.png" />
-    <EmbeddedResource Include="Resources\toolbox\outlook.png" />
     <EmbeddedResource Include="Resources\toolbox\readexcel.png" />
     <EmbeddedResource Include="Resources\toolbox\readfile.png" />
     <EmbeddedResource Include="Resources\toolbox\readpdf.png" />
     <EmbeddedResource Include="Resources\toolbox\selectfolder.png" />
+    <EmbeddedResource Include="Resources\toolbox\setcredentials.png" />
+    <EmbeddedResource Include="Resources\toolbox\writecsv.png" />
     <EmbeddedResource Include="Resources\toolbox\writeexcel.png" />
-    <EmbeddedResource Include="Resources\toolbox\writefile.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -150,25 +179,21 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\closeworkbook.png" />
-    <Resource Include="Resources\designer\commentout.png" />
     <Resource Include="Resources\designer\downloadfile.png" />
-    <Resource Include="Resources\designer\entity.png" />
-    <Resource Include="Resources\designer\newemail.png" />
-    <Resource Include="Resources\designer\outlook.png" />
-    <Resource Include="Resources\designer\play.png" />
     <Resource Include="Resources\designer\readexcel.png" />
     <Resource Include="Resources\designer\readfile.png" />
     <Resource Include="Resources\designer\readjson.png" />
     <Resource Include="Resources\designer\readpdf.png" />
-    <Resource Include="Resources\designer\regex.png" />
+    <Resource Include="Resources\designer\match.png" />
+    <Resource Include="Resources\designer\setcredentials.png" />
+    <Resource Include="Resources\designer\startprocess.png" />
+    <Resource Include="Resources\designer\writecsv.png" />
     <Resource Include="Resources\designer\writeexcel.png" />
-    <Resource Include="Resources\designer\writefile.png" />
+    <EmbeddedResource Include="Resources\toolbox\startprocess.png" />
     <EmbeddedResource Include="Resources\toolbox\compressarchive.png" />
     <EmbeddedResource Include="Resources\toolbox\expandarchive.png" />
-    <EmbeddedResource Include="Resources\toolbox\database.png" />
-    <EmbeddedResource Include="Resources\toolbox\regex.png" />
-    <EmbeddedResource Include="Resources\toolbox\entity.png" />
+    <EmbeddedResource Include="Resources\toolbox\setallrowsstate.png" />
+    <EmbeddedResource Include="Resources\toolbox\match.png" />
     <EmbeddedResource Include="Resources\toolbox\downloadfile.png" />
   </ItemGroup>
   <ItemGroup>

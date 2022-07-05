@@ -158,7 +158,7 @@ namespace OpenRPA.Interfaces.Selector
         }
         public bool doHighlight()
         {
-            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage = Extensions.GetImageSourceFromResource(".searchfailed.png");
             NotifyPropertyChanged("HighlightImage");
             // IElement[] results = new IElement[] { };
             Task.Run(() =>
@@ -186,7 +186,7 @@ namespace OpenRPA.Interfaces.Selector
                     }
                     if (results.Count() > 0)
                     {
-                        HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                        HighlightImage = Extensions.GetImageSourceFromResource("searchfound.png");
                         NotifyPropertyChanged("HighlightImage");
                     }
                 });

@@ -26,7 +26,7 @@
       1.0.12 support for seperate images
       1.0.11 update interfaces reference
     </PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>image.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -56,9 +56,6 @@
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Activities\GetColorDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\GetImageDesigner.xaml" />
@@ -66,30 +63,40 @@
     <None Remove="Activities\LoadFromFileDesigner.xaml" />
     <None Remove="Activities\PrintWindowDesigner.xaml" />
     <None Remove="Activities\TakeScreenshotDesigner.xaml" />
-    <None Remove="Resources\check.png" />
-    <None Remove="Resources\designer\camera.png" />
-    <None Remove="Resources\designer\foreachimage.png" />
+    <None Remove="Resources\designer\getcolor.png" />
+    <None Remove="Resources\designer\getelement.png" />
     <None Remove="Resources\designer\getimage.png" />
-    <None Remove="Resources\designer\palette.png" />
+    <None Remove="Resources\designer\gettext.png" />
+    <None Remove="Resources\designer\loadfromfile.png" />
+    <None Remove="Resources\designer\printwindow.png" />
+    <None Remove="Resources\designer\takescreenshot.png" />
     <None Remove="Resources\search.png" />
-    <None Remove="Resources\toolbox\camera.png" />
-    <None Remove="Resources\toolbox\foreachimage.png" />
+    <None Remove="Resources\searchfailed.png" />
+    <None Remove="Resources\searchfound.png" />
+    <None Remove="Resources\toolbox\getcolor.png" />
+    <None Remove="Resources\toolbox\getelement.png" />
     <None Remove="Resources\toolbox\getimage.png" />
-    <None Remove="Resources\toolbox\palette.png" />
-    <None Remove="Resources\x.png" />
+    <None Remove="Resources\toolbox\gettext.png" />
+    <None Remove="Resources\toolbox\loadfromfile.png" />
+    <None Remove="Resources\toolbox\printwindow.png" />
+    <None Remove="Resources\toolbox\takescreenshot.png" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\check.png" />
-    <Resource Include="Resources\designer\palette.png" />
+    <Resource Include="Resources\designer\getcolor.png" />
     <EmbeddedResource Include="Resources\search.png" />
-    <EmbeddedResource Include="Resources\toolbox\camera.png" />
-    <EmbeddedResource Include="Resources\toolbox\foreachimage.png" />
+    <EmbeddedResource Include="Resources\searchfound.png" />
+    <EmbeddedResource Include="Resources\toolbox\takescreenshot.png" />
+    <EmbeddedResource Include="Resources\toolbox\printwindow.png" />
+    <EmbeddedResource Include="Resources\toolbox\getelement.png" />
+    <EmbeddedResource Include="Resources\toolbox\loadfromfile.png" />
+    <EmbeddedResource Include="Resources\toolbox\gettext.png" />
     <EmbeddedResource Include="Resources\toolbox\getimage.png" />
-    <EmbeddedResource Include="Resources\toolbox\palette.png" />
-    <EmbeddedResource Include="Resources\x.png" />
+    <EmbeddedResource Include="Resources\toolbox\getcolor.png" />
+    <EmbeddedResource Include="Resources\searchfailed.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\image.png" Pack="true" PackagePath="\" />
     <PackageReference Include="Emgu.CV" Version="4.1.1.3497" />
   </ItemGroup>
   <ItemGroup>
@@ -131,8 +138,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\camera.png" />
-    <Resource Include="Resources\designer\foreachimage.png" />
+    <Resource Include="Resources\designer\takescreenshot.png" />
+    <Resource Include="Resources\designer\printwindow.png" />
+    <Resource Include="Resources\designer\getelement.png" />
+    <Resource Include="Resources\designer\loadfromfile.png" />
+    <Resource Include="Resources\designer\gettext.png" />
     <Resource Include="Resources\designer\getimage.png" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ using System.Data;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(QueryDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.getentities.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.query.png")]
     [LocalizedToolboxTooltip("activity_query_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_query", typeof(Resources.strings))]
     public class Query : AsyncTaskCodeActivity<JObject[]>

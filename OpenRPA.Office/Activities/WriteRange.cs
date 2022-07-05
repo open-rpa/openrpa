@@ -15,7 +15,7 @@ namespace OpenRPA.Office.Activities
 {
     using Microsoft.Office.Interop;
     [System.ComponentModel.Designer(typeof(WriteRangeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.writerange.png")]
     [LocalizedToolboxTooltip("activity_writerange_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_writerange", typeof(Resources.strings))]
     public class WriteRange : ExcelActivity

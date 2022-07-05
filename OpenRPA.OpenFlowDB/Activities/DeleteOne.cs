@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [Designer(typeof(DeleteOneDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteentity.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.deleteone.png")]
     [LocalizedToolboxTooltip("activity_deleteone_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_deleteone", typeof(Resources.strings))]
     public class DeleteOne : AsyncTaskCodeActivity

@@ -16,7 +16,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA.Java;component/Resources/designer/getjavaelement.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.Java;component/Resources/designer/getelement.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

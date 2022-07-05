@@ -46,7 +46,7 @@
 1.0.15 update interfaces reference
 1.0.14 support for seperate images 
 1.0.13 update interfaces reference</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>nm.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -73,9 +73,6 @@
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Activities\CloseTabDesigner .xaml" />
     <None Remove="Activities\Editor.xaml" />
     <None Remove="Activities\ExecuteScriptDesigner.xaml" />
@@ -83,19 +80,37 @@
     <None Remove="Activities\GetTabDesigner.xaml" />
     <None Remove="Activities\OpenURLDesigner.xaml" />
     <None Remove="Activities\WaitForDownloadDesigner.xaml" />
-    <None Remove="Resources\designer\detector.png" />
-    <None Remove="Resources\designer\gethtmlelement.png" />
-    <None Remove="Resources\toolbox\detector.png" />
-    <None Remove="Resources\toolbox\gethtmlelement.png" />
+    <None Remove="Resources\designer\closetab.png" />
+    <None Remove="Resources\designer\executescript.png" />
+    <None Remove="Resources\designer\getelement.png" />
+    <None Remove="Resources\designer\gettab.png" />
+    <None Remove="Resources\designer\openurl.png" />
+    <None Remove="Resources\designer\waitfordownload.png" />
+    <None Remove="Resources\search.png" />
+    <None Remove="Resources\searchfailed.png" />
+    <None Remove="Resources\searchfound.png" />
+    <None Remove="Resources\toolbox\closetab.png" />
+    <None Remove="Resources\toolbox\executescript.png" />
+    <None Remove="Resources\toolbox\getelement.png" />
+    <None Remove="Resources\toolbox\gettab.png" />
+    <None Remove="Resources\toolbox\openurl.png" />
+    <None Remove="Resources\toolbox\waitfordownload.png" />
     <None Remove="Snippets\GoogleSearch.xaml" />
     <None Remove="Snippets\GoogleSearchPaging.xaml" />
     <None Remove="Views\DownloadDetectorView.xaml" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\detector.png" />
-    <EmbeddedResource Include="Resources\toolbox\detector.png" />
-    <EmbeddedResource Include="Resources\toolbox\gethtmlelement.png" />
+    <Resource Include="Resources\designer\waitfordownload.png" />
+    <EmbeddedResource Include="Resources\search.png" />
+    <EmbeddedResource Include="Resources\searchfailed.png" />
+    <EmbeddedResource Include="Resources\searchfound.png" />
+    <EmbeddedResource Include="Resources\toolbox\waitfordownload.png" />
+    <EmbeddedResource Include="Resources\toolbox\closetab.png" />
+    <EmbeddedResource Include="Resources\toolbox\executescript.png" />
+    <EmbeddedResource Include="Resources\toolbox\openurl.png" />
+    <EmbeddedResource Include="Resources\toolbox\gettab.png" />
+    <EmbeddedResource Include="Resources\toolbox\getelement.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.1.3.50" />
@@ -145,7 +160,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\gethtmlelement.png" />
+    <Resource Include="Resources\designer\closetab.png" />
+    <Resource Include="Resources\designer\executescript.png" />
+    <Resource Include="Resources\designer\openurl.png" />
+    <Resource Include="Resources\designer\gettab.png" />
+    <Resource Include="Resources\designer\getelement.png" />
     <Resource Include="Snippets\GoogleSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

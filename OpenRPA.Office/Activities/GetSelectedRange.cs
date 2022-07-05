@@ -12,7 +12,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(GetSelectedRangeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.getselectedrange.png")]
     [System.Activities.Presentation.DefaultTypeArgument(typeof(String))]
     [LocalizedToolboxTooltip("activity_getselectedrange_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getselectedrange", typeof(Resources.strings))]

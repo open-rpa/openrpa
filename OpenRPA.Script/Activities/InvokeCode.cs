@@ -20,7 +20,7 @@ using Python.Runtime;
 namespace OpenRPA.Script.Activities
 {
     [System.ComponentModel.Designer(typeof(InvokeCodeDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.comment.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.invokecode.png")]
     [LocalizedToolboxTooltip("activity_invokecode_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokecode", typeof(Resources.strings))]
     public class InvokeCode : CodeActivity

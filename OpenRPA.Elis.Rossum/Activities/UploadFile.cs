@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(UploadFileDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(UploadFile), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(UploadFile), "Resources.toolbox.uploadfile.png")]
     [LocalizedToolboxTooltip("activity_uploadfile_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_uploadfile", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_uploadfile_helpurl", typeof(Resources.strings))]

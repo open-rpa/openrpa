@@ -14,7 +14,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ProtectWorksheetDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.protect.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.protectworksheet.png")]
     [LocalizedToolboxTooltip("activity_protectworksheet_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_protectworksheet", typeof(Resources.strings))]
     public class ProtectWorksheet : ExcelActivity

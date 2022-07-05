@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>sap.png</PackageIcon>
     <Platforms>AnyCPU;x86</Platforms>
     <Configurations>Debug;Release;PrepInstaller</Configurations>
     <Version>1.0.2</Version>
@@ -29,24 +29,40 @@
     <OutputPath>..\dist</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Resources\sap.png" Pack="true" PackagePath="\" />
     <None Remove="Activities\ExecuteTransactionDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\GetPropertyDesigner.xaml" />
     <None Remove="Activities\InvokeMethodDesigner.xaml" />
     <None Remove="Activities\LoginDesigner.xaml" />
     <None Remove="Activities\SetPropertyDesigner.xaml" />
-    <None Remove="Resources\designer\SAP_logo_small.png" />
-    <None Remove="Resources\designer\SAP_logo_small2.png" />
-    <None Remove="Resources\toolbox\SAP_logo_small.png" />
-    <None Remove="Resources\toolbox\SAP_logo_small2.png" />
+    <None Remove="Resources\designer\executetransaction.png" />
+    <None Remove="Resources\designer\getelement.png" />
+    <None Remove="Resources\designer\getproperty.png" />
+    <None Remove="Resources\designer\invokemethod.png" />
+    <None Remove="Resources\designer\login.png" />
+    <None Remove="Resources\designer\setproperty.png" />
+    <None Remove="Resources\search.png" />
+    <None Remove="Resources\searchfailed.png" />
+    <None Remove="Resources\searchfound.png" />
+    <None Remove="Resources\toolbox\executetransaction.png" />
+    <None Remove="Resources\toolbox\getelement.png" />
+    <None Remove="Resources\toolbox\getproperty.png" />
+    <None Remove="Resources\toolbox\invokemethod.png" />
+    <None Remove="Resources\toolbox\login.png" />
+    <None Remove="Resources\toolbox\setproperty.png" />
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\SAP_logo_small.png" />
-    <EmbeddedResource Include="Resources\toolbox\SAP_logo_small2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
+    <EmbeddedResource Include="Resources\search.png" />
+    <EmbeddedResource Include="Resources\searchfailed.png" />
+    <EmbeddedResource Include="Resources\searchfound.png" />
+    <EmbeddedResource Include="Resources\toolbox\setproperty.png" />
+    <EmbeddedResource Include="Resources\toolbox\login.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokemethod.png" />
+    <EmbeddedResource Include="Resources\toolbox\getproperty.png" />
+    <EmbeddedResource Include="Resources\toolbox\getelement.png" />
+    <EmbeddedResource Include="Resources\toolbox\executetransaction.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
@@ -88,8 +104,12 @@
     <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\SAP_logo_small.png" />
-    <Resource Include="Resources\designer\SAP_logo_small2.png" />
+    <Resource Include="Resources\designer\setproperty.png" />
+    <Resource Include="Resources\designer\login.png" />
+    <Resource Include="Resources\designer\invokemethod.png" />
+    <Resource Include="Resources\designer\getproperty.png" />
+    <Resource Include="Resources\designer\getelement.png" />
+    <Resource Include="Resources\designer\executetransaction.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

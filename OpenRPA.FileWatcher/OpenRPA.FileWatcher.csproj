@@ -13,7 +13,7 @@
 1.0.14 Add langauges
 1.0.12 update interfaces reference
 1.0.9 update interfaces reference</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>filewatcher.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -41,9 +41,7 @@
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\filewatcher.png" Pack="true" PackagePath="\" />
     <None Remove="Views\FileWatcherView.xaml" />
   </ItemGroup>
   <ItemGroup>

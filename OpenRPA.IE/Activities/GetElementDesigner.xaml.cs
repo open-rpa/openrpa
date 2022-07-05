@@ -99,7 +99,7 @@ namespace OpenRPA.IE
                 loadFrom = loadFrom.Parent;
             }
 
-            HighlightImage = IEExtensions.GetImageSourceFromResource(".x.png");
+            HighlightImage = IEExtensions.GetImageSourceFromResource(".searchfailed.png");
             NotifyPropertyChanged("HighlightImage");
 
             string SelectorString = ModelItem.GetValue<string>("Selector");
@@ -124,7 +124,7 @@ namespace OpenRPA.IE
 
             if (elements.Count() > 0)
             {
-                HighlightImage = IEExtensions.GetImageSourceFromResource("check.png");
+                HighlightImage = IEExtensions.GetImageSourceFromResource("searchfound.png");
                 NotifyPropertyChanged("HighlightImage");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));

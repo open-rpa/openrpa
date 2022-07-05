@@ -13,7 +13,7 @@
 1.0.16 Add langauges
 1.0.14 update interfaces reference
 1.0.11 update interfaces reference</PackageReleaseNotes>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>forms.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
@@ -41,26 +41,23 @@
     <OutputPath />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\forms.png" Pack="true" PackagePath="\" />
     <None Remove="Activities\Form.xaml" />
     <None Remove="Activities\FormDesigner.xaml" />
     <None Remove="Activities\InvokeFormDesigner.xaml" />
     <None Remove="Activities\ShowNotificationDesigner.xaml" />
-    <None Remove="Resources\designer\closeworkbook.png" />
-    <None Remove="Resources\designer\form16.png" />
-    <None Remove="Resources\designer\form30.png" />
-    <None Remove="Resources\designer\prompt.png" />
-    <None Remove="Resources\toolbox\closeworkbook.png" />
-    <None Remove="Resources\toolbox\form16.png" />
-    <None Remove="Resources\toolbox\form30.png" />
-    <None Remove="Resources\toolbox\prompt.png" />
+    <None Remove="Resources\designer\form.png" />
+    <None Remove="Resources\designer\invokeform.png" />
+    <None Remove="Resources\designer\shownotification.png" />
+    <None Remove="Resources\toolbox\form.png" />
+    <None Remove="Resources\toolbox\invokeform.png" />
+    <None Remove="Resources\toolbox\shownotification.png" />
     <None Remove="Snippets\DialogStorm.xaml" />
     <None Remove="Snippets\ImageForm.xaml" />
     <None Remove="Snippets\SimpleForm.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\invokeform.png" />
     <Resource Include="Snippets\DialogStorm.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Resource>
@@ -72,10 +69,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\closeworkbook.png" />
-    <EmbeddedResource Include="Resources\toolbox\form16.png" />
-    <EmbeddedResource Include="Resources\toolbox\form30.png" />
-    <EmbeddedResource Include="Resources\toolbox\prompt.png" />
+    <EmbeddedResource Include="Resources\toolbox\invokeform.png" />
+    <EmbeddedResource Include="Resources\toolbox\form.png" />
+    <EmbeddedResource Include="Resources\toolbox\shownotification.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Forge.Forms" Version="1.1.4" />
@@ -109,10 +105,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\closeworkbook.png" />
-    <Resource Include="Resources\designer\form16.png" />
-    <Resource Include="Resources\designer\form30.png" />
-    <Resource Include="Resources\designer\prompt.png" />
+    <Resource Include="Resources\designer\form.png" />
+    <Resource Include="Resources\designer\shownotification.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

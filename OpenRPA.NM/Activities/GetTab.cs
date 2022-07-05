@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.NM
 {
     [System.ComponentModel.Designer(typeof(GetTabDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.gettab.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_gettab_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_gettab", typeof(Resources.strings))]

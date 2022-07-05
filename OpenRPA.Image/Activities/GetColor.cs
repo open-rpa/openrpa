@@ -16,7 +16,7 @@ namespace OpenRPA.Image
     using System.Runtime.InteropServices;
 
     [Designer(typeof(GetColorDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetColor), "Resources.toolbox.palette.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetColor), "Resources.toolbox.getcolor.png")]
     [LocalizedToolboxTooltip("activity_getcolor_tooltip" , typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getcolor", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_getcolor_helpurl", typeof(Resources.strings))]

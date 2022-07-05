@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace OpenRPA.SAP
 {
     [Designer(typeof(InvokeMethodDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(Login), "Resources.toolbox.SAP_logo_small2.png")]
+    [System.Drawing.ToolboxBitmap(typeof(Login), "Resources.toolbox.invokemethod.png")]
     [LocalizedToolboxTooltip("activity_invokemethod_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_invokemethod", typeof(Resources.strings))]
     public class InvokeMethod : CodeActivity

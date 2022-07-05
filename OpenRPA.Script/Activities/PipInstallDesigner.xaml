@@ -15,7 +15,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA;component/Resources/designer/copyclipboard.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.Script;component/Resources/designer/pipinstall.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

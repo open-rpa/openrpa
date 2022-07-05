@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace OpenRPA.OpenFlowDB
 {
     [System.ComponentModel.Designer(typeof(RemovePermissionDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.addentitypermission.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.removepermission.png")]
     [LocalizedToolboxTooltip("activity_removepermission_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_removepermission", typeof(Resources.strings))]
     public class RemovePermission : CodeActivity

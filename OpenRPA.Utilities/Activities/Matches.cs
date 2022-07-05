@@ -19,7 +19,7 @@ using System.Windows;
 namespace OpenRPA.Utilities
 {
     [Designer(typeof(MatchesDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.regex.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.matches.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class Matches : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory

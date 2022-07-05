@@ -16,7 +16,7 @@
                         <Rect Location="0,0" Size="32,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA.TerminalEmulator;component/Resources/designer/settext.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.TerminalEmulator;component/Resources/designer/waitfortext.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

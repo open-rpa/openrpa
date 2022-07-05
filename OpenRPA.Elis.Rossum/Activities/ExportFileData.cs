@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(ExportFileDataDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ExportFileData), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ExportFileData), "Resources.toolbox.exportfiledata.png")]
     [LocalizedToolboxTooltip("activity_exportfiledata_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_exportfiledata", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_exportfiledata_helpurl", typeof(Resources.strings))]

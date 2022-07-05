@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
+	<PackageIcon>rdservice.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>False</Optimize>
@@ -16,10 +17,20 @@
     <None Remove="Activities\TerminalRecorder.xaml" />
     <None Remove="Activities\TerminalSessionDesigner.xaml" />
     <None Remove="Activities\WaitForTextDesigner.xaml" />
+    <None Remove="Resources\designer\gettext.png" />
+    <None Remove="Resources\designer\gettextat.png" />
+    <None Remove="Resources\designer\sendkey.png" />
+    <None Remove="Resources\designer\sendtext.png" />
     <None Remove="Resources\designer\settext.png" />
     <None Remove="Resources\designer\terminalsession.png" />
+    <None Remove="Resources\designer\waitfortext.png" />
+    <None Remove="Resources\toolbox\gettext.png" />
+    <None Remove="Resources\toolbox\gettextat.png" />
+    <None Remove="Resources\toolbox\sendkey.png" />
+    <None Remove="Resources\toolbox\sendtext.png" />
     <None Remove="Resources\toolbox\settext.png" />
     <None Remove="Resources\toolbox\terminalsession.png" />
+    <None Remove="Resources\toolbox\waitfortext.png" />
     <None Remove="Views\RunPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -101,10 +112,20 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\terminalsession.png" />
+    <Resource Include="Resources\designer\gettextat.png" />
+    <Resource Include="Resources\designer\gettext.png" />
+    <Resource Include="Resources\designer\sendkey.png" />
+    <Resource Include="Resources\designer\waitfortext.png" />
     <Resource Include="Resources\designer\settext.png" />
-    <EmbeddedResource Include="Resources\toolbox\terminalsession.png" />
+    <Resource Include="Resources\designer\terminalsession.png" />
+    <Resource Include="Resources\designer\sendtext.png" />
+    <EmbeddedResource Include="Resources\toolbox\gettextat.png" />
+    <EmbeddedResource Include="Resources\toolbox\gettext.png" />
+    <EmbeddedResource Include="Resources\toolbox\sendkey.png" />
+    <EmbeddedResource Include="Resources\toolbox\waitfortext.png" />
     <EmbeddedResource Include="Resources\toolbox\settext.png" />
+    <EmbeddedResource Include="Resources\toolbox\terminalsession.png" />
+    <EmbeddedResource Include="Resources\toolbox\sendtext.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

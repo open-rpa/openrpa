@@ -15,7 +15,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(WriteCellDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.writeexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.writecell.png")]
     [LocalizedToolboxTooltip("activity_writecell_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_writecell", typeof(Resources.strings))]
     public class WriteCell<TResult> : ExcelActivityOf<TResult>

@@ -12,7 +12,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(GetParagraphDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.getparagraph.png")]
     [LocalizedToolboxTooltip("activity_getparagraph_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getparagraph", typeof(Resources.strings))]
     public class GetParagraph : BreakableLoop, System.Activities.Presentation.IActivityTemplateFactory

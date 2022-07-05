@@ -8,7 +8,7 @@
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged"
         xmlns:forms="clr-namespace:Forge.Forms.Controls;assembly=Forge.Forms"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Form Designer" MinHeight="300" MinWidth="550" Icon="/OpenRPA.Forms;component/Resources/designer/form30.png"
+        Title="Form Designer" MinHeight="300" MinWidth="550" Icon="/OpenRPA.Forms;component/Resources/designer/form.png"
         SizeToContent="WidthAndHeight" Loaded="BuildDefinition" Unloaded="Window_Unloaded"
         >
     <Grid>

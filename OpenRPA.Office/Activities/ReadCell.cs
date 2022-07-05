@@ -12,7 +12,7 @@ using OpenRPA.Interfaces;
 namespace OpenRPA.Office.Activities
 {
     [System.ComponentModel.Designer(typeof(ReadCellDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.readcell.png")]
     [System.Activities.Presentation.DefaultTypeArgument(typeof(String))]
     [LocalizedToolboxTooltip("activity_readcell_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_readcell", typeof(Resources.strings))]

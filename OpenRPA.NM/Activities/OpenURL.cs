@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.NM
 {
     [System.ComponentModel.Designer(typeof(OpenURLDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(OpenURL), "Resources.toolbox.openurl.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     [LocalizedToolboxTooltip("activity_openurl_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_openurl", typeof(Resources.strings))]

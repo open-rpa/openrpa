@@ -13,7 +13,7 @@ using System.Threading;
 namespace OpenRPA.Activities
 {
     [System.ComponentModel.Designer(typeof(HighlightElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlight.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.highlightelement.png")]
     [LocalizedToolboxTooltip("activity_highlightelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_highlightelement", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_highlightelement_helpurl", typeof(Resources.strings))]

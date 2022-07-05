@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.AviRecorder.Activities
 {
     [System.ComponentModel.Designer(typeof(PlayRecordingDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.gethtmlelement.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.playrecording.png")]
     [LocalizedToolboxTooltip("activity_playrecording_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_playrecording", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_playrecording_helpurl", typeof(Resources.strings))]

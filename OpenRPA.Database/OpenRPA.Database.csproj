@@ -11,7 +11,7 @@
 1.0.0 Initial push</PackageReleaseNotes>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <PackageIcon>open_rpa128.png</PackageIcon>
+    <PackageIcon>database.png</PackageIcon>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Platforms>AnyCPU;x86</Platforms>
     <Company>OpenIAP</Company>
@@ -31,16 +31,21 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Activities\DatabaseScopeDesigner.xaml" />
     <None Remove="Activities\ExecuteNonQueryDesigner.xaml" />
     <None Remove="Activities\ExecuteQueryQueryDesigner.xaml" />
     <None Remove="Activities\ExecuteScalarDesigner.xaml" />
     <None Remove="Activities\UpdateFromDataTableDesigner.xaml" />
-    <None Remove="Resources\designer\database.png" />
-    <None Remove="Resources\toolbox\database.png" />
+    <None Remove="Resources\designer\databasescope.png" />
+    <None Remove="Resources\designer\executenonquery.png" />
+    <None Remove="Resources\designer\executequery.png" />
+    <None Remove="Resources\designer\executescalar.png" />
+    <None Remove="Resources\designer\updatefromdatatable.png" />
+    <None Remove="Resources\toolbox\databasescope.png" />
+    <None Remove="Resources\toolbox\executenonquery.png" />
+    <None Remove="Resources\toolbox\executequery.png" />
+    <None Remove="Resources\toolbox\executescalar.png" />
+    <None Remove="Resources\toolbox\updatefromdatatable.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MSDASC.dll">
@@ -53,9 +58,14 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\toolbox\database.png" />
+    <EmbeddedResource Include="Resources\toolbox\databasescope.png" />
+    <EmbeddedResource Include="Resources\toolbox\executenonquery.png" />
+    <EmbeddedResource Include="Resources\toolbox\executequery.png" />
+    <EmbeddedResource Include="Resources\toolbox\executescalar.png" />
+    <EmbeddedResource Include="Resources\toolbox\updatefromdatatable.png" />
   </ItemGroup>
   <ItemGroup>
+	  <None Include="Resources\database.png" Pack="true" PackagePath="\" />
     <PackageReference Include="DataConnectionDialog" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
@@ -91,7 +101,11 @@
     <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\designer\database.png" />
+    <Resource Include="Resources\designer\databasescope.png" />
+    <Resource Include="Resources\designer\executenonquery.png" />
+    <Resource Include="Resources\designer\executequery.png" />
+    <Resource Include="Resources\designer\executescalar.png" />
+    <Resource Include="Resources\designer\updatefromdatatable.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\strings.Designer.cs">

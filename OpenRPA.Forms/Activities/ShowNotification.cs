@@ -18,7 +18,7 @@ namespace OpenRPA.Forms.Activities
     using ToastNotifications.Position;
 
     [System.ComponentModel.Designer(typeof(ShowNotificationDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.prompt.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder2), "Resources.toolbox.shownotification.png")]
     [LocalizedToolboxTooltip("activity_shownotification_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_shownotification", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_shownotification_helpurl", typeof(Resources.strings))]

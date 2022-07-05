@@ -100,7 +100,7 @@ namespace OpenRPA.Java
                 loadFrom = loadFrom.Parent;
             }
 
-            HighlightImage = Extensions.GetImageSourceFromResource(".x.png");
+            HighlightImage = Extensions.GetImageSourceFromResource(".searchfailed.png");
             NotifyPropertyChanged("HighlightImage");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
@@ -126,7 +126,7 @@ namespace OpenRPA.Java
             if (elements.Count() > maxresults) elements = elements.ToList().Take(maxresults).ToList();
             if (elements.Count() > 0)
             {
-                HighlightImage = Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage = Extensions.GetImageSourceFromResource("searchfound.png");
                 NotifyPropertyChanged("HighlightImage");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));

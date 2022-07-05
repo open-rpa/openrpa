@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.SAP
 {
     [System.ComponentModel.Designer(typeof(GetElementDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(GetElement), "Resources.toolbox.SAP_logo_small2.png")]
+    [System.Drawing.ToolboxBitmap(typeof(GetElement), "Resources.toolbox.getelement.png")]
     [System.Windows.Markup.ContentProperty("Body")]
     [LocalizedToolboxTooltip("activity_getelement_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_getelement", typeof(Resources.strings))]

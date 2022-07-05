@@ -20,7 +20,7 @@
                         <Rect Location="0,0" Size="16,16" ></Rect>
                     </ImageDrawing.Rect>
                     <ImageDrawing.ImageSource>
-                        <BitmapImage UriSource="/OpenRPA.Utilities;component/Resources/designer/database.png" ></BitmapImage>
+                        <BitmapImage UriSource="/OpenRPA.Utilities;component/Resources/designer/adddatarow.png" ></BitmapImage>
                     </ImageDrawing.ImageSource>
                 </ImageDrawing>
             </DrawingBrush.Drawing>

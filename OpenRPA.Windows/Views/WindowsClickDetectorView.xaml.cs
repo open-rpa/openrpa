@@ -101,10 +101,10 @@ namespace OpenRPA.Windows.Views
             var elements = WindowsSelector.GetElementsWithuiSelector(selector, null, 10, null);
             if (elements.Count() > 0)
             {
-                HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource("check.png");
+                HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource("searchfound.png");
             } else
             {
-                HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource(".x.png");
+                HighlightImage.Source = Interfaces.Extensions.GetImageSourceFromResource(".searchfailed.png");
             }
             foreach (var ele in elements) ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
         }

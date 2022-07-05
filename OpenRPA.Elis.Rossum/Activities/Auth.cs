@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Elis.Rossum
 {
     [System.ComponentModel.Designer(typeof(AuthDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(Auth), "Resources.toolbox.getimage.png")]
+    [System.Drawing.ToolboxBitmap(typeof(Auth), "Resources.toolbox.auth.png")]
     [LocalizedToolboxTooltip("activity_auth_tooltip", typeof(Resources.strings))]
     [LocalizedDisplayName("activity_auth", typeof(Resources.strings))]
     [LocalizedHelpURL("activity_auth_helpurl", typeof(Resources.strings))]

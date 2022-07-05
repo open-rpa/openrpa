@@ -15,7 +15,7 @@ using ExcelDataReader;
 namespace OpenRPA.Utilities
 {
     [Designer(typeof(WriteCSVDesigner), typeof(System.ComponentModel.Design.IDesigner))]
-    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.writeexcel.png")]
+    [System.Drawing.ToolboxBitmap(typeof(ResFinder), "Resources.toolbox.writecsv.png")]
     //[designer.ToolboxTooltip(Text = "Find an Windows UI element based on xpath selector")]
     public class WriteCSV : CodeActivity
     {

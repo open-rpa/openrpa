@@ -132,37 +132,22 @@ namespace OpenRPA.NM
 
             } while (elements.Count() == 0 && sw.Elapsed < timeout);
             if (elements.Count() > maxresults) elements = elements.Take(maxresults).ToArray();
-
             if ((elements.Length + allelements.Length) < minresults)
             {
                 Log.Selector(string.Format("Windows.GetElement::Failed locating " + minresults + " item(s) {0:mm\\:ss\\.fff}", sw.Elapsed));
                 throw new ElementNotFoundException("Failed locating " + minresults + " item(s)");
             }
-
-
-
             IEnumerator<NMElement> _enum = elements.ToList().GetEnumerator();
             bool more = _enum.MoveNext();
-            //if (lastelements.Length == elements.Length && lastelements.Length > 0)
-            //{
-            //    var eq = new Activities.NMEqualityComparer();
-            //    more = !System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(lastelements, elements);
-            //}
             if (more)
             {
                 allelements = allelements.Concat(elements).ToArray();
                 var eq = new Activities.NMEqualityComparer();
                 allelements = allelements.Distinct(eq).ToArray();
-
-                //var allelementslength = allelements.Length;
-                //Array.Resize(ref allelements, allelements.Length + elements.Length);
-                //Array.Copy(elements, 0, allelements, allelementslength, elements.Length);
             }
-
             context.SetValue(_allelements, allelements);
             context.SetValue(Elements, allelements);
             Log.Selector("END:: I have " + elements.Count() + " elements, and " + allelements.Count() + " in all elements");
-
             if (more)
             {
                 context.SetValue(_elements, _enum);

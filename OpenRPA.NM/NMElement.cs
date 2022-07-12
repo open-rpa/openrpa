@@ -87,7 +87,7 @@ namespace OpenRPA.NM
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        private void parseChromeString(string _chromeelement)
+        private void parseChromeString(string _chromeelement, bool reset)
         {
             if (string.IsNullOrEmpty(_chromeelement)) return;
             {
@@ -99,7 +99,7 @@ namespace OpenRPA.NM
                 catch (Exception)
                 {
                 }
-                Attributes = new Dictionary<string, object>();
+                if(reset || Attributes == null) Attributes = new Dictionary<string, object>();
                 if (c != null)
                     foreach (var kp in c)
                     {
@@ -145,7 +145,7 @@ namespace OpenRPA.NM
         }
         public NMElement(NativeMessagingMessage message)
         {
-            parseChromeString(message.result.ToString());
+            parseChromeString(message.result.ToString(), true);
             _browser = message.browser;
             zn_id = message.zn_id;
             this.message = message;
@@ -160,7 +160,7 @@ namespace OpenRPA.NM
         {
             this.message = message;
             _browser = message.browser;
-            parseChromeString(_chromeelement);
+            parseChromeString(_chromeelement, true);
         }
         [Newtonsoft.Json.JsonIgnore]
         private readonly string _browser = null;
@@ -187,8 +187,11 @@ namespace OpenRPA.NM
                     var text = Attributes["innertext"].ToString();
                     if (string.IsNullOrEmpty(text) && Children.Length == 0)
                     {
-                        var inner = innerHTML;
-                        if (!string.IsNullOrEmpty(inner)) text = inner;
+                        if (Attributes.ContainsKey("innerhtml"))
+                        {
+                            var inner = innerHTML;
+                            if (!string.IsNullOrEmpty(inner)) text = inner;
+                        }
                     }
                     return text;
                 }
@@ -398,7 +401,7 @@ namespace OpenRPA.NM
                     };
                     NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed locating element again (zn_id " + zn_id + ")");
-                    parseChromeString(subsubresult.result.ToString());
+                    parseChromeString(subsubresult.result.ToString(), false);
                     if (Attributes.ContainsKey("innerhtml"))
                     {
                         result = Attributes["innerhtml"].ToString();
@@ -627,7 +630,7 @@ namespace OpenRPA.NM
                     return false;
                 }
 
-                parseChromeString(message.result.ToString());
+                parseChromeString(message.result.ToString(), false);
                 zn_id = message.zn_id;
                 this.message = message;
                 if (!string.IsNullOrEmpty(message.xPath)) xpath = message.xPath;

@@ -203,8 +203,8 @@ namespace OpenRPA.TerminalEmulator
             if (Terminal != null)
             {
                 Terminal.Close();
-                Terminal = null;
                 Terminal.CursorPositionSet -= Terminal_CursorPositionSet;
+                Terminal = null;
             }
             if (Config.TermType == "IBM-3179-2")
             {

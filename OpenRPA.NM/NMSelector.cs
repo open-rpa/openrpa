@@ -47,7 +47,6 @@ namespace OpenRPA.NM
                 var elementarray = element.cssselector.Split('>');
                 elementarray = elementarray.Skip(anchorarray.Length).ToArray();
                 element.cssselector = string.Join(">", elementarray);
-                // element.cssselector = element.cssselector.Substring(anchorelement.cssselector.Length);
             }
             item = new NMSelectorItem(element, false, (anchor != null));
             item.Enabled = true;
@@ -99,19 +98,6 @@ namespace OpenRPA.NM
                 fromcssPath = fromNMElement.cssselector;
                 fromxPath = fromNMElement.xpath;
             }
-            //NMHook.checkForPipes(true, true);
-            //NMHook.reloadtabs();
-            //var tabs = NMHook.tabs.ToList();
-            //if (!string.IsNullOrEmpty(browser)) { 
-            //    lock(NMHook.tabs)
-            //    {
-            //        tabs = NMHook.tabs.Where(x => x.browser == browser).ToList();
-            //    }
-            //}
-            //foreach (var tab in tabs)
-            //{
-
-            //}
             NativeMessagingMessage subresult = null;
 
             var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
@@ -134,20 +120,8 @@ namespace OpenRPA.NM
                         if (b.cssPath == "true" || b.xPath == "true")
                         {
                             if (results.Count > maxresults) continue;
-                            results.Add(new NMElement(b));
-                            //var data = b.result;
-                            //var arr = JArray.Parse(data.ToString());
-                            //foreach (var _e in arr)
-                            //{
-                            //    if (results.Count > maxresults) continue;
-                            //    var json = _e.ToString();
-                            //    var subsubresult = Newtonsoft.Json.JsonConvert.DeserializeObject<NativeMessagingMessage>(json);
-                            //    subsubresult.browser = browser;
-                            //    subsubresult.result = json;
-                            //    subsubresult.tabid = b.tabid;
-                            //    subsubresult.tab = b.tab;
-                            //    results.Add(new NMElement(subsubresult));
-                            //}
+                            var nme = new NMElement(b);
+                            results.Add(nme);
                         }
                     }
             return results.ToArray();

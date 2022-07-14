@@ -450,6 +450,71 @@ namespace OpenRPA.NM
                 }
             }
         }
+        public string textContent
+        {
+            get
+            {
+                string result = null;
+                if (!Attributes.ContainsKey("textcontent"))
+                {
+                    var getelement2 = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = "innerhtml"
+                    };
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed locating element again (zn_id " + zn_id + ")");
+                    parseChromeString(subsubresult.result.ToString(), false);
+                    if (Attributes.ContainsKey("textcontent"))
+                    {
+                        result = Attributes["textcontent"].ToString();
+                        return result;
+                    }
+
+                }
+                if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
+                if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
+                // if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.FindTabById(browser, message.tabid);
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    // NMHook.HighlightTab(tab);
+
+                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        //cssPath = cssselector,
+                        //xPath = xpath,
+                        //tabid = message.tabid,
+                        //frameId = message.frameId,
+                        //data = value
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "textcontent"
+                    };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
+                    var subsubresult = NMHook.sendMessageResult(updateelement, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
+                    //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
         public string Value
         {
             get

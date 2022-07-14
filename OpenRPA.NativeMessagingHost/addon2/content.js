@@ -482,6 +482,9 @@ if (true == false) {
                         } else if (message.result == "innerhtml") {
                             if (document.openrpadebug) console.log('set value', data);
                             ele.innerHTML = data;
+                        } else if (message.result == "textcontent") {
+                            if (document.openrpadebug) console.log('set value', data);
+                            ele.innerText = data;
                         } else if (ele.tagName == "DIV") {
                             if (document.openrpadebug) console.log('set value', data);
                             ele.innerText = data;
@@ -991,8 +994,12 @@ if (true == false) {
                     treeObject["isvisibleonscreen"] = openrpautil.isVisibleOnScreen(element);
                     treeObject["disabled"] = element.disabled;
                     treeObject["innerText"] = element.innerText;
+                    //textContent
                     if (innerhtml) {
                         treeObject["innerhtml"] = element.innerHTML;
+                        if (element.textContent) {
+                            treeObject["textcontent"] = element.textContent;
+                        }
                     }
                     if (element.tagName == "INPUT" && element.getAttribute("type") == "checkbox") {
                         treeObject["checked"] = element.checked;

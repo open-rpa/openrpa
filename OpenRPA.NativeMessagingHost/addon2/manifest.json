@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "openrpa",
-  "version": "1.0.0.3",
+  "version": "1.0.0.4",
   "description": "Support extension for OpenRPA",
   "permissions": [ "tabs", "nativeMessaging", "<all_urls>", "webNavigation", "downloads" ],
   "background": {

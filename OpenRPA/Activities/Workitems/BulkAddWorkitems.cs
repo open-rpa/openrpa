@@ -53,6 +53,16 @@ namespace OpenRPA.WorkItems
             for (var i = 0; i < filefields.Length; i++) filefields[i] = filefields[i].ToLower();
             var counter = 0;
             var bulkcounter = 0;
+            if (dt == null)
+            {
+                Log.Warning("BulkAddWorkitems: Datatable is null");
+                return null;
+            }
+            if (dt.Rows == null)
+            {
+                Log.Warning("BulkAddWorkitems: Datatable contains no rows");
+                return null;
+            }
             foreach (DataRow row in dt.Rows)
             {
                 counter++;

@@ -235,6 +235,14 @@ namespace OpenRPA.Activities
                 }
                 else if (instance.projectid != null)
                 {
+                    if (instance.Parameters == null)
+                    {
+                        if (WorkflowInstance.Instances.Where(x => x._id == instance._id).FirstOrDefault() != null)
+                        {
+
+                            instance = WorkflowInstance.Instances.Where(x => x._id == instance._id).FirstOrDefault();
+                        }
+                    }
                     Dictionary<string, object> arguments = (from argument in Arguments
                                                             where argument.Value.Direction != ArgumentDirection.In
                                                             select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));

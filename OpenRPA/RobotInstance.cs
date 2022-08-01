@@ -2016,7 +2016,8 @@ namespace OpenRPA
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
                     .AddOtlpExporter(otlpOptions =>
                     {
-                        otlpOptions.Endpoint = new Uri("http://otel.openiap.io");
+                        // otlpOptions.Endpoint = new Uri("http://otel.openiap.io");
+                        otlpOptions.Endpoint = new Uri("https://otel.stats.openiap.io:443/v1/trace");
                         otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                     })
                     .Build();
@@ -2158,7 +2159,8 @@ namespace OpenRPA
                         .AddOtlpExporter(opt =>
                         {
                             // opt.Endpoint = new Uri("https://otel.stats.openiap.io");
-                            opt.Endpoint = new Uri("http://otel.openiap.io");
+                            // opt.Endpoint = new Uri("http://otel.openiap.io");
+                            opt.Endpoint = new Uri("https://otel.stats.openiap.io:443/v1/metrics");
                             opt.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                         })
                         .Build();

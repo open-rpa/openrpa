@@ -465,7 +465,6 @@ namespace OpenRPA
                 {
                     if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(IDOrRelativeFilename) is Views.WFDesigner designer) { designer.tab.Close(); }
                 });
-                if (!skipOnline) await Delete<Workflow>();
                 if (!string.IsNullOrEmpty(_id) && global.isConnected)
                 {
                     var imagepath = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "images");
@@ -477,7 +476,7 @@ namespace OpenRPA
                         var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
                         if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
                     }
-                    await global.webSocketClient.DeleteOne("openrpa", this._id);
+                    if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
                 if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Workflows, 1000))
                 {

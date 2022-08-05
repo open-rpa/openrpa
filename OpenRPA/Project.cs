@@ -434,7 +434,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
+                        if(!skipOnline) await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
                     }
                     catch (Exception ex)
                     {
@@ -450,33 +450,36 @@ namespace OpenRPA
                     System.Windows.MessageBox.Show("Not connected to " + Config.local.wsurl + " so cannot validate deletion of WorkItemQueue");
                 } else
                 {
-                    await wiq.Delete();
+                    await wiq.Delete(skipOnline);
                 }                
             }
             foreach (var wf in Workflows.ToList()) { 
-                await wf.Delete(); 
+                await wf.Delete(skipOnline); 
             }
             foreach (var d in Detectors.ToList()) { 
                 var _d = d as Detector;
                 _d.Stop();
-                await _d.Delete(); 
+                await _d.Delete(skipOnline); 
             }
             
             if (System.IO.Directory.Exists(Path))
             {
-                var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
-                foreach (var f in Files) System.IO.File.Delete(f);
+                if(!skipOnline)
+                {
+                    var Files = System.IO.Directory.EnumerateFiles(Path, "*.*", System.IO.SearchOption.AllDirectories).OrderBy((x) => x).ToArray();
+                    foreach (var f in Files) System.IO.File.Delete(f);
+                }
             }
             if (global.isConnected && !skipOnline)
             {
                 if (!string.IsNullOrEmpty(_id))
                 {
-                    await global.webSocketClient.DeleteOne("openrpa", this._id);
+                    if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
             }
             try
             {
-                if (System.IO.Directory.Exists(Path)) System.IO.Directory.Delete(Path, true);
+                if (!skipOnline && System.IO.Directory.Exists(Path)) System.IO.Directory.Delete(Path, true);
             }
             catch (Exception ex)
             {

@@ -89,6 +89,10 @@ namespace OpenRPA
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
+                                    if(result._id != entity._id && !string.IsNullOrEmpty(entity._id))
+                                    {
+                                        collection.Delete(entity._id);
+                                    }
                                     if(_type != "workflowinstance")
                                     {
                                         EnumerableExtensions.CopyPropertiesTo(result, entity, true);

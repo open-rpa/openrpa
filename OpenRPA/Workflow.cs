@@ -478,6 +478,11 @@ namespace OpenRPA
                     }
                     if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id);
                 }
+                var exists = RobotInstance.instance.dbWorkflows.FindById(_id);
+                if (exists != null)
+                {
+                    RobotInstance.instance.dbWorkflows.Delete(_id);
+                }
                 if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Workflows, 1000))
                 {
                     try

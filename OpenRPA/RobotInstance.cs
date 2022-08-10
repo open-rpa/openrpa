@@ -954,7 +954,7 @@ namespace OpenRPA
                                       var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
                                       if (instance != null)
                                       {
-                                          if (!instance.isCompleted)
+                                          if (!instance.isCompleted && i.state != "running" && i.state != "idle")
                                           {
                                               try
                                               {

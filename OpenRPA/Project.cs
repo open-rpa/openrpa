@@ -386,6 +386,7 @@ namespace OpenRPA
         public async Task Save(bool skipOnline = false)
         {
             await Save<Project>(skipOnline);
+            if(!skipOnline) isDirty = false;
             foreach (var workflow in Workflows.ToList())
             {
                 if (workflow.projectid != _id) workflow.projectid = _id;

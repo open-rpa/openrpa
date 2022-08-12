@@ -62,8 +62,10 @@ namespace OpenRPA.Image
                 stream = new MemoryStream(Convert.FromBase64String(Image));
                 b = new Bitmap(stream);
             }
-
+            var sw = new Stopwatch();
+            sw.Start();
             var matches = ImageEvent.waitFor(b, Threshold, Processname, Timeout, CompareGray, limit);
+            Log.Information(string.Format("OpenRPA.Image::GetElement::found {1} elements in {0:mm\\:ss\\.fff}", sw.Elapsed, matches.Count()));
             if (matches.Count() > maxresults) matches = matches.Take(maxresults).ToArray();
             if (Timeout.TotalMilliseconds > 100)
             {

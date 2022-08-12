@@ -20,19 +20,10 @@ namespace OpenRPA.Image
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult);
 
-        private static List<string> windowTitles = new List<string>();
         private static List<IntPtr> windows = new List<IntPtr>();
         [DllImport("user32.dll", SetLastError = true)]
         //public static extern int GetWindowThreadProcessId(HandleRef handle, out int processId);
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-
-        public static List<string> GetWindowTitles(bool includeChildren)
-        {
-            windowTitles.Clear();
-            EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
-            return windowTitles;
-        }
         public static List<IntPtr> GetWindows(bool includeChildren)
         {
             windows.Clear();
@@ -55,11 +46,6 @@ namespace OpenRPA.Image
         private static bool EnumWindowsCallback(IntPtr testWindowHandle, IntPtr includeChildren)
         {
             windows.Add(testWindowHandle);
-            string title = GetWindowTitle(testWindowHandle);
-            if (TitleMatches(title))
-            {
-                windowTitles.Add(title);
-            }
             if (includeChildren.Equals(IntPtr.Zero) == false)
             {
                 EnumChildWindows(testWindowHandle, EnumWindowsCallback, IntPtr.Zero);

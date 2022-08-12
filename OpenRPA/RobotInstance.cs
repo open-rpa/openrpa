@@ -945,38 +945,42 @@ namespace OpenRPA
                           Log.Debug("RunPendingInstances::begin ");
                           await WorkflowInstance.RunPendingInstances();
                           Log.Debug("RunPendingInstances::end ");
-                          foreach (var i in WorkflowInstance.Instances)
+                          if(first_connect)
                           {
-                              if (i.Bookmarks != null && i.Bookmarks.Count > 0)
+                              foreach (var i in WorkflowInstance.Instances)
                               {
-                                  foreach (var b in i.Bookmarks)
+                                  if (i.Bookmarks != null && i.Bookmarks.Count > 0)
                                   {
-                                      var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
-                                      if (instance != null)
+                                      foreach (var b in i.Bookmarks)
                                       {
-                                          if (!instance.isCompleted && i.state != "running" && i.state != "idle")
+                                          var instance = dbWorkflowInstances.Find(x => x.correlationId == b.Key || x._id == b.Key).FirstOrDefault();
+                                          if (instance != null)
                                           {
-                                              try
+                                              if (!instance.isCompleted) //  && i.state != "running" && i.state != "idle"
                                               {
-                                                  i.ResumeBookmark(b.Key, instance, true);
-                                              }
-                                              catch (System.ArgumentException ex)
-                                              {
-                                                  if (i.state == "idle" || i.state == "running")
+                                                  try
                                                   {
-                                                      i.Abort(ex.Message);
+                                                      i.ResumeBookmark(b.Key, instance, true);
                                                   }
-                                              }
-                                              catch (Exception ex)
-                                              {
-                                                  Log.Error(ex.ToString());
+                                                  catch (System.ArgumentException ex)
+                                                  {
+                                                      if (i.state == "idle" || i.state == "running")
+                                                      {
+                                                          i.Abort(ex.Message);
+                                                      }
+                                                  }
+                                                  catch (Exception ex)
+                                                  {
+                                                      Log.Error(ex.ToString());
+                                                  }
                                               }
                                           }
                                       }
-                                  }
 
+                                  }
                               }
                           }
+
                       }
                       catch (Exception ex)
                       {

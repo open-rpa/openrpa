@@ -115,12 +115,8 @@ namespace OpenRPA.Image
                     var ps = System.Diagnostics.Process.GetProcessesByName(Processname);
                     foreach (var p in ps)
                     {
-                        var sw = new System.Diagnostics.Stopwatch();
-                        sw.Start();
                         var rects = new List<Rectangle>();
-                        Log.Information(string.Format("OpenRPA.Image::Enum all windows for processid {1} {0:mm\\:ss\\.fff}", sw.Elapsed, p.Id));
                         var allChildWindows = MyEnumWindows.GetWindows(true, p.Id);
-                        Log.Information(string.Format("OpenRPA.Image::Found {1} windows for processid {2} {0:mm\\:ss\\.fff}", sw.Elapsed, allChildWindows.Count(), p.Id));
                         // var allChildWindows = new WindowHandleInfo(p.MainWindowHandle).GetAllChildHandles();
                         allChildWindows.Add(p.MainWindowHandle);
                         var temparr = allChildWindows.ToArray();
@@ -145,7 +141,6 @@ namespace OpenRPA.Image
                                 rects.Add(rect);
                             }
                         }
-                        Log.Information(string.Format("OpenRPA.Image::Found {1} rectangles for processid {2} {0:mm\\:ss\\.fff}", sw.Elapsed, rects.Count(), p.Id));
                         foreach (var rect in rects.ToList())
                         {
                             foreach (var subrect in rects.ToList())
@@ -156,7 +151,6 @@ namespace OpenRPA.Image
                                 }
                             }
                         }
-                        Log.Information(string.Format("OpenRPA.Image::Ended up with {1} rectangles for processid {2} {0:mm\\:ss\\.fff}", sw.Elapsed, rects.Count(), p.Id));
                         foreach (var rect in rects)
                         {
                             var desktop = Interfaces.Image.Util.Screenshot(rect);
@@ -172,7 +166,6 @@ namespace OpenRPA.Image
                                         results[i].Y += rect.Y;
                                     }
                                     this.results = results;
-                                    Log.Information(string.Format("OpenRPA.Image::Found {1} results for processid {2} {0:mm\\:ss\\.fff}", sw.Elapsed, results.Count(), p.Id));
                                     return true;
                                 }
                             }

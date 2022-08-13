@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -26,23 +27,28 @@ namespace OpenRPA.Image
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
         public static List<IntPtr> GetWindows(bool includeChildren)
         {
-            windows.Clear();
-            EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
-            return windows;
-        }
-        public static List<IntPtr> GetWindows(bool includeChildren, int processId)
-        {
-            windows.Clear();
-            EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
-            foreach (var h in windows.ToList())
+            lock (windows)
             {
-                uint _processId = 0;
-                GetWindowThreadProcessId(h, out _processId);
-                if (_processId != processId) windows.Remove(h);
+                windows.Clear();
+                EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
+                return windows;
             }
-            return windows;
         }
-
+        public static IntPtr[] GetWindows(bool includeChildren, System.Diagnostics.Process p)
+        {
+            lock (windows)
+            {
+                windows.Clear();
+                EnumWindows(EnumWindowsCallback, includeChildren ? (IntPtr)1 : IntPtr.Zero);
+                foreach (var h in windows.ToList())
+                {
+                    uint _processId = 0;
+                    GetWindowThreadProcessId(h, out _processId);
+                    if (_processId != p.Id) windows.Remove(h);
+                }
+            }
+            return windows.ToArray();
+        }
         private static bool EnumWindowsCallback(IntPtr testWindowHandle, IntPtr includeChildren)
         {
             windows.Add(testWindowHandle);
@@ -52,7 +58,63 @@ namespace OpenRPA.Image
             }
             return true;
         }
-
+        //private static List<Rectangle> Rects = new List<Rectangle>();
+        public static object reference = new object();
+        public static Rectangle[] WindowRects(object sender, bool includeChildren, System.Diagnostics.Process p, Rectangle limit, int minWidth = 0, int minHeight = 0)
+        {
+            var Rects = new List<Rectangle>();
+            // Rects.Clear();
+            var allChildWindows = MyEnumWindows.GetWindows(true, p).ToList();
+            foreach (var window in allChildWindows)
+            {
+                Interfaces.win32.WindowHandleInfo.RECT rct;
+                if (!Interfaces.win32.WindowHandleInfo.GetWindowRect(new HandleRef(reference, window), out rct))
+                {
+                    continue;
+                }
+                var rect = new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left + 1, rct.Bottom - rct.Top + 1);
+                if (!limit.IsEmpty)
+                {
+                    rect = new Rectangle(rect.X + limit.X, rect.Y + limit.Y, limit.Width, limit.Height);
+                }
+                if (rect.Width < minWidth || rect.Height < minHeight)
+                {
+                    continue;
+                }
+                if ((rect.X > 0 || (rect.X + rect.Width) > 0) &&
+                        (rect.Y > 0 || (rect.Y + rect.Height) > 0))
+                {
+                    Rects.Add(rect);
+                }
+            }
+            foreach (var _rect in Rects.ToList())
+            {
+                foreach (var subrect in Rects.ToList())
+                {
+                    if (!_rect.Equals(subrect))
+                    {
+                        if (_rect.Contains(subrect) || subrect.Contains(_rect))
+                        {
+                            Rects.Remove(subrect);
+                        }
+                        else if (subrect.X == _rect.X && subrect.Y == _rect.Y && subrect.Height == _rect.Height && subrect.Width == _rect.Width)
+                        {
+                            Rects.Remove(subrect);
+                        }
+                        else if (subrect.IntersectsWith(_rect))
+                        {
+                            var X = subrect.X < _rect.X ? subrect.X : _rect.X;
+                            var Y = subrect.Y < _rect.Y ? subrect.Y : _rect.Y;
+                            var Width = subrect.Width > _rect.Width ? subrect.Width : _rect.Width;
+                            var Height = subrect.Height > _rect.Height ? subrect.Height : _rect.Height;
+                            Rects.Remove(subrect);
+                            Rects.Add(new Rectangle(X, Y, Width, Height));
+                        }
+                    }
+                }
+            }
+            return Rects.Distinct().ToArray();
+        }
         private static string GetWindowTitle(IntPtr windowHandle)
         {
             uint SMTO_ABORTIFHUNG = 0x0002;
@@ -67,7 +129,6 @@ namespace OpenRPA.Image
             Marshal.FreeCoTaskMem(memoryHandle);
             return title;
         }
-
         private static bool TitleMatches(string title)
         {
             bool match = title.Contains("e");

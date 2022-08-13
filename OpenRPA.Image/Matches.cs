@@ -57,6 +57,7 @@ namespace OpenRPA.Image
         {
             try
             {
+                if(Template == null || Source == null) return new Rectangle[] { };
                 if (Template.Width > Source.Width) throw new ArgumentException("Template is wider than the source");
                 if (Template.Height > Source.Height) throw new ArgumentException("Template is higher than the source");
                 if (asGray)

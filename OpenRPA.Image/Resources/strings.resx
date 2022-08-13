@@ -141,6 +141,9 @@
   <data name="activity_getelement" xml:space="preserve">
     <value>Get Element</value>
   </data>
+  <data name="activity_getelement_clear_process_limit" xml:space="preserve">
+    <value>Clear Process Limit</value>
+  </data>
   <data name="activity_getelement_drop_hint" xml:space="preserve">
     <value>Drop activity</value>
   </data>

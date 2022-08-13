@@ -133,6 +133,15 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Process Limit.
+        /// </summary>
+        public static string activity_getelement_clear_process_limit {
+            get {
+                return ResourceManager.GetString("activity_getelement_clear_process_limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop activity.
         /// </summary>
         public static string activity_getelement_drop_hint {

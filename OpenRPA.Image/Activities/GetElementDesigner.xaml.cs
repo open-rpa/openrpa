@@ -96,7 +96,7 @@ namespace OpenRPA.Image
                 var Processname = ModelItem.GetValue<string>("Processname");
                 var limit = ModelItem.GetValue<Rectangle>("Limit");
                 if (Threshold < 0.5) Threshold = 0.8;
-                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(100), CompareGray, limit);
+                var matches = ImageEvent.waitFor(b, Threshold, Processname, TimeSpan.FromMilliseconds(0), CompareGray, limit);
                 foreach (var r in matches)
                 {
                     var element = new ImageElement(r);
@@ -144,6 +144,11 @@ namespace OpenRPA.Image
             NotifyPropertyChanged("Limit");
 
         }
+        private void ClearProcessLimit_Click(object sender, RoutedEventArgs e)
+        {
+            ModelItem.Properties["Limit"].ClearValue();
+        }
+
         public string ImageString
         {
             get

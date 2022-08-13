@@ -41,6 +41,7 @@
                     </StackPanel>
                 </Button>
                 <Button Content="{x:Static or:strings.activity_getelement_process_limit}" Click="ProcessLimit_Click" />
+                <Button Content="{x:Static or:strings.activity_getelement_clear_process_limit}" Click="ClearProcessLimit_Click" />
                 <Image Source="{Binding Image}"></Image>
                 <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
                                     HintText="{x:Static or:strings.activity_getelement_drop_hint}" AllowedItemType="sa:Activity"

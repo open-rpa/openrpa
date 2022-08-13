@@ -59,6 +59,7 @@ namespace OpenRPA.Image
 
             me.waitHandle = new System.Threading.AutoResetEvent(false);
             me.waitHandle.WaitOne(TimeOut);
+            me.template = null;
             me.running = false;
             me.timer.Stop();
             return me.results;
@@ -90,6 +91,7 @@ namespace OpenRPA.Image
             {
                 //var results = new List<Rectangle>();
                 if (!running) return false;
+                if (this.template == null) return false;
                 try
                 {
                     var with = template.Width;
@@ -115,44 +117,106 @@ namespace OpenRPA.Image
                     var ps = System.Diagnostics.Process.GetProcessesByName(Processname);
                     foreach (var p in ps)
                     {
-                        var rects = new List<Rectangle>();
-                        var allChildWindows = MyEnumWindows.GetWindows(true, p.Id);
-                        // var allChildWindows = new WindowHandleInfo(p.MainWindowHandle).GetAllChildHandles();
-                        allChildWindows.Add(p.MainWindowHandle);
-                        var temparr = allChildWindows.ToArray();
-                        foreach (var window in temparr)
-                        {
-                            Interfaces.win32.WindowHandleInfo.RECT rct;
-                            if (!Interfaces.win32.WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
-                            {
-                                continue;
-                            }
-                            var rect = new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left + 1, rct.Bottom - rct.Top + 1);
-                            if (!limit.IsEmpty)
-                            {
-                                rect = new Rectangle(rect.X + limit.X, rect.Y + limit.Y, limit.Width, limit.Height);
-                            }
-                            if (rect.Width < template.Width || rect.Height < template.Height)
-                            {
-                                continue;
-                            }
-                            if((rect.X > 0 || (rect.X + rect.Width) > 0) &&
-                                    (rect.Y > 0 || (rect.Y + rect.Height) > 0)) {
-                                rects.Add(rect);
-                            }
-                        }
-                        foreach (var rect in rects.ToList())
-                        {
-                            foreach (var subrect in rects.ToList())
-                            {
-                                if (rect.Contains(subrect) && !rect.Equals(subrect))
-                                {
-                                    rects.Remove(subrect);
-                                }
-                            }
-                        }
+                        //var rects = new List<Rectangle>();
+                        //var allChildWindows = MyEnumWindows.GetWindows(true, p);
+                        //allChildWindows.Add(p.MainWindowHandle);
+                        //var temparr = allChildWindows.ToArray();
+                        //foreach (var window in temparr)
+                        //{
+                        //    Interfaces.win32.WindowHandleInfo.RECT rct;
+                        //    if (!Interfaces.win32.WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
+                        //    {
+                        //        continue;
+                        //    }
+                        //    var rect = new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left + 1, rct.Bottom - rct.Top + 1);
+                        //    if (!limit.IsEmpty)
+                        //    {
+                        //        rect = new Rectangle(rect.X + limit.X, rect.Y + limit.Y, limit.Width, limit.Height);
+                        //    }
+                        //    if (rect.Width < template.Width || rect.Height < template.Height)
+                        //    {
+                        //        continue;
+                        //    }
+                        //    if((rect.X > 0 || (rect.X + rect.Width) > 0) &&
+                        //            (rect.Y > 0 || (rect.Y + rect.Height) > 0)) {
+                        //        rects.Add(rect);
+                        //    }
+                        //}
+                        //foreach (var rect in rects.ToList())
+                        //{
+                        //    foreach (var subrect in rects.ToList())
+                        //    {
+                        //        if (rect.Contains(subrect) && !rect.Equals(subrect))
+                        //        {
+                        //            rects.Remove(subrect);
+                        //        }
+                        //    }
+                        //}
+                        //foreach (var rect in rects)
+                        //{
+                        //    var desktop = Interfaces.Image.Util.Screenshot(rect);
+                        //    try
+                        //    {
+                        //        var results = Matches.FindMatches(desktop, template, threshold, 10, CompareGray);
+                        //        if (results.Count() > 0)
+                        //        {
+                        //            var finalresult = new List<Rectangle>();
+                        //            for(var i = 0; i < results.Length; i ++)
+                        //            {
+                        //                results[i].X += rect.X;
+                        //                results[i].Y += rect.Y;
+                        //            }
+                        //            this.results = results;
+                        //            return true;
+                        //        }
+                        //    }
+                        //    catch (Exception ex)
+                        //    {
+                        //        System.Diagnostics.Trace.WriteLine(ex.ToString());
+                        //    }
+                        //}
+                        var rects2 = new List<Rectangle>();
+                        if (!running) return false;
+                        if (this.template == null) return false;
+                        var rects = MyEnumWindows.WindowRects(this, true, p, limit, template.Width, template.Height);
+                        //foreach (var window in temparr)
+                        //{
+                        //    Interfaces.win32.WindowHandleInfo.RECT rct;
+                        //    if (!Interfaces.win32.WindowHandleInfo.GetWindowRect(new HandleRef(this, window), out rct))
+                        //    {
+                        //        continue;
+                        //    }
+                        //    var rect = new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left + 1, rct.Bottom - rct.Top + 1);
+                        //    if (!limit.IsEmpty)
+                        //    {
+                        //        rect = new Rectangle(rect.X + limit.X, rect.Y + limit.Y, limit.Width, limit.Height);
+                        //    }
+                        //    if (rect.Width < template.Width || rect.Height < template.Height)
+                        //    {
+                        //        continue;
+                        //    }
+                        //    if ((rect.X > 0 || (rect.X + rect.Width) > 0) &&
+                        //            (rect.Y > 0 || (rect.Y + rect.Height) > 0))
+                        //    {
+                        //        rects.Add(rect);
+                        //    }
+                        //}
+                        //foreach (var rect in rects.ToList())
+                        //{
+                        //    foreach (var subrect in rects.ToList())
+                        //    {
+                        //        if (rect.Contains(subrect) && !rect.Equals(subrect))
+                        //        {
+                        //            rects.Remove(subrect);
+                        //        }
+                        //    }
+                        //}
+                        // Log.Information("searcing " + rects.Length + " windows for image");
+                        if (!running) return false;
+                        if (this.template == null) return false;
                         foreach (var rect in rects)
                         {
+                            // Log.Information("searcing " + rect.ToString());
                             var desktop = Interfaces.Image.Util.Screenshot(rect);
                             try
                             {
@@ -160,7 +224,7 @@ namespace OpenRPA.Image
                                 if (results.Count() > 0)
                                 {
                                     var finalresult = new List<Rectangle>();
-                                    for(var i = 0; i < results.Length; i ++)
+                                    for (var i = 0; i < results.Length; i++)
                                     {
                                         results[i].X += rect.X;
                                         results[i].Y += rect.Y;
@@ -174,7 +238,7 @@ namespace OpenRPA.Image
                                 System.Diagnostics.Trace.WriteLine(ex.ToString());
                             }
                         }
-                        
+
                     }
                 }
             }

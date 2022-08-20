@@ -67,6 +67,7 @@
     <None Remove="Activities\GetMailsDesigner.xaml" />
     <None Remove="Activities\GetParagraphDesigner.xaml" />
     <None Remove="Activities\GetSelectedRangeDesigner.xaml" />
+    <None Remove="Activities\InsertRangeDesigner.xaml" />
     <None Remove="Activities\MoveMailItemDesigner.xaml" />
     <None Remove="Activities\NewMailItemDesigner.xaml" />
     <None Remove="Activities\ProtectWorksheetDesigner.xaml" />
@@ -89,6 +90,7 @@
     <None Remove="Resources\designer\getmails.png" />
     <None Remove="Resources\designer\getparagraph.png" />
     <None Remove="Resources\designer\getselectedrange.png" />
+    <None Remove="Resources\designer\insertrange.png" />
     <None Remove="Resources\designer\movemailitem.png" />
     <None Remove="Resources\designer\newmailitem.png" />
     <None Remove="Resources\designer\protectworksheet.png" />
@@ -112,6 +114,7 @@
     <None Remove="Resources\toolbox\getmails.png" />
     <None Remove="Resources\toolbox\getparagraph.png" />
     <None Remove="Resources\toolbox\getselectedrange.png" />
+    <None Remove="Resources\toolbox\insertrange.png" />
     <None Remove="Resources\toolbox\movemailitem.png" />
     <None Remove="Resources\toolbox\newmailitem.png" />
     <None Remove="Resources\toolbox\protectworksheet.png" />
@@ -129,6 +132,7 @@
     <None Remove="Snippets\ExcelPowerLoop.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\insertrange.png" />
     <EmbeddedResource Include="Resources\toolbox\setparagraph.png" />
     <EmbeddedResource Include="Resources\toolbox\runslideshow.png" />
     <EmbeddedResource Include="Resources\toolbox\runexcelmacro.png" />
@@ -148,6 +152,7 @@
     <EmbeddedResource Include="Resources\toolbox\protectworksheet.png" />
     <EmbeddedResource Include="Resources\toolbox\addparagraph.png" />
     <EmbeddedResource Include="Resources\toolbox\unprotectworksheet.png" />
+    <EmbeddedResource Include="Resources\toolbox\insertrange.png" />
     <EmbeddedResource Include="Resources\toolbox\writerange.png" />
     <EmbeddedResource Include="Resources\toolbox\writecell.png" />
   </ItemGroup>
@@ -195,6 +200,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\ClearRangeDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\InsertRangeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\WriteRangeDesigner.xaml">

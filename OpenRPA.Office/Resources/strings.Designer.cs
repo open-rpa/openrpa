@@ -628,6 +628,78 @@ namespace OpenRPA.Office.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert Range.
+        /// </summary>
+        public static string activity_insertrange {
+            get {
+                return ResourceManager.GetString("activity_insertrange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell or Range.
+        /// </summary>
+        public static string activity_insertrange_cell {
+            get {
+                return ResourceManager.GetString("activity_insertrange_cell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell or rows to start at ( a1 or a:a or 1:1 ).
+        /// </summary>
+        public static string activity_insertrange_cell_help {
+            get {
+                return ResourceManager.GetString("activity_insertrange_cell_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string activity_insertrange_count {
+            get {
+                return ResourceManager.GetString("activity_insertrange_count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of rows to insert.
+        /// </summary>
+        public static string activity_insertrange_count_help {
+            get {
+                return ResourceManager.GetString("activity_insertrange_count_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shift to right.
+        /// </summary>
+        public static string activity_insertrange_shiftright {
+            get {
+                return ResourceManager.GetString("activity_insertrange_shiftright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shifting down by default, enable this to shift to right instead.
+        /// </summary>
+        public static string activity_insertrange_shiftright_help {
+            get {
+                return ResourceManager.GetString("activity_insertrange_shiftright_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert Rows or column to a spread sheet.
+        /// </summary>
+        public static string activity_insertrange_tooltip {
+            get {
+                return ResourceManager.GetString("activity_insertrange_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail.
         /// </summary>
         public static string activity_movemail_mail {

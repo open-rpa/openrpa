@@ -306,6 +306,30 @@
   <data name="activity_getselectedrange_tooltip" xml:space="preserve">
     <value>Get the currently selected cells in the specefied worksheet</value>
   </data>
+  <data name="activity_insertrange" xml:space="preserve">
+    <value>Insert Range</value>
+  </data>
+  <data name="activity_insertrange_cell" xml:space="preserve">
+    <value>Cell or Range</value>
+  </data>
+  <data name="activity_insertrange_cell_help" xml:space="preserve">
+    <value>Cell or rows to start at ( a1 or a:a or 1:1 )</value>
+  </data>
+  <data name="activity_insertrange_count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="activity_insertrange_count_help" xml:space="preserve">
+    <value>Number of rows to insert</value>
+  </data>
+  <data name="activity_insertrange_shiftright" xml:space="preserve">
+    <value>Shift to right</value>
+  </data>
+  <data name="activity_insertrange_shiftright_help" xml:space="preserve">
+    <value>Shifting down by default, enable this to shift to right instead</value>
+  </data>
+  <data name="activity_insertrange_tooltip" xml:space="preserve">
+    <value>Insert Rows or column to a spread sheet</value>
+  </data>
   <data name="activity_movemailitem" xml:space="preserve">
     <value>Move MailItem</value>
   </data>

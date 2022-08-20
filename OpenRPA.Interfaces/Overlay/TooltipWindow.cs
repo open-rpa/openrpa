@@ -70,10 +70,10 @@ namespace OpenRPA.Interfaces.Overlay
             get
             {
                 var result = base.CreateParams;
-                result.ExStyle |= (int)WindowStylesEx.WS_EX_TOOLWINDOW;
-                result.ExStyle |= (int)WindowStylesEx.WS_EX_TRANSPARENT;
-                result.ExStyle |= (int)WindowStylesEx.WS_EX_NOACTIVATE;
-                result.ExStyle |= (int)WindowStylesEx.WS_EX_LAYERED;
+                result.ExStyle |= (int)win32.WindowStylesEx.WS_EX_TOOLWINDOW;
+                result.ExStyle |= (int)win32.WindowStylesEx.WS_EX_TRANSPARENT;
+                result.ExStyle |= (int)win32.WindowStylesEx.WS_EX_NOACTIVATE;
+                result.ExStyle |= (int)win32.WindowStylesEx.WS_EX_LAYERED;
                 return result;
             }
         }

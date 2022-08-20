@@ -1762,6 +1762,16 @@ namespace OpenRPA.Interfaces
             MOUSEEVENTF_XDOWN = 0x0080,
             MOUSEEVENTF_XUP = 0x0100
         }
+
+        public static HandleRef HWND_TOPMOST = new HandleRef(null, new IntPtr(-1));
+        public static HandleRef HWND_NOTOPMOST = new HandleRef(null, new IntPtr(-2));
+        public const int SWP_NOSIZE = 1;
+        public const int SWP_NOMOVE = 2;
+        public const int SWP_NOZORDER = 4;
+        public const int SWP_NOACTIVATE = 16;
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SetWindowPos(HandleRef hWnd, HandleRef hWndInsertAfter, int x, int y, int cx, int cy, int flags);
+
     }
 
     public enum WM

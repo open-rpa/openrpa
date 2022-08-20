@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using iTextSharp.text.pdf;
+using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.ComponentModel;
@@ -14,13 +15,24 @@ namespace OpenRPA.Utilities
     {
         [RequiredArgument]
         public InArgument<string> Filename { get; set; }
+        public InArgument<string> Password { get; set; }
         public OutArgument<iTextSharp.text.pdf.PdfReader> Result { get; set; }
         public OutArgument<string> AllText { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var filename = Filename.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
-            iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(filename);
+            var password = Password.Get(context);
+            iTextSharp.text.pdf.PdfReader reader;
+            if(!string.IsNullOrEmpty(password))
+            {
+                PdfReader.unethicalreading = true;
+                reader = new iTextSharp.text.pdf.PdfReader(filename, System.Text.ASCIIEncoding.ASCII.GetBytes(password));
+            }
+            else
+            {
+                reader = new iTextSharp.text.pdf.PdfReader(filename);
+            }
             context.SetValue(Result, reader);
             var result = GetTextFromAllPages(reader);
             context.SetValue(AllText, result);

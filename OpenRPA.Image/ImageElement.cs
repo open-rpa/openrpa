@@ -104,6 +104,7 @@ namespace OpenRPA.Image
                     System.Threading.Thread.Sleep(10);
                     _overlayWindow.TopMost = true;
                 } while (_overlayWindow.Visible && sw.Elapsed < Duration);
+                _overlayWindow.Close();
                 return Task.CompletedTask;
             }
         }

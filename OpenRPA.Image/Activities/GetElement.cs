@@ -50,36 +50,41 @@ namespace OpenRPA.Image
             var result = new List<ImageElement>();
             Bitmap b = null;
             MemoryStream stream = null;
-            if (System.Text.RegularExpressions.Regex.Match(Image, "[a-f0-9]{24}").Success)
+            try
             {
-                b = Task.Run(() =>
+                if (System.Text.RegularExpressions.Regex.Match(Image, "[a-f0-9]{24}").Success)
                 {
-                    return Interfaces.Image.Util.LoadBitmap(Image);
-                }).Result;
-            }
-            else
-            {
-                stream = new MemoryStream(Convert.FromBase64String(Image));
-                b = new Bitmap(stream);
-            }
-            var matches = ImageEvent.waitFor(b, Threshold, Processname, Timeout, CompareGray, limit);
-            if (matches.Count() > maxresults) matches = matches.Take(maxresults).ToArray();
-            if (Timeout.TotalMilliseconds > 100)
-            {
-                if (matches.Length == 0)
+                    b = Task.Run(() =>
+                    {
+                        return Interfaces.Image.Util.LoadBitmap(Image);
+                    }).Result;
+                }
+                else
                 {
-                    if (stream != null) stream.Dispose();
-                    b.Dispose();
-                    b = null;
-                    return result;
+                    stream = new MemoryStream(Convert.FromBase64String(Image));
+                    b = new Bitmap(stream);
+                }
+                var matches = ImageEvent.waitFor(b, Threshold, Processname, Timeout, CompareGray, limit);
+                if (matches.Count() > maxresults) matches = matches.Take(maxresults).ToArray();
+                if (Timeout.TotalMilliseconds > 100)
+                {
+                    if (matches.Length == 0) return result;
+                }
+                foreach (var r in matches)
+                {
+                    result.Add(new ImageElement(r));
                 }
             }
-            if (stream != null) stream.Dispose();
-            b.Dispose();
-            b = null;
-            foreach (var r in matches)
+            catch (Exception)
             {
-                result.Add(new ImageElement(r));
+                throw;
+            }
+            finally
+            {
+                b?.Dispose();
+                b = null;
+                stream?.Dispose();
+                stream = null;
             }
             if (result.Count() < minresults)
             {

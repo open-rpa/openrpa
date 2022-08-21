@@ -32,7 +32,7 @@ namespace OpenRPA.Activities
         public InArgument<IElement> Element { get; set; }
         [RequiredArgument, LocalizedDisplayName("activity_blocking", typeof(Resources.strings)), LocalizedDescription("activity_blocking_help", typeof(Resources.strings))]
         public InArgument<bool> Blocking { get; set; }
-        [RequiredArgument, LocalizedDisplayName("activity_duration", typeof(Resources.strings)), LocalizedDescription("activity_duration_help", typeof(Resources.strings))]
+        [LocalizedDisplayName("activity_duration", typeof(Resources.strings)), LocalizedDescription("activity_duration_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> Duration { get; set; }
         protected async override Task<int> ExecuteAsync(AsyncCodeActivityContext context)
         {

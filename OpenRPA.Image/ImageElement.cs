@@ -1,9 +1,11 @@
 ﻿using OpenRPA.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace OpenRPA.Image
 {
@@ -89,13 +91,18 @@ namespace OpenRPA.Image
             }
             return _Highlight(Color, Duration);
         }
-        public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
+        [DllImport("User32.dll")]
+        public static extern IntPtr GetDC(IntPtr hwnd);
+        [DllImport("User32.dll")]
+        public static extern void ReleaseDC(IntPtr hwnd, IntPtr dc);
+        public async Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
+            System.Threading.Thread.CurrentThread.Name = "UIHighlighter";
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
             {
                 _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;
-                _overlayWindow.SetTimeout(Duration);
+                //_overlayWindow.SetTimeout(Duration);
                 _overlayWindow.Bounds = Rectangle;
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
@@ -105,8 +112,37 @@ namespace OpenRPA.Image
                     _overlayWindow.TopMost = true;
                 } while (_overlayWindow.Visible && sw.Elapsed < Duration);
                 _overlayWindow.Close();
-                return Task.CompletedTask;
+                return;
             }
+            //var r = new Rectangle(Rectangle.Location, Rectangle.Size);
+            //IntPtr desktopPtr = GetDC(IntPtr.Zero);
+            //IntPtr hWnd = rectutil.WindowFromPoint(r.Location);
+            //try
+            //{
+            //    using (Graphics g = Graphics.FromHdc(desktopPtr))
+            //    {
+            //        SolidBrush b = new SolidBrush(Color);
+            //        Pen p = new Pen(Color, 5);
+            //        var sw = new System.Diagnostics.Stopwatch();
+            //        sw.Start();
+            //        do
+            //        {
+            //            g.DrawRectangle(p, r);
+            //            // System.Threading.Thread.Sleep(1);
+            //            // await Task.Delay(1);
+            //            // g.DrawEllipse(p, r);
+            //            // g.FillRectangle(b, r);
+            //        } while (sw.Elapsed < Duration);
+            //        sw.Stop();
+            //        // await Task.Delay(Duration);
+            //    }
+            //    // rectutil.InvalidateRect(hWnd, IntPtr.Zero, true);
+            //    rectutil.InvalidateRect(IntPtr.Zero, r, true);
+            //}
+            //finally
+            //{
+            //    ReleaseDC(IntPtr.Zero, desktopPtr);
+            //}
         }
         public string ImageString()
         {

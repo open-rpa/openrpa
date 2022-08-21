@@ -405,7 +405,7 @@ namespace OpenRPA.Java
             {
                 _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;
-                _overlayWindow.SetTimeout(Duration);
+                // _overlayWindow.SetTimeout(Duration);
                 _overlayWindow.Bounds = Rectangle;
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();

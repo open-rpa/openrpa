@@ -93,112 +93,116 @@ namespace OpenRPA
                     {
                         return;
                     }
-                        if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
+                    if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
+                    {
+                        if(string.IsNullOrEmpty(System.Threading.Thread.CurrentThread.Name)) System.Threading.Thread.CurrentThread.Name = Instance.name;
+                    }                        
+                    if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
+                    {
+                        if (System.Threading.Monitor.TryEnter(timerslock, 1000))
                         {
-                            if (System.Threading.Monitor.TryEnter(timerslock, 1000))
-                            {
-                                try
-                                {
-                                    timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
-                                }
-                                finally
-                                {
-                                    System.Threading.Monitor.Exit(timerslock);
-                                }
-                            }
-
-
-                            System.Diagnostics.Activity.Current = null;
                             try
                             {
-                                Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                                timers.Add(InstanceId.ToString(), new Dictionary<string, Stopwatch>());
                             }
-                            catch (Exception)
+                            finally
                             {
-                                Instance.source = null;
-                            }
-                            if (Instance.RootActivity != null)
-                            {
-                                if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
-                                Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
-                            }
-                            Instance.RootActivity?.SetTag("status.code", 200);
-                            Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                            Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
-                            try
-                            {
-                                if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.username))
-                                {
-                                    Instance.RootActivity?.SetTag("username", global.webSocketClient.user.username);
-                                }
-                                else
-                                {
-                                    Instance.RootActivity?.SetTag("username", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                                }
-                            }
-                            catch (Exception)
-                            {
-                            }
-                            try
-                            {
-                                if (hostname == null) hostname = System.Net.Dns.GetHostName();
-                                Instance.RootActivity?.SetTag("hostname", hostname);
-                            }
-                            catch (Exception)
-                            {
-                                hostname = "";
-                            }
-                            Instance.Activities.Push(Instance.RootActivity);
-
-                        }
-                        else if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
-                            workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
-                            workflowInstanceRecord.State == WorkflowInstanceStates.Suspended || workflowInstanceRecord.State == WorkflowInstanceStates.Terminated ||
-                            workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
-                        {
-                            if (System.Threading.Monitor.TryEnter(timerslock, 1000))
-                            {
-                                try
-                                {
-                                    if (timers.ContainsKey(InstanceId.ToString())) timers.Remove(InstanceId.ToString());
-                                }
-                                finally
-                                {
-                                    System.Threading.Monitor.Exit(timerslock);
-                                }
-                            }
-                            if (workflowInstanceRecord.State != WorkflowInstanceStates.Completed)
-                            {
-                                Instance.RootActivity?.SetTag("status.state", 500);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException)
-                            {
-                                Instance.RootActivity?.SetTag("Exception", ((System.Activities.Tracking.WorkflowInstanceUnhandledExceptionRecord)workflowInstanceRecord).UnhandledException);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted)
-                            {
-                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceAbortedRecord)workflowInstanceRecord).Reason);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Suspended)
-                            {
-                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceSuspendedRecord)workflowInstanceRecord).Reason);
-                            }
-                            if (workflowInstanceRecord.State == WorkflowInstanceStates.Terminated)
-                            {
-                                Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
-                            }
-                            Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
-                            if (Instance.source != null)
-                            {
-                                while (Instance.Activities.Count > 0)
-                                {
-                                    var span = Instance.Activities.Pop();
-                                    span?.Dispose();
-                                }
-                                if (Instance.RootActivity != null) Instance.RootActivity.Dispose();
-                                Instance.RootActivity = null;
+                                System.Threading.Monitor.Exit(timerslock);
                             }
                         }
+
+
+                        System.Diagnostics.Activity.Current = null;
+                        try
+                        {
+                            Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                        }
+                        catch (Exception)
+                        {
+                            Instance.source = null;
+                        }
+                        if (Instance.RootActivity != null)
+                        {
+                            if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
+                            Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
+                        }
+                        Instance.RootActivity?.SetTag("status.code", 200);
+                        Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
+                        Instance.RootActivity?.SetTag("ofid", Config.local.openflow_uniqueid);
+                        try
+                        {
+                            if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.username))
+                            {
+                                Instance.RootActivity?.SetTag("username", global.webSocketClient.user.username);
+                            }
+                            else
+                            {
+                                Instance.RootActivity?.SetTag("username", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        try
+                        {
+                            if (hostname == null) hostname = System.Net.Dns.GetHostName();
+                            Instance.RootActivity?.SetTag("hostname", hostname);
+                        }
+                        catch (Exception)
+                        {
+                            hostname = "";
+                        }
+                        Instance.Activities.Push(Instance.RootActivity);
+
+                    }
+                    else if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted || workflowInstanceRecord.State == WorkflowInstanceStates.Canceled ||
+                        workflowInstanceRecord.State == WorkflowInstanceStates.Completed || workflowInstanceRecord.State == WorkflowInstanceStates.Deleted ||
+                        workflowInstanceRecord.State == WorkflowInstanceStates.Suspended || workflowInstanceRecord.State == WorkflowInstanceStates.Terminated ||
+                        workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException || workflowInstanceRecord.State == WorkflowInstanceStates.UpdateFailed)
+                    {
+                        if (System.Threading.Monitor.TryEnter(timerslock, 1000))
+                        {
+                            try
+                            {
+                                if (timers.ContainsKey(InstanceId.ToString())) timers.Remove(InstanceId.ToString());
+                            }
+                            finally
+                            {
+                                System.Threading.Monitor.Exit(timerslock);
+                            }
+                        }
+                        if (workflowInstanceRecord.State != WorkflowInstanceStates.Completed)
+                        {
+                            Instance.RootActivity?.SetTag("status.state", 500);
+                        }
+                        if (workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException)
+                        {
+                            Instance.RootActivity?.SetTag("Exception", ((System.Activities.Tracking.WorkflowInstanceUnhandledExceptionRecord)workflowInstanceRecord).UnhandledException);
+                        }
+                        if (workflowInstanceRecord.State == WorkflowInstanceStates.Aborted)
+                        {
+                            Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceAbortedRecord)workflowInstanceRecord).Reason);
+                        }
+                        if (workflowInstanceRecord.State == WorkflowInstanceStates.Suspended)
+                        {
+                            Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceSuspendedRecord)workflowInstanceRecord).Reason);
+                        }
+                        if (workflowInstanceRecord.State == WorkflowInstanceStates.Terminated)
+                        {
+                            Instance.RootActivity?.SetTag("Reason", ((System.Activities.Tracking.WorkflowInstanceTerminatedRecord)workflowInstanceRecord).Reason);
+                        }
+                        Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
+                        if (Instance.source != null)
+                        {
+                            while (Instance.Activities.Count > 0)
+                            {
+                                var span = Instance.Activities.Pop();
+                                span?.Dispose();
+                            }
+                            if (Instance.RootActivity != null) Instance.RootActivity.Dispose();
+                            Instance.RootActivity = null;
+                        }
+                    }
                 }
                 if (activityStateRecord != null && Instance != null)
                 {
@@ -245,7 +249,14 @@ namespace OpenRPA
                                 var Name = activityStateRecord.Activity.Name;
                                 if (String.IsNullOrEmpty(Name)) Name = TypeName;
                                 if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
-
+                                TypeName = TypeName.Replace("OpenRPA.Activities.", "");
+                                TypeName = TypeName.Replace("OpenRPA.", "");
+                                TypeName = TypeName.Replace("System.Activities.Statements.", "");
+                                TypeName = TypeName.Replace("System.Activities.Core.Presentation.Factories.", "");
+                                TypeName = TypeName.Replace("System.Activities.DynamicActivity", "DynamicActivity");
+                                TypeName = TypeName.Replace("System.Activities.Expressions.", "");
+                                TypeName = TypeName.Replace("Microsoft.VisualBasic.Activities.", "");
+                                // VisualBasicValue
                                 try
                                 {
                                     if (System.Threading.Monitor.TryEnter(Instance.Activities, 1000))
@@ -257,7 +268,18 @@ namespace OpenRPA
                                                 if (Instance.Activities.First()?.DisplayName == Name)
                                                 {
                                                     var span = Instance.Activities.Pop();
+                                                    var _tags = new TagList();
+                                                    foreach (var tag in RobotInstance.tags) _tags.Add(tag);
+                                                    _tags.Add(new KeyValuePair<string, object>("name", Instance.name));
+                                                    _tags.Add(new KeyValuePair<string, object>("type", TypeName));
+                                                    var ms = (DateTime.UtcNow - span.StartTimeUtc).TotalMilliseconds;
+                                                    if (ms < 0) ms *= -1;
+                                                    var s =  ms / 1000;
+                                                    RobotInstance.meter_activities?.Record(s, _tags);
                                                     span?.Dispose();
+                                                } else
+                                                {
+                                                    var b = true;
                                                 }
                                             }
                                         }

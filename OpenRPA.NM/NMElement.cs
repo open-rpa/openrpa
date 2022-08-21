@@ -744,7 +744,7 @@ namespace OpenRPA.NM
             {
                 _overlayWindow.BackColor = Color;
                 _overlayWindow.Visible = true;
-                _overlayWindow.SetTimeout(Duration);
+                // _overlayWindow.SetTimeout(Duration);
                 _overlayWindow.Bounds = Rectangle;
                 Log.Debug("Highlight area " + Rectangle.ToString());
                 var sw = new System.Diagnostics.Stopwatch();

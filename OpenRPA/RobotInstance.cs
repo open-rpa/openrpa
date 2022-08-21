@@ -1983,6 +1983,7 @@ namespace OpenRPA
         private static PerformanceCounter Working_Set = null;
         public static Counter<long> openrpa_workflow_run_count;
         public static TagList tags;
+        public static Histogram<double> meter_activities = null;
         private bool InitializeOTEL()
         {
             try
@@ -2017,14 +2018,14 @@ namespace OpenRPA
                     StatsTracerProvider = OpenTelemetry.Sdk.CreateTracerProviderBuilder()
                     .SetSampler(new AlwaysOnSampler())
                     .AddSource("OpenRPA")
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA"))
-                    .AddOtlpExporter(otlpOptions =>
-                    {
-                        // otlpOptions.Endpoint = new Uri("http://otel.openiap.io");
-                        otlpOptions.Endpoint = new Uri("https://otel.stats.openiap.io:443/v1/trace");
-                        otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
-                    })
-                    .Build();
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRPA")).Build();
+                    //.AddOtlpExporter(otlpOptions =>
+                    //{
+                    //    // otlpOptions.Endpoint = new Uri("http://otel.openiap.io");
+                    //    otlpOptions.Endpoint = new Uri("https://otel.stats.openiap.io:443/v1/trace");
+                    //    otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
+                    //})
+                    //.Build();
                 }
                 if (LocalTracerProvider == null && Config.local != null && !string.IsNullOrEmpty(Config.local.otel_trace_url))
                 {
@@ -2135,6 +2136,7 @@ namespace OpenRPA
                             return new List<Measurement<long>>() { new Measurement<long>(value, tags) };
                         });
                     }
+                    meter_activities = OpenRPAMeter.CreateHistogram<double>("openrpa_workflow_activities");
                     OpenRPAMeter.CreateObservableGauge("Process.PagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedSystemMemorySize64, tags) });
                     OpenRPAMeter.CreateObservableGauge("Process.NonpagedSystemMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.NonpagedSystemMemorySize64, tags) });
                     OpenRPAMeter.CreateObservableGauge("Process.PagedMemorySize", () => new List<Measurement<long>>() { new Measurement<long>(process.PagedMemorySize64, tags) });
@@ -2167,6 +2169,8 @@ namespace OpenRPA
                             opt.Endpoint = new Uri("https://otel.stats.openiap.io:443/v1/metrics");
                             opt.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                         })
+                            .AddView(instrumentName: "openrpa_workflow_activities",
+                            new ExplicitBucketHistogramConfiguration { Boundaries = new double[] { 0.0001, 0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 75, 100 } })
                         .Build();
                 }
                 if (LocalMeterProvider == null && !string.IsNullOrEmpty(Config.local.otel_metric_url))

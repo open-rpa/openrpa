@@ -115,16 +115,17 @@ namespace OpenRPA.WorkItems.Activities
                 });
             }
         }
-        public async Task Update(IWorkitemQueue item, bool skipOnline = false)
+        public Task Update(IWorkitemQueue item, bool skipOnline = false)
         {
             GenericTools.RunUI(() =>
             {
                 RobotInstance.instance.WorkItemQueues.UpdateItem(this, item);
             });
             isDirty = false;
+            return Task.CompletedTask;
             // await Save<WorkitemQueue>(skipOnline);
         }
-        public async Task Delete(bool skipOnline = false)
+        public  Task Delete(bool skipOnline = false)
         {
             if (System.Threading.Monitor.TryEnter(RobotInstance.instance.WorkItemQueues, 1000))
             {
@@ -137,6 +138,7 @@ namespace OpenRPA.WorkItems.Activities
                     System.Threading.Monitor.Exit(RobotInstance.instance.WorkItemQueues);
                 }
             }
+            return Task.CompletedTask;
         }
         public void ExportFile(string filepath)
         {

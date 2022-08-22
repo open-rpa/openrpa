@@ -95,7 +95,7 @@ namespace OpenRPA.Image
         public static extern IntPtr GetDC(IntPtr hwnd);
         [DllImport("User32.dll")]
         public static extern void ReleaseDC(IntPtr hwnd, IntPtr dc);
-        public async Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
+        public Task _Highlight(System.Drawing.Color Color, TimeSpan Duration)
         {
             System.Threading.Thread.CurrentThread.Name = "UIHighlighter";
             using (Interfaces.Overlay.OverlayWindow _overlayWindow = new Interfaces.Overlay.OverlayWindow(true))
@@ -112,7 +112,7 @@ namespace OpenRPA.Image
                     _overlayWindow.TopMost = true;
                 } while (_overlayWindow.Visible && sw.Elapsed < Duration);
                 _overlayWindow.Close();
-                return;
+                return Task.CompletedTask;
             }
             //var r = new Rectangle(Rectangle.Location, Rectangle.Size);
             //IntPtr desktopPtr = GetDC(IntPtr.Zero);

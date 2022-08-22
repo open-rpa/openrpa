@@ -277,9 +277,6 @@ namespace OpenRPA
                                                     var s =  ms / 1000;
                                                     RobotInstance.meter_activities?.Record(s, _tags);
                                                     span?.Dispose();
-                                                } else
-                                                {
-                                                    var b = true;
                                                 }
                                             }
                                         }

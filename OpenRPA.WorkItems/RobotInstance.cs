@@ -320,7 +320,7 @@ namespace OpenRPA.WorkItems.Activities
             }
             Log.FunctionOutdent("RobotInstance", "RobotInstance_WebSocketClient_OnOpen");
         }
-        private async void WebSocketClient_OnClose(string reason)
+        private void WebSocketClient_OnClose(string reason)
         {
             try
             {
@@ -342,10 +342,10 @@ namespace OpenRPA.WorkItems.Activities
             _ = Connect();
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnClose");
         }
-        protected internal async void WebSocketClient_OnQueueClosed(IQueueClosedMessage message, QueueMessageEventArgs e)
+        protected internal void WebSocketClient_OnQueueClosed(IQueueClosedMessage message, QueueMessageEventArgs e)
         {
         }
-        private async void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
+        private void WebSocketClient_OnQueueMessage(IQueueMessage message, QueueMessageEventArgs e)
         {
             Log.FunctionIndent("RobotInstance", "WebSocketClient_OnQueueMessage");
             Log.FunctionOutdent("RobotInstance", "WebSocketClient_OnQueueMessage");
@@ -481,7 +481,7 @@ namespace OpenRPA.WorkItems.Activities
                 Log.Debug("LoadServerData::end");
             }
         }
-        private async void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
+        private void onWatchEvent(string id, Newtonsoft.Json.Linq.JObject data)
         {
             try
             {

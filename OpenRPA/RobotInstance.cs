@@ -1777,10 +1777,17 @@ namespace OpenRPA
                                 default:
                                     try
                                     {
-
-                                        // param.Add(k.Key, k.Value.Value<string>());
-                                        var v = k.Value.ToObject(Type.GetType(p.type));
-                                        param.Add(k.Key, v);
+                                        if(p.type == "OpenRPA.Interfaces.IWorkitem")
+                                        {
+                                            var v = k.Value.ToObject(typeof(Workitem));
+                                            param.Add(k.Key, v);
+                                        }
+                                        else
+                                        {
+                                            // param.Add(k.Key, k.Value.Value<string>());
+                                            var v = k.Value.ToObject(Type.GetType(p.type));
+                                            param.Add(k.Key, v);
+                                        }
                                     }
                                     catch (Exception ex)
                                     {

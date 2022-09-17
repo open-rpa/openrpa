@@ -296,6 +296,8 @@ namespace OpenRPA.NM
             if (e.UIElement == null) return false;
 
             if (e.UIElement.ProcessId < 1) return false;
+            var FrameworkId = e.UIElement.FrameworkId?.ToLower();
+            if (FrameworkId != "chrome" && FrameworkId != "gecko") return false;
             using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
             {
                 if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
@@ -303,8 +305,6 @@ namespace OpenRPA.NM
                 if (p.ProcessName.ToLower() == "chrome")
                 {
                     if (!NMHook.chromeconnected) { System.Windows.MessageBox.Show("You clicked inside Chrome, but it looks like you dont have the OpenRPA plugin installed"); return false; }
-                    if (string.IsNullOrEmpty(e.UIElement.FrameworkId) || e.UIElement.FrameworkId.ToLower() != "chrome") return false;
-
                 }
                 if (p.ProcessName.ToLower() == "msedge" && !NMHook.edgeconnected)
                 {
@@ -321,10 +321,6 @@ namespace OpenRPA.NM
                 if (LastElement.message.tab == null)
                 {
                     LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
-                }
-                if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "msedge")
-                {
-                    // if (e.UIElement.FrameworkId != "chrome" && e.UIElement.FrameworkId != "Chrome") return false;
                 }
             }
             var selector = new NMSelector(LastElement, null, true, null);
@@ -359,8 +355,9 @@ namespace OpenRPA.NM
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
-
             if (e.UIElement.ProcessId < 1) return false;
+            var FrameworkId = e.UIElement.FrameworkId?.ToLower();
+            if (FrameworkId != "chrome" && FrameworkId != "gecko") return false;
             using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
             {
                 if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;

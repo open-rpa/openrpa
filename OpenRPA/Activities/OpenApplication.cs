@@ -20,9 +20,9 @@ namespace OpenRPA.Activities
     {
         [RequiredArgument, LocalizedDisplayName("activity_selector", typeof(Resources.strings)), LocalizedDescription("activity_selector_help", typeof(Resources.strings))]
         public InArgument<string> Selector { get; set; }
-        [RequiredArgument, LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
+        [LocalizedDisplayName("activity_timeout", typeof(Resources.strings)), LocalizedDescription("activity_timeout_help", typeof(Resources.strings))]
         public InArgument<TimeSpan> Timeout { get; set; }
-        [RequiredArgument, LocalizedDisplayName("activity_checkrunning", typeof(Resources.strings)), LocalizedDescription("activity_checkrunning_help", typeof(Resources.strings))]
+        [LocalizedDisplayName("activity_checkrunning", typeof(Resources.strings)), LocalizedDescription("activity_checkrunning_help", typeof(Resources.strings))]
         public InArgument<bool> CheckRunning { get; set; } = true;
 
         [LocalizedDisplayName("activity_screen", typeof(Resources.strings)), LocalizedDescription("activity_screen_help", typeof(Resources.strings))]

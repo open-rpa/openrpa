@@ -7,6 +7,7 @@ using OpenRPA.Interfaces.Input;
 using OpenRPA.Windows;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,6 +73,7 @@ namespace OpenRPA.PDPlugin
                 re.Element = e.Element;
                 re.X = e.X;
                 re.Y = e.Y;
+                if (re.UIElement.ProcessId > 0) re.Process = Process.GetProcessById(re.UIElement.ProcessId);
 
                 foreach (var p in Plugins.recordPlugins)
                 {

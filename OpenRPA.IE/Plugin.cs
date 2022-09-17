@@ -7,6 +7,7 @@ using OpenRPA.Interfaces.Selector;
 using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -341,11 +342,8 @@ namespace OpenRPA.IE
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
-            if (e.UIElement.ProcessId < 1) return false;
-            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
-            {
-                if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return false;
-            }
+            if (e.Process == null || e.UIElement.ProcessId < 1) return false;
+            if (e.Process.ProcessName != "iexplore" && e.Process.ProcessName != "iexplore.exe") return false;
             return true;
         }
         void IRecordPlugin.StatusTextMouseUp()
@@ -403,6 +401,7 @@ namespace OpenRPA.IE
         // public AutomationElement Element { get; set; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
+        public Process Process { get; set; }
         public Interfaces.Selector.Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }

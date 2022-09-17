@@ -4,6 +4,7 @@ using OpenRPA.Interfaces.Selector;
 using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Text;
@@ -220,18 +221,12 @@ namespace OpenRPA.SAP
             //return SAPSelectorItem.Match(item, el);
             return false;
         }
-        private int lastid = -1;
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (SAPhook.Instance.LastElement == null) return false;
             if (e.UIElement == null) return false;
-            if (e.UIElement.ProcessId < 1) return false;
-            if (e.UIElement.ProcessId != lastid)
-            {
-                using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
-                    if (p.ProcessName.ToLower() != "saplogon") return false;
-                lastid = e.UIElement.ProcessId;
-            }
+            if (e.Process == null || e.UIElement.ProcessId < 1) return false;
+            if (e.Process.ProcessName.ToLower() != "saplogon") return false;
             e.Element = SAPhook.Instance.LastElement;
             if (e.Element == null) e.UIElement = null;
             return true;
@@ -302,6 +297,7 @@ namespace OpenRPA.SAP
         public RecordEvent() { SupportVirtualClick = true; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
+        public Process Process { get; set; }
         public Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }

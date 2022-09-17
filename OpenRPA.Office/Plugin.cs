@@ -100,9 +100,8 @@ namespace OpenRPA.Office
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
-            if (e.UIElement.ProcessId < 1) return false;
-            using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
-                if (p.ProcessName.ToLower() != "excel") return false;
+            if (e.Process == null || e.UIElement.ProcessId < 1) return false;
+            if (e.Process.ProcessName.ToLower() != "excel") return false;
             if (e.UIElement.ControlType != "DataItem") return false;
             e.UIElement = null;
             e.Element = null;

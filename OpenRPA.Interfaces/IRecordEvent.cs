@@ -1,6 +1,7 @@
 ﻿using FlaUI.Core.AutomationElements.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace OpenRPA.Interfaces
         // AutomationElement Element { get; set; }
         UIElement UIElement { get; set; }
         IElement Element { get; set; }
+        Process Process { get; set; }
         Selector.Selector Selector { get; set; }
         IBodyActivity a { get; set; }
         bool SupportInput { get; set; }

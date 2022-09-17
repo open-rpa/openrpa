@@ -124,8 +124,10 @@ namespace OpenRPA.Windows
             var re = new RecordEvent
             {
                 Button = e.Button
-            }; OnMouseMove?.Invoke(this, re);
+            };
+            OnMouseMove?.Invoke(this, re);
         }
+        private static Process lastProcess = null;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
         private void _OnMouseMove(InputEventArgs e)
         {
@@ -185,7 +187,19 @@ namespace OpenRPA.Windows
                         UIElement = e.Element,
                         X = e.X,
                         Y = e.Y
-                    }; OnMouseMove?.Invoke(this, re);
+                    };
+                    if (re.UIElement.ProcessId > 0)
+                    {
+                        if(lastProcess != null && lastProcess.Id == re.UIElement.ProcessId)
+                        {
+                            re.Process = lastProcess;
+                        } else
+                        {
+                            lastProcess = Process.GetProcessById(re.UIElement.ProcessId);
+                            re.Process = lastProcess;
+                        }
+                    } else { lastProcess = null; }
+                    OnMouseMove?.Invoke(this, re);
                 }
                 catch (Exception ex)
                 {
@@ -239,6 +253,7 @@ namespace OpenRPA.Windows
                     re.a = new GetElementResult(a);
                     re.SupportInput = e.Element.SupportInput;
                     re.SupportSelect = e.Element.SupportSelect;
+                    if (re.UIElement.ProcessId > 0) re.Process = Process.GetProcessById(re.UIElement.ProcessId);
                     Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                     OnUserAction?.Invoke(this, re);
                 }
@@ -544,6 +559,7 @@ namespace OpenRPA.Windows
         // public AutomationElement Element { get; set; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
+        public Process Process { get; set; }
         public IBodyActivity a { get; set; }
         public Interfaces.Selector.Selector Selector { get; set; }
         public bool SupportInput { get; set; }

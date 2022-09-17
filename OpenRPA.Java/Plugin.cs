@@ -4,6 +4,7 @@ using OpenRPA.Interfaces.Selector;
 using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -374,6 +375,7 @@ namespace OpenRPA.Java
         public RecordEvent() { SupportVirtualClick = true; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
+        public Process Process { get; set; }
         public Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }

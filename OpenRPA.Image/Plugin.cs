@@ -73,15 +73,12 @@ namespace OpenRPA.Image
             if (!e.Element.Equals(e.UIElement)) { return false; }
             if (e.UIElement.Type != "Pane") { return false; }
             var element = e.UIElement.RawElement;
-
-            if (e.UIElement.ProcessId > 0)
+            if (e.Process == null) return false;
+            if (e.Process != null)
             {
-                using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
-                {
-                    if (p.ProcessName == "iexplore" || p.ProcessName == "iexplore.exe") { return false; }
-                    if (p.ProcessName.ToLower() == "chrome" || p.ProcessName.ToLower() == "firefox") { return false; }
-                    if (p.ProcessName.ToLower() == "saplogon") return false;
-                }
+                if (e.Process.ProcessName == "iexplore" || e.Process.ProcessName == "iexplore.exe") { return false; }
+                if (e.Process.ProcessName.ToLower() == "chrome" || e.Process.ProcessName.ToLower() == "firefox") { return false; }
+                if (e.Process.ProcessName.ToLower() == "saplogon") return false;
             }
             e.Element = lastelement;
             if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))

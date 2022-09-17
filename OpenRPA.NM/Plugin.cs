@@ -3,6 +3,8 @@ using OpenRPA.Interfaces.Selector;
 using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -355,12 +357,15 @@ namespace OpenRPA.NM
         public bool ParseMouseMoveAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
-            if (e.UIElement.ProcessId < 1) return false;
+            if (e.Process == null || e.UIElement.ProcessId < 1) return false;
             var FrameworkId = e.UIElement.FrameworkId?.ToLower();
             if (FrameworkId != "chrome" && FrameworkId != "gecko") return false;
+            if(e.Process != null)
+            {
+                if (e.Process.ProcessName.ToLower() != "chrome" && e.Process.ProcessName.ToLower() != "firefox" && e.Process.ProcessName.ToLower() != "msedge") return false;
+            }
             using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
             {
-                if (p.ProcessName.ToLower() != "chrome" && p.ProcessName.ToLower() != "firefox" && p.ProcessName.ToLower() != "msedge") return false;
             }                
             if (LastElement == null) return false;
             e.Element = LastElement;
@@ -443,6 +448,7 @@ namespace OpenRPA.NM
         public RecordEvent() { SupportVirtualClick = true; }
         public UIElement UIElement { get; set; }
         public IElement Element { get; set; }
+        public Process Process { get; set; }
         public Selector Selector { get; set; }
         public IBodyActivity a { get; set; }
         public bool SupportInput { get; set; }

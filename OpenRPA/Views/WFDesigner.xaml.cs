@@ -337,7 +337,8 @@ namespace OpenRPA.Views
                     typeof(OpenRPA.UIElement),
                     typeof(System.Data.DataSet),
                     typeof(System.Linq.Enumerable),
-                    typeof(Microsoft.VisualBasic.Collection)
+                    typeof(Microsoft.VisualBasic.Collection),
+                    typeof(System.Data.DataTableExtensions)
                     );
                 WFHelper.AddVBNamespaceSettings(ab, new string[] { }, extratypes);
 

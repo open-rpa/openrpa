@@ -502,6 +502,7 @@
 		<Reference Include="System.Activities.Core.Presentation" />
 		<Reference Include="System.Activities.DurableInstancing" />
 		<Reference Include="System.Activities.Presentation" />
+		<Reference Include="System.Data.DataSetExtensions" />
 		<Reference Include="System.Runtime.DurableInstancing" />
 		<Reference Include="System.Runtime.Remoting" />
 		<Reference Include="System.Windows.Controls.Ribbon" />

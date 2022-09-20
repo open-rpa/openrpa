@@ -776,6 +776,7 @@ namespace OpenRPA
         }
         public bool isRunningInChildSession()
         {
+            if (Config.local.skip_child_session_check) return false;
             var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
             var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
             if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";

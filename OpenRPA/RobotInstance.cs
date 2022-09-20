@@ -112,9 +112,12 @@ namespace OpenRPA
                     var connecttype = "";
                     try
                     {
-                        if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                        if(!Config.local.skip_child_session_check)
                         {
-                            connecttype = ";connection=shared";
+                            if (Interfaces.win32.ChildSession.IsChildSessionsEnabled())
+                            {
+                                connecttype = ";connection=shared";
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -229,6 +232,7 @@ namespace OpenRPA
             get
             {
                 if (_isRunningInChildSession != null) return _isRunningInChildSession.Value;
+                if (Config.local.skip_child_session_check) return false;
                 try
                 {
                     var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
@@ -1897,53 +1901,57 @@ namespace OpenRPA
             {
                 bool registerqueues = true;
                 Interfaces.entity.TokenUser user = global.webSocketClient.user;
-                var IsChildSessionsEnabled = false;
-                try
+                if (!Config.local.skip_child_session_check)
                 {
-                    IsChildSessionsEnabled = Interfaces.win32.ChildSession.IsChildSessionsEnabled();
-                }
-                catch (Exception)
-                {
-                }
-                if (IsChildSessionsEnabled)
-                {
-                    var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
-                    var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                    var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                    var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                    var IsChildSessionsEnabled = false;
+                    try
+                    {
+                        IsChildSessionsEnabled = Interfaces.win32.ChildSession.IsChildSessionsEnabled();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    if (IsChildSessionsEnabled)
+                    {
+                        var CurrentP = System.Diagnostics.Process.GetCurrentProcess();
+                        var myusername = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                        var mydomain = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                        var mywinstation = UserLogins.QuerySessionInformation(CurrentP.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
 
-                    if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
-                    mywinstation = mywinstation.ToLower();
-                    if (!mywinstation.Contains("rdp") && mywinstation != "console")
-                    {
-                        Log.Debug("my WTSUserName: " + myusername);
-                        Log.Debug("my WTSDomainName: " + mydomain);
-                        Log.Debug("my WTSWinStationName: " + mywinstation);
-                        registerqueues = false;
-                        Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
-                    }
-                    else
-                    {
-                        var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
-                        foreach (var ps in processes)
+                        if (string.IsNullOrEmpty(mywinstation)) mywinstation = "";
+                        mywinstation = mywinstation.ToLower();
+                        if (!mywinstation.Contains("rdp") && mywinstation != "console")
                         {
-                            var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
-                            var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
-                            var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
-                            Log.Debug("WTSUserName: " + username);
-                            Log.Debug("WTSDomainName: " + domain);
-                            Log.Debug("WTSWinStationName: " + winstation);
+                            Log.Debug("my WTSUserName: " + myusername);
+                            Log.Debug("my WTSDomainName: " + mydomain);
+                            Log.Debug("my WTSWinStationName: " + mywinstation);
+                            registerqueues = false;
+                            Log.Warning("mywinstation is empty or does not contain RDP, skip registering queues");
                         }
+                        else
+                        {
+                            var processes = System.Diagnostics.Process.GetProcessesByName("explorer");
+                            foreach (var ps in processes)
+                            {
+                                var username = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSUserName);
+                                var domain = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSDomainName);
+                                var winstation = UserLogins.QuerySessionInformation(ps.SessionId, UserLogins.WTS_INFO_CLASS.WTSWinStationName);
+                                Log.Debug("WTSUserName: " + username);
+                                Log.Debug("WTSDomainName: " + domain);
+                                Log.Debug("WTSWinStationName: " + winstation);
+                            }
+                        }
+                        //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
+                        ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
+                        //var p = System.Diagnostics.Process.GetCurrentProcess();
+                        //if (ConsoleSession != p.SessionId)
+                        //{
+                        //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
+                        //    registerqueues = false;
+                        //}
                     }
-                    //int ConsoleSession = NativeMethods.WTSGetActiveConsoleSessionId();
-                    ////uint SessionId = Interfaces.win32.ChildSession.GetChildSessionId();
-                    //var p = System.Diagnostics.Process.GetCurrentProcess();
-                    //if (ConsoleSession != p.SessionId)
-                    //{
-                    //    Log.Warning("Child sessions enabled and not running as console, skip registering queues");
-                    //    registerqueues = false;
-                    //}
                 }
+
                 if (registerqueues)
                 {
                     SetStatus("Registering queues");

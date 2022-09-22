@@ -215,7 +215,7 @@ namespace OpenRPA.NM
         }
         private static void windowfocus(NativeMessagingMessage msg)
         {
-            var win = windows.Where(x => x.id == msg.windowId && x.browser == msg.browser).FirstOrDefault();
+            var win = windows.Where(x => x != null && x.id == msg.windowId && x.browser == msg.browser).FirstOrDefault();
             if (win != null)
             {
                 windows.ForEach(x => x.focused = false && x.browser == msg.browser);
@@ -294,7 +294,7 @@ namespace OpenRPA.NM
             {
                 try
                 {
-                    foreach (var tab in tabs.Where(x => x.browser == msg.browser && x.windowId == msg.windowId))
+                    foreach (var tab in tabs.Where(x => x != null && x.browser == msg.browser && x.windowId == msg.windowId))
                     {
                         tab.highlighted = (tab.id == msg.tabid);
                         tab.selected = (tab.id == msg.tabid);
@@ -534,7 +534,7 @@ namespace OpenRPA.NM
                     {
                         try
                         {
-                            tabcount = tabs.Where(x => x.browser == "chrome").Count();
+                            tabcount = tabs.Where(x => x != null && x.browser == "chrome").Count();
                         }
                         finally
                         {
@@ -575,7 +575,7 @@ namespace OpenRPA.NM
                     {
                         try
                         {
-                            tabcount = tabs.Where(x => x.browser == "edge").Count();
+                            tabcount = tabs.Where(x => x != null && x.browser == "edge").Count();
                         }
                         finally
                         {
@@ -617,7 +617,7 @@ namespace OpenRPA.NM
                     {
                         try
                         {
-                            tabcount = tabs.Where(x => x.browser == "ff").Count();
+                            tabcount = tabs.Where(x => x != null && x.browser == "ff").Count();
                         }
                         finally
                         {
@@ -675,35 +675,6 @@ namespace OpenRPA.NM
                 var result = chromepipe.Message(message, TimeSpan.FromSeconds(2));
                 // Log.Verbose("openurl reply, wait for tab #" + result.tab.id + " windowId " + result.tab.windowId);
                 if (result != null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
-                // Log.Verbose("openurl complete");
-
-                //NativeMessagingMessage result = null;
-                //NativeMessagingMessage message = new NativeMessagingMessage("openurl") { data = url };
-                //enumtabs();
-                //var tab = tabs.Where(x => x.url == url && x.highlighted == true && x.browser == "chrome").FirstOrDefault();
-                //if (tab == null)
-                //{
-                //    tab = tabs.Where(x => x.url == url && x.browser == "chrome").FirstOrDefault();
-                //}
-                //if (tab == null)
-                //{
-                //    tab = tabs.Where(x => x.highlighted == true && x.browser == "chrome").FirstOrDefault();
-                //}
-                //if (tab != null && !forceNew)
-                //{
-                //    //if (tab.highlighted && tab.url == url) return;
-                //    message.functionName = "updatetab";
-                //    message.data = url;
-                //    tab.highlighted = true;
-                //    message.tab = tab;
-                //    result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-                //    if(result!=null && result.tab != null) WaitForTab(result.tab.id, result.browser, TimeSpan.FromSeconds(5));
-                //    return;
-                //}
-                //result = chromepipe.Message(message, true, TimeSpan.FromSeconds(2));
-                //if (result == null) throw new Exception("Failed loading url " + url + " in chrome");
-                //WaitForTab(result.tabid, result.browser, TimeSpan.FromSeconds(5));
-                //return;
             }
         }
         internal static void edgeopenurl(string url, bool forceNew)
@@ -1058,7 +1029,7 @@ namespace OpenRPA.NM
             {
                 try
                 {
-                    CurrentTab = tabs.Where(x => x.browser == browser && !string.IsNullOrEmpty(x.url) && x.url.ToLower().StartsWith(url.ToLower())).FirstOrDefault();
+                    CurrentTab = tabs.Where(x => x != null && x.browser == browser && !string.IsNullOrEmpty(x.url) && x.url.ToLower().StartsWith(url.ToLower())).FirstOrDefault();
                 }
                 finally
                 {
@@ -1074,7 +1045,7 @@ namespace OpenRPA.NM
             {
                 try
                 {
-                    CurrentTab = tabs.Where(x => x.browser == browser && x.id == id).FirstOrDefault();
+                    CurrentTab = tabs.Where(x => x != null && x.browser == browser && x.id == id).FirstOrDefault();
                 }
                 finally
                 {
@@ -1092,11 +1063,11 @@ namespace OpenRPA.NM
                     if (isSelectéd)
                     {
                         // (x.selected || x.highlighted) ?
-                        return tabs.Where(x => x.browser == browser && x.windowId == windowId && x.selected).FirstOrDefault();
+                        return tabs.Where(x => x != null && x.browser == browser && x.windowId == windowId && x.selected).FirstOrDefault();
                     }
                     else
                     {
-                        return tabs.Where(x => x.browser == browser && x.windowId == windowId).FirstOrDefault();
+                        return tabs.Where(x => x != null && x.browser == browser && x.windowId == windowId).FirstOrDefault();
                     }
                 }
                 finally
@@ -1137,7 +1108,7 @@ namespace OpenRPA.NM
             {
                 try
                 {
-                    _tabs = tabs.Where(x => x.browser == browser).ToList();
+                    _tabs = tabs.Where(x => x != null && x.browser == browser).ToList();
                 }
                 finally
                 {

@@ -2824,6 +2824,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save output.
+        /// </summary>
+        public static string openproject_save_output {
+            get {
+                return ResourceManager.GetString("openproject_save_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send output.
+        /// </summary>
+        public static string openproject_send_output {
+            get {
+                return ResourceManager.GetString("openproject_send_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OpenRPA.
         /// </summary>
         public static string openrpa {

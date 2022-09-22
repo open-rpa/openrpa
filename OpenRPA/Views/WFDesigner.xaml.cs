@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -1344,6 +1345,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                         message += (" in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed));
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                    if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = instance.InstanceId;
                     Log.Output(message);
                     if (instance.hasError || instance.isCompleted)
                     {

@@ -16,6 +16,8 @@ namespace OpenRPA.Interfaces
         long current_version { get; set; }
         bool IsExpanded { get; set; }
         bool IsSelected { get; set; }
+        bool save_output { get; set; }
+        bool send_output { get; set; }
         string queue { get; set; }
         string Xaml { get; set; }
         string culture { get; set; }        

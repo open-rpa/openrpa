@@ -12,10 +12,12 @@ using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -3485,6 +3487,7 @@ namespace OpenRPA
                         message += " in " + string.Format("{0:mm\\:ss\\.fff}", instance.runWatch.Elapsed);
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += (Environment.NewLine + "# " + instance.errormessage);
+                    if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = instance.InstanceId;
                     Log.Output(message);
                     if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
                     {

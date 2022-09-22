@@ -31,9 +31,10 @@ namespace OpenRPA
                 WorkItemQueues.Refresh();
             }
         }
-
         public Dictionary<string, string> dependencies { get; set; }
         public bool disable_local_caching { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool save_output { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool send_output { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string Filename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore, BsonIgnore]
         public FilteredObservableCollection<IWorkflow> Workflows { get; set; } 

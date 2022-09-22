@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -405,7 +406,8 @@ namespace OpenRPA
                         message += "MISSING WORKFLOW!!!! " + instance.state;
                     }
                     if (!string.IsNullOrEmpty(instance.errormessage)) message += Environment.NewLine + "# " + instance.errormessage;
-                    Log.Information(message);
+                    if(Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = instance.InstanceId;
+                    Log.Output(message);
                     if ((Config.local.notify_on_workflow_end && !isRemote) || (Config.local.notify_on_workflow_remote_end && isRemote))
                     {
                         if (instance.state == "completed")

@@ -114,6 +114,20 @@ namespace OpenRPA.Views
                 return new RelayCommand<object>(OnBackground, CanBackground);
             }
         }
+        public ICommand SaveOutputCommand
+        {
+            get
+            {
+                return new RelayCommand<object>(OnSaveOutput, CanSaveOutput);
+            }
+        }
+        public ICommand SendOutputCommand
+        {
+            get
+            {
+                return new RelayCommand<object>(OnSendOutput, CanSendOutput);
+            }
+        }
         public ICommand DisableCachingCommand
         {
             get
@@ -223,6 +237,90 @@ namespace OpenRPA.Views
                 if (view.listWorkflows.SelectedValue is Workflow f)
                 {
                     await f.Save();
+                }
+            }
+        }
+        internal bool CanSaveOutput(object _item)
+        {
+            try
+            {
+                if (RobotInstance.instance.Window is AgentWindow) return false;
+                if (main.SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (view.listWorkflows.SelectedValue is Workflow f)
+                    {
+                        return true;
+                    }
+                    if (view.listWorkflows.SelectedValue is Project p)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnSaveOutput(object _item)
+        {
+            if (main.SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (view.listWorkflows.SelectedValue is Workflow f)
+                {
+                    await f.Save();
+                }
+                if (view.listWorkflows.SelectedValue is Project p)
+                {
+                    await p.Save();
+                }
+            }
+        }
+        internal bool CanSendOutput(object _item)
+        {
+            try
+            {
+                if (RobotInstance.instance.Window is AgentWindow) return false;
+                if (main.SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val == null) return false;
+                    if (view.listWorkflows.SelectedValue is Workflow f)
+                    {
+                        return true;
+                    }
+                    if (view.listWorkflows.SelectedValue is Project p)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return false;
+            }
+        }
+        internal async void OnSendOutput(object _item)
+        {
+            if (main.SelectedContent is Views.OpenProject view)
+            {
+                var val = view.listWorkflows.SelectedValue;
+                if (val == null) return;
+                if (view.listWorkflows.SelectedValue is Workflow f)
+                {
+                    await f.Save();
+                }
+                if (view.listWorkflows.SelectedValue is Project p)
+                {
+                    await p.Save();
                 }
             }
         }

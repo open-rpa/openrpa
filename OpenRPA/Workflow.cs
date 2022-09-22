@@ -33,6 +33,8 @@ namespace OpenRPA
             Serializable = true;
             IsVisible = true;
         }
+        public bool save_output { get { return GetProperty<bool>(); } set { SetProperty(value); } }
+        public bool send_output { get { return GetProperty<bool>(); } set { SetProperty(value); } }
         public string queue { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string Xaml { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }
         public string culture { get { return GetProperty<string>(); } set { _activity = null; SetProperty(value); } }        
@@ -587,10 +589,9 @@ namespace OpenRPA
                 ParseParameters();
             }
             var instance = WorkflowInstance.Create(this, Parameters);
-            instance.queuename = queuename; instance.correlationId = correlationId;
+            instance.queuename = queuename; instance.correlationId = correlationId; instance.isDirty = true;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             if (VisualTracking != null) instance.OnVisualTracking += VisualTracking;
-            LoadedInstances.Add(instance);
             //instance.Run();
             return instance;
         }

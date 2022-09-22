@@ -151,6 +151,16 @@
                     Margin="20,0,0,0" Content="{x:Static or:strings.openproject_background}"
                     Command="{Binding Data.BackgroundCommand, Source={StaticResource proxy}}" 
                     ></CheckBox>
+                <CheckBox 
+                    IsChecked="{Binding ElementName=listWorkflows, Path=SelectedValue.save_output}" 
+                    Margin="20,0,0,0" Content="{x:Static or:strings.openproject_save_output}"
+                    Command="{Binding Data.SaveOutputCommand, Source={StaticResource proxy}}" 
+                    ></CheckBox>
+                <CheckBox 
+                    IsChecked="{Binding ElementName=listWorkflows, Path=SelectedValue.send_output}" 
+                    Margin="20,0,0,0" Content="{x:Static or:strings.openproject_send_output}"
+                    Command="{Binding Data.SendOutputCommand, Source={StaticResource proxy}}" 
+                    ></CheckBox>
             </StackPanel>
             <StackPanel x:Name="EditXAMLPanel">
                 <TextBlock Text="{x:Static or:strings.open_edit}" FontWeight="Bold"></TextBlock>

@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
 {
+    public interface IWorkflowConsoleLog
+    {
+        DateTime ts { get; set; }
+        int lvl { get; set; }
+        string msg { get; set; }
+    }
     public interface IWorkflowInstance : IBase
     {
         IWorkflow Workflow { get; set; }
         Dictionary<string, object> Parameters { get; set; }
         Dictionary<string, object> Bookmarks { get; set; }
+        // List<IWorkflowConsoleLog> console { get; set; }
         string correlationId { get; set; }
         string queuename { get; set; }
         string InstanceId { get; set; }

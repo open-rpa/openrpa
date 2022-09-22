@@ -1002,6 +1002,12 @@
   <data name="openproject_background" xml:space="preserve">
     <value>Background workflow</value>
   </data>
+  <data name="openproject_save_output" xml:space="preserve">
+    <value>Save output</value>
+  </data>
+  <data name="openproject_send_output" xml:space="preserve">
+    <value>Send output</value>
+  </data>
   <data name="openrpa" xml:space="preserve">
     <value>OpenRPA</value>
   </data>

@@ -17,4 +17,15 @@ namespace OpenRPA.Interfaces.mq
         public Newtonsoft.Json.Linq.JObject data { get; set; }
         // public Dictionary<string, object> parameters { get; set; }
     }
+    public class RobotOutputCommand
+    {
+        public string command { get; set; }
+        public string workflowid { get; set; }
+        public string flowid { get; set; }
+        public string detectorid { get; set; }
+        public bool killexisting { get; set; }
+        public bool killallexisting { get; set; }
+        public int level { get; set; }
+        public string data { get; set; }
+    }
 }

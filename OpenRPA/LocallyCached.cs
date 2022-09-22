@@ -54,7 +54,7 @@ namespace OpenRPA
                 if (_type == "workflowinstance" && Config.local.skip_online_state) {
                     skipOnline = true;
                     isDirty = false;
-                }                
+                }
                 if (global.isConnected && !skipOnline)
                 {
                     if (string.IsNullOrEmpty(_id) || isLocalOnly == true)
@@ -86,6 +86,7 @@ namespace OpenRPA
                             entity._version++; // Add one to avoid watch update
                             try
                             {
+                                isDirty = false;
                                 var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
                                 if (result != null)
                                 {
@@ -107,9 +108,9 @@ namespace OpenRPA
                                         _createdbyid = result._createdbyid;
                                         _version = result._version;
                                     }
-                                    isDirty = false;
+                                    // isDirty = false;
                                     Log.Verbose("Updated in openflow and returned as version " + entity._version + " " + entity._type + " " + entity.name);
-                                }
+                                } else { isDirty = true; }
                             }
                             catch (Exception) 
                             {

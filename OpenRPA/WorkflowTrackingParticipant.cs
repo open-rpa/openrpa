@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading;
 
 namespace OpenRPA
 {
@@ -85,7 +86,10 @@ namespace OpenRPA
                         Log.Error("Failed getting WorkflowInstance in TrackingParticipant");
                     }
                 }
-
+                if(Instance != null)
+                {
+                    if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = InstanceId.ToString();
+                }
                 if (workflowInstanceRecord != null && Instance != null)
                 {
                     Log.Activity(workflowInstanceRecord.ActivityDefinitionId + " " + workflowInstanceRecord.State);
@@ -93,10 +97,6 @@ namespace OpenRPA
                     {
                         return;
                     }
-                    if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
-                    {
-                        if(string.IsNullOrEmpty(System.Threading.Thread.CurrentThread.Name)) System.Threading.Thread.CurrentThread.Name = Instance.name;
-                    }                        
                     if (workflowInstanceRecord.State == WorkflowInstanceStates.Started || workflowInstanceRecord.State == WorkflowInstanceStates.Resumed)
                     {
                         if (System.Threading.Monitor.TryEnter(timerslock, 1000))

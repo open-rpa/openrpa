@@ -8,10 +8,17 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.DurableInstancing;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenRPA
 {
+    public class WorkflowConsoleLog : IWorkflowConsoleLog
+    {
+        public DateTime ts { get; set; } = DateTime.Now;
+        public int lvl { get; set; } = 0;
+        public string msg { get; set; } = "";
+    }
     public class WorkflowInstance : LocallyCached, IWorkflowInstance, IDisposable
     {
         public WorkflowInstance()
@@ -47,6 +54,7 @@ namespace OpenRPA
         public string queuename { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore, LiteDB.BsonIgnore]
         public Dictionary<string, WorkflowInstanceValueType> Variables { get { return GetProperty<Dictionary<string, WorkflowInstanceValueType>>(); } set { SetProperty(value); } }
+        public List<WorkflowConsoleLog> console { get { return GetProperty<List<WorkflowConsoleLog>>(); } set { SetProperty(value); } }
         public string InstanceId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string WorkflowId { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public string caller { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -388,8 +396,6 @@ namespace OpenRPA
                     }
                 });
                 state = "running";
-                // Log.Debug(String.Format("Workflow {0} resumed bookmark '{1}' value '{2}'", wfApp.Id.ToString(), bookmarkName, value));
-                // Save();
             }
             catch (Exception)
             {
@@ -576,7 +582,6 @@ namespace OpenRPA
             //    state = "failed";
             //    Exception = ex;
             //    errormessage = ex.Message;
-            //    Save();
             //    if (runWatch != null) runWatch.Stop();
             //    OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             //}
@@ -631,26 +636,6 @@ namespace OpenRPA
                 // scheduler.ClearAllWorkItems(executor);
 
 
-                //if (string.IsNullOrEmpty(InstanceId))
-                //{
-                //    wfApp.Run();
-                //    InstanceId = wfApp.Id.ToString();
-                //    state = "running";
-                //    Save();
-                //}
-                //else
-                //{
-                //    foreach (var b in Bookmarks)
-                //    {
-                //        if (b.Value != null && !string.IsNullOrEmpty(b.Value.ToString())) wfApp.ResumeBookmark(b.Key, b.Value);
-                //    }
-                //    if (Bookmarks.Count() == 0)
-                //    {
-                //        wfApp.Run();
-                //    }
-                //    state = "running";
-                //    Save();
-                //}
             }
             catch (Exception ex)
             {
@@ -751,7 +736,6 @@ namespace OpenRPA
                         }
                     }
                     else { throw new LockNotReceivedException("Failed running workflow instance"); }
-                    // Save();
                 }
                 else
                 {
@@ -762,8 +746,6 @@ namespace OpenRPA
                     }
                     Log.Information(name + " resumed in " + string.Format("{0:mm\\:ss\\.fff}", runWatch.Elapsed));
                     state = "running";
-                    // Save();
-
                     if (Bookmarks != null)
                         foreach (var b in Bookmarks)
                         {
@@ -798,6 +780,7 @@ namespace OpenRPA
                 isCompleted = true;
                 _ = Workflow.State;
                 RobotInstance.unsavedTimer.Interval = 5000;
+                if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = InstanceId.ToString();
                 if (e.CompletionState == System.Activities.ActivityInstanceState.Faulted)
                 {
                     if (state == "running" || state == "idle" || state == "completed")
@@ -850,6 +833,7 @@ namespace OpenRPA
                 errormessage = e.Reason.Message;
                 isDirty = true;
                 if (runWatch != null) runWatch.Stop();
+                if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = InstanceId.ToString();
                 NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
@@ -868,6 +852,7 @@ namespace OpenRPA
                 }
                 state = "idle";
                 isDirty = true;
+                if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = InstanceId.ToString();
                 NotifyIdle();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
             };
@@ -907,6 +892,7 @@ namespace OpenRPA
                 //exceptionsource = e.ExceptionSource.Id;
                 if (runWatch != null) runWatch.Stop();
                 isDirty = true;
+                if (Thread.CurrentThread.ManagedThreadId > 1) Tracing.InstanceId.Value = InstanceId.ToString();
                 NotifyAborted();
                 OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
                 return System.Activities.UnhandledExceptionAction.Terminate;

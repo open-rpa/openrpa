@@ -12,6 +12,8 @@ namespace OpenRPA.Interfaces
         bool IsExpanded { get; set; }
         bool IsSelected { get; set; }
         bool disable_local_caching { get; set; }
+        bool save_output { get; set; }
+        bool send_output { get; set; }
         string Path { get; }
         string Filename { get; set; }
         FilteredObservableCollection<IWorkflow> Workflows { get; }

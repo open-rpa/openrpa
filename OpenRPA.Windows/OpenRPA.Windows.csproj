@@ -135,6 +135,7 @@
     <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xaml" />
+    <Reference Include="UIAutomationClient" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

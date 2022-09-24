@@ -37,12 +37,6 @@ namespace OpenRPA.Input
         private NativeMethods.LLProc keyboardProc;
         private IntPtr mouseHook;
         private NativeMethods.LLProc mouseProc;
-        //public event InputEventHandler OnKeyUp = delegate { };
-        //public event InputEventHandler OnKeyDown = delegate { };
-        //public event InputEventHandler OnMouseUp = delegate { };
-        //public event InputEventHandler OnMouseDown = delegate { };
-        //public event InputEventHandler OnMouseMove = delegate { };
-        //public event CancelEventHandler onCancel = delegate { };
         public event InputEventHandler OnKeyUp;
         public event InputEventHandler OnKeyDown;
         public event InputEventHandler OnMouseUp;
@@ -57,13 +51,11 @@ namespace OpenRPA.Input
         public void MouseMove(int x, int y) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseMove, X = x, Y = y });
         public static void DoMouseClick()
         {
-            InputDriver.Instance.Element = null;
             NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_LEFTDOWN | NativeMethods.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
         public static void Click(MouseButton button)
         {
             InputDriver.Instance.AllowOneClick = true;
-            InputDriver.Instance.Element = null;
             if (button == MouseButton.Left)
             {
                 NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_LEFTDOWN | NativeMethods.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -154,9 +146,6 @@ namespace OpenRPA.Input
         }
         public bool CallNext { get; set; }
         public bool AllowOneClick { get; set; }
-        // public bool SkipEvent { get; set; }
-        private int currentprocessid = 0;
-        // public var test = Activities.TypeText.parseText(cancelkey.Text);
         private IntPtr LowLevelKeyboardProc(Int32 nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode >= NativeMethods.HC_ACTION)
@@ -242,7 +231,6 @@ namespace OpenRPA.Input
                         return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                     }
                 }
-                if (currentprocessid == 0) currentprocessid = System.Diagnostics.Process.GetCurrentProcess().Id;
                 if (nCode >= NativeMethods.HC_ACTION)
                 {
                     var e = new InputEventArgs();
@@ -301,23 +289,21 @@ namespace OpenRPA.Input
                     }
                     if (CallNext || (int)wParam == NativeMethods.WM_MOUSEMOVE || (int)wParam == NativeMethods.WM_MouseWheel)
                     {
-                        // if((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
                         return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
                     }
-                    try
-                    {
-                        if (e.Element != null && e.Element.ProcessId == currentprocessid)
-                        {
-                            // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
-                            return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
-                        return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-                    }
-                    // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("Skip CallNextHookEx: " + CallNext);
+                    //try
+                    //{
+                    //    if (e.Element != null && e.Element.ProcessId == currentprocessid)
+                    //    {
+                    //        // if ((int)wParam != WM_MOUSEMOVE) Log.Debug("CallNextHookEx: " + CallNext);
+                    //        return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Log.Error(ex.ToString());
+                    //    return NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                    //}
                     return (IntPtr)1;
                 }
                 else
@@ -331,7 +317,7 @@ namespace OpenRPA.Input
                 return IntPtr.Zero;
             }
         }
-        public UIElement Element = null;
+        // public UIElement Element = null;
         // private bool mouseDownWaiting = false;
         private void RaiseOnMouseMove(InputEventArgs e)
         {
@@ -340,16 +326,6 @@ namespace OpenRPA.Input
         private void RaiseOnMouseDown(InputEventArgs e)
         {
             if (OnMouseDown == null) return;
-            try
-            {
-                Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-            e.Element = Element;
-            // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
             OnMouseDown?.Invoke(e);
         }
         private void RaiseOnMouseUp(InputEventArgs e)
@@ -357,22 +333,6 @@ namespace OpenRPA.Input
             if (OnMouseUp == null) return;
             try
             {
-                if (Element == null || OnMouseDown == null)
-                {
-                    Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-                }
-            }
-            catch (Exception)
-            {
-            }
-            try
-            {
-                e.Element = Element;
-                if (e.Element != null)
-                {
-                    e.Element.Refresh();
-                }
-                // if (e.Element != null && e.Element.ProcessId == currentprocessid) return;
                 OnMouseUp?.Invoke(e);
             }
             catch (Exception ex)

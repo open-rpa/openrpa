@@ -75,25 +75,28 @@ namespace OpenRPA.Activities
                 }
                 x += allScreens[screen].WorkingArea.X;
                 y += allScreens[screen].WorkingArea.Y;
-                var _window = ((UIElement)el).GetWindow();
-                var window = new UIElement(_window);
-                if(_window.Properties.NativeWindowHandle.IsSupported)
+                if (el.RawElement is FlaUI.Core.AutomationElements.AutomationElement fla)
                 {
-                    GenericTools.Restore(_window.Properties.NativeWindowHandle.Value);
-                }
-                if (animatemove) window.MoveWindowTo(x, y, width, height);
-                if (!animatemove)
-                {
-                    window.SetWindowSize(width, height);
-                    window.SetWindowPosition(x, y);
-                }
-                if (!string.IsNullOrEmpty(windowstate) && _window.Properties.NativeWindowHandle.IsSupported)
-                {
-                    switch (windowstate)
+                    var _window = ((UIElement)el).GetWindow< FlaUI.Core.AutomationElements.Window>();
+                    var window = new UIElement(_window);
+                    if (_window.Properties.NativeWindowHandle.IsSupported)
                     {
-                        case "Normal": GenericTools.Restore(_window.Properties.NativeWindowHandle.Value); break;
-                        case "Minimized": GenericTools.Minimize(_window.Properties.NativeWindowHandle.Value); break;
-                        case "Maximized": GenericTools.Maximized(_window.Properties.NativeWindowHandle.Value); break;
+                        GenericTools.Restore(_window.Properties.NativeWindowHandle.Value);
+                    }
+                    if (animatemove) window.MoveWindowTo(x, y, width, height);
+                    if (!animatemove)
+                    {
+                        window.SetWindowSize(width, height);
+                        window.SetWindowPosition(x, y);
+                    }
+                    if (!string.IsNullOrEmpty(windowstate) && _window.Properties.NativeWindowHandle.IsSupported)
+                    {
+                        switch (windowstate)
+                        {
+                            case "Normal": GenericTools.Restore(_window.Properties.NativeWindowHandle.Value); break;
+                            case "Minimized": GenericTools.Minimize(_window.Properties.NativeWindowHandle.Value); break;
+                            case "Maximized": GenericTools.Maximized(_window.Properties.NativeWindowHandle.Value); break;
+                        }
                     }
                 }
             }

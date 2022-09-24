@@ -67,9 +67,9 @@ namespace OpenRPA.Activities
                     }
                 }
 
-                if (ele is UIElement ui)
+                if (ele is UIElement ui && ui.RawElement is FlaUI.Core.AutomationElements.AutomationElement)
                 {
-                    var window = ui.GetWindow();
+                    var window = ui.GetWindow<FlaUI.Core.AutomationElements.Window>();
                     if (window == null) return;
                     if (!string.IsNullOrEmpty(window.Name))
                     {

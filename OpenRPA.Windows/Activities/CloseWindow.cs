@@ -37,8 +37,7 @@ namespace OpenRPA.Windows
             {
                 if (el == null) throw new ArgumentException("element cannot be null");
                 if (el.ProcessId == System.Diagnostics.Process.GetCurrentProcess().Id) return;
-                var window = el.RawElement.AsWindow();
-                window.Close();
+                el.Close();
             }
             catch (Exception)
             {

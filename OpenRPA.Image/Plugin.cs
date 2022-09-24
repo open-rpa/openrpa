@@ -1,4 +1,5 @@
-﻿using OpenRPA.Interfaces;
+﻿using FlaUI.Core.AutomationElements;
+using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
 using System;
 using System.Activities;
@@ -71,8 +72,6 @@ namespace OpenRPA.Image
             if (e.UIElement == null) { return false; }
 
             if (!e.Element.Equals(e.UIElement)) { return false; }
-            if (e.UIElement.Type != "Pane") { return false; }
-            var element = e.UIElement.RawElement;
             if (e.Process == null) return false;
             if (e.Process != null)
             {
@@ -80,6 +79,8 @@ namespace OpenRPA.Image
                 if (e.Process.ProcessName.ToLower() == "chrome" || e.Process.ProcessName.ToLower() == "firefox") { return false; }
                 if (e.Process.ProcessName.ToLower() == "saplogon") return false;
             }
+            if (e.UIElement.ControlType != "Pane") { return false; }
+            var element = e.UIElement.RawElement as AutomationElement;
             e.Element = lastelement;
             if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
             {
@@ -125,8 +126,6 @@ namespace OpenRPA.Image
             if (e.UIElement == null) return false;
 
             if (!e.Element.Equals(e.UIElement)) { return false; }
-            if (e.UIElement.Type != "Pane") return false;
-            var element = e.UIElement.RawElement;
 
             string Processname = "";
             if (e.UIElement.ProcessId > 0)
@@ -139,6 +138,8 @@ namespace OpenRPA.Image
                     Processname = p.ProcessName;
                 }
             }
+            if (e.UIElement.ControlType != "Pane") return false;
+            var element = e.UIElement.RawElement as AutomationElement;
 
 
             NativeMethods.SetCursorPos(e.X - 80, e.Y - 80);

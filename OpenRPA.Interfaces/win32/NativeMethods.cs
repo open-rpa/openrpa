@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 namespace OpenRPA.Interfaces
 {
     using System.ComponentModel;
+    using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Security.AccessControl;
+    using System.Windows.Forms;
 
     [System.Security.SuppressUnmanagedCodeSecurity]
     public static class NativeMethods
@@ -1703,6 +1705,8 @@ namespace OpenRPA.Interfaces
         public static extern IntPtr GetKeyboardLayout(UInt32 idThread);
         [DllImport("user32.dll")]
         public static extern Boolean SetPhysicalCursorPos(Int32 X, Int32 Y);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern UIntPtr GetMessageExtraInfo();
         [StructLayout(LayoutKind.Explicit)]
         public struct INPUT
         {
@@ -1772,6 +1776,80 @@ namespace OpenRPA.Interfaces
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern bool SetWindowPos(HandleRef hWnd, HandleRef hWndInsertAfter, int x, int y, int cx, int cy, int flags);
 
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern short VkKeyScan(char ch);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static InputStructs.INPUT ConvertKeyToInput(Keys key, uint flags)
+        {
+            return new InputStructs.INPUT
+            {
+                Type = InputStructs.KEYBOARDEVENT,
+                Data =
+                {
+                    Keyboard = new InputStructs.KEYBDINPUT
+                    {
+                        KeyCode = (ushort)key,
+                        Scan = InputStructs.SCANVALUE,
+                        Flags = flags,
+                        Time = 0,
+                        ExtraInfo = IntPtr.Zero
+                    }
+                }
+            };
+        }
+    }
+
+    public static class InputStructs
+    {
+        public const int KEYBOARDEVENT = 1;
+        public const int SCANVALUE = 0;
+
+
+        public struct MOUSEINPUT
+        {
+            public int X;
+            public int Y;
+            public uint MouseData;
+            public uint Flags;
+            public uint Time;
+            public IntPtr ExtraInfo;
+        }
+
+        public struct HARDWAREINPUT
+        {
+            public uint Msg;
+            public ushort ParamL;
+            public ushort ParamH;
+        }
+
+        public struct KEYBDINPUT
+        {
+            public ushort KeyCode;
+            public ushort Scan;
+            public uint Flags;
+            public uint Time;
+            public IntPtr ExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct MOUSEKEYBDHARDWAREINPUT
+        {
+            [FieldOffset(0)]
+            public MOUSEINPUT Mouse;
+
+            [FieldOffset(0)]
+            public KEYBDINPUT Keyboard;
+
+            [FieldOffset(0)]
+            public HARDWAREINPUT Hardware;
+        }
+
+        public struct INPUT
+        {
+            public uint Type;
+            public MOUSEKEYBDHARDWAREINPUT Data;
+        }
     }
 
     public enum WM

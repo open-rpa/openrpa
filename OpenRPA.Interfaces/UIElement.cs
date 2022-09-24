@@ -6,12 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Automation;
 using FlaUI.Core.AutomationElements;
 using Newtonsoft.Json;
 using FlaUI.Core.Tools;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using FlaUI.UIA3.Patterns;
+using FlaUI.Core.Patterns;
+using System.Threading;
+using System.Windows.Documents;
+using Newtonsoft.Json.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using FlaUI.Core.Input;
+using System.ServiceModel.Configuration;
 
 namespace OpenRPA
 {
@@ -23,7 +30,6 @@ namespace OpenRPA
             {
                 RawElement = Element;
                 ProcessId = Element.Properties.ProcessId.ValueOrDefault;
-                // if(Element.Properties.AutomationId.IsSupported) Id = Element.Properties.AutomationId.ValueOrDefault;
                 Name = Element.Properties.Name.ValueOrDefault;
                 if (string.IsNullOrEmpty(Name)) Name = "";
                 ClassName = Element.Properties.ClassName.ValueOrDefault;
@@ -36,34 +42,66 @@ namespace OpenRPA
             {
             }
         }
+        public UIElement(System.Windows.Automation.AutomationElement Element)
+        {
+            RawElement = Element;
+            ProcessId = Element.Current.ProcessId;
+            Name = Element.Current.Name;
+            if (string.IsNullOrEmpty(Name)) Name = "";
+            ClassName = Element.Current.ClassName;
+            Type = Element.Current.ControlType.ToString();
+            FrameworkId = Element.Current.FrameworkId;
+            _ = Rectangle;
+            _ = Position;
+
+        }
         public void Refresh()
         {
             try
             {
                 int pendingCounter = 0;
-                while (!RawElement.Properties.BoundingRectangle.IsSupported && pendingCounter < 6)
+                if(RawElement is AutomationElement fla)
                 {
-                    System.Windows.Forms.Application.DoEvents();
-                    System.Threading.Thread.Sleep(50);
-                    pendingCounter++;
+                    while (!fla.Properties.BoundingRectangle.IsSupported && pendingCounter < 6)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        System.Threading.Thread.Sleep(50);
+                        pendingCounter++;
+                    }
+                    _Rectangle = Rectangle;
+                    _Position = Position;
+                    ProcessId = fla.Properties.ProcessId.ValueOrDefault;
+                    Name = fla.Properties.Name.ValueOrDefault;
+                    ClassName = fla.Properties.ClassName.ValueOrDefault;
+                    Type = fla.Properties.ControlType.ValueOrDefault.ToString();
+                    FrameworkId = fla.Properties.FrameworkId.ValueOrDefault;
                 }
-                _Rectangle = Rectangle;
-                _Position = Position;
-                ProcessId = RawElement.Properties.ProcessId.ValueOrDefault;
-                // Id = RawElement.Properties.AutomationId.ValueOrDefault;
-                Name = RawElement.Properties.Name.ValueOrDefault;
-                ClassName = RawElement.Properties.ClassName.ValueOrDefault;
-                Type = RawElement.Properties.ControlType.ValueOrDefault.ToString();
-                FrameworkId = RawElement.Properties.FrameworkId.ValueOrDefault;
+                if (RawElement is System.Windows.Automation.AutomationElement wae )
+                {
+                    while (wae.Current.BoundingRectangle == null && pendingCounter < 6)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        System.Threading.Thread.Sleep(50);
+                        pendingCounter++;
+                    }
+                    _Rectangle = Rectangle;
+                    _Position = Position;
+                    ProcessId = wae.Current.ProcessId;
+                    Name = wae.Current.Name;
+                    ClassName = wae.Current.ClassName;
+                    Type = wae.Current.ControlType.ToString();
+                    FrameworkId = wae.Current.FrameworkId;
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
         }
-        [JsonIgnore]
-        public AutomationElement RawElement { get; private set; }
-        object IElement.RawElement { get => RawElement; set => RawElement = value as AutomationElement; }
+        //[JsonIgnore]
+        //public AutomationElement RawElement { get; private set; }
+        //object IElement.RawElement { get => RawElement; set => RawElement = value as AutomationElement; }
+        public object RawElement { get; set; }
         private System.Drawing.Rectangle _Rectangle = System.Drawing.Rectangle.Empty;
         public System.Drawing.Rectangle Rectangle
         {
@@ -71,13 +109,26 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (RawElement == null) return System.Drawing.Rectangle.Empty;
-                    if (!RawElement.Properties.BoundingRectangle.IsSupported) return System.Drawing.Rectangle.Empty;
-                    if (_Rectangle == System.Drawing.Rectangle.Empty)
+                    if (RawElement == null) return Rectangle.Empty;
+                    if (RawElement is AutomationElement fla)
                     {
-                        _Rectangle = new System.Drawing.Rectangle((int)RawElement.Properties.BoundingRectangle.Value.X,
-                        (int)RawElement.Properties.BoundingRectangle.Value.Y, (int)RawElement.Properties.BoundingRectangle.Value.Width,
-                        (int)RawElement.Properties.BoundingRectangle.Value.Height);
+                        if (!fla.Properties.BoundingRectangle.IsSupported) return Rectangle.Empty;
+                        if (_Rectangle == Rectangle.Empty)
+                        {
+                            _Rectangle = new Rectangle(fla.Properties.BoundingRectangle.Value.X,
+                            fla.Properties.BoundingRectangle.Value.Y, fla.Properties.BoundingRectangle.Value.Width,
+                            fla.Properties.BoundingRectangle.Value.Height);
+                        }
+                    }
+                    if (RawElement is System.Windows.Automation.AutomationElement wae)
+                    {
+                        if (_Rectangle == Rectangle.Empty)
+                        {
+                            _Rectangle = new Rectangle((int)wae.Current.BoundingRectangle.X,
+                            (int)wae.Current.BoundingRectangle.Y, (int)wae.Current.BoundingRectangle.Width,
+                            (int)wae.Current.BoundingRectangle.Height);
+                        }
+
                     }
                     return _Rectangle;
                 }
@@ -94,18 +145,32 @@ namespace OpenRPA
         public string ClassName { get; set; }
         public string FrameworkId { get; set; }
         public string Type { get; set; }
+        public string _ControlType = null;
         public string ControlType
         {
             get
             {
-                try
+                if (!string.IsNullOrEmpty(_ControlType)) return _ControlType;
+                if (RawElement is AutomationElement fla)
                 {
-                    return RawElement.Properties.ControlType.ToString();
-                }
-                catch (Exception)
+                    try
+                    {
+                        _ControlType = fla.Properties.ControlType.ToString();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                } else if (RawElement is System.Windows.Automation.AutomationElement wae)
                 {
+                    try
+                    {
+                        _ControlType = wae.Current.ControlType.ToString();
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-                return FlaUI.Core.Definitions.ControlType.Custom.ToString();
+                return _ControlType;
             }
         }
         public bool SupportInput
@@ -114,12 +179,8 @@ namespace OpenRPA
             {
                 try
                 {
-                    //return rawElement.Patterns.TextEdit.IsSupported || rawElement.Patterns.Text.IsSupported || rawElement.Patterns.Text2.IsSupported
-                    if (RawElement.Properties.ControlType.IsSupported && !string.IsNullOrEmpty(RawElement.Properties.ControlType.Value.ToString()))
-                    {
-                        return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Edit
-                        || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.Document;
-                    }
+                    if (ControlType == "Edit" || ControlType == "Document") return true;
+                    return false;
                 }
                 catch (Exception)
                 {
@@ -133,8 +194,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    return RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox;
-                    // || RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton;
+                    return ControlType == "ComboBox"; // || ControlType == "RadioButton"
                 }
                 catch (Exception)
                 {
@@ -168,12 +228,9 @@ namespace OpenRPA
         {
             get
             {
-                //if (TreeWalker.RawViewWalker.GetParent(rawElement) is AutomationElement rawParent)
-                //{
-                //    return new UIElement(rawParent);
-                //}
-                return new UIElement(RawElement.Parent);
-                //return null;
+                if (RawElement is AutomationElement fla) return new UIElement(fla.Parent);
+                if (RawElement is System.Windows.Automation.AutomationElement wae) return new UIElement(wae.GetParent());
+                return null;
             }
         }
         public void Focus()
@@ -181,21 +238,24 @@ namespace OpenRPA
             UntilResponsive();
             try
             {
-                RawElement.SetForeground();
+                if (RawElement is AutomationElement fla) fla.SetForeground();
+                if (RawElement is System.Windows.Automation.AutomationElement wae) wae.SetForeground();
             }
             catch
             {
             }
             try
             {
-                RawElement.FocusNative();
+                if (RawElement is AutomationElement fla) fla.FocusNative();
+                if (RawElement is System.Windows.Automation.AutomationElement wae) wae.FocusNative();
             }
             catch
             {
             }
             try
             {
-                RawElement.Focus();
+                if (RawElement is AutomationElement fla) fla.Focus();
+                if (RawElement is System.Windows.Automation.AutomationElement wae) wae.SetFocus();
             }
             catch
             {
@@ -214,10 +274,38 @@ namespace OpenRPA
                 if (Button != Input.MouseButton.Left) { VirtualClick = false; }
                 if (VirtualClick)
                 {
-                    if (RawElement.Patterns.Invoke.IsSupported)
-                        if (RawElement.Patterns.Invoke.TryGetPattern(out var InvokePattern))
+                    if (RawElement is AutomationElement fla)
+                    {
+                        if (fla.Patterns.Invoke.IsSupported)
+                            if (fla.Patterns.Invoke.TryGetPattern(out var InvokePattern))
+                            {
+                                if (fla.IsEnabled)
+                                {
+                                    InvokePattern.Invoke();
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        InvokePattern.Invoke();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw new Exception("Failed clicking disabled object", ex);
+                                    }
+                                }
+                                // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                                return;
+                            }
+                        VirtualClick = false;
+
+                    }
+                    if (RawElement is System.Windows.Automation.AutomationElement wae)
+                    {
+                        var InvokePattern = wae.GetSpecifiedPattern<System.Windows.Automation.InvokePattern>();
+                        if(InvokePattern != null)
                         {
-                            if (RawElement.IsEnabled)
+                            if(wae.Current.IsEnabled)
                             {
                                 InvokePattern.Invoke();
                             }
@@ -232,10 +320,8 @@ namespace OpenRPA
                                     throw new Exception("Failed clicking disabled object", ex);
                                 }
                             }
-                            // Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                            return;
                         }
-                    VirtualClick = false;
+                    }
                 }
                 if (!VirtualClick)
                 {
@@ -340,38 +426,57 @@ namespace OpenRPA
                 sw.Start();
                 try
                 {
-                    Log.Selector(string.Format("UIElement.Value.get::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-                    if (RawElement.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
+                    if (RawElement is AutomationElement fla)
                     {
-                        throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
-                    }
-                    if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern) &&
-                        valuePattern.Value.TryGetValue(out var value))
-                    {
-                        Log.Selector(string.Format("UIElement.Value.get::valuePattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        return value;
-                    }
-                    if (RawElement.Patterns.Text.TryGetPattern(out var textPattern))
-                    {
-                        Log.Selector(string.Format("UIElement.Value.get::textPattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                        return textPattern.DocumentRange.GetText(Int32.MaxValue);
-                    }
-                    if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
-                    {
-                        var combo = RawElement.AsListBox();
-                        if (combo.SelectedItem != null)
+                        Log.Selector(string.Format("UIElement.Value.get::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
+                        if (fla.Properties.IsPassword.TryGetValue(out var isPassword) && isPassword)
                         {
-                            return combo.SelectedItem.Name;
+                            throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
                         }
-                    }
-                    if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
-                    {
-                        var combo = RawElement.AsCheckBox();
-                        if (combo.IsChecked.HasValue && combo.IsChecked.Value)
+                        if (fla.Patterns.Value.TryGetPattern(out var valuePattern) &&
+                            valuePattern.Value.TryGetValue(out var value))
                         {
-                            return "true";
+                            Log.Selector(string.Format("UIElement.Value.get::valuePattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            return value;
                         }
-                        return "false";
+                        if (fla.Patterns.Text.TryGetPattern(out var textPattern))
+                        {
+                            Log.Selector(string.Format("UIElement.Value.get::textPattern::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                            return textPattern.DocumentRange.GetText(Int32.MaxValue);
+                        }
+                        if (fla.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                        {
+                            var combo = fla.AsListBox();
+                            if (combo.SelectedItem != null)
+                            {
+                                return combo.SelectedItem.Name;
+                            }
+                        }
+                        if (fla.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                        {
+                            var combo = fla.AsCheckBox();
+                            if (combo.IsChecked.HasValue && combo.IsChecked.Value)
+                            {
+                                return "true";
+                            }
+                            return "false";
+                        }
+                    } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                    {
+                        if (wae.Current.IsPassword)
+                        {
+                            throw new FlaUI.Core.Exceptions.MethodNotSupportedException($"Text from element '{ToString()}' cannot be retrieved because it is set as password.");
+                        }
+                        var valuePattern = wae.GetSpecifiedPattern<System.Windows.Automation.ValuePattern>();
+                        if (valuePattern != null)
+                        {
+                            return valuePattern.Current.Value;
+                        }
+                        var textPattern = wae.GetSpecifiedPattern<System.Windows.Automation.TextPattern>();
+                        if (textPattern != null)
+                        {
+                            return textPattern.DocumentRange.GetText(Int32.MaxValue);
+                        }
                     }
                 }
                 catch (Exception)
@@ -386,86 +491,110 @@ namespace OpenRPA
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
                 Log.Selector(string.Format("UIElement.Value.set::begin {0:mm\\:ss\\.fff}", sw.Elapsed));
-                if (RawElement.Patterns.LegacyIAccessible.TryGetPattern(out var LegacyPattern))
+                if (RawElement is AutomationElement fla)
                 {
-                    LegacyPattern.SetValue(value);
-                    Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                }
-                else if (RawElement.Patterns.Value.TryGetPattern(out var valuePattern))
-                {
-                    valuePattern.SetValue(value);
-                    Log.Selector(string.Format("UIElement.Value.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                }
-                else
-                {
-                    Enter(value);
-                    Log.Selector(string.Format("UIElement.Value.set::Enter::end {0:mm\\:ss\\.fff}", sw.Elapsed));
-                }
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
-                {
-                    var combo = RawElement.AsListBox();
-                    combo.Select(value);
-                }
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
-                {
-                    var combo = RawElement.AsCheckBox();
-                    if (!string.IsNullOrEmpty(value) && value.ToLower() == "true")
+                    if (fla.Patterns.LegacyIAccessible.TryGetPattern(out var LegacyPattern))
                     {
-                        combo.IsChecked = true;
+                        LegacyPattern.SetValue(value);
+                        Log.Selector(string.Format("UIElement.LegacyIAccessible.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    }
+                    else if (fla.Patterns.Value.TryGetPattern(out var valuePattern))
+                    {
+                        valuePattern.SetValue(value);
+                        Log.Selector(string.Format("UIElement.Value.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                     }
                     else
                     {
-                        combo.IsChecked = false;
+                        Enter(value);
+                        Log.Selector(string.Format("UIElement.Value.set::Enter::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    }
+                    if (fla.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                    {
+                        var combo = fla.AsListBox();
+                        combo.Select(value);
+                    }
+                    if (fla.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                    {
+                        var combo = fla.AsCheckBox();
+                        if (!string.IsNullOrEmpty(value) && value.ToLower() == "true")
+                        {
+                            combo.IsChecked = true;
+                        }
+                        else
+                        {
+                            combo.IsChecked = false;
+                        }
+                    }
+                } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                {
+                    var valuePattern = wae.GetSpecifiedPattern<System.Windows.Automation.ValuePattern>();
+                    if (valuePattern != null)
+                    {
+                        valuePattern.SetValue(value);
+                        Log.Selector(string.Format("UIElement.Value.set::SetValue::end {0:mm\\:ss\\.fff}", sw.Elapsed));
+                    }
+                    else
+                    {
+                        Enter(value);
+                        Log.Selector(string.Format("UIElement.Value.set::Enter::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                     }
                 }
-
             }
         }
         public bool IsChecked
         {
             get
             {
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                if (RawElement is AutomationElement fla)
                 {
-                    var combo = RawElement.AsCheckBox();
-                    if (combo.IsChecked.HasValue && combo.IsChecked.Value)
+                    if (fla.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
                     {
-                        return true;
+                        var combo = fla.AsCheckBox();
+                        if (combo.IsChecked.HasValue && combo.IsChecked.Value)
+                        {
+                            return true;
+                        }
                     }
-                }
-                else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton)
-                {
-                    var radio = RawElement.AsRadioButton();
-                    if (radio.IsChecked) return true;
+                    else if (fla.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton)
+                    {
+                        var radio = fla.AsRadioButton();
+                        if (radio.IsChecked) return true;
+                    }
                 }
                 return false;
             }
             set
             {
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                if (RawElement is AutomationElement fla)
                 {
-                    var combo = RawElement.AsCheckBox();
-                    combo.IsChecked = value;
-                }
-                else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton)
-                {
-                    var radio = RawElement.AsRadioButton();
-                    radio.IsChecked = value;
-                }
+                    if (fla.ControlType == FlaUI.Core.Definitions.ControlType.CheckBox)
+                    {
+                        var combo = fla.AsCheckBox();
+                        combo.IsChecked = value;
+                    }
+                    else if (fla.ControlType == FlaUI.Core.Definitions.ControlType.RadioButton)
+                    {
+                        var radio = fla.AsRadioButton();
+                        radio.IsChecked = value;
+                    }
+                }                    
             }
         }
         public void SelectItem(UIElement element)
         {
-            if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+            if (RawElement is AutomationElement fla)
             {
-                var combo = RawElement.AsListBox();
-                for (var i = 0; i < combo.Items.Length; i++)
+                if (fla.ControlType == FlaUI.Core.Definitions.ControlType.List)
                 {
-                    if (combo.Items[i].Name == element.Value)
+                    var combo = fla.AsListBox();
+                    for (var i = 0; i < combo.Items.Length; i++)
                     {
-                        combo.AddToSelection(i);
-                    }
+                        if (combo.Items[i].Name == element.Value)
+                        {
+                            combo.AddToSelection(i);
+                        }
 
+                    }
                 }
             }
         }
@@ -473,10 +602,13 @@ namespace OpenRPA
         {
             set
             {
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                if (RawElement is AutomationElement fla)
                 {
-                    var combo = RawElement.AsListBox();
-                    combo.Select(value);
+                    if (fla.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                    {
+                        var combo = fla.AsListBox();
+                        combo.Select(value);
+                    }
                 }
             }
         }
@@ -590,11 +722,19 @@ namespace OpenRPA
         }
         public void Enter(string value)
         {
-            RawElement.Focus();
-            var valuePattern = RawElement.Patterns.Value.PatternOrDefault;
-            valuePattern?.SetValue(String.Empty);
-            if (String.IsNullOrEmpty(value)) return;
-
+            Focus();
+            if (RawElement is AutomationElement fla)
+            {
+                var valuePattern = fla.Patterns.Value.PatternOrDefault;
+                valuePattern?.SetValue(String.Empty);
+                if (string.IsNullOrEmpty(value)) return;
+            }
+            if (RawElement is System.Windows.Automation.AutomationElement wae)
+            {
+                var valuePattern = wae.GetSpecifiedPattern<System.Windows.Automation.ValuePattern>();
+                valuePattern?.SetValue(String.Empty);
+                if (string.IsNullOrEmpty(value)) return;
+            }
             var lines = value.Replace("\r\n", "\n").Split('\n');
             FlaUI.Core.Input.Keyboard.Type(lines[0]);
             foreach (var line in lines.Skip(1))
@@ -645,121 +785,143 @@ namespace OpenRPA
         {
             get
             {
-
                 var result = new List<IElement>();
-                if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox)
+                if (RawElement is AutomationElement fla)
                 {
-                    var combo = RawElement.AsComboBox();
-                    foreach (var c in combo.Items) result.Add(new UIElement(c));
-                }
-                else if (RawElement.ControlType == FlaUI.Core.Definitions.ControlType.List)
-                {
-                    var combo = RawElement.AsListBox();
-                    foreach (var c in combo.Items)
+                    if (fla.ControlType == FlaUI.Core.Definitions.ControlType.ComboBox)
                     {
-                        var tt = c.AsListBoxItem();
-                        result.Add(new UIElement(tt));
+                        var combo = fla.AsComboBox();
+                        foreach (var c in combo.Items) result.Add(new UIElement(c));
+                    }
+                    else if (fla.ControlType == FlaUI.Core.Definitions.ControlType.List)
+                    {
+                        var combo = fla.AsListBox();
+                        foreach (var c in combo.Items)
+                        {
+                            var tt = c.AsListBoxItem();
+                            result.Add(new UIElement(tt));
+                        }
+                    }
+                }
+                if (RawElement is System.Windows.Automation.AutomationElement wae)
+                {
+                    var listItems = wae.FindAll(System.Windows.Automation.TreeScope.Children, 
+                        new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.ListItem)
+                        );
+                    foreach (System.Windows.Automation.AutomationElement c in listItems)
+                    {
+                        result.Add(new UIElement(c));
                     }
                 }
                 return result.ToArray();
             }
         }
-        public Window GetWindow()
+        public T GetWindow<T>()
         {
-            AutomationElement last = RawElement;
-            AutomationElement current = RawElement;
-            do
+            if (RawElement is AutomationElement fla)
             {
-                try
+                AutomationElement last = fla;
+                AutomationElement current = fla;
+                do
                 {
-                    last = current;
-                    current = current.Parent;
-                }
-                catch (Exception)
+                    try
+                    {
+                        last = current;
+                        current = current.Parent;
+                    }
+                    catch (Exception)
+                    {
+                        // throw;
+                    }
+                } while (current != null && current.Parent != null);
+                Window window = last.AsWindow();
+                if (window is T w) return w;
+                return default;
+            }
+            if (RawElement is System.Windows.Automation.AutomationElement wae)
+            {
+                System.Windows.Automation.AutomationElement last = wae;
+                System.Windows.Automation.AutomationElement current = wae;
+                do
                 {
-                    // throw;
-                }
-            } while (current != null && current.Parent != null);
-            Window window = last.AsWindow();
-            return window;
-            //Window window = RawElement.AsWindow();
-            //FlaUI.Core.Definitions.ControlType ct = FlaUI.Core.Definitions.ControlType.Button;
-            //if (RawElement.ControlType != FlaUI.Core.Definitions.ControlType.Window)
-            //{
-            //    AutomationElement item = RawElement.Parent;
-            //    do
-            //    {
-            //        item = item.Parent;
-            //        try
-            //        {
-            //            if(item!=null) ct = item.ControlType;
-            //        }
-            //        catch (Exception)
-            //        {
-            //            ct = FlaUI.Core.Definitions.ControlType.Button;
-            //        }
-            //    } while (item != null && ct != FlaUI.Core.Definitions.ControlType.Window);
-            //    if (item != null && ct == FlaUI.Core.Definitions.ControlType.Window)
-            //    {
-            //        window = item.AsWindow();
-            //    }
-            //}
-            //try
-            //{
-            //    if(window.Parent != null)
-            //    {
-            //        ct = window.Parent.ControlType;
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    ct = FlaUI.Core.Definitions.ControlType.Button;
-            //}
-            //if(window.Parent != null && ct == FlaUI.Core.Definitions.ControlType.Window)
-            //{
-            //    window = window.Parent.AsWindow();
-            //}
-            //return window;
+                    try
+                    {
+                        last = current;
+                        current = current.GetParent();
+                    }
+                    catch (Exception)
+                    {
+                        // throw;
+                    }
+                } while (current != null && current.GetParent() != null);
+                if (last is T w) return w;
+                return default;
+            }
+            return default;
         }
         public void SetPosition(int X, int Y)
         {
-            Window window = GetWindow();
-            if (window == null) return;
-
-            //if(RawElement.Properties.ProcessId.IsSupported)
-            //{
-            //    var processId = RawElement.Properties.ProcessId.Value;
-            //    var p = System.Diagnostics.Process.GetProcessById(processId);
-            //    IntPtr handle = p.Handle;
-            //    if(NativeMethods.IsImmersiveProcess(handle))
-            //    {
-            //        var automation = AutomationUtil.getAutomation();
-            //        var pc = new FlaUI.Core.Conditions.PropertyCondition(automation.PropertyLibrary.Element.ClassName, "Windows.UI.Core.CoreWindow");
-            //        var _el = RawElement.FindFirstChild(pc);
-            //        if (_el != null)
-            //        {
-            //            window = _el.AsWindow();
-            //        } else
-            //        {
-            //            window = automation.FromPoint(WindowPosition).AsWindow();
-            //        }
-            //    }
-            //}
-            //window.Move(X, Y);
-
-            var size = WindowSize;
-            NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, X, Y, size.Width, size.Height, true);
-
-
-
-            //window.Move(X, Y);
-            //NativeMethods.RECT rect;
-            //IntPtr hWnd = window.Properties.NativeWindowHandle.Value;
-            //if (NativeMethods.GetWindowRect(hWnd, out rect))
-            //{
-            //    // NativeMethods.MoveWindow(hWnd, X, Y, WindowSize.Width, WindowSize.Height, true);
-            //}
-
+            if (RawElement is AutomationElement fla)
+            {
+                Window window = GetWindow<Window>();
+                if (window == null) return;
+                var size = WindowSize;
+                NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, X, Y, size.Width, size.Height, true);
+            }
+            if (RawElement is System.Windows.Automation.AutomationElement wae)
+            {
+                var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                if (window == null) return;
+                var size = WindowSize;
+                NativeMethods.MoveWindow(new IntPtr(window.Current.NativeWindowHandle), X, Y, size.Width, size.Height, true);
+            }
+        }
+        public void UntilResponsive(TimeSpan timeout)
+        {
+            if (RawElement is AutomationElement fla)
+            {
+                Wait.UntilResponsive(fla, timeout);
+            }
+        }
+        public void Close()
+        {
+            if (RawElement is AutomationElement fla)
+            {
+                Window window = GetWindow<Window>();
+                if (window == null) return;
+                window.Close();
+            }
+            if (RawElement is System.Windows.Automation.AutomationElement wae)
+            {
+                var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                if (window == null) return;
+                var TitleBar = window.FindFirst(System.Windows.Automation.TreeScope.Children,
+                    new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.TitleBar));
+                if(TitleBar != null)
+                {
+                    var CloseButton = window.FindFirst(System.Windows.Automation.TreeScope.Children,
+                        new System.Windows.Automation.AndCondition(
+                            new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.Button),
+                            new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.NameProperty, "Close")
+                            )
+                        );
+                    if(CloseButton != null)
+                    {
+                        var invoke = CloseButton.GetSpecifiedPattern<System.Windows.Automation.InvokePattern>();
+                        if(invoke != null)
+                        {
+                            invoke.Invoke();
+                            return;
+                        }
+                    }
+                }
+                var windowpatt = window.GetSpecifiedPattern<System.Windows.Automation.WindowPattern>();
+                if (windowpatt != null)
+                {
+                    windowpatt.Close();
+                    return;
+                }
+            }
         }
         public void SetWindowPosition(int X, int Y)
         {
@@ -772,24 +934,42 @@ namespace OpenRPA
             {
                 if (_Position == System.Drawing.Point.Empty)
                 {
-                    _Position = new System.Drawing.Point(RawElement.BoundingRectangle.X, RawElement.BoundingRectangle.Y);
+                    if (RawElement is AutomationElement fla)
+                    {
+                        _Position = new System.Drawing.Point(fla.BoundingRectangle.X, fla.BoundingRectangle.Y);
+                    } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                    {
+                        _Position = new System.Drawing.Point((int)wae.Current.BoundingRectangle.X, (int)wae.Current.BoundingRectangle.Y);
+                    }
+                    
                 }
                 return _Position;
             }
             set
             {
-                if (RawElement.Patterns.Transform.TryGetPattern(out var tranPattern))
+                if (RawElement is AutomationElement fla)
                 {
-                    if (tranPattern.CanMove)
+                    if (fla.Patterns.Transform.TryGetPattern(out var tranPattern))
                     {
-                        tranPattern.Move(value.X, value.Y);
+                        if (tranPattern.CanMove)
+                        {
+                            tranPattern.Move(value.X, value.Y);
+                        }
+                    }
+                    if (fla.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                    {
+                        if (tran2Pattern.CanMove)
+                        {
+                            tran2Pattern.Move(value.X, value.Y);
+                        }
                     }
                 }
-                if (RawElement.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                else if (RawElement is System.Windows.Automation.AutomationElement wae)
                 {
-                    if (tran2Pattern.CanMove)
+                    var patt = wae.GetSpecifiedPattern<System.Windows.Automation.TransformPattern>();
+                    if (patt != null && patt.Current.CanMove)
                     {
-                        tran2Pattern.Move(value.X, value.Y);
+                        patt.Move(value.X, value.Y);
                     }
                 }
             }
@@ -798,34 +978,62 @@ namespace OpenRPA
         {
             get
             {
-                var window = GetWindow();
-                return new System.Drawing.Point(window.BoundingRectangle.X, window.BoundingRectangle.Y);
+                if (RawElement is AutomationElement) 
+                {
+                    var window = GetWindow<Window>();
+                    return new Point(window.BoundingRectangle.X, window.BoundingRectangle.Y);
+                }
+                if (RawElement is System.Windows.Automation.AutomationElement)
+                {
+                    var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                    return new Point((int)window.Current.BoundingRectangle.X, (int)window.Current.BoundingRectangle.Y);
+                }
+                return Point.Empty;
             }
             set
             {
                 SetPosition(value.X, value.Y);
             }
         }
-        public System.Drawing.Rectangle WindowRectangle
+        public Rectangle WindowRectangle
         {
             get
             {
                 try
                 {
-                    var window = GetWindow();
-                    return new System.Drawing.Rectangle((int)window.Properties.BoundingRectangle.Value.X,
-                        (int)window.Properties.BoundingRectangle.Value.Y, (int)window.Properties.BoundingRectangle.Value.Width,
-                        (int)window.Properties.BoundingRectangle.Value.Height);
+                    if (RawElement is AutomationElement)
+                    {
+                        var window = GetWindow<Window>();
+                        return new Rectangle((int)window.Properties.BoundingRectangle.Value.X,
+                            (int)window.Properties.BoundingRectangle.Value.Y, (int)window.Properties.BoundingRectangle.Value.Width,
+                            (int)window.Properties.BoundingRectangle.Value.Height);
+
+                    }
+                    if (RawElement is System.Windows.Automation.AutomationElement)
+                    {
+                        var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                        return new Rectangle((int)window.Current.BoundingRectangle.X,
+                            (int)window.Current.BoundingRectangle.Y, (int)window.Current.BoundingRectangle.Width,
+                            (int)window.Current.BoundingRectangle.Height);
+                    }
                 }
                 catch (Exception)
                 {
-                    return System.Drawing.Rectangle.Empty;
                 }
+                return Rectangle.Empty;
             }
             set
             {
-                var window = GetWindow();
-                NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, value.X, value.Y, value.Width, value.Height, true);
+                if (RawElement is AutomationElement)
+                {
+                    var window = GetWindow<Window>();
+                    NativeMethods.MoveWindow(window.Properties.NativeWindowHandle.Value, value.X, value.Y, value.Width, value.Height, true);
+                }
+                if (RawElement is System.Windows.Automation.AutomationElement)
+                {
+                    var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                    NativeMethods.MoveWindow(new IntPtr(window.Current.NativeWindowHandle), value.X, value.Y, value.Width, value.Height, true);
+                }
             }
         }
         public static double MovePixelsPerMillisecond { get; } = 2; // 0.5;
@@ -915,9 +1123,18 @@ namespace OpenRPA
             {
                 try
                 {
-                    var window = GetWindow();
-                    if (window == null) return System.Drawing.Size.Empty;
-                    return new System.Drawing.Size(window.BoundingRectangle.Width, window.BoundingRectangle.Height);
+                    if (RawElement is AutomationElement)
+                    {
+                        var window = GetWindow<Window>();
+                        if (window == null) return System.Drawing.Size.Empty;
+                        return new System.Drawing.Size(window.BoundingRectangle.Width, window.BoundingRectangle.Height);
+                    }
+                    if (RawElement is System.Windows.Automation.AutomationElement)
+                    {
+                        var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                        if (window == null) return System.Drawing.Size.Empty;
+                        return new System.Drawing.Size((int)window.Current.BoundingRectangle.Width, (int)window.Current.BoundingRectangle.Height);
+                    }
                 }
                 catch (Exception)
                 {
@@ -927,102 +1144,117 @@ namespace OpenRPA
             }
             set
             {
-                var window = GetWindow();
-                if (window == null) return;
-                if (window.Patterns.Transform.TryGetPattern(out var tranPattern))
+                if (RawElement is AutomationElement)
                 {
-                    if (tranPattern.CanResize)
+                    var window = GetWindow<Window>();
+                    if (window == null) return;
+                    if (window.Patterns.Transform.TryGetPattern(out var tranPattern))
+                    {
+                        if (tranPattern.CanResize)
+                        {
+                            tranPattern.Resize(value.Width, value.Height);
+                            return;
+                        }
+                    }
+                    if (window.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
+                    {
+                        if (tran2Pattern.CanResize)
+                        {
+                            tran2Pattern.Resize(value.Width, value.Height);
+                        }
+                    }
+                }
+                if (RawElement is System.Windows.Automation.AutomationElement)
+                {
+                    var window = GetWindow<System.Windows.Automation.AutomationElement>();
+                    if (window == null) return;
+                    var tranPattern = window.GetSpecifiedPattern<System.Windows.Automation.TransformPattern>();
+                    if(tranPattern!=null && tranPattern.Current.CanResize)
                     {
                         tranPattern.Resize(value.Width, value.Height);
-                        return;
                     }
                 }
-                if (window.Patterns.Transform2.TryGetPattern(out var tran2Pattern))
-                {
-                    if (tran2Pattern.CanResize)
-                    {
-                        tran2Pattern.Resize(value.Width, value.Height);
-                    }
-                }
-
             }
         }
         public System.Data.DataTable AsDataTable()
         {
             var table = new System.Data.DataTable();
-            DataGridView view = null;
-            Grid grid = null;
-            AutomationElement element = RawElement;
-            do
+            if (RawElement is AutomationElement fla)
             {
-                try
-                {
-                    view = element.AsDataGridView();
-                    grid = element.AsGrid();
-                    if (view.Header == null && view.Rows.Length == 0) { view = null; grid = null; }
-                    if (!element.Properties.ControlType.IsSupported) { view = null; grid = null; } else if (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem) { view = null; grid = null; }
-                    if (view == null) element = element.Parent;
-                }
-                catch (Exception)
-                {
-                    return table;
-                }
-            } while (view == null && element != null);
-            if (view == null) return table;
-            if (view.Rows == null) return table;
-            if (view.Header != null)
-            {
-                foreach (var h in view.Header.Columns)
-                {
-                    table.Columns.Add(h.Text, typeof(string));
-                }
-            }
-            else
-            {
-                if (view.Rows.Length == 0) return table;
-                DataGridViewRow row = view.Rows[0];
-                foreach (var cell in row.Cells)
-                {
-                    if (cell.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(cell.Properties.AutomationId.ToString()))
-                    {
-                        table.Columns.Add(cell.AutomationId, typeof(string));
-                    }
-                    else if (cell.Properties.Name.IsSupported && !string.IsNullOrEmpty(cell.Properties.Name.Value))
-                    {
-                        table.Columns.Add(cell.Name, typeof(string));
-                    }
-                    else
-                    {
-                        table.Columns.Add("", typeof(string));
-                    }
-                }
-
-            }
-            foreach (var _row in view.Rows)
-            {
-                var objs = new List<object>();
-                foreach (var cell in _row.Cells)
+                DataGridView view = null;
+                Grid grid = null;
+                AutomationElement element = fla;
+                do
                 {
                     try
                     {
-                        if (cell.Patterns.Value.IsSupported)
-                        {
-                            objs.Add(cell.Value);
-                        }
-                        else
-                        {
-                            objs.Add(null);
-                        }
-
+                        view = element.AsDataGridView();
+                        grid = element.AsGrid();
+                        if (view.Header == null && view.Rows.Length == 0) { view = null; grid = null; }
+                        if (!element.Properties.ControlType.IsSupported) { view = null; grid = null; } else if (element.ControlType == FlaUI.Core.Definitions.ControlType.DataItem) { view = null; grid = null; }
+                        if (view == null) element = element.Parent;
                     }
                     catch (Exception)
                     {
-                        objs.Add(null);
+                        return table;
+                    }
+                } while (view == null && element != null);
+                if (view == null) return table;
+                if (view.Rows == null) return table;
+                if (view.Header != null)
+                {
+                    foreach (var h in view.Header.Columns)
+                    {
+                        table.Columns.Add(h.Text, typeof(string));
                     }
                 }
-                table.Rows.Add(objs.ToArray());
+                else
+                {
+                    if (view.Rows.Length == 0) return table;
+                    DataGridViewRow row = view.Rows[0];
+                    foreach (var cell in row.Cells)
+                    {
+                        if (cell.Properties.AutomationId.IsSupported && !string.IsNullOrEmpty(cell.Properties.AutomationId.ToString()))
+                        {
+                            table.Columns.Add(cell.AutomationId, typeof(string));
+                        }
+                        else if (cell.Properties.Name.IsSupported && !string.IsNullOrEmpty(cell.Properties.Name.Value))
+                        {
+                            table.Columns.Add(cell.Name, typeof(string));
+                        }
+                        else
+                        {
+                            table.Columns.Add("", typeof(string));
+                        }
+                    }
+
+                }
+                foreach (var _row in view.Rows)
+                {
+                    var objs = new List<object>();
+                    foreach (var cell in _row.Cells)
+                    {
+                        try
+                        {
+                            if (cell.Patterns.Value.IsSupported)
+                            {
+                                objs.Add(cell.Value);
+                            }
+                            else
+                            {
+                                objs.Add(null);
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            objs.Add(null);
+                        }
+                    }
+                    table.Rows.Add(objs.ToArray());
+                }
+                table.AcceptChanges();
             }
-            table.AcceptChanges();
             return table;
         }
     }

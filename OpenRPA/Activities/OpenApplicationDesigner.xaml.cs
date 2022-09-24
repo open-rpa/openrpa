@@ -51,9 +51,9 @@ namespace OpenRPA.Activities
                         }
                     }
                 }
-                if (ele is UIElement ui)
+                if (ele is UIElement ui && ui.RawElement is FlaUI.Core.AutomationElements.AutomationElement)
                 {
-                    var window = ui.GetWindow();
+                    var window = ui.GetWindow<FlaUI.Core.AutomationElements.Window>();
                     if (window == null) return;
                     if (!string.IsNullOrEmpty(window.Name))
                     {
@@ -108,6 +108,7 @@ namespace OpenRPA.Activities
         {
             var p = Interfaces.Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction += OnUserAction;
+            OpenRPA.Interfaces.Extensions.CollectArguments = true;
             p.Start();
         }
         private void StopRecordPlugins()
@@ -115,6 +116,7 @@ namespace OpenRPA.Activities
             var p = Interfaces.Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
             p.OnUserAction -= OnUserAction;
             p.Stop();
+            OpenRPA.Interfaces.Extensions.CollectArguments = false;
         }
         public void OnUserAction(Interfaces.IRecordPlugin sender, Interfaces.IRecordEvent e)
         {
@@ -146,9 +148,9 @@ namespace OpenRPA.Activities
                     }
                 }
 
-                if (ele is UIElement ui)
+                if (ele is UIElement ui && ui.RawElement is FlaUI.Core.AutomationElements.AutomationElement)
                 {
-                    var window = ui.GetWindow();
+                    var window = ui.GetWindow<FlaUI.Core.AutomationElements.Window>();
                     if (window == null) return;
                     if (!string.IsNullOrEmpty(window.Name))
                     {

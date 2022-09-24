@@ -2990,15 +2990,16 @@ namespace OpenRPA
             // if (e.Key == KeyboardKey. 255) return;
             try
             {
-                var element = AutomationUtil.getAutomation().FocusedElement();
-                if (element != null && element.Properties.ProcessId.IsSupported)
+                // var element = AutomationUtil.getAutomation().FocusedElement();
+                var element = System.Windows.Automation.AutomationElement.FocusedElement;
+                if (element != null && element.Current.ProcessId > 0)
                 {
-                    if (element.Properties.ProcessId == lastsapprocessid) return;
-                    using (var p = System.Diagnostics.Process.GetProcessById(element.Properties.ProcessId))
+                    if (element.Current.ProcessId == lastsapprocessid) return;
+                    using (var p = System.Diagnostics.Process.GetProcessById(element.Current.ProcessId))
                     {
                         if (p.ProcessName.ToLower() == "saplogon")
                         {
-                            lastsapprocessid = element.Properties.ProcessId;
+                            lastsapprocessid = element.Current.ProcessId;
                             return;
                         }
                     }
@@ -3322,7 +3323,7 @@ namespace OpenRPA
                             NativeMethods.SetCursorPos(e.X, e.Y);
                             InputDriver.Click(e.Button);
                         }
-                        System.Threading.Thread.Sleep(500);
+                        // System.Threading.Thread.Sleep(500);
                     }
                     if (sender.Name == "Windows") StartRecordPlugins(false);
                 }

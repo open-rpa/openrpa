@@ -161,6 +161,8 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Xaml" />
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

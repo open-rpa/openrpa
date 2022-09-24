@@ -74,52 +74,58 @@ namespace OpenRPA.Windows
         {
             try
             {
-                if (e.Element == null) return;
+                UIElement _element = AutomationHelper.GetFromPoint(e.X, e.Y);
+
+                if (_element == null) return;
                 if (Entity == null || string.IsNullOrEmpty(Selector)) return;
                 var pathToRoot = new List<AutomationElement>();
-                AutomationElement element = e.Element.RawElement;
-                while (element != null)
+                if (_element.RawElement is AutomationElement element)
                 {
-                    if (pathToRoot.Contains(element)) { break; }
-                    try
+                    while (element != null)
                     {
-                        if (element.Parent != null) pathToRoot.Add(element);
+                        if (pathToRoot.Contains(element)) { break; }
+                        try
+                        {
+                            if (element.Parent != null) pathToRoot.Add(element);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        try
+                        {
+                            element = element.Parent;
+                        }
+                        catch (Exception ex)
+                        {
+                            element = null;
+                            Log.Error(ex.ToString());
+                            // return;
+                        }
                     }
-                    catch (Exception)
+                    WindowsSelector selector = new WindowsSelector(Selector);
+                    if (pathToRoot.Count < (selector.Count - 1))
                     {
-                    }
-                    try
-                    {
-                        element = element.Parent;
-                    }
-                    catch (Exception ex)
-                    {
-                        element = null;
-                        Log.Error(ex.ToString());
-                        // return;
-                    }
-                }
-                WindowsSelector selector = new WindowsSelector(Selector);
-                if (pathToRoot.Count < (selector.Count - 1))
-                {
-                    return;
-                }
-                if (pathToRoot.Count > (selector.Count - 1))
-                {
-                    return;
-                }
-                pathToRoot.Reverse();
-                for (var i = 0; i < pathToRoot.Count; i++)
-                {
-                    element = pathToRoot[i];
-                    WindowsSelectorItem s = new WindowsSelectorItem(selector[(i + 1)]);
-                    if (!s.Match(element)) {
-                        Log.Verbose("WindowsClickDetectorPlugin: Element " + i + " does not match with selector");
                         return;
                     }
+                    if (pathToRoot.Count > (selector.Count - 1))
+                    {
+                        return;
+                    }
+                    pathToRoot.Reverse();
+                    for (var i = 0; i < pathToRoot.Count; i++)
+                    {
+                        element = pathToRoot[i];
+                        WindowsSelectorItem s = new WindowsSelectorItem(selector[(i + 1)]);
+                        if (!s.Match(element))
+                        {
+                            Log.Verbose("WindowsClickDetectorPlugin: Element " + i + " does not match with selector");
+                            return;
+                        }
+                    }
+                    var _e = new DetectorEvent(_element);
+                    OnDetector?.Invoke(this, _e, EventArgs.Empty);
+
                 }
-                var _e = new DetectorEvent(e.Element);
-                OnDetector?.Invoke(this, _e, EventArgs.Empty);
             }
             catch (Exception ex)
             {

@@ -311,7 +311,7 @@ namespace OpenRPA.Windows
             {
                 if (PluginConfig.enable_cache && cond.ChildCount > 0)
                 {
-                    var cache = WindowsSelectorItem.GetFromCache(_ele.RawElement, ident, cond.ToString());
+                    var cache = WindowsSelectorItem.GetFromCache(_ele.RawElement as AutomationElement, ident, cond.ToString());
                     if (cache != null)
                     {
                         Log.Debug("GetElementsWithuiSelector: found in AppWindowCache " + cond.ToString());
@@ -343,7 +343,7 @@ namespace OpenRPA.Windows
                         var con = new FlaUI.Core.Conditions.OrCondition(ors);
                         if (PluginConfig.enable_cache && con.ChildCount > 0)
                         {
-                            var cache = WindowsSelectorItem.GetFromCache(_ele.RawElement, ident, con.ToString());
+                            var cache = WindowsSelectorItem.GetFromCache(_ele.RawElement as AutomationElement, ident, con.ToString());
                             if (cache != null)
                             {
                                 Log.Debug("GetElementsWithuiSelector: found in AppWindowCache " + con.ToString());
@@ -367,7 +367,7 @@ namespace OpenRPA.Windows
                                 hasError = false;
                                 try
                                 {
-                                    win = ___treeWalker.GetFirstChild(_ele.RawElement);
+                                    win = ___treeWalker.GetFirstChild(_ele.RawElement as AutomationElement);
                                 }
                                 catch (Exception ex)
                                 {
@@ -415,8 +415,8 @@ namespace OpenRPA.Windows
                             }
                             if (_current.Count > 0 && PluginConfig.enable_cache && con.ChildCount > 0)
                             {
-                                var elements = _current.Select(x => x.RawElement).ToArray();
-                                WindowsSelectorItem.AddToCache(_ele.RawElement, ident, con.ToString(), elements);
+                                var elements = _current.Select(x => x.RawElement).Cast<AutomationElement>().ToArray();
+                                WindowsSelectorItem.AddToCache(_ele.RawElement as AutomationElement, ident, con.ToString(), elements);
                             }
                         }
                     }
@@ -443,7 +443,7 @@ namespace OpenRPA.Windows
                         hasError = false;
                         try
                         {
-                            ele = _treeWalker.GetFirstChild(_ele.RawElement);
+                            ele = _treeWalker.GetFirstChild(_ele.RawElement as AutomationElement);
                         }
                         catch (Exception ex)
                         {
@@ -490,8 +490,8 @@ namespace OpenRPA.Windows
                     }
                     if (_current.Count > 0 && PluginConfig.enable_cache && cond.ChildCount > 0)
                     {
-                        var elements = _current.Select(x => x.RawElement).ToArray();
-                        WindowsSelectorItem.AddToCache(_ele.RawElement, ident, cond.ToString(), elements);
+                        var elements = _current.Select(x => x.RawElement).Cast<AutomationElement>().ToArray();
+                        WindowsSelectorItem.AddToCache(_ele.RawElement as AutomationElement, ident, cond.ToString(), elements);
                     }
 
                 }
@@ -510,7 +510,7 @@ namespace OpenRPA.Windows
             // var selectors = selector.Where(x => x.Enabled == true && x.Selector == null).ToList();
             var selectors = selector.ToList();
             AutomationElement startfrom = null;
-            if (_fromElement != null) startfrom = _fromElement.RawElement;
+            if (_fromElement != null) startfrom = _fromElement.RawElement as AutomationElement;
 
 
             var _current = new List<UIElement>();
@@ -536,7 +536,7 @@ namespace OpenRPA.Windows
                 {
                     foreach (var e in current)
                     {
-                        if (WindowsSelectorItem.Match(sel, e.RawElement))
+                        if (WindowsSelectorItem.Match(sel, e.RawElement as AutomationElement))
                         {
                             _current.Add(e);
                         }

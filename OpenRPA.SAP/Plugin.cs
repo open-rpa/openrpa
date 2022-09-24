@@ -151,7 +151,7 @@ namespace OpenRPA.SAP
             if (e.UIElement.ProcessId > 0)
             {
                 using (var p = System.Diagnostics.Process.GetProcessById(e.UIElement.ProcessId))
-                    if (p.ProcessName.ToLower() != "saplogon") { Log.Output("p.ProcessName is not saplogon but " + p.ProcessName); return false; }
+                    if (p.ProcessName.ToLower() != "saplogon") { return false; }
             }
             else
             {

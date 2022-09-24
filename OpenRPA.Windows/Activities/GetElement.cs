@@ -159,7 +159,7 @@ namespace OpenRPA.Windows
                 if (interactive)
                 {
                     var testelement = _enum.Current;
-                    Wait.UntilResponsive(testelement.RawElement, PluginConfig.search_timeout);
+                    testelement.UntilResponsive(PluginConfig.search_timeout);
                 }
                 context.SetValue(_elements, _enum);
                 context.SetValue(_sw, sw);

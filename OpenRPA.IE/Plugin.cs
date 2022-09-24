@@ -1,4 +1,5 @@
-﻿using FlaUI.Core.AutomationElements.Infrastructure;
+﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using FlaUI.Core.Conditions;
 using FlaUI.Core.Definitions;
 using OpenRPA.Input;
@@ -100,11 +101,13 @@ namespace OpenRPA.IE
                 var re = new RecordEvent
                 {
                     Button = e.Button
-                }; var a = new GetElement { DisplayName = (e.Element.Name).Replace(Environment.NewLine, "").Trim() };
+                };
+                var element = System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y));
+                var a = new GetElement { DisplayName = (element.Current.Name).Replace(Environment.NewLine, "").Trim() };
                 a.Variables.Add(new Variable<int>("Index", 0));
                 a.Variables.Add(new Variable<int>("Total", 0));
 
-                using (var p = System.Diagnostics.Process.GetProcessById(e.Element.ProcessId))
+                using (var p = System.Diagnostics.Process.GetProcessById(element.Current.ProcessId))
                 {
                     if (p.ProcessName != "iexplore" && p.ProcessName != "iexplore.exe") return;
                 }
@@ -132,13 +135,11 @@ namespace OpenRPA.IE
                 if (sel.Count < 2) return;
                 a.Selector = sel.ToString();
                 a.Image = sel.Last().Element.ImageString();
-                re.UIElement = e.Element;
+                re.UIElement = new UIElement(element);
                 re.Element = new IEElement(browser, htmlelement);
                 re.Selector = sel;
                 re.X = e.X;
                 re.Y = e.Y;
-
-                Log.Debug(e.Element.SupportInput + " / " + e.Element.ControlType);
                 re.a = new GetElementResult(a);
                 //if (htmlelement.tagName.ToLower() == "input" && htmlelement.tagName.ToLower() == "select")
                 if (htmlelement.tagName.ToLower() == "input")
@@ -270,7 +271,7 @@ namespace OpenRPA.IE
                         if (_ele != null)
                         {
                             var ui = new UIElement(_ele);
-                            var window = ui.GetWindow();
+                            var window = ui.GetWindow<Window>();
                             if (window != null) return new UIElement(window);
                         }
                     }

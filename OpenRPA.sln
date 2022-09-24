@@ -53,8 +53,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Utilities", "OpenRP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.CodeEditor", "OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj", "{A71E984D-180B-4EE3-85C1-86F3937A2B0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.PDPlugin", "OpenRPA.PDPlugin\OpenRPA.PDPlugin.csproj", "{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{8CBC9129-7A79-483A-838B-2C6FF3762B35}"
 	ProjectSection(SolutionItems) = preProject
 		dowinget.bat = dowinget.bat
@@ -357,18 +355,6 @@ Global
 		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Release|x86.ActiveCfg = Release|Any CPU
 		{A71E984D-180B-4EE3-85C1-86F3937A2B0F}.Release|x86.Build.0 = Release|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.All|Any CPU.ActiveCfg = ReleaseNuget|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.All|Any CPU.Build.0 = ReleaseNuget|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.All|x86.ActiveCfg = ReleaseNuget|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.All|x86.Build.0 = ReleaseNuget|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Debug|x86.ActiveCfg = Debug|x86
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Debug|x86.Build.0 = Debug|x86
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|x86.ActiveCfg = Release|Any CPU
-		{1AFAEDFC-13BF-40BF-AFF3-FD50FB5193D9}.Release|x86.Build.0 = Release|Any CPU
 		{52AF10F7-DCF9-4E1D-B4DD-331456671118}.All|Any CPU.ActiveCfg = Release|x86
 		{52AF10F7-DCF9-4E1D-B4DD-331456671118}.All|Any CPU.Build.0 = Release|x86
 		{52AF10F7-DCF9-4E1D-B4DD-331456671118}.All|x86.ActiveCfg = Release|x86
@@ -571,7 +557,7 @@ Global
 		{4B4CD933-BF62-4F92-B8FA-6771758C5197} = {86A0EDE3-9272-4CA5-A499-F2E1190A80EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

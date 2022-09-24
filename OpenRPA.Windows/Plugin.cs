@@ -38,7 +38,10 @@ namespace OpenRPA.Windows
                     {
                         foreach (var elementNode in elements)
                         {
-                            result.Add(new WindowsTreeElement(null, false, automation, elementNode.RawElement, _treeWalker));
+                            if(elementNode.RawElement is AutomationElement fla)
+                            {
+                                result.Add(new WindowsTreeElement(null, false, automation, fla, _treeWalker));
+                            }                            
                         }
                         //_rootElement = elements[0].RawElement;
                         return;
@@ -129,62 +132,41 @@ namespace OpenRPA.Windows
         }
         private static Process lastProcess = null;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "IDE1006")]
+        private Process p = null;
         private void _OnMouseMove(InputEventArgs e)
         {
             if (isMouseDown) return;
+            if (_processing) return;
             if (CurrentProcessId == 0) CurrentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
+            UIElement element = null;
             var thread = new Thread(new ThreadStart(() =>
             {
                 try
                 {
-                    if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
-                    {
-                        try
-                        {
-                            if (_processing) return;
-                            _processing = true;
-                        }
-                        finally
-                        {
-                            System.Threading.Monitor.Exit(_lock);
-                        }
-                    }
+                    if (_processing) return;
+                    _processing = true;
                     try
                     {
-                        if (e.Element == null)
-                        {
-                            var Element = AutomationHelper.GetFromPoint(e.X, e.Y);
-                            if (Element != null) e.SetElement(Element);
-                        }
+                        // element = AutomationHelper.GetFromPoint(e.X, e.Y);
+                        element = new UIElement(System.Windows.Automation.AutomationElement.FromPoint(new System.Windows.Point(e.X, e.Y)));
                     }
                     catch (Exception ex)
                     {
                         Log.Error(ex.ToString());
                     }
-                    if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
-                    {
-                        try
-                        {
-                            _processing = false;
-                        }
-                        finally
-                        {
-                            System.Threading.Monitor.Exit(_lock);
-                        }
-                    }
-                    if (e.Element == null) return;
+                    if (element == null) return;
 
-                    if (e.Element.RawElement.Properties.ProcessId.IsSupported && e.Element.RawElement.Properties.ProcessId.ValueOrDefault == CurrentProcessId)
+                    if (element.ProcessId > 0 && element.ProcessId == CurrentProcessId)
                     {
                         return;
                     }
                     var re = new RecordEvent
                     {
                         Button = e.Button,
-                        OffsetX = e.X - e.Element.Rectangle.X,
-                        OffsetY = e.Y - e.Element.Rectangle.Y,
-                        Element = e.Element,
-                        UIElement = e.Element,
+                        OffsetX = e.X - element.Rectangle.X,
+                        OffsetY = e.Y - element.Rectangle.Y,
+                        Element = element,
+                        UIElement = element,
                         X = e.X,
                         Y = e.Y
                     };
@@ -205,6 +187,10 @@ namespace OpenRPA.Windows
                 {
                     Log.Error(ex.ToString());
                 }
+                finally
+                {
+                    _processing = false;
+                }
             }));
             thread.IsBackground = true;
             thread.Start();
@@ -217,27 +203,31 @@ namespace OpenRPA.Windows
             {
                 try
                 {
+                    UIElement element = null;
+                    element = AutomationHelper.GetFromPoint(e.X, e.Y);
+
+
                     Log.Debug("Windows.Recording::OnMouseUp::begin");
                     var re = new RecordEvent
                     {
                         Button = e.Button
-                    }; var a = new GetElement { DisplayName = e.Element.Name };
+                    }; var a = new GetElement { DisplayName = element.Name };
                     a.Variables.Add(new Variable<int>("Index", 0));
                     a.Variables.Add(new Variable<int>("Total", 0));
                     var sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
                     WindowsSelector sel = null;
                     // sel = new WindowsSelector(e.Element.rawElement, null, true);
-                    sel = new WindowsSelector(e.Element.RawElement, null, PluginConfig.enum_selector_properties);
+                    sel = new WindowsSelector(element.RawElement as AutomationElement, null, PluginConfig.enum_selector_properties);
                     if (sel.Count < 2) return;
                     if (sel == null) return;
                     a.Selector = sel.ToString();
                     a.MaxResults = 1;
-                    a.Image = e.Element.ImageString();
-                    re.OffsetX = e.X - e.Element.Rectangle.X;
-                    re.OffsetY = e.Y - e.Element.Rectangle.Y;
-                    re.UIElement = e.Element;
-                    re.Element = e.Element;
+                    a.Image = element.ImageString();
+                    re.OffsetX = e.X - element.Rectangle.X;
+                    re.OffsetY = e.Y - element.Rectangle.Y;
+                    re.UIElement = element;
+                    re.Element = element;
                     re.Selector = sel;
                     re.X = e.X;
                     re.Y = e.Y;
@@ -251,8 +241,8 @@ namespace OpenRPA.Windows
                         }
                     }
                     re.a = new GetElementResult(a);
-                    re.SupportInput = e.Element.SupportInput;
-                    re.SupportSelect = e.Element.SupportSelect;
+                    re.SupportInput = element.SupportInput;
+                    re.SupportSelect = element.SupportSelect;
                     if (re.UIElement.ProcessId > 0) re.Process = Process.GetProcessById(re.UIElement.ProcessId);
                     Log.Debug(string.Format("Windows.Recording::OnMouseUp::end {0:mm\\:ss\\.fff}", sw.Elapsed));
                     OnUserAction?.Invoke(this, re);
@@ -333,7 +323,15 @@ namespace OpenRPA.Windows
                 {
                     elements[0].Focus();
                     var _window = ((UIElement)elements[0]);
-                    return new UIElement(_window.GetWindow());
+                    if (_window.RawElement is AutomationElement fla)
+                    {
+                        return new UIElement(_window.GetWindow<Window>());
+                    }
+                    if (_window.RawElement is System.Windows.Automation.AutomationElement wae)
+                    {
+                        return new UIElement(_window.GetWindow<System.Windows.Automation.AutomationElement>());
+                    }
+                    return null;
                 }
             }
             var f = selector.First();
@@ -427,7 +425,15 @@ namespace OpenRPA.Windows
             if (elements.Length > 0)
             {
                 var window = ((UIElement)elements[0]);
-                return new UIElement(window.GetWindow());
+                if (window.RawElement is AutomationElement fla)
+                {
+                    return new UIElement(window.GetWindow<Window>());
+                }
+                if (window.RawElement is System.Windows.Automation.AutomationElement wae)
+                {
+                    return new UIElement(window.GetWindow<System.Windows.Automation.AutomationElement>());
+                }
+                return null;
             }
             else
             {

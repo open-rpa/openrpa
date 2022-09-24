@@ -1,10 +1,14 @@
 ﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
+using FlaUI.Core.Patterns.Infrastructure;
+using FlaUI.Core.WindowsAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenRPA.Interfaces
@@ -37,6 +41,62 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
+        public static T GetSpecifiedPattern<T>(this System.Windows.Automation.AutomationElement element) where T : System.Windows.Automation.BasePattern
+        {
+            System.Windows.Automation.AutomationPattern[] supportedPattern = element.GetSupportedPatterns();
+
+            foreach (System.Windows.Automation.AutomationPattern pattern in supportedPattern)
+            {
+                if (pattern.ProgrammaticName is T res)
+                    return res;
+            }
+            return null;
+        }
+        //public static System.Windows.Automation.AutomationPattern GetSpecifiedPattern<T of >(this System.Windows.Automation.AutomationElement element, string patternName)
+        //{
+        //    System.Windows.Automation.AutomationPattern[] supportedPattern = element.GetSupportedPatterns();
+
+        //    foreach (System.Windows.Automation.AutomationPattern pattern in supportedPattern)
+        //    {
+        //        if (pattern.ProgrammaticName == patternName)
+        //            return pattern;
+        //    }
+
+        //    return null;
+        //}
+        public static System.Windows.Automation.AutomationElement GetParent(this System.Windows.Automation.AutomationElement el)
+        {
+            if (el == null)
+            {
+                return null;
+            }
+            return System.Windows.Automation.TreeWalker.ContentViewWalker.GetParent(el);
+        }
+        public static void SetForeground(this System.Windows.Automation.AutomationElement element)
+        {
+            if (element.Current.NativeWindowHandle > 0)
+            {
+                NativeMethods.SetForegroundWindow(new IntPtr(element.Current.NativeWindowHandle));
+            }
+        }
+        public static void FocusNative(this System.Windows.Automation.AutomationElement element)
+        {
+            if (element.Current.NativeWindowHandle > 0)
+            {
+                var windowHandle = new IntPtr(element.Current.NativeWindowHandle);
+                uint windowThreadId = User32.GetWindowThreadProcessId(windowHandle, out _);
+                uint currentThreadId = Kernel32.GetCurrentThreadId();
+
+                // attach window to the calling thread's message queue
+                User32.AttachThreadInput(currentThreadId, windowThreadId, true);
+                User32.SetFocus(windowHandle);
+                // detach the window from the calling thread's message queue
+                User32.AttachThreadInput(currentThreadId, windowThreadId, false);
+                return;
+            }
+            // Fallback to the UIA Version
+            element.SetFocus();
+        }
         public static T FindById<T>(this System.Collections.ObjectModel.ObservableCollection<T> collection, string id) where T : IBase
         {
             return collection.Where(x => x._id == id).FirstOrDefault();
@@ -522,6 +582,7 @@ namespace OpenRPA.Interfaces
             model.SetValue(name, new System.Activities.OutArgument<T>() { Expression = new Microsoft.VisualBasic.Activities.VisualBasicReference<T>(value) });
             // model.SetValue(name, new System.Activities.OutArgument<T>() { Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<T>(value) });
         }
+        public static bool CollectArguments = false;
         public static ProcessInfo GetProcessInfo(this AutomationElement element)
         {
             if (!element.Properties.ProcessId.IsSupported) return null;
@@ -589,34 +650,32 @@ namespace OpenRPA.Interfaces
 
 
             }
-            try
+
+            if(CollectArguments)
             {
-                var arguments = GetCommandLine(processId);
-                var arr = ParseCommandLine(arguments);
-
-                if (arr.Length == 0)
+                try
                 {
+                    var arguments = GetCommandLine(processId);
+                    var arr = ParseCommandLine(arguments);
+
+                    if (arr.Length == 0)
+                    {
+
+                    }
+                    else if (arguments.Contains("\"" + arr[0] + "\""))
+                    {
+                        result.Arguments = arguments.Replace("\"" + arr[0] + "\"", "");
+                    }
+                    else
+                    {
+                        result.Arguments = arguments.Replace(arr[0], "");
+                    }
+                    if (result.Arguments != null) { result.Arguments = result.Arguments.ReplaceEnvironmentVariable(); }
 
                 }
-                else if (arguments.Contains("\"" + arr[0] + "\""))
+                catch (Exception)
                 {
-                    result.Arguments = arguments.Replace("\"" + arr[0] + "\"", "");
                 }
-                else
-                {
-                    result.Arguments = arguments.Replace(arr[0], "");
-                }
-                if (result.Arguments != null) { result.Arguments = result.Arguments.ReplaceEnvironmentVariable(); }
-                //if (arr.Length > 0)
-                //{
-                //    var resultarr = new string[arr.Length - 1];
-                //    Array.Copy(arr, 1, resultarr, 0, arr.Length - 1);
-                //    result.arguments = string.Join(" ", resultarr).replaceEnvironmentVariable();
-                //}
-
-            }
-            catch (Exception)
-            {
             }
             result.ApplicationUserModelId = ApplicationUserModelId;
             result.IsImmersiveProcess = _isImmersiveProcess;

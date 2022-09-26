@@ -97,7 +97,67 @@ namespace OpenRPA.FileWatcher.Views
                 plugin.Start();
                 NotifyPropertyChanged("Entity");
             }
-        }        
+        }
+        public bool raiseOnCreated
+        {
+            get
+            {
+                return plugin.raiseOnCreated;
+            }
+            set
+            {
+                plugin.raiseOnCreated = value;
+                Entity.isDirty = true;
+                plugin.Stop();
+                plugin.Start();
+                NotifyPropertyChanged("Entity");
+            }
+        }
+        public bool raiseOnChanged
+        {
+            get
+            {
+                return plugin.raiseOnChanged;
+            }
+            set
+            {
+                plugin.raiseOnChanged = value;
+                Entity.isDirty = true;
+                plugin.Stop();
+                plugin.Start();
+                NotifyPropertyChanged("Entity");
+            }
+        }
+        public bool raiseOnRenamed
+        {
+            get
+            {
+                return plugin.raiseOnRenamed;
+            }
+            set
+            {
+                plugin.raiseOnRenamed = value;
+                Entity.isDirty = true;
+                plugin.Stop();
+                plugin.Start();
+                NotifyPropertyChanged("Entity");
+            }
+        }
+        public bool raiseOnDeleted
+        {
+            get
+            {
+                return plugin.raiseOnDeleted;
+            }
+            set
+            {
+                plugin.raiseOnDeleted = value;
+                Entity.isDirty = true;
+                plugin.Stop();
+                plugin.Start();
+                NotifyPropertyChanged("Entity");
+            }
+        }
         private void Open_Selector_Click(object sender, RoutedEventArgs e)
         {
         }

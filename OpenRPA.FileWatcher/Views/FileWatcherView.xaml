@@ -15,6 +15,14 @@
         <TextBox Height="23" HorizontalAlignment="Left" Margin="183,80,0,0" Text="{Binding EntityFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,110,0,0" Text="{x:Static or:strings.plugin_includesubdir}" VerticalAlignment="Top" Width="110" />
         <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,110,0,0" IsChecked="{Binding IncludeSubdirectories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,133,0,0" Text="{x:Static or:strings.plugin_raiseOnCreated}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,133,0,0" IsChecked="{Binding raiseOnCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,156,0,0" Text="{x:Static or:strings.plugin_raiseOnChanged}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,156,0,0" IsChecked="{Binding raiseOnChanged, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,179,0,0" Text="{x:Static or:strings.plugin_raiseOnRenamed}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,179,0,0" IsChecked="{Binding raiseOnRenamed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="67,202,0,0" Text="{x:Static or:strings.plugin_raiseOnDeleted}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="183,202,0,0" IsChecked="{Binding raiseOnDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="222" />
 
     </Grid>
 </UserControl>

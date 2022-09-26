@@ -95,13 +95,78 @@ namespace OpenRPA.FileWatcher
                 Entity.Properties["IncludeSubdirectories"] = value;
             }
         }
+        public bool raiseOnChanged
+        {
+            get
+            {
+                if (Entity == null) return true;
+                if (!Entity.Properties.ContainsKey("raiseOnChanged")) return true;
+                var _val = Entity.Properties["raiseOnChanged"];
+                if (_val == null) return true;
+                return bool.Parse(_val.ToString());
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["raiseOnChanged"] = value;
+            }
+        }
+        public bool raiseOnCreated
+        {
+            get
+            {
+                if (Entity == null) return false;
+                if (!Entity.Properties.ContainsKey("raiseOnCreated")) return false;
+                var _val = Entity.Properties["raiseOnCreated"];
+                if (_val == null) return false;
+                return bool.Parse(_val.ToString());
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["raiseOnCreated"] = value;
+            }
+        }
+        public bool raiseOnDeleted
+        {
+            get
+            {
+                if (Entity == null) return false;
+                if (!Entity.Properties.ContainsKey("raiseOnDeleted")) return false;
+                var _val = Entity.Properties["raiseOnDeleted"];
+                if (_val == null) return false;
+                return bool.Parse(_val.ToString());
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["raiseOnDeleted"] = value;
+            }
+        }
+        public bool raiseOnRenamed
+        {
+            get
+            {
+                if (Entity == null) return false;
+                if (!Entity.Properties.ContainsKey("raiseOnRenamed")) return false;
+                var _val = Entity.Properties["raiseOnRenamed"];
+                if (_val == null) return false;
+                return bool.Parse(_val.ToString());
+            }
+            set
+            {
+                if (Entity == null) return;
+                Entity.Properties["raiseOnRenamed"] = value;
+            }
+        }
         public void Start()
         {
             try
             {
                 watcher.Path = Watchpath;
-                watcher.NotifyFilter = NotifyFilters.LastWrite;
-                if(!string.IsNullOrEmpty(WatchFilter) && (WatchFilter.Contains(",") || WatchFilter.Contains("|")))
+                watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.CreationTime | NotifyFilters.FileName | NotifyFilters.Attributes;
+
+                if (!string.IsNullOrEmpty(WatchFilter) && (WatchFilter.Contains(",") || WatchFilter.Contains("|")))
                 {
                     watcher.Filter = "*";
                 } 
@@ -109,9 +174,14 @@ namespace OpenRPA.FileWatcher
                 {
                     watcher.Filter = WatchFilter;
                 }
-                
-                watcher.Changed += new FileSystemEventHandler(OnChanged);
+
+                if (raiseOnChanged) watcher.Changed += new FileSystemEventHandler(OnChanged);
+                if (raiseOnCreated) watcher.Created += new FileSystemEventHandler(OnChanged);
+                if (raiseOnDeleted) watcher.Deleted += new FileSystemEventHandler(OnChanged);
+                if (raiseOnRenamed) watcher.Renamed += new RenamedEventHandler(OnChanged);
+                //watcher.EnableRaisingEvents = true;
                 watcher.EnableRaisingEvents = true;
+                watcher.Error += Watcher_Error;
                 watcher.IncludeSubdirectories = IncludeSubdirectories;
                 
             }
@@ -120,15 +190,29 @@ namespace OpenRPA.FileWatcher
                 Log.Error(ex.ToString());
             }
         }
+
+        private void Watcher_Error(object sender, ErrorEventArgs e)
+        {
+            Log.Error(e.GetException()?.ToString());
+        }
+
         public void Stop()
         {
-            watcher.EnableRaisingEvents = false;
+            //watcher.EnableRaisingEvents = false;
+            watcher.Changed -= new FileSystemEventHandler(OnChanged);
+            watcher.Created -= new FileSystemEventHandler(OnChanged);
+            watcher.Deleted -= new FileSystemEventHandler(OnChanged);
+            watcher.Renamed -= new RenamedEventHandler(OnChanged);
         }
         private DateTime lastTriggered = DateTime.Now;
         private void OnChanged(object sender, FileSystemEventArgs e)
         {
             try
             {
+                if (e.ChangeType == WatcherChangeTypes.Changed && !raiseOnChanged) return;
+                if (e.ChangeType == WatcherChangeTypes.Created && !raiseOnCreated) return;
+                if (e.ChangeType == WatcherChangeTypes.Renamed && !raiseOnRenamed) return;
+                if (e.ChangeType == WatcherChangeTypes.Deleted && !raiseOnDeleted) return;
                 if (!string.IsNullOrEmpty(WatchFilter) && (WatchFilter.Contains(",") || WatchFilter.Contains("|")))
                 {
                     bool cont = false;
@@ -142,7 +226,7 @@ namespace OpenRPA.FileWatcher
                 TimeSpan timepassed = DateTime.Now - lastTriggered;
                 if (timepassed.Milliseconds < 100) return;
                 lastTriggered = DateTime.Now;
-                var _e = new DetectorEvent(e.FullPath);
+                var _e = new DetectorEvent(e.FullPath); _e.ChangeType = e.ChangeType;
                 OnDetector?.Invoke(this, _e, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -158,6 +242,7 @@ namespace OpenRPA.FileWatcher
     {
         public IElement element { get; set; }
         public string host { get; set; }
+        public WatcherChangeTypes ChangeType { get; set; }
         public string fqdn { get; set; }
         public string filepath { get; set; }
         public string result { get; set; }

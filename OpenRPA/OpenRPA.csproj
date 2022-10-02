@@ -226,7 +226,6 @@
 		<None Remove="Views\selectUserWindow.xaml" />
 		<None Remove="Views\showVariables.xaml" />
 		<None Remove="Views\Snippets.xaml" />
-		<None Remove="Views\SplashScreen.xaml" />
 		<None Remove="Views\WFDesigner.xaml" />
 		<None Remove="Views\wfToolbox.xaml" />
 		<None Remove="Views\WorkflowInstances.xaml" />
@@ -356,9 +355,6 @@
 		</Page>
 		<Page Include="Views\WorkflowInstances.xaml">
 			<SubType>Designer</SubType>
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Views\SplashScreen.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\InsertSelect.xaml">

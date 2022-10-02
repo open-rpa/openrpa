@@ -197,24 +197,18 @@ namespace OpenRPA
             RobotInstance.instance.ParseCommandLineArgs(args);
             return true;
         }
-        public static Views.SplashScreen splash { get; set; }
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (Config.local.showloadingscreen)
-            {
-                splash = new Views.SplashScreen();
-                splash.Topmost = false;
-                splash.Show();
-                splash.BusyContent = "Loading main window";
-            }
             AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
             System.Threading.Thread.CurrentThread.Name = "UIThread";
             if (!Config.local.isagent)
             {
-                if (!Config.local.showloadingscreen) notifyIcon.Visible = true;
+                StartupUri = new Uri("/OpenRPA;component/MainWindow.xaml", UriKind.Relative);
+                notifyIcon.Visible = true;
             }
             else
             {
+                StartupUri = new Uri("/OpenRPA;component/AgentWindow.xaml", UriKind.Relative);
                 notifyIcon.Visible = true;
             }
             if (Config.local.files_pending_deletion.Length > 0)
@@ -244,10 +238,10 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (Config.local.showloadingscreen) splash.BusyContent = "loading plugins";
+                    // if (Config.local.showloadingscreen) splash.BusyContent = "loading plugins";
                     // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
                     Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
-                    if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
+                    // if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
                     await RobotInstance.instance.init();
                 }
                 catch (Exception ex)
@@ -263,7 +257,7 @@ namespace OpenRPA
             {
                 Log.Debug(message);
                 // notifyIcon.ShowBalloonTip(5000, "Title", message, System.Windows.Forms.ToolTipIcon.Info);
-                if (splash != null) splash.BusyContent = message;
+                // if (splash != null) splash.BusyContent = message;
             }
             catch (Exception)
             {

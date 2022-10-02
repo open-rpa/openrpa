@@ -23,6 +23,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Minimize(System.Windows.Window window)
         {
+            if (window == null) return;
             RunUI(() =>
             {
                 try
@@ -63,6 +64,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Restore()
         {
+            if (MainWindow == null) return;
             RunUI(() =>
             {
                 try
@@ -86,6 +88,7 @@ namespace OpenRPA.Interfaces
         }
         public static void Restore(System.Windows.Window window)
         {
+            if (window == null) return;
             RunUI(() =>
             {
                 try

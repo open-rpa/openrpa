@@ -5,6 +5,7 @@
              xmlns:resx="clr-namespace:OpenRPA.Properties"
              ShutdownMode="OnMainWindowClose"
              Startup="Application_Startup"
+             StartupUri="MainWindow.xaml"
              >
     <!--StartupUri="MainWindow.xaml"-->
     <!-- 

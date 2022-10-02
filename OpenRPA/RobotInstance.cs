@@ -324,11 +324,6 @@ namespace OpenRPA
             {
                 try
                 {
-                    if (App.splash != null)
-                    {
-                        App.splash.Close();
-                        App.splash = null;
-                    }
                     if (!Config.local.isagent) Show();
                     ReadyForAction?.Invoke();
                     Input.InputDriver.Instance.Initialize();
@@ -1089,11 +1084,6 @@ namespace OpenRPA
                     CreateMainWindow();
                     GenericTools.RunUI(() =>
                     {
-                        if (App.splash != null)
-                        {
-                            App.splash.Close();
-                            App.splash = null;
-                        }
                         if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     });
@@ -1117,7 +1107,6 @@ namespace OpenRPA
             Log.FunctionIndent("RobotInstance", "Hide");
             GenericTools.RunUI(() =>
             {
-                if (App.splash != null) App.splash.Hide();
                 if (Window != null) Window.Hide();
             });
             Log.FunctionOutdent("RobotInstance", "Hide");
@@ -1142,23 +1131,25 @@ namespace OpenRPA
                             }
                         }
                         SetStatus("Creating main window");
+                        if(App.Current.MainWindow is MainWindow && isagent)
+                        {
+                            var oldwin = App.Current.MainWindow;
+                            App.Current.MainWindow = new AgentWindow();
+                            oldwin.Hide();
+                        }
                         if (!isagent)
                         {
-                            var win = new MainWindow();
-                            App.Current.MainWindow = win;
-                            Window = win;
+                            Window = App.Current.MainWindow as IMainWindow;
                             Window.ReadyForAction += MainWindowReadyForAction;
                             Window.Status += MainWindowStatus;
-                            GenericTools.MainWindow = win;
+                            GenericTools.MainWindow = App.Current.MainWindow;
                         }
                         else
                         {
-                            var win = new AgentWindow();
-                            App.Current.MainWindow = win;
-                            Window = win;
+                            Window = App.Current.MainWindow as AgentWindow;
                             Window.ReadyForAction += MainWindowReadyForAction;
                             Window.Status += MainWindowStatus;
-                            GenericTools.MainWindow = win;
+                            GenericTools.MainWindow = App.Current.MainWindow;
                         }
                     }
                     catch (Exception ex)
@@ -1166,7 +1157,6 @@ namespace OpenRPA
                         Log.Error("RobotInstance.CreateMainWindow: " + ex.ToString());
                     }
                 }, null);
-                // ExpressionEditor.EditorUtil.Init();
                 _ = CodeEditor.init.Initialize();
                 SetStatus("loading detectors");
                 var _detectors = dbDetectors.FindAll();
@@ -1182,14 +1172,7 @@ namespace OpenRPA
             Log.FunctionIndent("RobotInstance", "Show");
             GenericTools.RunUI(() =>
             {
-                if (App.splash != null)
-                {
-                    App.splash.Show();
-                }
-                else
-                {
-                    if (Window != null) Window.Show();
-                }
+                if (Window != null) Window.Show();
             });
             Log.FunctionOutdent("RobotInstance", "Show");
         }
@@ -1198,9 +1181,8 @@ namespace OpenRPA
             Log.FunctionIndent("RobotInstance", "Close");
             GenericTools.RunUI(() =>
             {
-                if (App.splash != null) App.splash.Close();
                 if (Window != null) Window.Close();
-                System.Windows.Application.Current.Shutdown();
+                Application.Current.Shutdown();
             });
             Log.FunctionOutdent("RobotInstance", "Close");
         }
@@ -1470,11 +1452,6 @@ namespace OpenRPA
             }
             GenericTools.RunUI(() =>
             {
-                if (App.splash != null)
-                {
-                    App.splash.Close();
-                    App.splash = null;
-                }
                 if (!Config.local.isagent) Show();
                 ReadyForAction?.Invoke();
             });
@@ -1497,11 +1474,6 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if (App.splash != null)
-                        {
-                            App.splash.Close();
-                            App.splash = null;
-                        }
                         if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     }
@@ -1576,11 +1548,6 @@ namespace OpenRPA
                 if (Config.local.jwt != null && Config.local.jwt.Length > 0) CreateMainWindow();
                 GenericTools.RunUI(() =>
                 {
-                    if (App.splash != null)
-                    {
-                        App.splash.Close();
-                        App.splash = null;
-                    }
                     if (!Config.local.isagent) Show();
                     ReadyForAction?.Invoke();
                 });

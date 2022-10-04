@@ -334,11 +334,11 @@ namespace OpenRPA.Java
             {
                 if (AnimateMouse)
                 {
-                    FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY));
+                    Input.InputDriver.Instance.AnimateMouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 }
                 else
                 {
-                    NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 }
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);

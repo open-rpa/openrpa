@@ -49,6 +49,10 @@ namespace OpenRPA.Input
         public void MouseUp(MouseButton button) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseUp, Button = button });
         public void MouseDown(MouseButton button) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseDown, Button = button });
         public void MouseMove(int x, int y) => SetInputState(new InputEventArgs() { Type = InputEventType.MouseMove, X = x, Y = y });
+        public void AnimateMouseMove(int x, int y)
+        {
+            FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(x, y));
+        }
         public static void DoMouseClick()
         {
             NativeMethods.mouse_event(NativeMethods.MOUSEEVENTF_LEFTDOWN | NativeMethods.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -416,6 +420,7 @@ namespace OpenRPA.Input
 
                 case InputEventType.MouseMove:
                     NativeMethods.SetPhysicalCursorPos(e.X, e.Y);
+                    NativeMethods.SetCursorPos(e.X, e.Y);
                     break;
             }
         }

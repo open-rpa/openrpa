@@ -1,5 +1,4 @@
-﻿using OpenRPA.NamedPipeWrapper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OpenRPA.Interfaces;
 using static OpenRPA.Interfaces.RegUtil;
 using OpenRPA.NM.pipe;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FlaUI.Core.AutomationElements;
 
 namespace OpenRPA.NM
 {

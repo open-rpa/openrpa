@@ -149,13 +149,14 @@ namespace OpenRPA.NM
             NMHook.onMessage += OnMessage;
             NMHook.Connected += OnConnected;
             NMHook.onDisconnected += OnDisconnected;
-            _ = PluginConfig.unique_xpath_ids;
-            _ = PluginConfig.debug_console_output;
             _ = PluginConfig.wait_for_tab_after_set_value;
             _ = PluginConfig.wait_for_tab_click;
             _ = PluginConfig.compensate_for_old_addon;
+            _ = PluginConfig.debug_console_output;
+            _ = PluginConfig.unique_xpath_ids;
+            _ = PluginConfig.protocol_timeout;
             _ = PluginConfig.wait_for_tab_timeout;
-
+            _ = PluginConfig.use_zn_for_fromelement;
         }
         private void OnConnected(string obj)
         {

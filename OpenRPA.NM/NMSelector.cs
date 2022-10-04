@@ -97,6 +97,17 @@ namespace OpenRPA.NM
             {
                 fromcssPath = fromNMElement.cssselector;
                 fromxPath = fromNMElement.xpath;
+                if (PluginConfig.use_zn_for_fromelement)
+                {
+                    fromcssPath = "";
+                    if(!string.IsNullOrEmpty(fromNMElement.tagname))
+                    {
+                        fromxPath = "//" + fromNMElement.tagname.ToUpperInvariant() + "[@zn_id=\"" + fromNMElement.zn_id + "\"]";
+                    } else
+                    {
+                        fromxPath = "//*[@zn_id=\"106\"]";
+                    }                    
+                }
             }
             NativeMessagingMessage subresult = null;
 
@@ -106,6 +117,7 @@ namespace OpenRPA.NM
             getelement.cssPath = cssselector;
             getelement.fromxPath = fromxPath;
             getelement.fromcssPath = fromcssPath;
+            if(PluginConfig.wait_for_tab_after_set_value)
             if (fromElement != null && fromElement is NMElement)
             {
                 getelement.windowId = ((NMElement)fromElement).message.windowId;

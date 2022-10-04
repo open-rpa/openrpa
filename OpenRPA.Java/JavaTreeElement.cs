@@ -1,5 +1,4 @@
-﻿using FlaUI.Core.Definitions;
-using OpenRPA.Interfaces.Selector;
+﻿using OpenRPA.Interfaces.Selector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,29 +10,6 @@ namespace OpenRPA.Java
     public class JavaTreeElement : treeelement
     {
         public JavaElement JavaElement { get; set; }
-        public ControlType ControlType
-        {
-            get
-            {
-                if(JavaElement!=null)
-                {
-                    switch (JavaElement.role)
-                    {
-                        case "panel": return ControlType.Pane;
-                        case "root pane": return ControlType.Pane;
-                        case "layered pane": return ControlType.Pane;
-                        case "push button": return ControlType.Button;
-                        case "text": return ControlType.Edit;
-                        case "frame": return ControlType.Pane;
-                        case "label": return ControlType.Text;
-                        default:
-                            break;
-                    }
-                }
-                return ControlType.Custom;
-            }
-        }
-
         public JavaTreeElement(treeelement parent, bool expanded, JavaElement element) : base(parent)
         {
             JavaElement = element;

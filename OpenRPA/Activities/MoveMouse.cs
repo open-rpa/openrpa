@@ -68,11 +68,11 @@ namespace OpenRPA.Activities
             }
             if (animatemouse)
             {
-                FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(x, y));
+                Input.InputDriver.Instance.AnimateMouseMove(x, y);
             }
             else
             {
-                NativeMethods.SetCursorPos(x, y);
+                Input.InputDriver.Instance.MouseMove(x, y);
             }
             if (button > -1)
             {

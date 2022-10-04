@@ -1,5 +1,4 @@
-﻿using FlaUI.Core.Definitions;
-using OpenRPA.Interfaces.Selector;
+﻿using OpenRPA.Interfaces.Selector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,29 +10,6 @@ namespace OpenRPA.NM
     public class NMTreeElement : treeelement
     {
         public NMElement NMElement { get; set; }
-        public ControlType ControlType
-        {
-            get
-            {
-                if(NMElement!=null)
-                {
-                    switch (NMElement.type)
-                    {
-                        case "panel": return ControlType.Pane;
-                        case "root pane": return ControlType.Pane;
-                        case "layered pane": return ControlType.Pane;
-                        case "push button": return ControlType.Button;
-                        case "text": return ControlType.Edit;
-                        case "frame": return ControlType.Pane;
-                        case "label": return ControlType.Text;
-                        default:
-                            break;
-                    }
-                }
-                return ControlType.Hyperlink;
-            }
-        }
-
         public NMTreeElement(treeelement parent, bool expanded, NMElement element) : base(parent)
         {
             NMElement = element;

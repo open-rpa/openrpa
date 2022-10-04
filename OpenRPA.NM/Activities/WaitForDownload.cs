@@ -1,6 +1,4 @@
-﻿using FlaUI.Core.AutomationElements.Infrastructure;
-using Newtonsoft.Json.Linq;
-using OpenRPA.Interfaces;
+﻿using OpenRPA.Interfaces;
 using System;
 using System.Activities;
 using System.Collections.Generic;

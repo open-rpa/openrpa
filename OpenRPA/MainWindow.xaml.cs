@@ -3246,7 +3246,7 @@ namespace OpenRPA
                         if (sender.Name == "Windows") StartRecordPlugins(false);
                         if (e.ClickHandled == false)
                         {
-                            NativeMethods.SetCursorPos(e.X, e.Y);
+                            Input.InputDriver.Instance.MouseMove(e.X, e.Y);
                             InputDriver.Click(e.Button);
                         }
                         Log.Function("MainWindow", "OnUserAction", "Action is null");
@@ -3320,7 +3320,7 @@ namespace OpenRPA
                         view.ReadOnly = true;
                         if (e.ClickHandled == false && e.SupportInput == false)
                         {
-                            NativeMethods.SetCursorPos(e.X, e.Y);
+                            Input.InputDriver.Instance.MouseMove(e.X, e.Y);
                             InputDriver.Click(e.Button);
                         }
                         // System.Threading.Thread.Sleep(500);

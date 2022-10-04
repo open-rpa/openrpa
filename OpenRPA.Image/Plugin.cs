@@ -1,5 +1,4 @@
-﻿using FlaUI.Core.AutomationElements;
-using OpenRPA.Interfaces;
+﻿using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.Selector;
 using System;
 using System.Activities;
@@ -80,7 +79,6 @@ namespace OpenRPA.Image
                 if (e.Process.ProcessName.ToLower() == "saplogon") return false;
             }
             if (e.UIElement.ControlType != "Pane") { return false; }
-            var element = e.UIElement.RawElement as AutomationElement;
             e.Element = lastelement;
             if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
             {
@@ -94,7 +92,7 @@ namespace OpenRPA.Image
                     System.Threading.Monitor.Exit(_lock);
                 }
             }
-            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
+            var image = getrectangle.GuessContour(e.UIElement.Rectangle, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
             if (System.Threading.Monitor.TryEnter(_lock, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
@@ -139,10 +137,8 @@ namespace OpenRPA.Image
                 }
             }
             if (e.UIElement.ControlType != "Pane") return false;
-            var element = e.UIElement.RawElement as AutomationElement;
 
-
-            NativeMethods.SetCursorPos(e.X - 80, e.Y - 80);
+            Input.InputDriver.Instance.MouseMove(e.X - 80, e.Y - 80);
             System.Threading.Thread.Sleep(PluginConfig.recording_mouse_move_time);
 
             var a = new GetElement
@@ -154,7 +150,7 @@ namespace OpenRPA.Image
             a.Variables.Add(new Variable<int>("Total", 0));
             e.SupportInput = false;
             e.SupportSelect = false;
-            var image = getrectangle.GuessContour(element, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
+            var image = getrectangle.GuessContour(e.UIElement.Rectangle, e.OffsetX, e.OffsetY, out int newOffsetX, out int newOffsetY, out System.Drawing.Rectangle resultrect);
             if (image == null)
             {
                 var tip = new Interfaces.Overlay.TooltipWindow("Failed Guessing Contour, please select manually");
@@ -172,7 +168,7 @@ namespace OpenRPA.Image
             a.Image = Interfaces.Image.Util.Bitmap2Base64(image);
             e.a = new GetElementResult(a);
 
-            NativeMethods.SetCursorPos(e.X, e.Y);
+            Input.InputDriver.Instance.MouseMove(e.X, e.Y);
 
             return true;
         }

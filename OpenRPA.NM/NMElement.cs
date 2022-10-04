@@ -569,11 +569,11 @@ namespace OpenRPA.NM
             {
                 if (AnimateMouse)
                 {
-                    FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(Rectangle.X + OffsetX, Rectangle.Y + OffsetY));
+                    Input.InputDriver.Instance.AnimateMouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 }
                 else
                 {
-                    NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                    Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 }
                 Log.Debug("Click at  " + OffsetX + "," + OffsetY + " in area " + Rectangle.ToString());
                 Input.InputDriver.Click(Button);
@@ -629,11 +629,11 @@ namespace OpenRPA.NM
                 }
                 if (AnimateMouse)
                 {
-                    FlaUI.Core.Input.Mouse.MoveTo(new Point(hitx, hity));
+                    Input.InputDriver.Instance.AnimateMouseMove(hitx, hity);
                 }
                 else
                 {
-                    NativeMethods.SetCursorPos(hitx, hity);
+                    Input.InputDriver.Instance.MouseMove(hitx, hity);
                 }
                 Input.InputDriver.Click(Button);
                 if (DoubleClick) Input.InputDriver.Click(Button);

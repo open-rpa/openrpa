@@ -237,7 +237,7 @@ namespace OpenRPA.IE
             }
             else
             {
-                NativeMethods.SetCursorPos(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
+                Input.InputDriver.Instance.MouseMove(Rectangle.X + OffsetX, Rectangle.Y + OffsetY);
                 Input.InputDriver.Click(Button);
             }
         }

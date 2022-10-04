@@ -11,7 +11,7 @@ namespace OpenRPA.Image
     using OpenRPA.Input;
     using OpenRPA.Interfaces;
     using Emgu.CV;
-    using FlaUI.Core.AutomationElements;
+    using System.Drawing;
 
     public static class getrectangle
     {
@@ -168,14 +168,14 @@ namespace OpenRPA.Image
         public const int AddedWidth = 150;
         public const int AddedHeight = 100;
 
-        public static System.Drawing.Bitmap GuessContour(AutomationElement element,
+        public static System.Drawing.Bitmap GuessContour(Rectangle element,
             int x, int y, out int OffsetX, out int OffsetY, out System.Drawing.Rectangle resultrect)
         {
             //var element = automationutil.getElementAt(x, y);
-            var elementx = (int)element.BoundingRectangle.X;
-            var elementy = (int)element.BoundingRectangle.Y;
-            var elementw = (int)element.BoundingRectangle.Width;
-            var elementh = (int)element.BoundingRectangle.Height;
+            var elementx = (int)element.X;
+            var elementy = (int)element.Y;
+            var elementw = (int)element.Width;
+            var elementh = (int)element.Height;
             Log.Verbose(string.Format("Snap screenshot of element at ({0}, {1},{2},{3})",
                 elementx, elementy, elementx + elementw, elementy + elementh));
             var desktopb = Interfaces.Image.Util.Screenshot(elementx, elementy, elementw, elementh);

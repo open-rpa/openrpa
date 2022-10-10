@@ -259,6 +259,33 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get Table Data.
+        /// </summary>
+        public static string activity_gettable {
+            get {
+                return ResourceManager.GetString("activity_gettable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-table.
+        /// </summary>
+        public static string activity_gettable_helpurl {
+            get {
+                return ResourceManager.GetString("activity_gettable_helpurl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple table data extraction based on xpaths.
+        /// </summary>
+        public static string activity_gettable_tooltip {
+            get {
+                return ResourceManager.GetString("activity_gettable_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Editor.
         /// </summary>
         public static string activity_open_editor {
@@ -372,6 +399,24 @@ namespace OpenRPA.NM.Resources {
         public static string debug_console_output_help {
             get {
                 return ResourceManager.GetString("debug_console_output_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detect html table.
+        /// </summary>
+        public static string plugin_detect_html_table {
+            get {
+                return ResourceManager.GetString("plugin_detect_html_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto add Get Table if clicked on HTML table doing recording.
+        /// </summary>
+        public static string plugin_detect_html_table_help {
+            get {
+                return ResourceManager.GetString("plugin_detect_html_table_help", resourceCulture);
             }
         }
         

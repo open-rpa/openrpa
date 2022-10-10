@@ -177,6 +177,15 @@
   <data name="activity_gettab" xml:space="preserve">
     <value>Get Tab</value>
   </data>
+  <data name="activity_gettable" xml:space="preserve">
+    <value>Get Table Data</value>
+  </data>
+  <data name="activity_gettable_helpurl" xml:space="preserve">
+    <value>https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-table</value>
+  </data>
+  <data name="activity_gettable_tooltip" xml:space="preserve">
+    <value>Simple table data extraction based on xpaths</value>
+  </data>
   <data name="activity_gettab_helpurl" xml:space="preserve">
     <value>https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-tab</value>
   </data>
@@ -221,6 +230,12 @@
   </data>
   <data name="debug_console_output_help" xml:space="preserve">
     <value>Write debug informtation to browser console</value>
+  </data>
+  <data name="plugin_detect_html_table" xml:space="preserve">
+    <value>Detect html table</value>
+  </data>
+  <data name="plugin_detect_html_table_help" xml:space="preserve">
+    <value>Auto add Get Table if clicked on HTML table doing recording</value>
   </data>
   <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
     <value>Wait after set value</value>

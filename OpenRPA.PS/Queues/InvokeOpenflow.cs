@@ -85,7 +85,7 @@ namespace OpenRPA.PS
 
                 if (workflow != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.name));
                 if (workflow == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + TargetQueue));
-                var result = await global.webSocketClient.QueueMessage(TargetQueue, tmpObject, psqueue, correlationId, Expiration);
+                var result = await global.webSocketClient.QueueMessage(TargetQueue, tmpObject, psqueue, correlationId, Expiration, true);
                 workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
 

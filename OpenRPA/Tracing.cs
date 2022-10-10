@@ -152,7 +152,7 @@ namespace OpenRPA.Interfaces
                             command.level = lvl;
                             command.workflowid = i.WorkflowId;
                             command.data = message;
-                            global.webSocketClient.QueueMessage(i.queuename, command, null, i.correlationId, 0);
+                            global.webSocketClient.QueueMessage(i.queuename, command, null, i.correlationId, 0, true);
                         }
                         catch (Exception)
                         {

@@ -124,7 +124,7 @@ namespace OpenRPA.Activities
                 {
                     int expiration = Expiration.Get(context);
                     Log.Output("Invoke Openflow sending message to queue " + _workflow);
-                    var result = global.webSocketClient.QueueMessage(_workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration);
+                    var result = global.webSocketClient.QueueMessage(_workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration, false);
                     if (expiration < 1) expiration = 5000;
                     result.Wait(expiration + 500);
                 }

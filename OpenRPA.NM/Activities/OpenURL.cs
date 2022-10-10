@@ -47,6 +47,9 @@ namespace OpenRPA.NM
                     if (!tab.highlighted || !tab.selected)
                     {
                         var _tab = NMHook.selecttab(browser, tab.id);
+                    } else
+                    {
+                        return;
                     }
                 }
             }

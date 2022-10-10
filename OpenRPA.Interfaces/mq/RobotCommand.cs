@@ -11,6 +11,7 @@ namespace OpenRPA.Interfaces.mq
         public string command { get; set; }
         public string workflowid { get; set; }
         public string flowid { get; set; }
+        public string nodeId { get; set; }        
         public string detectorid { get; set; }
         public bool killexisting { get; set; }
         public bool killallexisting { get; set; }

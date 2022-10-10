@@ -1248,7 +1248,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     {
                         try
                         {
-                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0, true);
                         }
                         catch (Exception ex)
                         {

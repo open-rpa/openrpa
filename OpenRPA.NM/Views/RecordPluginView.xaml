@@ -32,9 +32,14 @@
             Checked="value_Changed" Unchecked="value_Changed" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,90,0,0" Text="{x:Static or:strings.debug_console_output_help}" VerticalAlignment="Top" />
 
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="{x:Static or:strings.unique_xpath_ids}" VerticalAlignment="Top" Width="110" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,120,0,0" Text="{x:Static or:strings.plugin_detect_html_table}" VerticalAlignment="Top" Width="110" />
+        <CheckBox Height="23" HorizontalAlignment="Left" Margin="151,120,0,0" VerticalAlignment="Top" Width="222" x:Name="plugin_detect_html_table" 
+            Checked="value_Changed" Unchecked="value_Changed" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="{x:Static or:strings.plugin_detect_html_table_help}" VerticalAlignment="Top" />
+
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="35,150,0,0" Text="{x:Static or:strings.unique_xpath_ids}" VerticalAlignment="Top" Width="110" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="151,150,0,0" VerticalAlignment="Top" Width="222" x:Name="unique_xpath_ids" 
             TextChanged="unique_xpath_ids_TextChanged" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,120,0,0" Text="{x:Static or:strings.unique_xpath_ids_help}" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="180,175,0,0" Text="{x:Static or:strings.unique_xpath_ids_help}" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

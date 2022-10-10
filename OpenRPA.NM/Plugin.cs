@@ -156,7 +156,6 @@ namespace OpenRPA.NM
             _ = PluginConfig.unique_xpath_ids;
             _ = PluginConfig.protocol_timeout;
             _ = PluginConfig.wait_for_tab_timeout;
-            _ = PluginConfig.use_zn_for_fromelement;
         }
         private void OnConnected(string obj)
         {
@@ -294,12 +293,13 @@ namespace OpenRPA.NM
             var el = new NMElement(m.RawElement as NativeMessagingMessage);
             return NMSelectorItem.Match(item, el);
         }
+        
         public bool ParseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
 
             if (e.Process == null) return false;
-            if (e.UIElement.ClassName != "Chrome_RenderWidgetHostHWND" && e.UIElement.FrameworkId != "gecko") return false;
+            // if (e.UIElement.ClassName != "Chrome_RenderWidgetHostHWND" && e.UIElement.FrameworkId != "gecko") return false;
             if (e.Process.ProcessName.ToLower() != "chrome" && e.Process.ProcessName.ToLower() != "firefox" && e.Process.ProcessName.ToLower() != "msedge") return false;
 
             if (e.Process.ProcessName.ToLower() == "chrome")
@@ -322,24 +322,41 @@ namespace OpenRPA.NM
             {
                 LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
             }
-            var selector = new NMSelector(LastElement, null, true, null);
-            var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };
-            a.Variables.Add(new Variable<int>("Index", 0));
-            a.Variables.Add(new Variable<int>("Total", 0));
-            a.Selector = selector.ToString();
-            a.Image = LastElement.ImageString();
-            a.MaxResults = 1;
+            if (PluginConfig.plugin_detect_html_table && (new string[] {"table", "tr", "td", "th", "thead" }).Contains(LastElement.tagname.ToLower())) {
+                while (LastElement.tagname.ToLower() != "table")
+                {
+                    LastElement = LastElement.GetParent();
+                }
+                var a = new GetTable() { DisplayName = "Get Table "+  (!string.IsNullOrEmpty(LastElement.Name) ? LastElement.Name: LastElement.id) };
+                var dt = global.OpenRPAClient.CurrentDesigner.GetVariableOf<DataTable>("dt");
+                a.Result = dt;
+                a.xPath = LastElement.xpath;
+                e.a = new GetTableResult(a); 
+                e.SupportInput = false;
+                e.SupportSelect = false;
+                e.ClickHandled = true;
+            }
+            else
+            {
+                var selector = new NMSelector(LastElement, null, true, null);
+                var a = new GetElement { DisplayName = LastElement.id + " " + LastElement.type + " " + LastElement.Name };
+                a.Variables.Add(new Variable<int>("Index", 0));
+                a.Variables.Add(new Variable<int>("Total", 0));
+                a.Selector = selector.ToString();
+                a.Image = LastElement.ImageString();
+                a.MaxResults = 1;
 
-            e.Element = LastElement;
-            e.Selector = selector;
-            e.a = new GetElementResult(a);
-            e.SupportInput = LastElement.SupportInput;
-            e.SupportSelect = LastElement.tagname.ToLower() == "select";
-            e.OffsetX = e.X - LastElement.Rectangle.X;
-            e.OffsetY = e.Y - LastElement.Rectangle.Y;
-            e.ClickHandled = false;
-            //e.ClickHandled = true;
-            //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+                e.Element = LastElement;
+                e.Selector = selector;
+                e.a = new GetElementResult(a);
+                e.SupportInput = LastElement.SupportInput;
+                e.SupportSelect = LastElement.tagname.ToLower() == "select";
+                e.OffsetX = e.X - LastElement.Rectangle.X;
+                e.OffsetY = e.Y - LastElement.Rectangle.Y;
+                e.ClickHandled = false;
+                //e.ClickHandled = true;
+                //LastElement.Click(true, e.Button, e.X, e.Y, false, false);
+            }
             return true;
         }
         public bool IsRecording { get; set; } = false;
@@ -435,6 +452,20 @@ namespace OpenRPA.NM
             {
                 Log.Error(ex.ToString());
             }
+        }
+    }
+    public class GetTableResult : IBodyActivity
+    {
+        public GetTableResult(GetTable activity)
+        {
+            Activity = activity;
+        }
+        public Activity Activity { get; set; }
+        public void AddActivity(Activity a, string Name)
+        {
+        }
+        public void AddInput(string value, IElement element)
+        {
         }
     }
     public class RecordEvent : IRecordEvent

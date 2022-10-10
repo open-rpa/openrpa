@@ -128,7 +128,7 @@ namespace OpenRPA.Activities
                     _robotcommand["killexisting"] = killifrunning;
                     _robotcommand["command"] = "invoke";
                     _robotcommand.Add("data", _payload);
-                    var result = global.webSocketClient.QueueMessage(target.Get(context), _robotcommand, RobotInstance.instance.robotqueue, bookmarkname, expiration);
+                    var result = global.webSocketClient.QueueMessage(target.Get(context), _robotcommand, RobotInstance.instance.robotqueue, bookmarkname, expiration, true);
                     result.Wait(5000);
                 }
             }

@@ -33,6 +33,10 @@ namespace OpenRPA.NM
             Log.Selector(string.Format("NMselector::GetControlVNMwWalker::end {0:mm\\:ss\\.fff}", sw.Elapsed));
 
 
+            if(element.xpath == "true")
+            {
+                element.Refresh();
+            }
             NMSelectorItem item;
             if (anchor == null)
             {
@@ -46,7 +50,16 @@ namespace OpenRPA.NM
                 var anchorarray = anchorelement.cssselector.Split('>');
                 var elementarray = element.cssselector.Split('>');
                 elementarray = elementarray.Skip(anchorarray.Length).ToArray();
-                element.cssselector = string.Join(">", elementarray);
+                if(element.xpath.StartsWith(anchorelement.xpath))
+                {
+                    element.xpath = "" + element.xpath.Substring(anchorelement.xpath.Length);
+                    element.cssselector = "";
+                } 
+                else
+                {
+                    element.cssselector = string.Join(">", elementarray);
+                }
+                
             }
             item = new NMSelectorItem(element, false, (anchor != null));
             item.Enabled = true;
@@ -93,25 +106,47 @@ namespace OpenRPA.NM
             NMElement fromNMElement = fromElement as NMElement;
             string fromcssPath = "";
             string fromxPath = "";
-            if (fromElement != null)
-            {
-                fromcssPath = fromNMElement.cssselector;
-                fromxPath = fromNMElement.xpath;
-                if (PluginConfig.use_zn_for_fromelement)
-                {
-                    fromcssPath = "";
-                    if(!string.IsNullOrEmpty(fromNMElement.tagname))
-                    {
-                        fromxPath = "//" + fromNMElement.tagname.ToUpperInvariant() + "[@zn_id=\"" + fromNMElement.zn_id + "\"]";
-                    } else
-                    {
-                        fromxPath = "//*[@zn_id=\"106\"]";
-                    }                    
-                }
-            }
             NativeMessagingMessage subresult = null;
 
             var getelement = new NativeMessagingMessage("getelements", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids);
+
+            if (fromElement != null)
+            {
+                getelement.frameId = fromNMElement.message.frameId;
+                getelement.tabid = fromNMElement.message.tabid;
+                getelement.windowId = fromNMElement.message.windowId;
+                fromcssPath = fromNMElement.cssselector;
+                fromxPath = fromNMElement.xpath;
+
+                if (!string.IsNullOrEmpty(selector[0].use_zn) && fromNMElement.zn_id > 0)
+                {
+                    fromcssPath = "";
+                    if (string.IsNullOrEmpty(xpath)) fromcssPath = fromNMElement.cssselector;
+                    if (!string.IsNullOrEmpty(fromNMElement.tagname))
+                    {
+                        // case sensetiv :-(
+                        // fromxPath = "//" + fromNMElement.tagname.ToUpperInvariant() + "[@zn_id=\"" + fromNMElement.zn_id + "\"]";
+                        fromxPath = "//*[@zn_id=\"" + fromNMElement.zn_id + "\"]";
+                    }
+                    else
+                    {
+                        fromxPath = "//*[@zn_id=\"" + fromNMElement.zn_id + "\"]";
+                    }
+                }
+                else if (!string.IsNullOrEmpty(xpath) && !string.IsNullOrEmpty(fromNMElement.xpath))
+                {
+                    fromcssPath = "";
+                    fromxPath = "";
+                    xpath = fromNMElement.xpath + xpath;
+                }
+                else if (!string.IsNullOrEmpty(cssselector) && !string.IsNullOrEmpty(fromNMElement.cssselector))
+                {
+                    fromcssPath = "";
+                    fromxPath = "";
+                    cssselector = fromNMElement.cssselector + " > " + cssselector;
+                }
+            }
+
             getelement.browser = browser;
             getelement.xPath = xpath;
             getelement.cssPath = cssselector;
@@ -132,6 +167,11 @@ namespace OpenRPA.NM
                         if (b.cssPath == "true" || b.xPath == "true")
                         {
                             if (results.Count > maxresults) continue;
+                            if (fromNMElement != null)
+                            {
+                                //b.uix = fromNMElement.X + b.x;
+                                //b.uiy = fromNMElement.Y + b.y;
+                            }
                             var nme = new NMElement(b);
                             results.Add(nme);
                         }

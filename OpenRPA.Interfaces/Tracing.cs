@@ -231,7 +231,7 @@ namespace OpenRPA.Interfaces
         public override void WriteLine(object value)
         {
             if (value == null) WriteLine("");
-            WriteLine(value.ToString());
+            if (value != null) WriteLine(value.ToString());
         }
         public override void WriteLine(string value)
         {

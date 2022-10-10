@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,14 +13,17 @@ namespace OpenRPA.Net
         public QueueMessage() : base()
         {
             msg.command = "queuemessage";
+            striptoken = false;
             correlationId = Guid.NewGuid().ToString();
         }
         public QueueMessage(string queuename) : base()
         {
             this.queuename = queuename;
             msg.command = "queuemessage";
+            striptoken = false;
             correlationId = Guid.NewGuid().ToString();
         }
+        public bool striptoken { get; set; }
         public string queuename { get; set; }
         // public string data { get; set; }
         public object data { get; set; }

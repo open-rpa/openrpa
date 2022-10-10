@@ -71,6 +71,15 @@ namespace OpenRPA.Interfaces.Selector
                 return json.ToString().Replace(Environment.NewLine, " ").Trim();
             }
         }
+        public string use_zn
+        {
+            get
+            {
+                var e = Properties.Where(x => x.Name == "use_zn").FirstOrDefault();
+                if (e == null) return null;
+                return e.Value;
+            }
+        }
         public override string ToString()
         {
             return Displayname;

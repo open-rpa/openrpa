@@ -908,20 +908,20 @@ namespace OpenRPA.Net
             {
             }
         }
-        public async Task<object> QueueMessage(string exchange, string routingkey, object data, string replyto, string correlationId, int expiration)
+        public async Task<object> QueueMessage(string exchange, string routingkey, object data, string replyto, string correlationId, int expiration, bool striptoken)
         {
             QueueMessage qm = new QueueMessage();
             qm.expiration = expiration; qm.exchange = exchange; qm.routingkey = routingkey; 
-            qm.data = data; qm.replyto = replyto;
+            qm.data = data; qm.replyto = replyto; qm.striptoken = striptoken;
             qm.correlationId = correlationId;
             qm = await qm.SendMessage<QueueMessage>(this);
             if (!string.IsNullOrEmpty(qm.error)) throw new SocketException(qm.error);
             return qm.data;
         }
-        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration)
+        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration, bool striptoken)
         {
             QueueMessage qm = new QueueMessage(queuename);
-            qm.expiration = expiration;
+            qm.expiration = expiration; qm.striptoken = striptoken;
             qm.data = data; qm.replyto = replyto;
             qm.correlationId = correlationId;
             qm = await qm.SendMessage<QueueMessage>(this);

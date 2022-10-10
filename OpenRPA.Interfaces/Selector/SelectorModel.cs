@@ -202,21 +202,22 @@ namespace OpenRPA.Interfaces.Selector
                 try
                 {
                     Selector s = null; treeelement parent;
-                    if(Anchor!=null && Plugin.Name == "nm")
-                    {
-                        parent = item.Parent;
-                        while (parent != null && parent.Parent != null) parent = parent.Parent;
-                        if (parent == null)
-                        {
-                            System.Windows.MessageBox.Show("Cannot select self");
-                            return;
-                        }
-                        s = Plugin.GetSelector(null, parent);  
-                    } else if (Anchor != null && Plugin.Name != "nm")
-                    {
-                        s = Anchor;
-                    }
-                        var selector = Plugin.GetSelector(s, item);
+                    //if(Anchor!=null && Plugin.Name?.ToLower() == "nm")
+                    //{
+                    //    parent = item.Parent;
+                    //    while (parent != null && parent.Parent != null) parent = parent.Parent;
+                    //    if (parent == null)
+                    //    {
+                    //        System.Windows.MessageBox.Show("Cannot select self");
+                    //        return;
+                    //    }
+                    //    s = Plugin.GetSelector(null, parent);  
+                    //} else if (Anchor != null && Plugin.Name?.ToLower() != "nm")
+                    //{
+                    //    s = Anchor;
+                    //}
+                    if (Anchor != null) s = Anchor;
+                    var selector = Plugin.GetSelector(s, item);
                     Selector = selector;
                     _json = selector.ToString();
 

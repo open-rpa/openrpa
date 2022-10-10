@@ -327,11 +327,11 @@ namespace OpenRPA
                     {
                         if(plugin.Entity.detectortype == "exchange")
                         {
-                            await global.webSocketClient.QueueMessage(Entity._id, "", command, null, null, 0);
+                            await global.webSocketClient.QueueMessage(Entity._id, "", command, null, null, 0, true);
                         } 
                         else
                         {
-                            await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0);
+                            await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0, true);
                         }
                     }
                     catch (Exception ex)
@@ -370,7 +370,7 @@ namespace OpenRPA
                     {
                         try
                         {
-                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0);
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0, true);
                         }
                         catch (Exception ex)
                         {

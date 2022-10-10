@@ -59,7 +59,7 @@ namespace OpenRPA.NM
         {
             get
             {
-                if (tagname.ToLower() != "input" && tagname.ToLower() != "select") return false;
+                if (tagname.ToLower() != "input" && tagname.ToLower() != "select" && tagname.ToLower() != "textarea") return false;
                 if (tagname.ToLower() == "input")
                 {
                     if (type == null) return true;
@@ -670,6 +670,39 @@ namespace OpenRPA.NM
             }
         }
         private bool hasRefreshed = false;
+        public NMElement GetParent()
+        {
+            try
+            {
+                var getelement = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                {
+                    browser = browser,
+                    xPath = xpath + "/..",
+                    frameId = this.message.frameId,
+                    windowId = this.message.windowId,
+                };
+                NativeMessagingMessage message = null;
+                // getelement.data = "getdom";
+                if (NMHook.connected) message = NMHook.sendMessageResult(getelement, PluginConfig.protocol_timeout);
+                if (message == null)
+                {
+                    Log.Error("Failed getting html element");
+                    return null;
+                }
+                if (message.result == null)
+                {
+                    Log.Error("Failed getting html element");
+                    return null;
+                }
+                var result = new NMElement(message);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                return null;
+            }
+        }
         public bool Refresh()
         {
             try
@@ -700,7 +733,7 @@ namespace OpenRPA.NM
                 parseChromeString(message.result.ToString(), false);
                 zn_id = message.zn_id;
                 this.message = message;
-                if (!string.IsNullOrEmpty(message.xPath)) xpath = message.xPath;
+                if (!string.IsNullOrEmpty(message.xPath) && message.xPath != "true") xpath = message.xPath;
                 if (!string.IsNullOrEmpty(message.cssPath)) cssselector = message.cssPath;
                 X = message.uix;
                 Y = message.uiy;

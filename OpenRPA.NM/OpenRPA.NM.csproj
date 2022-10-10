@@ -78,12 +78,14 @@
     <None Remove="Activities\ExecuteScriptDesigner.xaml" />
     <None Remove="Activities\GetElementDesigner.xaml" />
     <None Remove="Activities\GetTabDesigner.xaml" />
+    <None Remove="Activities\GetTableDesigner.xaml" />
     <None Remove="Activities\OpenURLDesigner.xaml" />
     <None Remove="Activities\WaitForDownloadDesigner.xaml" />
     <None Remove="Resources\designer\closetab.png" />
     <None Remove="Resources\designer\executescript.png" />
     <None Remove="Resources\designer\getelement.png" />
     <None Remove="Resources\designer\gettab.png" />
+    <None Remove="Resources\designer\gettable.png" />
     <None Remove="Resources\designer\openurl.png" />
     <None Remove="Resources\designer\waitfordownload.png" />
     <None Remove="Resources\search.png" />
@@ -93,6 +95,7 @@
     <None Remove="Resources\toolbox\executescript.png" />
     <None Remove="Resources\toolbox\getelement.png" />
     <None Remove="Resources\toolbox\gettab.png" />
+    <None Remove="Resources\toolbox\gettable.png" />
     <None Remove="Resources\toolbox\openurl.png" />
     <None Remove="Resources\toolbox\waitfordownload.png" />
     <None Remove="Snippets\GoogleSearch.xaml" />
@@ -101,10 +104,12 @@
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\gettable.png" />
     <Resource Include="Resources\designer\waitfordownload.png" />
     <EmbeddedResource Include="Resources\search.png" />
     <EmbeddedResource Include="Resources\searchfailed.png" />
     <EmbeddedResource Include="Resources\searchfound.png" />
+    <EmbeddedResource Include="Resources\toolbox\gettable.png" />
     <EmbeddedResource Include="Resources\toolbox\waitfordownload.png" />
     <EmbeddedResource Include="Resources\toolbox\closetab.png" />
     <EmbeddedResource Include="Resources\toolbox\executescript.png" />
@@ -116,6 +121,9 @@
     <PackageReference Include="AvalonEdit" Version="6.1.3.50" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Activities\GetTableDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\GetTabDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

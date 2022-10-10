@@ -199,48 +199,58 @@ namespace OpenRPA
         }
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
-            System.Threading.Thread.CurrentThread.Name = "UIThread";
-            if (!Config.local.isagent)
+            try
             {
-                StartupUri = new Uri("/OpenRPA;component/MainWindow.xaml", UriKind.Relative);
-                notifyIcon.Visible = true;
-            }
-            else
-            {
-                StartupUri = new Uri("/OpenRPA;component/AgentWindow.xaml", UriKind.Relative);
-                notifyIcon.Visible = true;
-            }
-            if (Config.local.files_pending_deletion.Length > 0)
-            {
-                bool sucess = true;
-                foreach (var f in Config.local.files_pending_deletion)
+                AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+                System.Threading.Thread.CurrentThread.Name = "UIThread";
+                if (!Config.local.isagent)
                 {
-                    try
+                    StartupUri = new Uri("/OpenRPA;component/MainWindow.xaml", UriKind.Relative);
+                    notifyIcon.Visible = true;
+                }
+                else
+                {
+                    StartupUri = new Uri("/OpenRPA;component/AgentWindow.xaml", UriKind.Relative);
+                    notifyIcon.Visible = true;
+                }
+                if (Config.local.files_pending_deletion.Length > 0)
+                {
+                    bool sucess = true;
+                    foreach (var f in Config.local.files_pending_deletion)
                     {
-                        if (System.IO.File.Exists(f)) System.IO.File.Delete(f);
+                        try
+                        {
+                            if (System.IO.File.Exists(f)) System.IO.File.Delete(f);
+                        }
+                        catch (Exception ex)
+                        {
+                            sucess = false;
+                            Log.Error(ex.ToString());
+                        }
                     }
-                    catch (Exception ex)
+                    if (sucess)
                     {
-                        sucess = false;
-                        Log.Error(ex.ToString());
+                        Config.local.files_pending_deletion = new string[] { };
+                        Config.Save();
                     }
                 }
-                if (sucess)
-                {
-                    Config.local.files_pending_deletion = new string[] { };
-                    Config.Save();
-                }
+                RobotInstance.instance.Status += App_Status;
+                Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
+                Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
             }
-            RobotInstance.instance.Status += App_Status;
-            Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+                Console.WriteLine(ex.ToString());
+                MessageBox.Show(ex.Message);
+            }
+
             await Task.Run(async () =>
             {
                 try
                 {
                     // if (Config.local.showloadingscreen) splash.BusyContent = "loading plugins";
                     // Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.ProjectsDirectory);
-                    Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
                     // if (Config.local.showloadingscreen) splash.BusyContent = "Initialize main window";
                     await RobotInstance.instance.init();
                 }
@@ -248,6 +258,7 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                     Console.WriteLine(ex.ToString());
+                    MessageBox.Show(ex.Message);
                 }
             });
         }

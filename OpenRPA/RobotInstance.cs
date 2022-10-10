@@ -16,6 +16,7 @@ using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace OpenRPA
 {
@@ -1600,7 +1601,9 @@ namespace OpenRPA
             Interfaces.mq.RobotCommand command = null;
             try
             {
-                command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString());
+                var settings = new JsonSerializerSettings { Error = (se, ev) => { ev.ErrorContext.Handled = true; } };
+                command = Newtonsoft.Json.JsonConvert.DeserializeObject<Interfaces.mq.RobotCommand>(message.data.ToString(), settings);
+
                 if (command.command == "invokecompleted" || command.command == "invokefailed" || command.command == "invokeaborted" || command.command == "error" || command.command == null
                     || command.command == "timeout")
                 {
@@ -1843,7 +1846,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId, 0);
+                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId, 0, true);
                     }
                     catch (Exception ex)
                     {

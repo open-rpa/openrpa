@@ -36,7 +36,7 @@ namespace OpenRPA.WorkItems
         public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            var status = new string[] { "failed", "successful", "abandoned", "retry", "processing" };
+            var status = new string[] { "successful","retry", "processing" };
             var files = Files.Get<string[]>(context);
             var t = Workitem.Get(context);
             var ex = Exception.Get(context);
@@ -60,7 +60,7 @@ namespace OpenRPA.WorkItems
                 }
             }
             t.state = t.state.ToLower();
-            if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be failed, successful, abandoned or retry");
+            if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be successful, abandoned or retry");
             var result = await global.webSocketClient.UpdateWorkitem<Workitem>(t, files, ignoremaxretries);
             return result;
         }

@@ -1215,6 +1215,10 @@ namespace OpenRPA
                 while (user == null)
                 {
                     string errormessage = string.Empty;
+                    if (!string.IsNullOrEmpty(Config.local.username) && !string.IsNullOrEmpty(Config.local.unsafepassword))
+                    {
+                        Config.local.password = Config.local.ProtectString(Config.local.unsafepassword);
+                    }
                     if (!string.IsNullOrEmpty(Config.local.username) && Config.local.password != null && Config.local.password.Length > 0)
                     {
                         try
@@ -1224,6 +1228,11 @@ namespace OpenRPA
                             user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
                             Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
+                            if(!string.IsNullOrEmpty(Config.local.unsafepassword))
+                            {
+                                Config.local.unsafepassword = "";
+                                Config.Save();
+                            }
                         }
                         catch (Exception ex)
                         {

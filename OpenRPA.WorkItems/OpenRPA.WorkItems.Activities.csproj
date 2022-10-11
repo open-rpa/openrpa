@@ -3,7 +3,7 @@
 		<TargetFramework>net46</TargetFramework>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<Version>1.0.22</Version>
+		<Version>1.0.24</Version>
 		<PackageIcon>workitems.png</PackageIcon>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -173,6 +173,10 @@ namespace OpenRPA.WorkItems.Activities
                 while (user == null)
                 {
                     string errormessage = string.Empty;
+                    if (!string.IsNullOrEmpty(Config.local.username) && !string.IsNullOrEmpty(Config.local.unsafepassword))
+                    {
+                        Config.local.password = Config.local.ProtectString(Config.local.unsafepassword);
+                    }
                     if (!string.IsNullOrEmpty(Config.local.username) && Config.local.password != null && Config.local.password.Length > 0)
                     {
                         try
@@ -180,6 +184,11 @@ namespace OpenRPA.WorkItems.Activities
                             Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password), clientagent: "workitemclient");
                             Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            if (!string.IsNullOrEmpty(Config.local.unsafepassword))
+                            {
+                                Config.local.unsafepassword = "";
+                                Config.Save();
+                            }
                         }
                         catch (Exception ex)
                         {

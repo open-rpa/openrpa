@@ -36,7 +36,7 @@ namespace OpenRPA.WorkItems.Activities
             InitializeComponent();
             _ = RobotInstance.instance;
             WIQStates.Add(new workitemstatus("Successful", "Successful"));
-            WIQStates.Add(new workitemstatus("Failed", "Failed"));
+            //WIQStates.Add(new workitemstatus("Failed", "Failed"));
             WIQStates.Add(new workitemstatus("Processing", "Processing"));
             WIQStates.Add(new workitemstatus("Retry", "Retry"));
         }

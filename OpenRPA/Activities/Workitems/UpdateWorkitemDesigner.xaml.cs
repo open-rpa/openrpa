@@ -35,7 +35,7 @@ namespace OpenRPA.WorkItems
         {
             InitializeComponent();
             WIQStates.Add(new workitemstatus("Successful", "Successful"));
-            WIQStates.Add(new workitemstatus("Failed", "Failed"));
+            //WIQStates.Add(new workitemstatus("Failed", "Failed"));
             WIQStates.Add(new workitemstatus("Processing", "Processing"));
             WIQStates.Add(new workitemstatus("Retry", "Retry"));
         }

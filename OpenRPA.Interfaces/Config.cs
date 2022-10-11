@@ -19,6 +19,7 @@ namespace OpenRPA
         public string username { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public byte[] jwt { get { return GetProperty<byte[]>(null, null); } set { SetProperty(null, value); } }
         public byte[] password { get { return GetProperty<byte[]>(null, null); } set { SetProperty(null, value); } }
+        public string unsafepassword { get { return GetProperty<string>(null, null); } set { SetProperty(null, value); } }
         public byte[] entropy { get { return GetProperty<byte[]>(null, null); } set { SetProperty(null, value); } }
         public string cancelkey { get { return GetProperty(null, "{ESCAPE}"); } set { SetProperty(null, value); } }
         public bool isagent { get { return GetProperty(null, false); } set { SetProperty(null, value); } }

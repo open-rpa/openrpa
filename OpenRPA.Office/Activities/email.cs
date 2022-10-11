@@ -53,28 +53,48 @@ namespace OpenRPA.Office.Activities
             }
             return outlookApplication;
         }
-        public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        //public MAPIFolder GetFolder(MAPIFolder folder, string FullFolderPath)
+        //{
+        //    if (folder.Folders.Count == 0)
+        //    {
+        //        if (folder.FullFolderPath == FullFolderPath)
+        //        {
+        //            return folder;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (MAPIFolder subFolder in folder.Folders)
+        //        {
+        //            if (folder.FullFolderPath == FullFolderPath)
+        //            {
+        //                return folder;
+        //            }
+        //            var temp = GetFolder(subFolder, FullFolderPath);
+        //            if (temp != null) return temp;
+        //        }
+        //    }
+        //    return null;
+        //}
+        private MAPIFolder GetFolder(Folders folders, string folderPath)
         {
-            if (folder.Folders.Count == 0)
+            string dir = folderPath.Substring(0, folderPath.Substring(4).IndexOf("\\") + 4);
+            try
             {
-                if (folder.FullFolderPath == FullFolderPath)
+                foreach (MAPIFolder mf in folders)
                 {
-                    return folder;
-                }
-            }
-            else
-            {
-                foreach (MAPIFolder subFolder in folder.Folders)
-                {
-                    if (folder.FullFolderPath == FullFolderPath)
+                    if (!(mf.FullFolderPath.StartsWith(dir))) continue;
+                    if (mf.FullFolderPath == folderPath) return mf;
+                    else
                     {
-                        return folder;
+                        MAPIFolder temp = GetFolder(mf.Folders, folderPath);
+                        if (temp != null)
+                            return temp;
                     }
-                    var temp = GetFolder(subFolder, FullFolderPath);
-                    if (temp != null) return temp;
                 }
+                return null;
             }
-            return null;
+            catch { return null; }
         }
         public bool Move(string targetfolder)
         {
@@ -85,14 +105,20 @@ namespace OpenRPA.Office.Activities
                 return false;
             }
             var oNS = outlookApplication.GetNamespace("MAPI");
-            foreach (MAPIFolder folder in oNS.Folders)
+            //foreach (MAPIFolder folder in oNS.Folders)
+            //{
+            //    MAPIFolder mfolder = GetFolder(folder, targetfolder);
+            //    if(mfolder != null)
+            //    {
+            //        mailItem.Move(mfolder);
+            //        return true;
+            //    }
+            //}
+            MAPIFolder mfolder = GetFolder(oNS.Folders, targetfolder);
+            if (mfolder != null)
             {
-                MAPIFolder mfolder = GetFolder(folder, targetfolder);
-                if(mfolder != null)
-                {
-                    mailItem.Move(mfolder);
-                    return true;
-                }
+                mailItem.Move(mfolder);
+                return true;
             }
             Log.Error("Fail locating " + targetfolder);
             return false;

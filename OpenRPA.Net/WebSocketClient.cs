@@ -979,6 +979,19 @@ namespace OpenRPA.Net
         {
             return await _Query<T>(collectionname, query, projection, top, skip, orderby, queryas, traceId, spanId);
         }
+        public async Task<int> Count(string collectionname, string query, string queryas, string traceId, string spanId)
+        {
+            CountMessage q = new CountMessage();
+            q.traceId = traceId; q.spanId = spanId;
+            if (string.IsNullOrEmpty(query)) query = "{}";
+            q.query = JObject.Parse(query);
+            q.queryas = queryas;  q.collectionname = collectionname; 
+            q = await q.SendMessage<CountMessage>(this);
+            if (q == null) throw new SocketException("Server returned an empty response");
+            if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
+            return q.result;
+
+        }
         public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item, string traceId, string spanId)
         {
             InsertOrUpdateOneMessage<T> q = new InsertOrUpdateOneMessage<T>();

@@ -88,6 +88,24 @@ namespace OpenRPA.OpenFlowDB.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string activity_count {
+            get {
+                return ResourceManager.GetString("activity_count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count number of entities, with optional query filter.
+        /// </summary>
+        public static string activity_count_tooltip {
+            get {
+                return ResourceManager.GetString("activity_count_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete File.
         /// </summary>
         public static string activity_deletefile {

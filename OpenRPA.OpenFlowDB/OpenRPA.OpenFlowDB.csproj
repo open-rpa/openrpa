@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Activities\AssignOpenFlowDesigner.xaml" />
+    <None Remove="Activities\CountDesigner.xaml" />
     <None Remove="Activities\DeleteFileDesigner.xaml" />
     <None Remove="Activities\DeleteOneDesigner.xaml" />
     <None Remove="Activities\GetCredentialsDesigner.xaml" />
@@ -56,6 +57,7 @@
     <None Remove="Activities\SetCredentialsDesigner.xaml" />
     <None Remove="Activities\UpdateFromDataTableDesigner.xaml" />
     <None Remove="Resources\designer\assignopenflow.png" />
+    <None Remove="Resources\designer\count.png" />
     <None Remove="Resources\designer\deletefile.png" />
     <None Remove="Resources\designer\deleteone.png" />
     <None Remove="Resources\designer\getcredentials.png" />
@@ -70,6 +72,7 @@
     <None Remove="Resources\designer\setcredentials.png" />
     <None Remove="Resources\designer\updatefromdatatable.png" />
     <None Remove="Resources\toolbox\assignopenflow.png" />
+    <None Remove="Resources\toolbox\count.png" />
     <None Remove="Resources\toolbox\deletefile.png" />
     <None Remove="Resources\toolbox\deleteone.png" />
     <None Remove="Resources\toolbox\getcredentials.png" />
@@ -86,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\deletefile.png" />
+    <EmbeddedResource Include="Resources\toolbox\count.png" />
     <EmbeddedResource Include="Resources\toolbox\updatefromdatatable.png" />
     <EmbeddedResource Include="Resources\toolbox\query.png" />
     <EmbeddedResource Include="Resources\toolbox\insertone.png" />
@@ -140,6 +144,9 @@
     <Page Include="Activities\InsertOrUpdateManyDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Activities\CountDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Activities\UpdateFromDataTableDesigner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +172,7 @@
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\designer\count.png" />
     <Resource Include="Resources\designer\setcredentials.png" />
     <Resource Include="Resources\designer\query.png" />
     <Resource Include="Resources\designer\insertorupdatemany.png" />

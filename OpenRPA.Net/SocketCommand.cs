@@ -14,6 +14,8 @@ namespace OpenRPA.Net
         {
             msg = new Message("ping");
         }
+        public string traceId { get; set; }
+        public string spanId { get; set; }
         public string error { get; set; }
         public string jwt { get; set; }
         [JsonIgnore]

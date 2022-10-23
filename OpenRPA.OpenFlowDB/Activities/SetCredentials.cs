@@ -27,11 +27,14 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> Password { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var name = Name.Get(context);
             var username = Username.Get(context);
             var password = Password.Get(context);
             var obj = JObject.Parse("{name: \"" + name + "\", _type: \"credential\", _encrypt: [\"username\", \"password\"], username: \"" + username + "\", password: \"" + password + "\" }");
-            await global.webSocketClient.InsertOrUpdateOne("openrpa", 1, true, "name", obj);
+            await global.webSocketClient.InsertOrUpdateOne("openrpa", 1, true, "name", obj, traceId, spanId);
             return null;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

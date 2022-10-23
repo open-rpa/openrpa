@@ -29,6 +29,9 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> _id { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var ignoreErrors = IgnoreErrors.Get(context);
             var collection = Collection.Get(context);
             if (string.IsNullOrEmpty(collection)) collection = "entities";
@@ -57,7 +60,7 @@ namespace OpenRPA.OpenFlowDB
             {
                 id = _id.Get(context);
             }
-            await global.webSocketClient.DeleteOne(collection, id);
+            await global.webSocketClient.DeleteOne(collection, id, traceId, spanId);
             System.Windows.Forms.Application.DoEvents();
             return true;
         }

@@ -2,8 +2,10 @@
 using OpenRPA.Input;
 using OpenRPA.Interfaces;
 using System;
+using System.Activities.Tracking;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -293,9 +295,12 @@ namespace OpenRPA
         public IDesigner LastDesigner => null;
         public void OnDetector(IDetectorPlugin plugin, IDetectorEvent detector, EventArgs e)
         {
+            var source = new System.Diagnostics.ActivitySource("OpenRPA");
+            var activity = source?.StartActivity("Detector " + plugin.Entity.name + " was triggered");
+            string traceId = activity?.TraceId.ToString();
+            string spanId = activity?.SpanId.ToString();
             try
             {
-                Log.Information("Detector " + plugin.Entity.name + " was triggered, with id " + plugin.Entity._id);
                 foreach (var wi in WorkflowInstance.Instances.ToList())
                 {
                     if (wi.isCompleted) continue;
@@ -307,6 +312,8 @@ namespace OpenRPA
                             Log.Debug(b.Key + " -> " + "detector_" + _id);
                             if (b.Key == "detector_" + _id)
                             {
+                                if (!string.IsNullOrEmpty(traceId)) wi.TraceId = traceId;
+                                if (!string.IsNullOrEmpty(spanId)) wi.SpanId = spanId;
                                 wi.ResumeBookmark(b.Key, detector, true);
                             }
                         }
@@ -327,11 +334,11 @@ namespace OpenRPA
                     {
                         if(plugin.Entity.detectortype == "exchange")
                         {
-                            await global.webSocketClient.QueueMessage(Entity._id, "", command, null, null, 0, true);
+                            await global.webSocketClient.QueueMessage(Entity._id, "", command, null, null, 0, true, traceId, spanId);
                         } 
                         else
                         {
-                            await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0, true);
+                            await global.webSocketClient.QueueMessage(Entity._id, command, null, null, 0, true, traceId, spanId);
                         }
                     }
                     catch (Exception ex)
@@ -342,8 +349,13 @@ namespace OpenRPA
             }
             catch (Exception ex)
             {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.ToString());
                 Log.Error(ex.ToString());
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                activity?.Stop();
             }
         }
         public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
@@ -370,7 +382,7 @@ namespace OpenRPA
                     {
                         try
                         {
-                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0, true);
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0, true, instance.TraceId, instance.SpanId);
                         }
                         catch (Exception ex)
                         {

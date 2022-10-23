@@ -449,7 +449,7 @@ namespace OpenRPA.Views
                                                 }
                                             }
                                         }
-                                        string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata);
+                                        string id = await global.webSocketClient.UploadFile(tempfilename, "", metadata, "", "");
                                         var filename = System.IO.Path.Combine(imagepath, id + ".png");
                                         System.IO.File.Copy(tempfilename, filename, true);
                                         System.IO.File.Delete(tempfilename);
@@ -476,7 +476,7 @@ namespace OpenRPA.Views
                         var unusedfiles = files.Where(x => !usedimages.Contains(x._id)).ToList();
                         foreach (var f in unusedfiles)
                         {
-                            await global.webSocketClient.DeleteOne("files", f._id);
+                            await global.webSocketClient.DeleteOne("files", f._id, "", "");
                             var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
                             // if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
                             if (System.IO.File.Exists(imagefilepath))
@@ -1248,7 +1248,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                     {
                         try
                         {
-                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0, true);
+                            await global.webSocketClient.QueueMessage(instance.queuename, command, null, instance.correlationId, 0, true, instance.TraceId, instance.SpanId);
                         }
                         catch (Exception ex)
                         {

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using OpenRPA.Interfaces.Input;
 using OpenRPA.Interfaces.entity;
 using System.Data;
+using OpenTelemetry.Trace;
 
 namespace OpenRPA.WorkItems
 {
@@ -36,6 +37,9 @@ namespace OpenRPA.WorkItems
         public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var status = new string[] { "successful","retry", "processing" };
             var files = Files.Get<string[]>(context);
             var t = Workitem.Get(context);
@@ -61,7 +65,7 @@ namespace OpenRPA.WorkItems
             }
             t.state = t.state.ToLower();
             if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be successful, abandoned or retry");
-            var result = await global.webSocketClient.UpdateWorkitem<Workitem>(t, files, ignoremaxretries);
+            var result = await global.webSocketClient.UpdateWorkitem<Workitem>(t, files, ignoremaxretries, traceId, spanId);
             return result;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

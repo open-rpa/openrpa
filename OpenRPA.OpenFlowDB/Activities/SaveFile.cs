@@ -26,12 +26,15 @@ namespace OpenRPA.OpenFlowDB
         //public new OutArgument<string> Result { get; set; }
         protected async override Task<string> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var filename = Filename.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
             var path = Path.Get(context);
             if (!System.IO.File.Exists(filename)) throw new System.IO.FileNotFoundException("File not found " + filename);
 
-            string id = await global.webSocketClient.UploadFile(filename, path, null);
+            string id = await global.webSocketClient.UploadFile(filename, path, null, traceId, spanId);
             return id;
         }
         public new string DisplayName

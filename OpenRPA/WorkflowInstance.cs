@@ -412,6 +412,7 @@ namespace OpenRPA
         public string ParentSpanId { get; set; }
         [JsonProperty(propertyName: "spanid")]
         public string SpanId { get; set; }
+        public string TraceId { get; set; }
         [JsonIgnore, LiteDB.BsonIgnore]
         public System.Diagnostics.ActivitySource source = new System.Diagnostics.ActivitySource("OpenRPA");
         IWorkflow IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }

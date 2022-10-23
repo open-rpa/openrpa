@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 using System.ComponentModel;
 using Newtonsoft.Json;
+using System.Management.Instrumentation;
 
 namespace OpenRPA
 {
@@ -1499,8 +1500,8 @@ namespace OpenRPA
                 if (global.openflowconfig != null && global.openflowconfig.supports_watch && global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin)
                 {
                     await global.webSocketClient.Watch("openrpa",
-                        "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent);
-                    await global.webSocketClient.Watch("mq", "[\"$.[?(@ && @._type == 'workitemqueue')]\"]", onWatchEvent);
+                        "[\"$.[?(@ && @._type == 'workflow')]\", \"$.[?(@ && @._type == 'project')]\", \"$.[?(@ && @._type == 'detector')]\"]", onWatchEvent, "", "");
+                    await global.webSocketClient.Watch("mq", "[\"$.[?(@ && @._type == 'workitemqueue')]\"]", onWatchEvent, "", "");
                 }
             }
             catch (Exception ex)
@@ -1813,11 +1814,15 @@ namespace OpenRPA
                                 {
                                     designer.BreakpointLocations = null;
                                     instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
+                                    (instance as WorkflowInstance).TraceId = command.traceId;
+                                    (instance as WorkflowInstance).SpanId = command.spanId;
                                     designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
                                 }
                                 else
                                 {
                                     instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
+                                    (instance as WorkflowInstance).TraceId = command.traceId;
+                                    (instance as WorkflowInstance).SpanId = command.spanId;
                                     instance.Run();
                                 }
                                 if (Config.local.notify_on_workflow_remote_start)
@@ -1855,7 +1860,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId, 0, true);
+                        await global.webSocketClient.QueueMessage(message.replyto, command, null, message.correlationId, 0, true, command.traceId, command.spanId);
                     }
                     catch (Exception ex)
                     {
@@ -1935,7 +1940,7 @@ namespace OpenRPA
                 {
                     SetStatus("Registering queues");
                     Log.Debug("Registering queue for robot " + user._id);
-                    robotqueue = await global.webSocketClient.RegisterQueue(user._id);
+                    robotqueue = await global.webSocketClient.RegisterQueue(user._id, "", "");
                     if (global.webSocketClient.user != null)
                         foreach (var role in global.webSocketClient.user.roles)
                         {
@@ -1944,7 +1949,7 @@ namespace OpenRPA
                             {
                                 SetStatus("Add queue " + role.name);
                                 Log.Debug("Registering queue for role " + role.name + " " + role._id + " ");
-                                await global.webSocketClient.RegisterQueue(role._id);
+                                await global.webSocketClient.RegisterQueue(role._id, "", "");
                             }
                         }
                 }

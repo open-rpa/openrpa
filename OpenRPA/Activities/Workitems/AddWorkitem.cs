@@ -50,6 +50,9 @@ namespace OpenRPA.WorkItems
         public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var files = Files.Get<string[]>(context);
             var t = new OpenRPA.Workitem();
             t.wiqid = wiqid.Get<string>(context);
@@ -71,7 +74,7 @@ namespace OpenRPA.WorkItems
             } 
             else
             {
-                result = await global.webSocketClient.AddWorkitem<Workitem>(t, files);
+                result = await global.webSocketClient.AddWorkitem<Workitem>(t, files, traceId, spanId);
             }
             return result;
         }

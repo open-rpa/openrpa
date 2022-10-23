@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using OpenRPA.Interfaces.Input;
 using OpenRPA.Interfaces.entity;
 using System.Data;
+using OpenTelemetry.Trace;
 
 namespace OpenRPA.WorkItems
 {
@@ -40,6 +41,9 @@ namespace OpenRPA.WorkItems
         public InArgument<string> Failed_wiq { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var _wiqid = wiqid.Get(context);
             var _wiq = wiq.Get(context);
             var dt = DataTable.Get(context);
@@ -91,12 +95,12 @@ namespace OpenRPA.WorkItems
                 items.Add(wi);
                 if (bulkcounter >= bulksize)
                 {
-                    await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray());
+                    await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray(), traceId, spanId);
                     items.Clear();
                 }
             }
             if (items.Count > 0) await global.webSocketClient.AddWorkitems(_wiqid, _wiq, items.ToArray(),
-                Success_wiq.Get<string>(context), null, Failed_wiq.Get<string>(context), null);
+                Success_wiq.Get<string>(context), null, Failed_wiq.Get<string>(context), null, traceId, spanId);
             return null;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

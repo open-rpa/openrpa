@@ -19,6 +19,8 @@ namespace OpenRPA.Interfaces
         Dictionary<string, object> Parameters { get; set; }
         Dictionary<string, object> Bookmarks { get; set; }
         // List<IWorkflowConsoleLog> console { get; set; }
+        string TraceId { get; set; }
+        string SpanId { get; set; }
         string correlationId { get; set; }
         string queuename { get; set; }
         string InstanceId { get; set; }

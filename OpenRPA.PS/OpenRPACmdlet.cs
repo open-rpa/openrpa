@@ -73,7 +73,7 @@ namespace OpenRPA.PS
         {
             if (psqueue == null && global.webSocketClient != null)
             {
-                psqueue = await global.webSocketClient.RegisterQueue(null);
+                psqueue = await global.webSocketClient.RegisterQueue(null, "", "");
             }
 
         }

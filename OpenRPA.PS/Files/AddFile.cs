@@ -20,9 +20,10 @@ namespace OpenRPA.PS
         {
             try
             {
+                string traceId = ""; string spanId = "";
                 string Path = this.SessionState.Path.CurrentFileSystemLocation.Path;
-                string id = await global.webSocketClient.UploadFile(System.IO.Path.Combine(Path, Filename), VirtualPath, null);
-                var entities = await global.webSocketClient.Query<JObject>("files", "{\"_id\": \"" + id + "\"}", null, 1, 0, null, null);
+                string id = await global.webSocketClient.UploadFile(System.IO.Path.Combine(Path, Filename), VirtualPath, null, traceId, spanId);
+                var entities = await global.webSocketClient.Query<JObject>("files", "{\"_id\": \"" + id + "\"}", null, 1, 0, null, null, traceId, spanId);
                 var entity = entities[0].Value<JObject>("metadata");
                 entity["__pscollection"] = "files";
                 var obj = entity.toPSObject();

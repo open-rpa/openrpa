@@ -42,6 +42,8 @@ namespace OpenRPA.Activities
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var killifrunning = KillIfRunning.Get(context);
             string bookmarkname = null;
             bool waitforcompleted = WaitForCompleted.Get(context);
@@ -128,7 +130,7 @@ namespace OpenRPA.Activities
                     _robotcommand["killexisting"] = killifrunning;
                     _robotcommand["command"] = "invoke";
                     _robotcommand.Add("data", _payload);
-                    var result = global.webSocketClient.QueueMessage(target.Get(context), _robotcommand, RobotInstance.instance.robotqueue, bookmarkname, expiration, true);
+                    var result = global.webSocketClient.QueueMessage(target.Get(context), _robotcommand, RobotInstance.instance.robotqueue, bookmarkname, expiration, true, traceId, spanId);
                     result.Wait(5000);
                 }
             }

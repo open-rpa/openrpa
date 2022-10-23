@@ -48,7 +48,7 @@ namespace OpenRPA
             {
                 try
                 {
-                    var wiq = await global.webSocketClient.AddWorkitemQueue(this);
+                    var wiq = await global.webSocketClient.AddWorkitemQueue(this, "", "");
                     EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
                 }
                 catch (Exception)
@@ -62,7 +62,7 @@ namespace OpenRPA
             {
                 if (!skipOnline)
                 {
-                    var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false);
+                    var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false, "", "");
                     EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
                 }
             }
@@ -159,7 +159,7 @@ namespace OpenRPA
         {
             if (string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
             {
-                var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true); ;
+                var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true, "", "");
             } else if (string.IsNullOrEmpty( Config.local.wsurl))
             {
                 RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);

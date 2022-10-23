@@ -214,7 +214,7 @@ namespace OpenRPA.RDService
                 {
                     Log.Information("Adding new unattendedserver for " + computerfqdn);
                     server = new unattendedserver() { computername = computername, computerfqdn = computerfqdn, name = computerfqdn, enabled = true };
-                    server = await global.webSocketClient.InsertOne("openrpa", 1, false, server);
+                    server = await global.webSocketClient.InsertOne("openrpa", 1, false, server, "", "");
                 }
                 //var clients = await global.webSocketClient.Query<unattendedclient>("openrpa", "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
                 //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
@@ -227,7 +227,7 @@ namespace OpenRPA.RDService
                     {
                         // "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}"
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'} } }]", onWatchEvent);
-                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent);
+                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent, "", "");
 
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[]", onWatchEvent);
                         await ReloadConfig();

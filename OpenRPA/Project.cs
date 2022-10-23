@@ -436,7 +436,7 @@ namespace OpenRPA
                 {
                     try
                     {
-                        if(!skipOnline) await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
+                        if(!skipOnline) await global.webSocketClient.DeleteWorkitemQueue(wiq, true, "", "");
                     }
                     catch (Exception ex)
                     {
@@ -476,7 +476,7 @@ namespace OpenRPA
             {
                 if (!string.IsNullOrEmpty(_id))
                 {
-                    if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id);
+                    if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id, "", "");
                 }
             }
             try

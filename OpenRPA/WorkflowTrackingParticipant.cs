@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using OpenTelemetry.Trace;
+using System.Management.Instrumentation;
 
 namespace OpenRPA
 {
@@ -115,7 +117,23 @@ namespace OpenRPA
                         System.Diagnostics.Activity.Current = null;
                         try
                         {
-                            Instance.RootActivity = Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                            System.Diagnostics.ActivityContext parentContext = default(System.Diagnostics.ActivityContext);
+                            if(!string.IsNullOrEmpty(Instance.TraceId) && !string.IsNullOrEmpty(Instance.SpanId))
+                            {
+                                parentContext = new System.Diagnostics.ActivityContext(
+                                ActivityTraceId.CreateFromUtf8String(Encoding.UTF8.GetBytes(Instance.TraceId)),
+                                ActivitySpanId.CreateFromUtf8String(Encoding.UTF8.GetBytes(Instance.SpanId)), ActivityTraceFlags.Recorded, isRemote: true);
+                            }
+                            if (string.IsNullOrEmpty(Instance.TraceId) && string.IsNullOrEmpty(Instance.SpanId) && parentContext != null)
+                            {
+                                Instance.TraceId = parentContext.TraceId.ToString();
+                                Instance.SpanId = parentContext.SpanId.ToString();
+                            }
+                            Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer,
+                                parentContext: parentContext);
+                            Instance.RootActivity = Instance.source?.StartActivity(
+                                workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
+                            
                         }
                         catch (Exception)
                         {
@@ -123,8 +141,8 @@ namespace OpenRPA
                         }
                         if (Instance.RootActivity != null)
                         {
-                            if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
-                            Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
+                            //if (!string.IsNullOrEmpty(Instance.ParentSpanId)) Instance.RootActivity?.SetParentId(Instance.ParentSpanId);
+                            // Instance.SpanId = Instance.RootActivity.SpanId.ToHexString();
                         }
                         Instance.RootActivity?.SetTag("status.code", 200);
                         Instance.RootActivity?.SetTag("status.state", workflowInstanceRecord.State.ToString());
@@ -174,6 +192,7 @@ namespace OpenRPA
                         if (workflowInstanceRecord.State != WorkflowInstanceStates.Completed)
                         {
                             Instance.RootActivity?.SetTag("status.state", 500);
+                            Instance.RootActivity?.SetStatus(ActivityStatusCode.Error);
                         }
                         if (workflowInstanceRecord.State == WorkflowInstanceStates.UnhandledException)
                         {

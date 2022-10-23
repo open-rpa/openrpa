@@ -85,7 +85,7 @@ namespace OpenRPA.Views
                 d.detectortype = "exchange";
                 if (global.isConnected)
                 {
-                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
+                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d, "", "");
                     d._id = result._id;
                     d._acl = result._acl;
                 }
@@ -121,7 +121,7 @@ namespace OpenRPA.Views
                         var wiq = item as OpenRPA.WorkitemQueue;
                         if (wiq != null)
                         {
-                            await global.webSocketClient.DeleteWorkitemQueue(wiq, true);
+                            await global.webSocketClient.DeleteWorkitemQueue(wiq, true, "", "");
                             RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
                             WorkItemQueues.Remove(wiq);
                             var p = OpenProject.Instance.Projects.Where(x => x._id == wiq.projectid).FirstOrDefault() as Project;

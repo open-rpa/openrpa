@@ -29,15 +29,19 @@ namespace OpenRPA.WorkItems
         public InArgument<string> Folder { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
+
             var folder = Folder.Get(context);
             if (!string.IsNullOrEmpty(folder)) folder = Environment.ExpandEnvironmentVariables(folder);
             if (string.IsNullOrEmpty(folder)) folder = Interfaces.Extensions.ProjectsDirectory;
-            var result = await global.webSocketClient.PopWorkitem<Workitem>(wiq.Get(context), wiqid.Get(context));
+            var result = await global.webSocketClient.PopWorkitem<Workitem>(wiq.Get(context), wiqid.Get(context), traceId, spanId);
             if(result != null)
             {
                 foreach (var file in result.files)
                 {
-                    await global.webSocketClient.DownloadFileAndSave(null, file._id, folder, false, false);
+                    await global.webSocketClient.DownloadFileAndSave(null, file._id, folder, false, false, traceId, spanId);
                 }
             }
             return result;

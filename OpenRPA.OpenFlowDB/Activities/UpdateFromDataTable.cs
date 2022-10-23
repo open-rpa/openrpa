@@ -31,6 +31,9 @@ namespace OpenRPA.OpenFlowDB
         private List<JObject> results = new List<JObject>();
         protected async override Task<JArray> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var encrypt = EncryptFields.Get(context);
             if (encrypt == null) encrypt = "";
             var collection = Collection.Get(context);
@@ -47,7 +50,7 @@ namespace OpenRPA.OpenFlowDB
                 {
 
                     var _id = row["_id", DataRowVersion.Original].ToString();
-                    await global.webSocketClient.DeleteOne(collection, _id);
+                    await global.webSocketClient.DeleteOne(collection, _id, traceId, spanId);
                 } 
                 else if(row.RowState == DataRowState.Added || row.RowState == DataRowState.Modified)
                 {
@@ -71,7 +74,7 @@ namespace OpenRPA.OpenFlowDB
                     items.Add(result);
                 }
             }
-            await global.webSocketClient.InsertOrUpdateMany<JObject>(collection, 1, false, uniqueness, true, items.ToArray());
+            await global.webSocketClient.InsertOrUpdateMany<JObject>(collection, 1, false, uniqueness, true, items.ToArray(), traceId, spanId);
 
             dt.AcceptChanges();
             System.Windows.Forms.Application.DoEvents();

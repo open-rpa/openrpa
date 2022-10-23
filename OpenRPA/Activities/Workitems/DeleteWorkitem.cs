@@ -23,12 +23,15 @@ namespace OpenRPA.WorkItems
         public InArgument<IWorkitem> Workitem { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var status = new string[] { "failed", "successful", "abandoned", "retry", "processing" };
             var t = Workitem.Get(context);
             if (t == null) throw new Exception("Missing Workitem");
             t.state = t.state.ToLower();
             if (!status.Contains(t.state)) throw new Exception("Illegal state on Workitem, must be failed, successful, abandoned or retry");
-            await global.webSocketClient.DeleteWorkitem(t._id);
+            await global.webSocketClient.DeleteWorkitem(t._id, traceId, spanId);
             return null;
         }
         protected override void AfterExecute(AsyncCodeActivityContext context, object result)

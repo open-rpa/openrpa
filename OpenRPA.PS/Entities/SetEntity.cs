@@ -8,6 +8,7 @@ using System.Management.Automation;
 using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace OpenRPA.PS
 {
@@ -55,6 +56,7 @@ namespace OpenRPA.PS
         {
             try
             {
+                string traceId = ""; string spanId = "";
                 var CollectionRuntime = new RuntimeDefinedParameter();
                 _staticStorage.TryGetValue("Collection", out CollectionRuntime);
                 string Collection = "";
@@ -90,7 +92,7 @@ namespace OpenRPA.PS
                             var count = BatchSize;
                             if ((i + count) > total) count = total - i;
                             var items = kv.Value.GetRange(i, count).ToArray();
-                            var affectedrows = await global.webSocketClient.InsertMany(kv.Key, 1, false, SkipResults.IsPresent, items);
+                            var affectedrows = await global.webSocketClient.InsertMany(kv.Key, 1, false, SkipResults.IsPresent, items, traceId, spanId);
                             WriteVerbose("Added " + (i + count) + " rows out of " + total + " to collection " + col);
                             foreach (var obj in affectedrows)
                             {
@@ -180,19 +182,19 @@ namespace OpenRPA.PS
                         if (UniqueKeys != null && UniqueKeys.Length > 0)
                         {
                             string uniqeness = string.Join(",", UniqueKeys);
-                            obj = await global.webSocketClient.InsertOrUpdateOne(col, 1, false, uniqeness, tmpObject);
+                            obj = await global.webSocketClient.InsertOrUpdateOne(col, 1, false, uniqeness, tmpObject, traceId, spanId);
                         }
                         else
                         {
                             if (tmpObject.ContainsKey("_id"))
                             {
-                                obj = await global.webSocketClient.UpdateOne(col, 1, false, tmpObject);
+                                obj = await global.webSocketClient.UpdateOne(col, 1, false, tmpObject, traceId, spanId);
                             }
                             else
                             {
                                 if (MyInvocation.InvocationName == "Add-Entity")
                                 {
-                                    obj = await global.webSocketClient.InsertOne(col, 1, false, tmpObject);
+                                    obj = await global.webSocketClient.InsertOne(col, 1, false, tmpObject, traceId, spanId);
                                 }
                                 else
                                 {

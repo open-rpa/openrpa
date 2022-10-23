@@ -48,6 +48,7 @@ namespace OpenRPA.PS
         {
             try
             {
+                string traceId = ""; string spanId = "";
                 var CollectionRuntime = new RuntimeDefinedParameter();
                 _staticStorage.TryGetValue("Collection", out CollectionRuntime);
                 string Collection = "";
@@ -56,7 +57,7 @@ namespace OpenRPA.PS
                 string col = Collection;
                 if (!string.IsNullOrEmpty(Query))
                 {
-                    var affectedrows = await global.webSocketClient.DeleteMany(col, Query);
+                    var affectedrows = await global.webSocketClient.DeleteMany(col, Query, traceId, spanId);
                     WriteVerbose("Removed " + affectedrows + " rows from " + col);
                     return;
                 }
@@ -76,7 +77,7 @@ namespace OpenRPA.PS
                     }
                     foreach (var kv in colls)
                     {
-                        var affectedrows = await global.webSocketClient.DeleteMany(kv.Key, kv.Value.ToArray());
+                        var affectedrows = await global.webSocketClient.DeleteMany(kv.Key, kv.Value.ToArray(), traceId, spanId);
                         WriteVerbose("Removed " + affectedrows + " rows from " + col);
                     }
                     return;
@@ -104,7 +105,7 @@ namespace OpenRPA.PS
                     return;
                 }
                 WriteVerbose("Removing " + Id + " from " + col);
-                await global.webSocketClient.DeleteOne(col, Id);
+                await global.webSocketClient.DeleteOne(col, Id, traceId, spanId);
                 Id = null;
             }
             catch (Exception ex)

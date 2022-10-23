@@ -38,8 +38,10 @@ namespace OpenRPA.Activities
         public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         protected override void Execute(NativeActivityContext context)
         {
-            bool waitforcompleted = WaitForCompleted.Get(context);
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var myinstance = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
+            string traceId = myinstance?.TraceId; string spanId = myinstance?.SpanId;
+            bool waitforcompleted = WaitForCompleted.Get(context);
             // IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             var param = new Dictionary<string, object>();
             var killifrunning = KillIfRunning.Get(context);
@@ -112,8 +114,6 @@ namespace OpenRPA.Activities
             Exception error = null;
             try
             {
-                var Instance = WorkflowInstance.Instances.Where(x => x.InstanceId == context.WorkflowInstanceId.ToString()).FirstOrDefault();
-
                 // , string SpanId, string ParentSpanId
                 var workflowid = this.workflow.Get(context);
                 var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(workflowid);
@@ -124,7 +124,7 @@ namespace OpenRPA.Activities
                     {
                         if (i.Workflow != null && !i.isCompleted && i.Workflow._id == workflow._id)
                         {
-                            i.Abort("Killed by KillIfRunning from " + Instance.Workflow.name);
+                            i.Abort("Killed by KillIfRunning from " + myinstance.Workflow.name);
                         }
                     }
                 IWorkflowInstance instance = null;
@@ -145,6 +145,8 @@ namespace OpenRPA.Activities
                             instance = workflow.CreateInstance(param, null, null, RobotInstance.instance.Window.IdleOrComplete, null);
                         }
                         instance.caller = WorkflowInstanceId;
+                        if (!string.IsNullOrEmpty(traceId)) instance.TraceId = traceId;
+                        if (!string.IsNullOrEmpty(spanId)) instance.SpanId = spanId;
                     }
                     catch (Exception ex)
                     {

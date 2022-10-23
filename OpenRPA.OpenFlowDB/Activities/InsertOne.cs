@@ -29,6 +29,9 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> EncryptFields { get; set; }
         protected async override Task<JObject> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var ignoreErrors = IgnoreErrors.Get(context);
             var encrypt = EncryptFields.Get(context);
             if (encrypt == null) encrypt = "";
@@ -64,11 +67,11 @@ namespace OpenRPA.OpenFlowDB
             if (id != null)
             {
                 var _id = id.ToString();
-                result = await global.webSocketClient.UpdateOne(collection, 1, false, result);
+                result = await global.webSocketClient.UpdateOne(collection, 1, false, result, traceId, spanId);
             }
             else
             {
-                result = await global.webSocketClient.InsertOne(collection, 1, false, result);
+                result = await global.webSocketClient.InsertOne(collection, 1, false, result, traceId, spanId);
             }
             System.Windows.Forms.Application.DoEvents();
             return result;

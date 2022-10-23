@@ -128,7 +128,7 @@ namespace OpenRPA
                                 parentContext: parentContext);
                             Instance.RootActivity = Instance.source?.StartActivity(
                                 workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                            if (string.IsNullOrEmpty(Instance.TraceId) && string.IsNullOrEmpty(Instance.SpanId) && Instance.RootActivity != null)
+                            if (Instance.RootActivity != null)
                             {
                                 Instance.TraceId = Instance.RootActivity.TraceId.ToString();
                                 Instance.SpanId = Instance.RootActivity.SpanId.ToString();
@@ -251,6 +251,11 @@ namespace OpenRPA
                                     span?.AddTag("type", TypeName);
                                     span?.AddTag("ActivityId", ActivityId);
                                     if (Instance.source != null && span != null) Instance.Activities.Push(span);
+                                    if (span != null) // update traceid/spanid to match current activity
+                                    {
+                                        Instance.TraceId = Instance.RootActivity.TraceId.ToString();
+                                        Instance.SpanId = Instance.RootActivity.SpanId.ToString();
+                                    }
                                 }
                                 catch (Exception)
                                 {

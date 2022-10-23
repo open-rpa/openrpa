@@ -124,16 +124,16 @@ namespace OpenRPA
                                 ActivityTraceId.CreateFromUtf8String(Encoding.UTF8.GetBytes(Instance.TraceId)),
                                 ActivitySpanId.CreateFromUtf8String(Encoding.UTF8.GetBytes(Instance.SpanId)), ActivityTraceFlags.Recorded, isRemote: true);
                             }
+                            Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer,
+                                parentContext: parentContext);
+                            Instance.RootActivity = Instance.source?.StartActivity(
+                                workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
                             if (string.IsNullOrEmpty(Instance.TraceId) && string.IsNullOrEmpty(Instance.SpanId) && parentContext != null)
                             {
                                 Instance.TraceId = parentContext.TraceId.ToString();
                                 Instance.SpanId = parentContext.SpanId.ToString();
                             }
-                            Instance.source?.StartActivity(workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer,
-                                parentContext: parentContext);
-                            Instance.RootActivity = Instance.source?.StartActivity(
-                                workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                            
+
                         }
                         catch (Exception)
                         {

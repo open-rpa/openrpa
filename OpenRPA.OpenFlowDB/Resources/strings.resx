@@ -126,6 +126,12 @@
   <data name="activity_click_to_view" xml:space="preserve">
     <value>Double-click to view</value>
   </data>
+  <data name="activity_count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="activity_count_tooltip" xml:space="preserve">
+    <value>Count number of entities, with optional query filter</value>
+  </data>
   <data name="activity_deletefile" xml:space="preserve">
     <value>Delete File</value>
   </data>

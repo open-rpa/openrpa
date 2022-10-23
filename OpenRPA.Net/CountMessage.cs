@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Net
 {
-    public class CountMessage : SocketCommand
+    public class QueryMessage<T> : SocketCommand
     {
-        public CountMessage() : base()
+        public QueryMessage() : base()
         {
-            msg.command = "count";
+            msg.command = "query";
         }
         public JObject query { get; set; }
+        public string projection { get; set; }
         public string queryas { get; set; }
+        public int top { get; set; }
+        public int skip { get; set; }
+        public string orderby { get; set; }
         public string collectionname { get; set; }
-        public int result { get; set; }
+        public T[] result { get; set; }
 
     }
 }

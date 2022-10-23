@@ -32,7 +32,9 @@ namespace OpenRPA.OpenFlowDB
         public OutArgument<DataTable> DataTable { get; set; }
         protected async override Task<JObject[]> ExecuteAsync(AsyncCodeActivityContext context)
         {
-            //var ignoreErrors = IgnoreErrors.Get(context);
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var collection = Collection.Get(context);
             var querystring = QueryString.Get(context);
             var projection = Projection.Get(context);
@@ -43,7 +45,7 @@ namespace OpenRPA.OpenFlowDB
             var orderby = Orderby.Get(context);
             if (string.IsNullOrEmpty(collection)) collection = "entities";
             JObject[] result = null;
-            result = await global.webSocketClient.Query<JObject>(collection, querystring, projection, top, skip, orderby);
+            result = await global.webSocketClient.Query<JObject>(collection, querystring, projection, top, skip, orderby, traceId, spanId);
             System.Windows.Forms.Application.DoEvents();
             return result;
         }

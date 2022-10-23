@@ -446,6 +446,33 @@ namespace OpenRPA
                                 Log.Debug(ex.Message);
                             }
                         }
+                        var timer = timers[InstanceId.ToString()];
+                        if (!timer.ContainsKey(ChildActivityId) && activityScheduledRecord.Child != null)
+                        {
+                            Stopwatch sw = new Stopwatch(); sw.Start();
+                            timer.Add(ChildActivityId, sw);
+                            var TypeName = activityScheduledRecord.Child.TypeName;
+                            var Name = activityScheduledRecord.Child.Name;
+                            if (String.IsNullOrEmpty(Name)) Name = TypeName;
+                            if (TypeName.IndexOf("`") > -1) TypeName = TypeName.Substring(0, TypeName.IndexOf("`"));
+                            try
+                            {
+                                var span = Instance.source?.StartActivity(Name, ActivityKind.Consumer);
+                                span?.AddTag("type", TypeName);
+                                span?.AddTag("ChildActivityId", ChildActivityId);
+                                if (Instance.source != null && span != null) Instance.Activities.Push(span);
+                                if (span != null) // update traceid/spanid to match current activity
+                                {
+                                    Instance.TraceId = span.TraceId.ToString();
+                                    Instance.SpanId = span.SpanId.ToString();
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                Instance.source = null;
+                            }
+                        }
+
                         OnVisualTracking?.Invoke(Instance, ActivityId, ChildActivityId, State);
                     }
                 }

@@ -253,8 +253,8 @@ namespace OpenRPA
                                     if (Instance.source != null && span != null) Instance.Activities.Push(span);
                                     if (span != null) // update traceid/spanid to match current activity
                                     {
-                                        Instance.TraceId = Instance.RootActivity.TraceId.ToString();
-                                        Instance.SpanId = Instance.RootActivity.SpanId.ToString();
+                                        Instance.TraceId = span.TraceId.ToString();
+                                        Instance.SpanId = span.SpanId.ToString();
                                     }
                                 }
                                 catch (Exception)

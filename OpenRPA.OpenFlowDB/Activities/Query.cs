@@ -45,7 +45,7 @@ namespace OpenRPA.OpenFlowDB
             var orderby = Orderby.Get(context);
             if (string.IsNullOrEmpty(collection)) collection = "entities";
             JObject[] result = null;
-            result = await global.webSocketClient.Query<JObject>(collection, querystring, projection, top, skip, orderby, traceId, spanId);
+            result = await global.webSocketClient.Query<JObject>(collection, querystring, projection, top, skip, orderby, traceId: traceId, spanId: spanId);
             System.Windows.Forms.Application.DoEvents();
             return result;
         }

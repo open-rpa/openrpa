@@ -29,6 +29,9 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<bool> IgnorePath { get; set; } = false;
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var filename = Filename.Get(context);
             var id = _id.Get(context);
             var filepath = LocalPath.Get(context);
@@ -40,7 +43,7 @@ namespace OpenRPA.OpenFlowDB
 
             var q = "{\"_id\": \"" + id + "\"}";
             if(!string.IsNullOrEmpty(filename)) q = "{\"filename\":\"" + filename + "\"}";
-            var rows = await global.webSocketClient.Query<JObject>("files", q, null, 100, 0, "{\"_id\": -1}");
+            var rows = await global.webSocketClient.Query<JObject>("files", q, null, 100, 0, "{\"_id\": -1}", traceId: traceId, spanId: spanId);
 
             if (rows.Length == 0) throw new Exception("File not found");
             filename = rows[0]["filename"].ToString();
@@ -55,8 +58,10 @@ namespace OpenRPA.OpenFlowDB
             {
                 // client.Headers.Add("Authorization", "jwt " + global.webSocketClient);
                 client.Headers.Add(System.Net.HttpRequestHeader.Authorization, global.webSocketClient.jwt);
+                if (!string.IsNullOrEmpty(traceId)) client.Headers.Add("x-trace-id", traceId);
+                if (!string.IsNullOrEmpty(spanId)) client.Headers.Add("x-span-id", spanId);
 
-                if(ignorepath) filename = System.IO.Path.GetFileName(filename);
+                if (ignorepath) filename = System.IO.Path.GetFileName(filename);
                 await client.DownloadFileTaskAsync(new Uri(url), System.IO.Path.Combine(filepath, filename));
             }
             return 42;

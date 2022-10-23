@@ -455,7 +455,7 @@ namespace OpenRPA
                 if (!equal)
                 {
                     f.metadata._acl = _acl;
-                    await global.webSocketClient.UpdateOne("files", 0, false, f);
+                    await global.webSocketClient.UpdateOne("files", 0, false, f, "", "");
                 }
             }
         }
@@ -474,11 +474,11 @@ namespace OpenRPA
                     var files = await global.webSocketClient.Query<metadataitem>("files", "{\"metadata.workflow\": \"" + _id + "\"}");
                     foreach (var f in files)
                     {
-                        await global.webSocketClient.DeleteOne("files", f._id);
+                        await global.webSocketClient.DeleteOne("files", f._id, "", "");
                         var imagefilepath = System.IO.Path.Combine(imagepath, f._id + ".png");
                         if (System.IO.File.Exists(imagefilepath)) System.IO.File.Delete(imagefilepath);
                     }
-                    if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id);
+                    if (!skipOnline) await global.webSocketClient.DeleteOne("openrpa", this._id, "", "");
                 }
                 var exists = RobotInstance.instance.dbWorkflows.FindById(_id);
                 if (exists != null)

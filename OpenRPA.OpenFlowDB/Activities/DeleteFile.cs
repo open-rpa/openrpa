@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using System.Activities.Hosting;
 
 namespace OpenRPA.OpenFlowDB
 {
@@ -26,6 +27,9 @@ namespace OpenRPA.OpenFlowDB
         public InArgument<string> _id { get; set; }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var filename = Filename.Get(context);
             var id = _id.Get(context);
             var ignoreerrors = IgnoreErrors.Get(context);
@@ -42,7 +46,7 @@ namespace OpenRPA.OpenFlowDB
             foreach(var row in rows)
             {
                 var _id = row["_id"].ToString();
-                await global.webSocketClient.DeleteOne("fs.files", _id);
+                await global.webSocketClient.DeleteOne("fs.files", _id, traceId, spanId);
             }
             return 42;
         }

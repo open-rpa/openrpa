@@ -293,7 +293,6 @@ namespace OpenRPA.NM
             var el = new NMElement(m.RawElement as NativeMessagingMessage);
             return NMSelectorItem.Match(item, el);
         }
-        
         public bool ParseUserAction(ref IRecordEvent e)
         {
             if (e.UIElement == null) return false;
@@ -322,16 +321,92 @@ namespace OpenRPA.NM
             {
                 LastElement.message.tab = NMHook.FindTabById(LastElement.message.browser, LastElement.message.tabid);
             }
-            if (PluginConfig.plugin_detect_html_table && (new string[] {"table", "tr", "td", "th", "thead" }).Contains(LastElement.tagname.ToLower())) {
-                while (LastElement.tagname.ToLower() != "table")
+            bool isHtmlTable = false; bool isDivTable = false; bool isGoogleResut = false;
+            if (PluginConfig.plugin_detect_html_table)
+            {
+                var ParentElement = LastElement;
+                // i would say 2 is enough, but with google search results we need 6 :-/ 
+                for (var i = 0; i <= 6; i++)
                 {
-                    LastElement = LastElement.GetParent();
+                    Console.WriteLine(ParentElement.classname);
+                    if (ParentElement.classnames.Contains("row")) isDivTable = true;
+                    if (ParentElement.classnames.Contains("col")) isDivTable = true;
+                    if (ParentElement.classnames.Contains("tablerow")) isDivTable = true;
+                    if (ParentElement.classnames.Contains("tablecell")) isDivTable = true;
+                    if (ParentElement.tagname.ToLower() == "div" && ParentElement.id == "rso")
+                    {
+                        LastElement = ParentElement;
+                        isGoogleResut = true;
+                    }
+                    if ((new string[] { "table", "tr", "td", "th", "thead" }).Contains(ParentElement.tagname.ToLower())) isHtmlTable = true;
+                    if (isDivTable || isHtmlTable) break;
+                    ParentElement = ParentElement.GetParent();
                 }
-                var a = new GetTable() { DisplayName = "Get Table "+  (!string.IsNullOrEmpty(LastElement.Name) ? LastElement.Name: LastElement.id) };
+            }
+            if(isDivTable)
+            {
+                var ParentElement = LastElement;
+                isDivTable = false;
+                for (var i = 0; i < 5; i++)
+                {
+                    Console.WriteLine(ParentElement.classname);
+                    if (ParentElement.classnames.Contains("row")) isDivTable = true;
+                    if (ParentElement.classnames.Contains("col")) isDivTable = true;
+                    if (ParentElement.classnames.Contains("tablerow")) isDivTable = true;
+                    if (ParentElement.classnames.Contains("tablecell")) isDivTable = true;
+                    if (isDivTable) break;
+                    ParentElement = ParentElement.GetParent();
+                }
+                if (isDivTable)
+                {
+                    while (ParentElement != null && !ParentElement.classnames.Contains("row") && !ParentElement.classnames.Contains("tablerow") )
+                    {
+                        ParentElement = ParentElement.GetParent();
+                    }
+                    if (ParentElement != null)
+                    {
+                        LastElement = ParentElement.GetParent();
+                    }
+                    else
+                    {
+                        isDivTable = false;
+                    }
+                }
+            }
+            if (isHtmlTable) {
+                if(isHtmlTable)
+                {
+                    var ParentElement = LastElement;
+                    while (ParentElement != null && ParentElement.tagname.ToLower() != "table")
+                    {
+                        ParentElement = ParentElement.GetParent();
+                    }
+                    if(ParentElement != null)
+                    {
+                        LastElement = ParentElement;
+                    } else
+                    {
+                        isHtmlTable = false;
+                    }
+                }
+            }
+            if (isHtmlTable || isDivTable)
+            {
+                var a = new GetTable() { DisplayName = "Get Table " + (!string.IsNullOrEmpty(LastElement.Name) ? LastElement.Name : LastElement.id) };
                 var dt = global.OpenRPAClient.CurrentDesigner.GetVariableOf<DataTable>("dt");
                 a.Result = dt;
                 a.xPath = LastElement.xpath;
-                e.a = new GetTableResult(a); 
+                e.a = new GetTableResult(a);
+                e.SupportInput = false;
+                e.SupportSelect = false;
+                e.ClickHandled = true;
+            } else if (isGoogleResut)
+            {
+                var a = new GetTable() { DisplayName = "Get Table " + (!string.IsNullOrEmpty(LastElement.Name) ? LastElement.Name : LastElement.id) };
+                var dt = global.OpenRPAClient.CurrentDesigner.GetVariableOf<DataTable>("dt");
+                a.Result = dt;
+                a.xPath = LastElement.xpath;
+                e.a = new GetTableResult(a);
                 e.SupportInput = false;
                 e.SupportSelect = false;
                 e.ClickHandled = true;

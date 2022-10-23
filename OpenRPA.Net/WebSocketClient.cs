@@ -4,6 +4,7 @@ using OpenRPA.Interfaces;
 using OpenRPA.Interfaces.entity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 // using System.Net.WebSockets.Managed;
@@ -736,11 +737,12 @@ namespace OpenRPA.Net
             }
             return qm.reply as Message;
         }
-        public async Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "")
+        public async Task<TokenUser> Signin(string username, SecureString password, string clientagent = "", string clientversion = "", string traceId = "", string spanId = "")
         {
             SigninMessage signin = new SigninMessage(username, password, global.version);
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
+            signin.traceId = traceId; signin.spanId = spanId;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
             if (signin.user == null) throw new SocketException("signin failed, received a null user object");
@@ -762,11 +764,12 @@ namespace OpenRPA.Net
             signedin = true;
             return signin.user;
         }
-        public async Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "")
+        public async Task<TokenUser> Signin(string jwt, string clientagent = "", string clientversion = "", string traceId = "", string spanId = "")
         {
             SigninMessage signin = new SigninMessage(jwt, global.version);
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
+            signin.traceId = traceId; signin.spanId = spanId;
             signin = await signin.SendMessage<SigninMessage>(this);
             if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
             if (signin.user == null) throw new SocketException("signin failed, received a null user object");
@@ -788,13 +791,14 @@ namespace OpenRPA.Net
             signedin = true;
             return signin.user;
         }
-        public async Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "")
+        public async Task<TokenUser> Signin(SecureString jwt, string clientagent = "", string clientversion = "", string traceId = "", string spanId = "")
         {
             try
             {
                 SigninMessage signin = new SigninMessage(jwt, global.version);
                 if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
                 if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
+                signin.traceId = traceId; signin.spanId = spanId;
                 signin = await signin.SendMessage<SigninMessage>(this);
                 if (!string.IsNullOrEmpty(signin.error)) throw new SocketException(signin.error);
                 if (signin.user == null) throw new SocketException("signin failed, received a null user object");
@@ -821,10 +825,10 @@ namespace OpenRPA.Net
                 throw ex;
             }
         }
-        public async Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "")
+        public async Task<string> Signin(bool validate_only, bool longtoken, string clientagent = "", string clientversion = "", string traceId = "", string spanId = "")
         {
             SigninMessage signin = new SigninMessage(jwt, global.version);
-            signin.validate_only = validate_only;
+            signin.validate_only = validate_only; signin.traceId = traceId; signin.spanId = spanId;
             signin.longtoken = longtoken;
             if (!string.IsNullOrEmpty(clientagent)) signin.clientagent = clientagent;
             if (!string.IsNullOrEmpty(clientversion)) signin.clientversion = clientversion;
@@ -855,11 +859,12 @@ namespace OpenRPA.Net
             RegisterQueue = await RegisterQueue.SendMessage<RegisterUserMessage>(this);
             if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new SocketException(RegisterQueue.error);
         }
-        public async Task<string> RegisterQueue(string queuename)
+        public async Task<string> RegisterQueue(string queuename, string traceId, string spanId)
         {
             try
             {
                 RegisterQueueMessage RegisterQueue = new RegisterQueueMessage(queuename);
+                RegisterQueue.traceId = traceId; RegisterQueue.spanId = spanId;
                 RegisterQueue = await RegisterQueue.SendMessage<RegisterQueueMessage>(this);
                 if (!string.IsNullOrEmpty(RegisterQueue.error)) throw new SocketException(RegisterQueue.error);
                 return RegisterQueue.queuename;
@@ -872,12 +877,12 @@ namespace OpenRPA.Net
             {
             }
         }
-        public async Task<string> RegisterExchange(string exchangename, string algorithm, bool addqueue)
+        public async Task<string> RegisterExchange(string exchangename, string algorithm, bool addqueue, string traceId, string spanId)
         {
             try
             {
                 RegisterExchangeMessage RegisterExchange = new RegisterExchangeMessage(exchangename, algorithm);
-                RegisterExchange.addqueue = addqueue;
+                RegisterExchange.addqueue = addqueue; RegisterExchange.traceId = traceId; RegisterExchange.spanId = spanId;
                 RegisterExchange = await RegisterExchange.SendMessage<RegisterExchangeMessage>(this);
                 if (!string.IsNullOrEmpty(RegisterExchange.error)) throw new SocketException(RegisterExchange.error);
                 return RegisterExchange.queuename;
@@ -890,12 +895,12 @@ namespace OpenRPA.Net
             {
             }
         }
-        public async Task<string> RegisterExchange(string exchangename, string algorithm, string routingkey, bool addqueue)
+        public async Task<string> RegisterExchange(string exchangename, string algorithm, string routingkey, bool addqueue, string traceId, string spanId)
         {
             try
             {
                 RegisterExchangeMessage RegisterExchange = new RegisterExchangeMessage(exchangename, algorithm);
-                RegisterExchange.routingkey = routingkey; RegisterExchange.addqueue = addqueue;
+                RegisterExchange.routingkey = routingkey; RegisterExchange.addqueue = addqueue; RegisterExchange.traceId = traceId; RegisterExchange.spanId = spanId;
                 RegisterExchange = await RegisterExchange.SendMessage<RegisterExchangeMessage>(this);
                 if (!string.IsNullOrEmpty(RegisterExchange.error)) throw new SocketException(RegisterExchange.error);
                 return RegisterExchange.queuename;
@@ -908,27 +913,27 @@ namespace OpenRPA.Net
             {
             }
         }
-        public async Task<object> QueueMessage(string exchange, string routingkey, object data, string replyto, string correlationId, int expiration, bool striptoken)
+        public async Task<object> QueueMessage(string exchange, string routingkey, object data, string replyto, string correlationId, int expiration, bool striptoken, string traceId, string spanId)
         {
             QueueMessage qm = new QueueMessage();
             qm.expiration = expiration; qm.exchange = exchange; qm.routingkey = routingkey; 
             qm.data = data; qm.replyto = replyto; qm.striptoken = striptoken;
-            qm.correlationId = correlationId;
+            qm.correlationId = correlationId; qm.traceId = traceId; qm.spanId = spanId;
             qm = await qm.SendMessage<QueueMessage>(this);
             if (!string.IsNullOrEmpty(qm.error)) throw new SocketException(qm.error);
             return qm.data;
         }
-        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration, bool striptoken)
+        public async Task<object> QueueMessage(string queuename, object data, string replyto, string correlationId, int expiration, bool striptoken, string traceId, string spanId)
         {
             QueueMessage qm = new QueueMessage(queuename);
             qm.expiration = expiration; qm.striptoken = striptoken;
             qm.data = data; qm.replyto = replyto;
-            qm.correlationId = correlationId;
+            qm.correlationId = correlationId; qm.traceId = traceId; qm.spanId = spanId;
             qm = await qm.SendMessage<QueueMessage>(this);
             if (!string.IsNullOrEmpty(qm.error)) throw new SocketException(qm.error);
             return qm.data;
         }
-        private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
+        private async Task<T[]> _Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas, string traceId, string spanId)
         {
             try
             {
@@ -945,6 +950,7 @@ namespace OpenRPA.Net
                     q.collectionname = collectionname;
                     if (string.IsNullOrEmpty(query)) query = "{}";
                     q.query = JObject.Parse(query);
+                    q.traceId = traceId; q.spanId = spanId;
                     q = await q.SendMessage<QueryMessage<T>>(this);
                     if (q == null) throw new SocketException("Server returned an empty response");
                     if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
@@ -969,27 +975,27 @@ namespace OpenRPA.Net
             {
             }
         }
-        public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas)
+        public async Task<T[]> Query<T>(string collectionname, string query, string projection, int top, int skip, string orderby, string queryas, string traceId, string spanId)
         {
-            return await _Query<T>(collectionname, query, projection, top, skip, orderby, queryas);
+            return await _Query<T>(collectionname, query, projection, top, skip, orderby, queryas, traceId, spanId);
         }
-        public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item)
+        public async Task<T> InsertOrUpdateOne<T>(string collectionname, int w, bool j, string uniqeness, T item, string traceId, string spanId)
         {
             InsertOrUpdateOneMessage<T> q = new InsertOrUpdateOneMessage<T>();
             q.w = w; q.j = j; q.uniqeness = uniqeness;
-            q.collectionname = collectionname; q.item = item;
+            q.collectionname = collectionname; q.item = item; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<InsertOrUpdateOneMessage<T>>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task<T[]> InsertOrUpdateMany<T>(string collectionname, int w, bool j, string uniqeness, bool SkipResult, T[] items)
+        public async Task<T[]> InsertOrUpdateMany<T>(string collectionname, int w, bool j, string uniqeness, bool SkipResult, T[] items, string traceId, string spanId)
         {
             var result = new List<T>();
             for (var i = 0; i < items.Length; i = i + 50)
             {
                 InsertOrUpdateMany<T> q = new InsertOrUpdateMany<T>();
-                q.w = w; q.j = j; q.uniqeness = uniqeness;
+                q.w = w; q.j = j; q.uniqeness = uniqeness; q.traceId = traceId; q.spanId = spanId;
                 q.collectionname = collectionname; q.skipresults = SkipResult; q.items = items.Skip(i).Take(50).ToArray();
                 q = await q.SendMessage<InsertOrUpdateMany<T>>(this);
                 if (q == null) throw new SocketException("Server returned an empty response");
@@ -998,59 +1004,59 @@ namespace OpenRPA.Net
             }
             return result.ToArray();
         }
-        public async Task<T> InsertOne<T>(string collectionname, int w, bool j, T item)
+        public async Task<T> InsertOne<T>(string collectionname, int w, bool j, T item, string traceId, string spanId)
         {
             InsertOneMessage<T> q = new InsertOneMessage<T>();
-            q.w = w; q.j = j;
+            q.w = w; q.j = j; q.traceId = traceId; q.spanId = spanId;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<InsertOneMessage<T>>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task<T> UpdateOne<T>(string collectionname, int w, bool j, T item)
+        public async Task<T> UpdateOne<T>(string collectionname, int w, bool j, T item, string traceId, string spanId)
         {
             UpdateOneMessage<T> q = new UpdateOneMessage<T>();
-            q.w = w; q.j = j;
+            q.w = w; q.j = j; q.traceId = traceId; q.spanId = spanId;
             q.collectionname = collectionname; q.item = item;
             q = await q.SendMessage<UpdateOneMessage<T>>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task DeleteOne(string collectionname, string Id)
+        public async Task DeleteOne(string collectionname, string Id, string traceId, string spanId)
         {
             DeleteOneMessage q = new DeleteOneMessage();
-            q.collectionname = collectionname; q._id = Id;
+            q.collectionname = collectionname; q._id = Id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<DeleteOneMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
-        public async Task<int> DeleteMany(string collectionname, string[] Ids)
+        public async Task<int> DeleteMany(string collectionname, string[] Ids, string traceId, string spanId)
         {
             DeleteManyMessage q = new DeleteManyMessage();
-            q.collectionname = collectionname; q.ids = Ids;
+            q.collectionname = collectionname; q.ids = Ids; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<DeleteManyMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.affectedrows;
         }
-        public async Task<int> DeleteMany(string collectionname, string query)
+        public async Task<int> DeleteMany(string collectionname, string query, string traceId, string spanId)
         {
             DeleteManyMessage q = new DeleteManyMessage();
-            q.collectionname = collectionname; q.query = query;
+            q.collectionname = collectionname; q.query = query; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<DeleteManyMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.affectedrows;
         }
-        public async Task<T[]> InsertMany<T>(string collectionname, int w, bool j, bool skipresults, T[] items)
+        public async Task<T[]> InsertMany<T>(string collectionname, int w, bool j, bool skipresults, T[] items, string traceId, string spanId)
         {
             var result = new List<T>();
             for (var i = 0; i < items.Length; i = i + 50)
             {
                 InsertManyMessage<T> q = new InsertManyMessage<T>();
-                q.w = w; q.j = j;
+                q.w = w; q.j = j; q.traceId = traceId; q.spanId = spanId;
                 q.collectionname = collectionname; q.skipresults = skipresults; q.items = items.Skip(i).Take(50).ToArray();
                 q = await q.SendMessage<InsertManyMessage<T>>(this);
                 if (q == null) throw new SocketException("Server returned an empty response");
@@ -1059,7 +1065,7 @@ namespace OpenRPA.Net
             }
             return result.ToArray();
         }
-        public async Task<string> UploadFile(string filepath, string path, metadata metadata)
+        public async Task<string> UploadFile(string filepath, string path, metadata metadata, string traceId, string spanId)
         {
             if (string.IsNullOrEmpty(path)) path = "";
             byte[] bytes = System.IO.File.ReadAllBytes(filepath);
@@ -1067,7 +1073,7 @@ namespace OpenRPA.Net
             SaveFileMessage q = new SaveFileMessage();
             q.filename = System.IO.Path.Combine(path, System.IO.Path.GetFileName(filepath));
             q.mimeType = MimeTypeHelper.GetMimeType(System.IO.Path.GetExtension(filepath));
-            q.file = base64;
+            q.file = base64; q.traceId = traceId; q.spanId = spanId;
             q.metadata = metadata;
             if (q.metadata == null) q.metadata = new metadata();
             q.metadata.name = System.IO.Path.GetFileName(filepath);
@@ -1078,12 +1084,12 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.id;
         }
-        public async Task<GetFileMessage> DownloadFile(string filename, string id, bool IgnoreNotFound)
+        public async Task<GetFileMessage> DownloadFile(string filename, string id, bool IgnoreNotFound, string traceId, string spanId)
         {
             if (string.IsNullOrEmpty(filename) && string.IsNullOrEmpty(id)) throw new ArgumentException("path or id is mandatory");
             GetFileMessage q = new GetFileMessage();
             q.filename = filename;
-            q.id = id;
+            q.id = id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<GetFileMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error))
@@ -1097,16 +1103,16 @@ namespace OpenRPA.Net
         {
             public Interfaces.entity.metadata metadata { get; set; }
         }
-        public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound)
+        public async Task DownloadFileAndSave(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound, string traceId, string spanId)
         {
             apifile file = null;
             if(!string.IsNullOrEmpty(id))
             {
-                var files = await Query<apifile>("fs.files", "{_id: '" + id + "'}", null, 1, 0, null, null);
+                var files = await Query<apifile>("fs.files", "{_id: '" + id + "'}", null, 1, 0, null, null, traceId, spanId);
                 if(files.Length > 0) file = files[0];
             } else
             {
-                var files = await Query<apifile>("fs.files", "{filename: '" + filename + "'}", null, 1, 0, null, null);
+                var files = await Query<apifile>("fs.files", "{filename: '" + filename + "'}", null, 1, 0, null, null, traceId, spanId);
                 if (files.Length > 0) file = files[0];
             }
             if (file == null) throw new SocketException("File not found or access denied");
@@ -1127,15 +1133,15 @@ namespace OpenRPA.Net
                     return;
                 }
             }
-            var res = await DownloadFile(filename, id, IgnoreNotFound);
+            var res = await DownloadFile(filename, id, IgnoreNotFound, traceId, spanId);
             if (res == null) return;
             System.IO.File.WriteAllBytes(filepath, Convert.FromBase64String(res.file));
             File.SetCreationTime(filepath, res.metadata._created);
             File.SetLastWriteTime(filepath, res.metadata._modified);
         }
-        public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound)
+        public async Task DownloadFileAndSaveAs(string filename, string id, string filepath, bool ignorepath, bool IgnoreNotFound, string traceId, string spanId)
         {
-            var res = await DownloadFile(filename, id, IgnoreNotFound);
+            var res = await DownloadFile(filename, id, IgnoreNotFound,traceId, spanId);
             if (res == null) return;
             var path = System.IO.Path.GetFullPath(filepath);
             if (!ignorepath)
@@ -1167,31 +1173,31 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.newinstanceid;
         }
-        public async Task EnsureNoderedInstance(string _id)
+        public async Task EnsureNoderedInstance(string _id, string traceId, string spanId)
         {
             var q = new EnsureNoderedInstanceMessage();
-            q._id = _id;
+            q._id = _id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<EnsureNoderedInstanceMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task DeleteNoderedInstance(string _id)
+        public async Task DeleteNoderedInstance(string _id, string traceId, string spanId)
         {
             var q = new DeleteNoderedInstanceMessage();
-            q._id = _id;
+            q._id = _id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<DeleteNoderedInstanceMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task RestartNoderedInstance(string _id)
+        public async Task RestartNoderedInstance(string _id, string traceId, string spanId)
         {
             var q = new RestartNoderedInstanceMessage();
-            q._id = _id;
+            q._id = _id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<RestartNoderedInstanceMessage>(this);
             if (!string.IsNullOrEmpty(q.error)) throw new Exception(q.error);
         }
-        public async Task<Interfaces.ICollection[]> ListCollections(bool includehist = false)
+        public async Task<Interfaces.ICollection[]> ListCollections(bool includehist = false, string traceId = "", string spanId = "")
         {
             var q = new ListCollectionsMessage();
-            q.includehist = includehist; q.jwt = jwt;
+            q.includehist = includehist; q.jwt = jwt; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<ListCollectionsMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
@@ -1206,10 +1212,10 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
         private Dictionary<string, WatchEventDelegate> watches = new Dictionary<string, WatchEventDelegate>();
-        public async Task<string> Watch(string collectionname, string aggregates, WatchEventDelegate onWatchEvent)
+        public async Task<string> Watch(string collectionname, string aggregates, WatchEventDelegate onWatchEvent, string traceId, string spanId)
         {
             WatchMessage q = new WatchMessage();
-            q.collectionname = collectionname; q.aggregates = JArray.Parse(aggregates);
+            q.collectionname = collectionname; q.aggregates = JArray.Parse(aggregates); q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<WatchMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (string.IsNullOrEmpty(q.id)) throw new SocketException("Failed registering watch, id is null");
@@ -1217,10 +1223,10 @@ namespace OpenRPA.Net
             if (!watches.ContainsKey(q.id)) watches.Add(q.id, onWatchEvent);
             return q.id;
         }
-        public async Task UnWatch(string id)
+        public async Task UnWatch(string id, string traceId, string spanId)
         {
             WatchMessage q = new WatchMessage(); q.msg.command = "unwatch";
-            q.id = id;
+            q.id = id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<WatchMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
@@ -1229,12 +1235,13 @@ namespace OpenRPA.Net
 
 
 
-        public async Task<T> AddWorkitem<T> (IWorkitem item, string[] files) where T : IWorkitem
+        public async Task<T> AddWorkitem<T> (IWorkitem item, string[] files, string traceId, string spanId) where T : IWorkitem
         {
             var q = new AddWorkitemMessage<T>(); q.msg.command = "addworkitem";
             q.wiqid = item.wiqid; q.wiq = item.wiq; q.name = item.name; q.nextrun = item.nextrun; q.priority = item.priority;
             q.success_wiq = item.success_wiq; q.success_wiqid = item.success_wiqid;
             q.failed_wiq = item.failed_wiq; q.failed_wiqid = item.failed_wiqid;
+            q.traceId = traceId; q.spanId = spanId;
             q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
             var _files = new List<MessageWorkitemFile>();
             if(files != null)
@@ -1254,13 +1261,13 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items, string success_wiq, string success_wiqid, string failed_wiq, string failed_wiqid)
+        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items, string success_wiq, string success_wiqid, string failed_wiq, string failed_wiqid, string traceId, string spanId)
         {
             var q = new AddWorkitemsMessage(); q.msg.command = "addworkitems";
             q.wiqid = wiqid; q.wiq = wiq;
             q.success_wiq = success_wiq; q.success_wiqid = success_wiqid;
             q.failed_wiq = failed_wiq; q.failed_wiqid = failed_wiqid;
-            q.items = items;
+            q.items = items; q.traceId = traceId; q.spanId = spanId;
             foreach (var item in q.items)
                 if (item.files != null)
                     foreach (var f in item.files)
@@ -1275,16 +1282,16 @@ namespace OpenRPA.Net
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
-        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items)
+        public async Task AddWorkitems(string wiqid, string wiq, AddWorkitem[] items, string traceId, string spanId)
         {
-            await AddWorkitems(wiqid, wiq, items, null, null, null, null);
+            await AddWorkitems(wiqid, wiq, items, null, null, null, null, traceId, spanId);
         }
-        public async Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files, bool ignoremaxretries) where T : IWorkitem
+        public async Task<T> UpdateWorkitem<T>(IWorkitem item, string[] files, bool ignoremaxretries, string traceId, string spanId) where T : IWorkitem
         {
             var q = new UpdateWorkitemMessage<T>(); q.msg.command = "updateworkitem";
             q._id = item._id; q.name = item.name; q.state = item.state; q.nextrun = item.nextrun;
             q.errormessage = item.errormessage; q.errorsource = item.errorsource; q.ignoremaxretries = ignoremaxretries;
-            q.errortype = item.errortype;
+            q.errortype = item.errortype; q.traceId = traceId; q.spanId = spanId;
             q.success_wiq = item.success_wiq; q.success_wiqid = item.success_wiqid;
             q.failed_wiq = item.failed_wiq; q.failed_wiqid = item.failed_wiqid;
             q.payload = item.payload; q.files = new MessageWorkitemFile[] { };
@@ -1306,27 +1313,27 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task<T> PopWorkitem<T>(string wiq, string wiqid) where T : IWorkitem
+        public async Task<T> PopWorkitem<T>(string wiq, string wiqid, string traceId, string spanId) where T : IWorkitem
         {
             var q = new PopWorkitemMessage<T>(); q.msg.command = "popworkitem";
-            q.wiqid = wiqid; q.wiq = wiq;
+            q.wiqid = wiqid; q.wiq = wiq; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<PopWorkitemMessage<T>>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task DeleteWorkitem(string _id)
+        public async Task DeleteWorkitem(string _id, string traceId, string spanId)
         {
             var q = new DeleteWorkitemMessage(); q.msg.command = "deleteworkitem";
-            q._id = _id;
+            q._id = _id; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<DeleteWorkitemMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
         }
-        public async Task<T> AddWorkitemQueue<T>(T item) where T : IWorkitemQueue
+        public async Task<T> AddWorkitemQueue<T>(T item, string traceId, string spanId) where T : IWorkitemQueue
         {
             var q = new AddWorkitemQueueMessage<T>(); q.msg.command = "addworkitemqueue";
-            q.skiprole = true; q._acl = item._acl;
+            q.skiprole = true; q._acl = item._acl; q.traceId = traceId; q.spanId = spanId;
             q.name = item.name; q.workflowid = item.workflowid; q.robotqueue = item.robotqueue;
             q.projectid = item.projectid; q.amqpqueue = item.amqpqueue;
             q.maxretries = item.maxretries; q.retrydelay = item.retrydelay; q.initialdelay = item.initialdelay;
@@ -1335,22 +1342,22 @@ namespace OpenRPA.Net
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task<T> UpdateWorkitemQueue<T>(T item, bool purge) where T : IWorkitemQueue
+        public async Task<T> UpdateWorkitemQueue<T>(T item, bool purge, string traceId, string spanId) where T : IWorkitemQueue
         {
             var q = new UpdateWorkitemQueueMessage<T>(); q.msg.command = "updateworkitemqueue";
             q._id = item._id; q._acl = item._acl; q.projectid = item.projectid;
             q.name = item.name; q.workflowid = item.workflowid; q.robotqueue = item.robotqueue;
-            q.amqpqueue = item.amqpqueue; q.purge = purge;
+            q.amqpqueue = item.amqpqueue; q.purge = purge; q.traceId = traceId; q.spanId = spanId;
             q.maxretries = item.maxretries; q.retrydelay = item.retrydelay; q.initialdelay = item.initialdelay;
             q = await q.SendMessage<UpdateWorkitemQueueMessage<T>>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);
             return q.result;
         }
-        public async Task DeleteWorkitemQueue(IWorkitemQueue item, bool purge)
+        public async Task DeleteWorkitemQueue(IWorkitemQueue item, bool purge, string traceId, string spanId)
         {
             var q = new DeleteWorkitemQueueMessage(); q.msg.command = "deleteworkitemqueue";
-            q._id = item._id; q.name = item.name; q.purge = purge;
+            q._id = item._id; q.name = item.name; q.purge = purge; q.traceId = traceId; q.spanId = spanId;
             q = await q.SendMessage<DeleteWorkitemQueueMessage>(this);
             if (q == null) throw new SocketException("Server returned an empty response");
             if (!string.IsNullOrEmpty(q.error)) throw new SocketException(q.error);

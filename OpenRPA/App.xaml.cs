@@ -206,7 +206,7 @@ namespace OpenRPA
                 if (!Config.local.isagent)
                 {
                     StartupUri = new Uri("/OpenRPA;component/MainWindow.xaml", UriKind.Relative);
-                    notifyIcon.Visible = true;
+                    notifyIcon.Visible = false;
                 }
                 else
                 {

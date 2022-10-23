@@ -33,6 +33,5 @@ namespace OpenRPA.Net
         public string consumerTag { get; set; }
         public string routingkey { get; set; }
         public string exchange { get; set; }
-
     }
 }

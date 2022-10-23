@@ -114,7 +114,7 @@ namespace OpenRPA
                 if (ver < reqver) return;
                 if (dp.Entity != null && dp.Entity.detectortype == "exchange" && !string.IsNullOrEmpty(dp.Entity._id))
                 {                    
-                    await global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false);
+                    await global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false, "", "");
                 }
             }
         }

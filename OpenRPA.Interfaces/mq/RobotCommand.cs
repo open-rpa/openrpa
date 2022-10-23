@@ -15,6 +15,8 @@ namespace OpenRPA.Interfaces.mq
         public string detectorid { get; set; }
         public bool killexisting { get; set; }
         public bool killallexisting { get; set; }
+        public string traceId { get; set; }
+        public string spanId { get; set; }
         public Newtonsoft.Json.Linq.JObject data { get; set; }
         // public Dictionary<string, object> parameters { get; set; }
     }

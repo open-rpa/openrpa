@@ -234,7 +234,7 @@ namespace OpenRPA.PS
                 _robotcommand.Add("data", tmpObject);
                 if(robot != null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflow.ProjectAndName + " on " + robot.name + "(" + robot.username + ")"));
                 if (robot == null) WriteProgress(new ProgressRecord(0, "Invoking", "Invoking " + workflowid + " on " + targetid));
-                var result = await global.webSocketClient.QueueMessage(targetid, _robotcommand, psqueue, correlationId, Expiration, true);
+                var result = await global.webSocketClient.QueueMessage(targetid, _robotcommand, psqueue, correlationId, Expiration, true, "", "");
                 workItemsWaiting.WaitOne();
                 WriteProgress(new ProgressRecord(0, "Invoking", "completed") { RecordType = ProgressRecordType.Completed });
                 if (command.command == "invokefailed" || command.command == "invokeaborted")

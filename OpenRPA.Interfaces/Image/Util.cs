@@ -239,7 +239,7 @@ namespace OpenRPA.Interfaces.Image
                 var imagepath = System.IO.Path.Combine(basepath, "images");
                 if (!System.IO.Directory.Exists(imagepath)) System.IO.Directory.CreateDirectory(imagepath);
                 var imagefilepath = System.IO.Path.Combine(imagepath, id + ".png");
-                if (!System.IO.File.Exists(imagefilepath) && global.webSocketClient != null ) { await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true, true); }
+                if (!System.IO.File.Exists(imagefilepath) && global.webSocketClient != null ) { await global.webSocketClient.DownloadFileAndSaveAs(id + ".png", id, imagepath, true, true, "", ""); }
                 if (System.IO.File.Exists(imagefilepath)) { return new Bitmap(imagefilepath); }
                 return null;
             }

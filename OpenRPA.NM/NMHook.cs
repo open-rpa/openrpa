@@ -174,26 +174,93 @@ namespace OpenRPA.NM
             if (typeof data === 'string') {
                 data = JSON.parse(data);
             }
+
             if (openrpadebug) console.debug('gettablev1', data);
-            const rowsxpath = (data.rowsxpath && data.rowsxpath != '' ? data.rowsxpath : '//tr');
-            const cellsxpath = (data.cellsxpath && data.cellsxpath != '' ? data.cellsxpath : `//*[local-name()='td' or local-name()='th']`);
-            const cellxpath = (data.cellsxpath && data.cellxpath != '' ? data.cellxpath : '');
-
-            const headerrowsxpath = (data.headerrowsxpath && data.headerrowsxpath != '' ? data.headerrowsxpath : cellsxpath);
-            const headerrowxpath = (data.headerrowxpath && data.headerrowxpath != '' ? data.headerrowxpath : '');
-            const headerrowindex = (data.headerrowindex ? data.headerrowindex : 0);
-            const skiptypecheck = (data.skiptypecheck != null && data.skiptypecheck != '' ? data.skiptypecheck : false);
-
-            if (openrpadebug) console.debug('skiptypecheck', skiptypecheck);
-
-            const headers = [];
-            const table = [];
             const domTabe = document.evaluate(message.xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             if (domTabe == null) {
-                if (openrpadebug) console.debug('Failed locating table', message.xPath);
+                console.error('Failed locating table', message.xPath);
                 const test = JSON.parse(JSON.stringify(message));
                 return test;
             }
+            const GetFirst = (element, xpath, prop) => {
+                let value = null;
+                const node = document.evaluate(xpath, element, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                if (node != null) {
+                    value = node[prop];
+                    if (value == null || value == '') value = '';
+                    value = value.split('\r').join('').split('\t').join('').split('\n').join('').trim();
+                }
+                return value;
+            }
+            const GetFirstText = (element, xpath) => {
+                return GetFirst(element, xpath, 'textContent');
+            }
+
+            let rowsxpath = data.rowsxpath && data.rowsxpath != '' ? data.rowsxpath : '';
+            let cellsxpath = data.cellsxpath && data.cellsxpath != '' ? data.cellsxpath : '';
+            let cellxpath = data.cellxpath && data.cellxpath != '' ? data.cellxpath : '';
+
+            let headerrowsxpath = data.headerrowsxpath && data.headerrowsxpath != '' ? data.headerrowsxpath : '';
+            let headerrowxpath = data.headerrowxpath && data.headerrowxpath != '' ? data.headerrowxpath : '';
+            let headerrowindex = data.headerrowindex ? data.headerrowindex : 0;
+            let skiptypecheck = data.skiptypecheck != null && data.skiptypecheck != '' ? data.skiptypecheck : false;
+            let isGoogleSearch = false;
+
+            if (domTabe.nodeName.toLowerCase() == 'table') {
+                rowsxpath = rowsxpath != '' ? rowsxpath : '//tr';
+                cellsxpath = cellsxpath != '' ? cellsxpath : `//*[local-name()='td' or local-name()='th']`;
+                cellxpath = cellxpath != '' ? cellxpath : '';
+                headerrowsxpath = headerrowsxpath != '' ? headerrowsxpath : cellsxpath;
+                headerrowxpath = headerrowxpath != '' ? headerrowxpath : '';
+            } else if (domTabe.nodeName.toLowerCase() == 'div') {
+                // @ts-ignore
+                if (domTabe.id == 'rso') {
+                    isGoogleSearch = true;
+                    headerrowindex = -1;
+                    rowsxpath = `//div[contains(concat(' ', normalize-space(@class), ' '), ' g ')]`;
+                    // rowsxpath = `/div`;
+                } else {
+                    if (rowsxpath == '' && GetFirstText(domTabe, `.//div[contains(@class, 'row')]`) != null) {
+                        rowsxpath = `//div[contains(@class, 'row')]`;
+                    } else if (rowsxpath == '' && GetFirstText(domTabe, `.//div[contains(@class, 'tableRow')]`) != null) {
+                        rowsxpath = `//div[contains(@class, 'tableRow')]`;
+                    } else if (rowsxpath == '' && GetFirstText(domTabe, `//div[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'row')]`) != null) {
+                        rowsxpath = `//div[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'row')]`;
+                    } else if (rowsxpath == '') {
+                        console.error('Could not autodetect row class', domTabe.nodeName);
+                        const test = JSON.parse(JSON.stringify(message));
+                        return test;
+                    }
+                    console.log('rowsxpath', rowsxpath);
+                    if (cellsxpath == '' && GetFirstText(domTabe, `.//div[contains(@class, 'col')]`) != null) {
+                        cellsxpath = `//div[contains(@class, 'col')]`;
+                    } else if (cellsxpath == '' && GetFirstText(domTabe, `.//div[contains(@class, 'cell')]`) != null) {
+                        cellsxpath = `//div[contains(@class, 'tableCell')]`;
+                    } else if (cellsxpath == '' && GetFirstText(domTabe, `.//div[contains(@class, 'tableCell')]`) != null) {
+                        cellsxpath = `//div[contains(@class, 'tableCell')]`;
+                    } else if (cellsxpath == '' && GetFirstText(domTabe, `.//*[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'col')`) != null) {
+                        cellsxpath = `//*[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'col')`;
+                    } else if (cellsxpath == '' && GetFirstText(domTabe, `.//*[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'cell')`) != null) {
+                        cellsxpath = `//*[contains(translate(@class, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'cell')`;
+                    } else {
+                        console.error('Could not autodetect column class', domTabe.nodeName);
+                        const test = JSON.parse(JSON.stringify(message));
+                        return test;
+                    }
+                    console.log('cellsxpath', cellsxpath);
+                }
+                cellxpath = cellxpath != '' ? cellxpath : '';
+                headerrowsxpath = headerrowsxpath != '' ? headerrowsxpath : cellsxpath;
+                headerrowxpath = headerrowxpath != '' ? headerrowxpath : '';
+            } else {
+                console.error('Table is of unknown type', domTabe.nodeName);
+                const test = JSON.parse(JSON.stringify(message));
+                return test;
+            }
+
+            if (openrpadebug) console.debug('skiptypecheck', skiptypecheck);
+            const headers = [];
+            const table = [];
             const isFloat = (val) => {
                 const floatRegex = /^-?\d+(?:[.,]\d*?)?$/;
                 if (!floatRegex.test(val))
@@ -213,24 +280,19 @@ namespace OpenRPA.NM
                 const intVal = parseInt(val, 10);
                 return parseFloat(val) == intVal && !isNaN(intVal);
             }
-            const GetFirstText = (element, xpath) => {
-                let value = null;
-                const node = document.evaluate(xpath, element, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                if (node != null) {
-                    value = node.textContent;
-                    if (value == null || value == '') value = '';
-                    value = value.split('\r').join('').split('\t').join('').split('\n').join('').trim();
-                }
-                return value;
-            }
 
             if (openrpadebug) console.debug('Working with table', domTabe);
             const query = document.evaluate('.' + rowsxpath, domTabe, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
             if (openrpadebug) console.debug('found ' + query.snapshotLength + ' rows using ' + rowsxpath);
+            if (isGoogleSearch) {
+                headers.push(['Title']);
+                headers.push(['URL']);
+                headers.push(['Description']);
+            }
             for (let i = 0; i < query.snapshotLength; i++) {
                 const row = query.snapshotItem(i)
                 let subquery = null;
-                if (i == headerrowindex) {
+                if (i == headerrowindex && !isGoogleSearch) {
                     if (openrpadebug) console.debug('headers row', row);
                     if (!data.headerrowsxpath || data.headerrowsxpath == '') {
                         subquery = document.evaluate('.//th', row, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
@@ -270,49 +332,64 @@ namespace OpenRPA.NM
                 }
                 if (i <= headerrowindex) continue;
                 subquery = document.evaluate('.' + cellsxpath, row, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-                console.log('row', i, 'found ' + subquery.snapshotLength + ' cells using ' + cellsxpath);
+                if (openrpadebug) console.log('row', i, 'found ' + subquery.snapshotLength + ' cells using ' + cellsxpath);
                 const obj = {};
                 let hadvalue = false;
-                for (let y = 0; y < subquery.snapshotLength; y++) {
-                    let cell = subquery.snapshotItem(y)
-                    let val = cell.textContent;
-                    if (cellxpath != '') {
-                        val = '';
-                        let __val = GetFirstText(cell, '.' + cellxpath)
-                        if (__val != null && __val != '') val = __val;
-                    }
 
-                    if (!val || val == '') val = '';
-                    while (val.endsWith('\n')) val = val.substring(0, val.length - 1);
-                    while (val.startsWith('\n')) val = val.substring(1, val.length);
-                    while (val.endsWith('\t')) val = val.substring(0, val.length - 1);
-                    while (val.startsWith('\t')) val = val.substring(1, val.length);
-                    val = val.trim();
-                    if (!skiptypecheck) {
-                        const input = document.evaluate(`.//input[@type='checkbox']`, cell, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                        if (input != null) {
-                            // @ts-ignore
-                            val = input.checked
+                if (isGoogleSearch) {
+                    const title = GetFirstText(row, './/h3')
+                    const url = GetFirst(row, './/a', 'href')
+                    let description = GetFirstText(row, `.//span[contains(concat(' ', normalize-space(@class), ' '), ' st ')]`)
+                    if (description == null) description = GetFirstText(row, `.//span[contains(concat(' ', normalize-space(@class), ' '), ' f ')]`)
+                    if (description == null) description = GetFirstText(row, `.//div[@data-content-feature='1']`)
+                    // if (description == null) description = GetFirstText(row, './/cite')
+                    // //span[@class='f']/following-sibling::text()
+                    obj['Title'] = title;
+                    obj['URL'] = url;
+                    obj['Description'] = description;
+                    hadvalue = true;
+                } else {
+                    for (let y = 0; y < subquery.snapshotLength; y++) {
+                        let cell = subquery.snapshotItem(y)
+                        let val = cell.textContent;
+                        if (cellxpath != '') {
+                            val = '';
+                            let __val = GetFirstText(cell, '.' + cellxpath)
+                            if (__val != null && __val != '') val = __val;
                         }
-                        if (isFloat(val)) {
-                            val = parseFloat(val);
-                        } else if (isInt(val)) {
-                            val = Number.parseInt(val);
-                            // is boolean 
-                        } else if (val == true || val == false) {
-                            val = val;
-                        } else if (val && val.toLowerCase() == 'true') {
-                            val = true;
-                        } else if (val && val.toLowerCase() == 'false') {
-                            val = false;
-                        } else {
-                            // xpath find input of type checkbox and then check if it is checked
+
+                        if (!val || val == '') val = '';
+                        while (val.endsWith('\n')) val = val.substring(0, val.length - 1);
+                        while (val.startsWith('\n')) val = val.substring(1, val.length);
+                        while (val.endsWith('\t')) val = val.substring(0, val.length - 1);
+                        while (val.startsWith('\t')) val = val.substring(1, val.length);
+                        val = val.trim();
+                        if (!skiptypecheck) {
+                            const input = document.evaluate(`.//input[@type='checkbox']`, cell, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                            if (input != null) {
+                                // @ts-ignore
+                                val = input.checked
+                            }
+                            if (isFloat(val)) {
+                                val = parseFloat(val);
+                            } else if (isInt(val)) {
+                                val = Number.parseInt(val);
+                                // is boolean 
+                            } else if (val == true || val == false) {
+                                val = val;
+                            } else if (val && val.toLowerCase() == 'true') {
+                                val = true;
+                            } else if (val && val.toLowerCase() == 'false') {
+                                val = false;
+                            } else {
+                                // xpath find input of type checkbox and then check if it is checked
+                            }
                         }
+                        let name = 'cell' + (y + 1);
+                        if (headers.length > y) { name = headers[y]; }
+                        obj[name] = val;
+                        if (val != '') hadvalue = true;
                     }
-                    let name = 'cell' + (y + 1);
-                    if (headers.length > y) { name = headers[y]; }
-                    obj[name] = val;
-                    if (val != '') hadvalue = true;
                 }
                 if (hadvalue) table.push(obj);
             }
@@ -320,6 +397,7 @@ namespace OpenRPA.NM
             message.result = table;
             const test = JSON.parse(JSON.stringify(message));
             return test;
+
         }";
         public static List<NativeMessagingMessageWindow> windows = new List<NativeMessagingMessageWindow>();
         public static List<NativeMessagingMessageTab> tabs = new List<NativeMessagingMessageTab>();

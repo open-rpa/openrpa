@@ -62,13 +62,13 @@ namespace OpenRPA
                         T result = default(T);
                         try
                         {
-                            result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity);
+                            result = await global.webSocketClient.InsertOne(collectionname, 0, false, entity, "", "");
                         }
                         catch (Exception ex)
                         {
                             if(ex.Message.Contains("E11000 duplicate key error"))
                             {
-                                result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
+                                result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity, "", "");
                             } else
                             {
                                 throw;
@@ -87,7 +87,7 @@ namespace OpenRPA
                             try
                             {
                                 isDirty = false;
-                                var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity);
+                                var result = await global.webSocketClient.InsertOrUpdateOne(collectionname, 0, false, null, entity, "", "");
                                 if (result != null)
                                 {
                                     if(result._id != entity._id && !string.IsNullOrEmpty(entity._id))
@@ -192,7 +192,7 @@ namespace OpenRPA
                 string collectionname = "openrpa";
                 if (_type == "workflowinstance") collectionname = "openrpa_instances";
 
-                await global.webSocketClient.DeleteOne(collectionname, entity._id);
+                await global.webSocketClient.DeleteOne(collectionname, entity._id, "", "");
                 Log.Verbose("Deleted in openflow and as version " + entity._version + " " + entity._type + " " + entity.name);
                 if (System.Threading.Monitor.TryEnter(savelock, Config.local.thread_lock_timeout_seconds * 1000))
                 {

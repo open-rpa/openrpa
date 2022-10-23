@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using OpenTelemetry.Trace;
 
 namespace OpenRPA.Activities
 {
@@ -39,10 +40,12 @@ namespace OpenRPA.Activities
         protected override void Execute(NativeActivityContext context)
         {
             string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = WorkflowInstance.Instances.Where(x => x.InstanceId == WorkflowInstanceId).FirstOrDefault();
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             string _workflow = workflow.Get(context);
             if (string.IsNullOrEmpty(_workflow)) throw new Exception("Workflow property is mandatory for Invoke Openflow");
             bool waitforcompleted = WaitForCompleted.Get(context);
-            string bookmarkname = null;
+            string bookmarkname = null; 
             IDictionary<string, object> _payload = new System.Dynamic.ExpandoObject();
             if (Arguments == null || Arguments.Count == 0)
             {
@@ -124,7 +127,7 @@ namespace OpenRPA.Activities
                 {
                     int expiration = Expiration.Get(context);
                     Log.Output("Invoke Openflow sending message to queue " + _workflow);
-                    var result = global.webSocketClient.QueueMessage(_workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration, false);
+                    var result = global.webSocketClient.QueueMessage(_workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration, false, traceId, spanId);
                     if (expiration < 1) expiration = 5000;
                     result.Wait(expiration + 500);
                 }

@@ -97,7 +97,7 @@ namespace OpenRPA.Views
                 d.detectortype = "exchange";
                 if (global.isConnected)
                 {
-                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d);
+                    var result = await global.webSocketClient.InsertOne("openrpa", 0, false, d, "", "");
                     d._id = result._id;
                     d._acl = result._acl;
                 }

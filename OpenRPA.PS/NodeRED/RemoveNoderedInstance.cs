@@ -18,8 +18,9 @@ namespace OpenRPA.PS
         {
             try
             {
+                string traceId = ""; string spanId = "";
                 if (string.IsNullOrEmpty(_id)) { _id = global.webSocketClient.user._id; }
-                await global.webSocketClient.DeleteNoderedInstance(_id);
+                await global.webSocketClient.DeleteNoderedInstance(_id, "", "");
             }
             catch (Exception ex)
             {

@@ -78,6 +78,13 @@ namespace OpenRPA.NM
         public string cssselector { get; set; }
         public string tagname { get; set; }
         public string classname { get; set; }
+        public string[] classnames
+        {
+            get
+            {
+                return string.IsNullOrEmpty(classname) ? new string[] { } : classname.ToLower().Split(' ');
+            }
+        }
         public bool IsVisible { get; set; }
         public string Display { get; set; }
         public bool isVisibleOnScreen { get; set; }
@@ -126,6 +133,7 @@ namespace OpenRPA.NM
                 if (Attributes.ContainsKey("id")) id = Attributes["id"].ToString();
                 if (Attributes.ContainsKey("tagname")) tagname = Attributes["tagname"].ToString();
                 if (Attributes.ContainsKey("classname")) classname = Attributes["classname"].ToString();
+                if (Attributes.ContainsKey("class")) classname = Attributes["class"].ToString();
                 if (Attributes.ContainsKey("type")) type = Attributes["type"].ToString();
                 if (Attributes.ContainsKey("xpath")) xpath = Attributes["xpath"].ToString();
                 if (Attributes.ContainsKey("cssselector")) cssselector = Attributes["cssselector"].ToString();

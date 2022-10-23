@@ -39,8 +39,11 @@ namespace OpenRPA.OpenFlowDB
         }
         protected async override Task<object> ExecuteAsync(AsyncCodeActivityContext context)
         {
+            string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
+            var instance = global.OpenRPAClient.GetWorkflowInstanceByInstanceId(WorkflowInstanceId);
+            string traceId = instance?.TraceId; string spanId = instance?.SpanId;
             var name = Name.Get(context);
-            var result = await global.webSocketClient.Query<JObject>("openrpa", "{name: \"" + name + "\", _type: \"credential\"}", top:2);
+            var result = await global.webSocketClient.Query<JObject>("openrpa", "{name: \"" + name + "\", _type: \"credential\"}", top:2, traceId: traceId, spanId: spanId);
             if (result.Length != 1) throw new Exception("Failed locating credentials " + name);
             return result[0];
         }

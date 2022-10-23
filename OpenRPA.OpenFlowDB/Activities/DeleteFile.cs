@@ -37,7 +37,7 @@ namespace OpenRPA.OpenFlowDB
             var q = "{\"_id\": \"" + id + "\"}";
             if(!string.IsNullOrEmpty(filename)) q = "{\"filename\":\"" + filename + "\"}";
             // await global.webSocketClient.DeleteOne("files", q);
-            var rows = await global.webSocketClient.Query<JObject>("fs.files", q);
+            var rows = await global.webSocketClient.Query<JObject>("fs.files", q, traceId: traceId, spanId: spanId);
             if (rows.Length == 0)
             {
                 if(!ignoreerrors) throw new Exception("File not found");

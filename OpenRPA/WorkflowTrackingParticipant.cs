@@ -128,10 +128,10 @@ namespace OpenRPA
                                 parentContext: parentContext);
                             Instance.RootActivity = Instance.source?.StartActivity(
                                 workflowInstanceRecord.State.ToString() + " " + Instance.name, ActivityKind.Consumer, Instance.ParentSpanId);
-                            if (string.IsNullOrEmpty(Instance.TraceId) && string.IsNullOrEmpty(Instance.SpanId) && parentContext != null)
+                            if (string.IsNullOrEmpty(Instance.TraceId) && string.IsNullOrEmpty(Instance.SpanId) && Instance.RootActivity != null)
                             {
-                                Instance.TraceId = parentContext.TraceId.ToString();
-                                Instance.SpanId = parentContext.SpanId.ToString();
+                                Instance.TraceId = Instance.RootActivity.TraceId.ToString();
+                                Instance.SpanId = Instance.RootActivity.SpanId.ToString();
                             }
 
                         }

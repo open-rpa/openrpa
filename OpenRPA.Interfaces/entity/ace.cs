@@ -72,7 +72,7 @@ namespace OpenRPA.Interfaces.entity
             _id = a._id;
             name = a.name;
         }
-        public bool deny { get; set; }
+        public bool? deny { get; set; }
         [JsonConverter(typeof(rightsConverter))]
         [JsonProperty("rights")]
         public object rights { get; set; }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +16,54 @@ namespace OpenRPA.Interfaces.entity
         delete = 4,
         invoke = 5
     }
+    class rightsConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(string)) || (objectType == typeof(int));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JToken token = JToken.Load(reader);
+            if (token.Type == JTokenType.Integer)
+            {
+                return token.ToObject<int>();
+            }
+            if (token.Type == JTokenType.String)
+            {
+                return token.ToObject<string>();
+            }
+            return null;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if(!string.IsNullOrEmpty(value.ToString()))
+            {
+                var v = value.ToString();
+                bool isIntString = v.All(char.IsDigit);
+                if(isIntString && int.TryParse(v, out int i))
+                {
+                    serializer.Serialize(writer, i);
+                    return;
+                }
+            }
+            serializer.Serialize(writer, value);
+        }
+    }
+
     public class ace : IEquatable<ace>
     {
+        public bool isInteger(object s)
+        {
+            if (s == null) return true;
+            return s.ToString().All(char.IsDigit);
+        }
         public ace()
         {
-            rights = "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8=";
+            rights = 65535;
+            //    rights = "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8=";
         }
         public ace(ace a)
         {
@@ -28,7 +73,9 @@ namespace OpenRPA.Interfaces.entity
             name = a.name;
         }
         public bool deny { get; set; }
-        public string rights { get; set; }
+        [JsonConverter(typeof(rightsConverter))]
+        [JsonProperty("rights")]
+        public object rights { get; set; }
         public string _id { get; set; }
         public string name { get; set; }
 
@@ -107,7 +154,12 @@ namespace OpenRPA.Interfaces.entity
         public void setBit(decimal bit)
         {
             bit--;
-            byte[] view = Convert.FromBase64String(rights);
+            if(isInteger(rights))
+            {
+                rights = (int)rights | (1 << (int)bit);
+                return;
+            }
+            byte[] view = Convert.FromBase64String(rights.ToString());
             var octet = Math.Floor(bit / 8);
             var currentValue = view[(int)octet];
             var _bit = (bit % 8);
@@ -119,7 +171,12 @@ namespace OpenRPA.Interfaces.entity
         public void unsetBit(decimal bit)
         {
             bit--;
-            byte[] view = Convert.FromBase64String(rights);
+            if (isInteger(rights))
+            {
+                rights = (int)rights & ~(1 << (int)bit);
+                return;
+            }
+            byte[] view = Convert.FromBase64String(rights.ToString());
             var octet = Math.Floor(bit / 8);
             var currentValue = view[(int)octet];
             var _bit = (bit % 8);
@@ -131,7 +188,12 @@ namespace OpenRPA.Interfaces.entity
         public bool getBit(decimal bit)
         {
             bit--;
-            byte[] view = Convert.FromBase64String(rights);
+            if (isInteger(rights))
+            {
+                var isset = ((int)rights & (1 << (int)bit)) != 0;
+                return isset;
+            }
+            byte[] view = Convert.FromBase64String(rights.ToString());
             var octet = Math.Floor(bit / 8);
             var currentValue = view[(int)octet];
             var _bit = (bit % 8);

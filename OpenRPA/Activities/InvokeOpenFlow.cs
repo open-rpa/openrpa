@@ -126,7 +126,6 @@ namespace OpenRPA.Activities
                 if (!string.IsNullOrEmpty(bookmarkname))
                 {
                     int expiration = Expiration.Get(context);
-                    Log.Output("Invoke Openflow sending message to queue " + _workflow);
                     var result = global.webSocketClient.QueueMessage(_workflow, _payload, RobotInstance.instance.robotqueue, bookmarkname, expiration, false, traceId, spanId);
                     if (expiration < 1) expiration = 5000;
                     result.Wait(expiration + 500);
@@ -146,7 +145,6 @@ namespace OpenRPA.Activities
         }
         void OnBookmarkCallback(NativeActivityContext context, Bookmark bookmark, object obj)
         {
-            Log.Output("Invoke Openflow resumed with bookmark");
             bool waitforcompleted = WaitForCompleted.Get(context);
             if (!waitforcompleted) return;
             // context.RemoveBookmark(bookmark.Name);
@@ -163,7 +161,6 @@ namespace OpenRPA.Activities
             {
                 if (state == "idle")
                 {
-                    Log.Output("Workflow out node set to idle, so also going idle again.");
                     context.CreateBookmark(bookmark.Name, new BookmarkCallback(OnBookmarkCallback));
                     return;
                 }

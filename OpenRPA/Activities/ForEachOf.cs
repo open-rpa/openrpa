@@ -60,7 +60,14 @@ namespace OpenRPA.Activities
             {
                 if ((completedInstance != null) && ((completedInstance.State == ActivityInstanceState.Canceled) || (context.IsCancellationRequested && (completedInstance.State == ActivityInstanceState.Faulted))))
                 {
-                    context.MarkCanceled();
+                    try
+                    {
+                        context.MarkCanceled();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(ex.ToString())
+                    }
                 }
                 valueEnumerator.Dispose();
             }
@@ -71,7 +78,14 @@ namespace OpenRPA.Activities
             }
             else
             {
-                context.MarkCanceled();
+                try
+                {
+                    context.MarkCanceled();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex.ToString())
+                }
                 valueEnumerator.Dispose();
             }
         }

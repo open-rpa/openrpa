@@ -66,7 +66,7 @@ namespace OpenRPA.Activities
                     }
                     catch (Exception ex)
                     {
-                        Log.Debug(ex.ToString())
+                        Log.Debug(ex.ToString());
                     }
                 }
                 valueEnumerator.Dispose();
@@ -84,7 +84,7 @@ namespace OpenRPA.Activities
                 }
                 catch (Exception ex)
                 {
-                    Log.Debug(ex.ToString())
+                    Log.Debug(ex.ToString());
                 }
                 valueEnumerator.Dispose();
             }

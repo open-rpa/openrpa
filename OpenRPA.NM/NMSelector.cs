@@ -141,9 +141,11 @@ namespace OpenRPA.NM
                 }
                 else if (!string.IsNullOrEmpty(cssselector) && !string.IsNullOrEmpty(fromNMElement.cssselector))
                 {
-                    fromcssPath = "";
-                    fromxPath = "";
-                    cssselector = fromNMElement.cssselector + " > " + cssselector;
+                    //fromcssPath = "";
+                    //fromxPath = "";
+                    //cssselector = fromNMElement.cssselector + " > " + cssselector;
+                    fromcssPath = fromNMElement.cssselector;
+                    fromxPath = fromNMElement.xpath;
                 }
             }
 

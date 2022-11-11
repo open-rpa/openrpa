@@ -1044,8 +1044,7 @@ namespace OpenRPA
                 }
                 try
                 {
-                     
-                    if(!Config.local.skip_online_state)
+                    if(!Config.local.skip_online_state && !string.IsNullOrEmpty(Config.local.wsurl))
                     {
                         var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted") && !x.isDirty);
                         if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");

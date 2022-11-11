@@ -203,7 +203,6 @@ namespace OpenRPA
             else { throw new LockNotReceivedException("Failed adding new workflow instance in Create"); }
             result.createApp(Workflow.Activity());
             CleanUp();
-            CleanUp();
             return result;
         }
         private void createApp(Activity activity)
@@ -787,6 +786,7 @@ namespace OpenRPA
                     if (state == "running" || state == "idle" || state == "completed")
                     {
                         state = "aborted";
+                        hasError = true;
                         if (e.TerminationException != null)
                         {
                             Exception = e.TerminationException;
@@ -943,18 +943,21 @@ namespace OpenRPA
                         if (i.Workflow == null)
                         {
                             i.state = "aborted";
+                            i.hasError = true;
                             i.errormessage = "Cannot run WorkflowInstance " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
                             continue;
                         }
                         else if (i.Workflow.Serializable == false)
                         {
                             i.state = "aborted";
+                            i.hasError = true;
                             i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state (non serializable)";
                             continue;
                         }
                         else if (string.IsNullOrEmpty(i.xml))
                         {
                             i.state = "aborted";
+                            i.hasError = true;
                             i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state";
                             continue;
                         }
@@ -962,6 +965,7 @@ namespace OpenRPA
                         if (workflow == null)
                         {
                             i.state = "aborted";
+                            i.hasError = true;
                             i.errormessage = "Cannot run WorkflowInstance, second try " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
                             await i.Save<WorkflowInstance>();
                             continue;
@@ -1037,6 +1041,22 @@ namespace OpenRPA
                 finally
                 {
                     System.Threading.Monitor.Exit(Instances);
+                }
+                try
+                {
+                     
+                    if(!Config.local.skip_online_state)
+                    {
+                        var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted") && !x.isDirty);
+                        if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");
+                    }
+                    else
+                    {
+                        var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted"));
+                        if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");
+                    }
+                } catch (Exception ex) {
+                    Log.Error(ex.ToString());
                 }
             }
             else { throw new LockNotReceivedException("Failed cleaning up old workflow instance"); }

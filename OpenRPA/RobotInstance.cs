@@ -992,6 +992,7 @@ namespace OpenRPA
                 {
                     NotifyPropertyChanged("FilterText");
                 });
+                WorkflowInstance.CleanUp();
             }
             catch (Exception ex)
             {

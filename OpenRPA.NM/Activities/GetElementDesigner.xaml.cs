@@ -19,12 +19,14 @@ namespace OpenRPA.NM
         public GetElementDesigner()
         {
             InitializeComponent();
+            HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("search.png");
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public BitmapFrame HighlightImage { get; set; }
         private void Open_Selector(object sender, RoutedEventArgs e)
         {
             ModelItem loadFrom = ModelItem.Parent;
@@ -100,7 +102,7 @@ namespace OpenRPA.NM
                 loadFrom = loadFrom.Parent;
             }
 
-
+            HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("search.png");
             string SelectorString = ModelItem.GetValue<string>("Selector");
             int maxresults = ModelItem.GetValue<int>("MaxResults");
             var selector = new NMSelector(SelectorString);
@@ -121,7 +123,15 @@ namespace OpenRPA.NM
                 var res = NMSelector.GetElementsWithuiSelector(selector, null, maxresults);
                 elements.AddRange(res);
             }
-
+            if (elements.Count() > 0)
+            {
+                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource("searchfound.png");
+            }
+            else
+            {
+                HighlightImage = Interfaces.Extensions.GetImageSourceFromResource(".searchfailed.png");
+            }
+            NotifyPropertyChanged("HighlightImage");
             foreach (var ele in elements) await ele.Highlight(false, System.Drawing.Color.Red, TimeSpan.FromSeconds(1));
 
         }

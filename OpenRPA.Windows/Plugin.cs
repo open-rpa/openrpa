@@ -384,10 +384,6 @@ namespace OpenRPA.Windows
 
             sw = new Stopwatch();
             sw.Start();
-            if (timeout < TimeSpan.FromSeconds(10))
-            {
-                timeout = TimeSpan.FromSeconds(10);
-            }
             do
             {
                 if (PluginConfig.get_elements_in_different_thread)

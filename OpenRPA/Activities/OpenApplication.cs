@@ -56,7 +56,7 @@ namespace OpenRPA.Activities
             var element = Plugin.LaunchBySelector(selector, checkrunning, timeout);
             Result.Set(context, element);
             _element.Set(context, element);
-            if (element != null && element is UIElement ui && Body == null)
+            if (element != null && element is UIElement ui)
             {
                 //var window = ((UIElement)element).GetWindow();
                 var screen = Screen.Get(context);

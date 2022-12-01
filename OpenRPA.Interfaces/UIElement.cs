@@ -30,11 +30,54 @@ namespace OpenRPA
             {
                 RawElement = Element;
                 ProcessId = Element.Properties.ProcessId.ValueOrDefault;
-                Name = Element.Properties.Name.ValueOrDefault;
-                if (string.IsNullOrEmpty(Name)) Name = "";
-                ClassName = Element.Properties.ClassName.ValueOrDefault;
-                Type = Element.Properties.ControlType.ValueOrDefault.ToString();
+                Name = "";
+                if (Element.Properties.Name.IsSupported)
+                {
+                    string name = "";
+                    Element.Properties.Name.TryGetValue(out name);
+                    if (!string.IsNullOrEmpty(name)) Name = name;
+                }
+                ClassName = "";
+                if (Element.Properties.ClassName.IsSupported)
+                {
+                    string classname = "";
+                    Element.Properties.ClassName.TryGetValue(out classname);
+                    if (!string.IsNullOrEmpty(classname)) ClassName = classname;
+                }
+                ClassName = "";
+                if (Element.Properties.ClassName.IsSupported)
+                {
+                    string classname = "";
+                    Element.Properties.ClassName.TryGetValue(out classname);
+                    if (!string.IsNullOrEmpty(classname)) ClassName = classname;
+                }
+                Type = "";
+                if (Element.Properties.ControlType.IsSupported)
+                {
+                    FlaUI.Core.Definitions.ControlType _type = FlaUI.Core.Definitions.ControlType.Unknown;
+                    Element.Properties.ControlType.TryGetValue(out _type);
+                    if (_type != FlaUI.Core.Definitions.ControlType.Unknown) Type = _type.ToString();
+                }
+                FrameworkId = "";
+                if (Element.Properties.FrameworkId.IsSupported)
+                {
+                    string frameworkId = "";
+                    Element.Properties.FrameworkId.TryGetValue(out frameworkId);
+                    if (!string.IsNullOrEmpty(frameworkId)) FrameworkId = frameworkId;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
                 FrameworkId = Element.Properties.FrameworkId.ValueOrDefault;
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
                 _ = Rectangle;
                 _ = Position;
             }
@@ -60,7 +103,7 @@ namespace OpenRPA
             try
             {
                 int pendingCounter = 0;
-                if(RawElement is AutomationElement fla)
+                if (RawElement is AutomationElement fla)
                 {
                     while (!fla.Properties.BoundingRectangle.IsSupported && pendingCounter < 6)
                     {
@@ -76,7 +119,7 @@ namespace OpenRPA
                     Type = fla.Properties.ControlType.ValueOrDefault.ToString();
                     FrameworkId = fla.Properties.FrameworkId.ValueOrDefault;
                 }
-                if (RawElement is System.Windows.Automation.AutomationElement wae )
+                if (RawElement is System.Windows.Automation.AutomationElement wae)
                 {
                     while (wae.Current.BoundingRectangle == null && pendingCounter < 6)
                     {
@@ -160,7 +203,8 @@ namespace OpenRPA
                     catch (Exception)
                     {
                     }
-                } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                }
+                else if (RawElement is System.Windows.Automation.AutomationElement wae)
                 {
                     try
                     {
@@ -211,7 +255,7 @@ namespace OpenRPA
                 if (!string.IsNullOrEmpty(_ProcessName)) return _ProcessName;
                 try
                 {
-                    using(var p = System.Diagnostics.Process.GetProcessById(ProcessId))
+                    using (var p = System.Diagnostics.Process.GetProcessById(ProcessId))
                     {
                         _ProcessName = p.ProcessName;
                         return _ProcessName;
@@ -303,9 +347,9 @@ namespace OpenRPA
                     if (RawElement is System.Windows.Automation.AutomationElement wae)
                     {
                         var InvokePattern = wae.GetSpecifiedPattern<System.Windows.Automation.InvokePattern>();
-                        if(InvokePattern != null)
+                        if (InvokePattern != null)
                         {
-                            if(wae.Current.IsEnabled)
+                            if (wae.Current.IsEnabled)
                             {
                                 InvokePattern.Invoke();
                             }
@@ -461,7 +505,8 @@ namespace OpenRPA
                             }
                             return "false";
                         }
-                    } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                    }
+                    else if (RawElement is System.Windows.Automation.AutomationElement wae)
                     {
                         if (wae.Current.IsPassword)
                         {
@@ -525,7 +570,8 @@ namespace OpenRPA
                             combo.IsChecked = false;
                         }
                     }
-                } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                }
+                else if (RawElement is System.Windows.Automation.AutomationElement wae)
                 {
                     var valuePattern = wae.GetSpecifiedPattern<System.Windows.Automation.ValuePattern>();
                     if (valuePattern != null)
@@ -577,7 +623,7 @@ namespace OpenRPA
                         var radio = fla.AsRadioButton();
                         radio.IsChecked = value;
                     }
-                }                    
+                }
             }
         }
         public void SelectItem(UIElement element)
@@ -805,7 +851,7 @@ namespace OpenRPA
                 }
                 if (RawElement is System.Windows.Automation.AutomationElement wae)
                 {
-                    var listItems = wae.FindAll(System.Windows.Automation.TreeScope.Children, 
+                    var listItems = wae.FindAll(System.Windows.Automation.TreeScope.Children,
                         new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.ListItem)
                         );
                     foreach (System.Windows.Automation.AutomationElement c in listItems)
@@ -897,7 +943,7 @@ namespace OpenRPA
                 if (window == null) return;
                 var TitleBar = window.FindFirst(System.Windows.Automation.TreeScope.Children,
                     new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.ControlTypeProperty, System.Windows.Automation.ControlType.TitleBar));
-                if(TitleBar != null)
+                if (TitleBar != null)
                 {
                     var CloseButton = window.FindFirst(System.Windows.Automation.TreeScope.Children,
                         new System.Windows.Automation.AndCondition(
@@ -905,10 +951,10 @@ namespace OpenRPA
                             new System.Windows.Automation.PropertyCondition(System.Windows.Automation.AutomationElement.NameProperty, "Close")
                             )
                         );
-                    if(CloseButton != null)
+                    if (CloseButton != null)
                     {
                         var invoke = CloseButton.GetSpecifiedPattern<System.Windows.Automation.InvokePattern>();
-                        if(invoke != null)
+                        if (invoke != null)
                         {
                             invoke.Invoke();
                             return;
@@ -937,11 +983,12 @@ namespace OpenRPA
                     if (RawElement is AutomationElement fla)
                     {
                         _Position = new System.Drawing.Point(fla.BoundingRectangle.X, fla.BoundingRectangle.Y);
-                    } else if (RawElement is System.Windows.Automation.AutomationElement wae)
+                    }
+                    else if (RawElement is System.Windows.Automation.AutomationElement wae)
                     {
                         _Position = new System.Drawing.Point((int)wae.Current.BoundingRectangle.X, (int)wae.Current.BoundingRectangle.Y);
                     }
-                    
+
                 }
                 return _Position;
             }
@@ -978,7 +1025,7 @@ namespace OpenRPA
         {
             get
             {
-                if (RawElement is AutomationElement) 
+                if (RawElement is AutomationElement)
                 {
                     var window = GetWindow<Window>();
                     return new Point(window.BoundingRectangle.X, window.BoundingRectangle.Y);
@@ -1169,7 +1216,7 @@ namespace OpenRPA
                     var window = GetWindow<System.Windows.Automation.AutomationElement>();
                     if (window == null) return;
                     var tranPattern = window.GetSpecifiedPattern<System.Windows.Automation.TransformPattern>();
-                    if(tranPattern!=null && tranPattern.Current.CanResize)
+                    if (tranPattern != null && tranPattern.Current.CanResize)
                     {
                         tranPattern.Resize(value.Width, value.Height);
                     }

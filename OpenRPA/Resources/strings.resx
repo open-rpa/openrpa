@@ -438,11 +438,17 @@
   <data name="activity_element_help" xml:space="preserve">
     <value>Click on this element, the return type of all GetElement activites and some others</value>
   </data>
+  <data name="activity_focus" xml:space="preserve">
+    <value>Focus</value>
+  </data>
   <data name="activity_focuselement" xml:space="preserve">
     <value>Focus Element</value>
   </data>
   <data name="activity_focuselement_tooltip" xml:space="preserve">
     <value>Give element focus</value>
+  </data>
+  <data name="activity_focus_help" xml:space="preserve">
+    <value>Auto focus and reload element</value>
   </data>
   <data name="activity_force" xml:space="preserve">
     <value>Force</value>

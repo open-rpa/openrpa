@@ -248,6 +248,7 @@ namespace OpenRPA.SAP
                 return _Children;
             }
         }
+        public void Refresh() { }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }

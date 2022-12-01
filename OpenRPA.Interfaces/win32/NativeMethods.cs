@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace OpenRPA.Interfaces
 {
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -1798,6 +1799,55 @@ namespace OpenRPA.Interfaces
                 }
             };
         }
+
+            /// <summary>Returns a dictionary that contains the handle and title of all the open windows.</summary>
+            /// <returns>A dictionary that contains the handle and title of all the open windows.</returns>
+            public static IntPtr[] GetOpenedWindows(bool includeHidden, bool includeEmptyTitle)
+            {
+                IntPtr shellWindow = GetShellWindow();
+                List<IntPtr> windows = new List<IntPtr>();
+
+                EnumWindows(new EnumWindowsProc(delegate (IntPtr hWnd, int lParam) {
+                    try
+                    {
+                        if (hWnd == shellWindow) return true;
+                        if (!includeHidden) { if (!IsWindowVisible(hWnd)) return true; }
+                        if(!includeEmptyTitle) {
+                            int length = GenericTools.GetWindowTextLength(hWnd);
+                            string Title = "";
+                            if (length == 0)
+                            {
+                                if (!includeEmptyTitle) return true;
+                            }
+                        }
+                        windows.Add(hWnd);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    return true;
+                }), 0);
+                return windows.ToArray();
+            }
+
+            private delegate bool EnumWindowsProc(IntPtr hWnd, int lParam);
+
+
+            [DllImport("USER32.DLL")]
+            private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
+
+            [DllImport("USER32.DLL")]
+            private static extern bool IsWindowVisible(IntPtr hWnd);
+
+            [DllImport("USER32.DLL")]
+            private static extern IntPtr GetShellWindow();
+
+            //WARN: Only for "Any CPU":
+            [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            private static extern int GetWindowThreadProcessId(IntPtr handle, out uint processId);
+
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern IntPtr SetFocus(IntPtr hWnd);
     }
 
     public static class InputStructs

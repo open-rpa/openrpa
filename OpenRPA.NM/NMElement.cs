@@ -711,6 +711,10 @@ namespace OpenRPA.NM
                 return null;
             }
         }
+        void IElement.Refresh()
+        {
+            Refresh();
+        }
         public bool Refresh()
         {
             try

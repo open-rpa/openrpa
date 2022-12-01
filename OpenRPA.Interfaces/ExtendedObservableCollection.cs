@@ -46,7 +46,7 @@ namespace OpenRPA.Interfaces
                 //            oldlist.Add(item);
                 if (e.OldItems != null)
                     foreach (T item in e.OldItems)
-                            oldlist.Add(item);
+                        oldlist.Add(item);
 
                 // Create the Add/Remove/Replace lists
                 List<T> addlist = new List<T>();
@@ -75,7 +75,8 @@ namespace OpenRPA.Interfaces
                         var titem = (T)item;
                         if (!shouldbehere) shouldbehere = _filter(titem);
                         if (!ishere) ishere = Items.Contains(titem);
-                        if (shouldbehere && !ishere && !addlist.Contains(titem)) { 
+                        if (shouldbehere && !ishere && !addlist.Contains(titem))
+                        {
                             addlist.Add(titem);
                         }
                         if (!shouldbehere && ishere && !removelist.Contains(titem))
@@ -170,7 +171,7 @@ namespace OpenRPA.Interfaces
         private void InitItems()
         {
             var itemsToAdd = _observableCollections.OfType<IEnumerable<IBase>>().SelectMany(item => item);
-            foreach(var item in itemsToAdd) Add(item);
+            foreach (var item in itemsToAdd) Add(item);
             // AddRange(itemsToAdd);
         }
         private void AttacheEvents()
@@ -202,16 +203,22 @@ namespace OpenRPA.Interfaces
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            this.Sort((a, b) => { 
-                if(a._type != "workflow" && b._type == "workflow") return -1;
-                return 1;
-                });
+            //this.Sort((a, b) => { 
+            //    if(a._type != "workflow" && b._type == "workflow") return -1;
+            //    return 1;
+            //    });
+            this.Sort((a, b) => {
+                if (a._type != "workflow" && b._type == "workflow") return -1;
+                if (a._type == "workflow" && b._type != "workflow") return 1;
+                return a.name.CompareTo(b.name);
+            });
+
         }
         private void Reset()
         {
             var itemsToDelete = GetItemsToDelete().ToList();
             // this.RemoveRange(itemsToDelete);
-            foreach(var item in itemsToDelete) Remove(item);
+            foreach (var item in itemsToDelete) Remove(item);
         }
         private void MoveItems(IEnumerable<IBase> newItems, NotifyCollectionChangedEventArgs e)
         {
@@ -286,7 +293,8 @@ namespace OpenRPA.Interfaces
                 var JsonIgnore = propTo.GetCustomAttributes(typeof(Newtonsoft.Json.JsonIgnoreAttribute), false);
                 if (JsonIgnore != null && JsonIgnore.Length > 0) continue;
                 bool copy = false;
-                if(SimpleOnly) {
+                if (SimpleOnly)
+                {
                     if (propTo.PropertyType == typeof(int)) copy = true;
                     if (propTo.PropertyType == typeof(Int64)) copy = true;
                     if (propTo.PropertyType == typeof(double)) copy = true;

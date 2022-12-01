@@ -31,6 +31,8 @@ namespace OpenRPA.Activities
         }
         [RequiredArgument, LocalizedDisplayName("activity_animatemouse", typeof(Resources.strings)), LocalizedDescription("activity_animatemouse_help", typeof(Resources.strings))]
         public InArgument<bool> AnimateMouse { get; set; } = false;
+        [RequiredArgument, LocalizedDisplayName("activity_focus", typeof(Resources.strings)), LocalizedDescription("activity_focus_help", typeof(Resources.strings))]
+        public InArgument<bool> Focus { get; set; } = false;
         [RequiredArgument, LocalizedDisplayName("activity_mousebutton", typeof(Resources.strings)), LocalizedDescription("activity_mousebutton_help", typeof(Resources.strings))]
         //[Editor(typeof(SelectButtonEditor), typeof(PropertyValueEditor))]
         public InArgument<int> Button { get; set; } = (int)Input.MouseButton.Left;
@@ -60,9 +62,16 @@ namespace OpenRPA.Activities
             if (VirtualClick != null) virtualClick = VirtualClick.Get(context);
             var animatemouse = false;
             if (AnimateMouse != null) animatemouse = AnimateMouse.Get(context);
+            var focus = false;
+            if (Focus != null) focus = Focus.Get(context);
             var keymodifiers = "";
             if (KeyModifiers != null) keymodifiers = KeyModifiers.Get(context);
 
+            if(focus)
+            {
+                el.Focus();
+                el.Refresh();
+            }
             var disposes = new List<IDisposable>();
             var keys = TypeText.GetKeys(keymodifiers);
             foreach (var vk in keys) disposes.Add(FlaUI.Core.Input.Keyboard.Pressing(vk));

@@ -227,6 +227,7 @@ namespace OpenRPA.IE
 
         }
         object IElement.RawElement { get => RawElement; set => RawElement = value as MSHTML.IHTMLElement; }
+        public void Refresh() { }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (Button != Input.MouseButton.Left) { VirtualClick = false; }

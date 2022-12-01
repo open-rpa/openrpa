@@ -65,6 +65,7 @@ namespace OpenRPA.Image
             Height = Rectangle.Height;
             this.element = Element;
         }
+        public void Refresh() { }
         public void Click(bool VirtualClick, Input.MouseButton Button, int OffsetX, int OffsetY, bool DoubleClick, bool AnimateMouse)
         {
             if (AnimateMouse)

@@ -1024,6 +1024,24 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Focus.
+        /// </summary>
+        public static string activity_focus {
+            get {
+                return ResourceManager.GetString("activity_focus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto focus and reload element.
+        /// </summary>
+        public static string activity_focus_help {
+            get {
+                return ResourceManager.GetString("activity_focus_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Focus Element.
         /// </summary>
         public static string activity_focuselement {

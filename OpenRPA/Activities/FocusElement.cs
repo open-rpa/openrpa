@@ -35,6 +35,7 @@ namespace OpenRPA.Activities
             if (el == null) throw new ArgumentException("element cannot be null");
 
             el.Focus();
+            el.Refresh();
             TimeSpan postwait = TimeSpan.Zero;
             if (PostWait != null) { postwait = PostWait.Get(context); }
             if (postwait != TimeSpan.Zero)

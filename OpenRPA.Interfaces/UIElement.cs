@@ -44,13 +44,6 @@ namespace OpenRPA
                     Element.Properties.ClassName.TryGetValue(out classname);
                     if (!string.IsNullOrEmpty(classname)) ClassName = classname;
                 }
-                ClassName = "";
-                if (Element.Properties.ClassName.IsSupported)
-                {
-                    string classname = "";
-                    Element.Properties.ClassName.TryGetValue(out classname);
-                    if (!string.IsNullOrEmpty(classname)) ClassName = classname;
-                }
                 Type = "";
                 if (Element.Properties.ControlType.IsSupported)
                 {

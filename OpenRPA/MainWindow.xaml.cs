@@ -598,6 +598,7 @@ namespace OpenRPA
             set
             {
                 Config.local.minimize = value;
+                Config.Save();
                 NotifyPropertyChanged("Minimize");
             }
         }

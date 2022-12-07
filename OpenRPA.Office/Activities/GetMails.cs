@@ -72,7 +72,7 @@ namespace OpenRPA.Office.Activities
                 }
                 else
                 {
-                    filter += "and [Unread]=true";
+                    filter += " and [Unread]=true";
                 }
             }
             if (!string.IsNullOrEmpty(filter))

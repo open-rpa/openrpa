@@ -13,6 +13,9 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.PowerShell.3.ReferenceAssemblies" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
     <ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj" />
   </ItemGroup>
@@ -20,9 +23,6 @@
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Core.Presentation" />
     <Reference Include="System.Activities.Presentation" />
-    <Reference Include="System.Management.Automation">
-      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\System.Management.Automation\1.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>

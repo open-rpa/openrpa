@@ -16,6 +16,7 @@ using System.Management.Automation.Runspaces;
 using System.Collections;
 using System.Collections.ObjectModel;
 using Python.Runtime;
+using NLog.Targets;
 
 namespace OpenRPA.Script.Activities
 {
@@ -471,17 +472,26 @@ namespace OpenRPA.Script.Activities
 
             if (methInfo != null)
             {
-                ExceptionDispatchInfo exceptionDispatchInfo = null;
                 try
                 {
                     methInfo.Invoke(null, new object[] { });
                 }
-                catch (Exception ex)
+                catch (TargetInvocationException ex)
                 {
-                    exceptionDispatchInfo = ExceptionDispatchInfo.Capture(ex);
+                    if(ex.InnerException != null) throw ex.InnerException;
+                    throw ex;
                 }
+                //ExceptionDispatchInfo exceptionDispatchInfo = null;
+                //try
+                //{
+                //    methInfo.Invoke(null, new object[] { });
+                //}
+                //catch (Exception ex)
+                //{
+                //    exceptionDispatchInfo = ExceptionDispatchInfo.Capture(ex);
+                //}
 
-                if (exceptionDispatchInfo != null) exceptionDispatchInfo.Throw();
+                //if (exceptionDispatchInfo != null) exceptionDispatchInfo.Throw();
 
                 var vars = context.DataContext.GetProperties();
                 foreach (dynamic v in vars)

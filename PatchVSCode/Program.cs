@@ -20,7 +20,7 @@ namespace PatchVSCode
             await DownloadAndCopyFramework4_0();
             await DownloadAndCopyFramework4_5();
             await DownloadAndCopyFramework4_6();
-            await DownloadAndCopyFramework4_62();
+            //await DownloadAndCopyFramework4_62();
         }
 
         public static async Task DownloadAndCopyFramework4_62()

@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.20348.0\x86\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a "C:\code\openrpa\OpenRPA.SetupProject\bin\Release\en-us\OpenRPA.msi"

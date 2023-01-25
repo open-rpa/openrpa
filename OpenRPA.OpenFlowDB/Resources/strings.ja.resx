@@ -243,4 +243,16 @@
 	<data name="activity_waitforcompleted_help" xml:space="preserve">
     <value>完了を待ってワークフローを続行する</value>
   </data>
+	<data name="activity_count_tooltip" xml:space="preserve">
+        <value>エンティティ数のカウント クエリフィルタはオプション </value>
+    </data>
+	<data name="activity_count" xml:space="preserve">
+        <value>カウント</value>
+    </data>
+	<data name="activity_insertorupdatemany" xml:space="preserve">
+        <value>多数の挿入または更新</value>
+    </data>
+	<data name="activity_insertorupdatemany_tooltip" xml:space="preserve">
+        <value>独自のキーで複数の項目を更新（必要に応じて挿入）可能</value>
+    </data>
 </root>

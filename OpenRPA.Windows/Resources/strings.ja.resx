@@ -195,4 +195,40 @@
 	<data name="plugin_traverse_selector_both_ways_help" xml:space="preserve">
     <value>UIツリーをトラバースして、ゴーストセレクター要素をフィルターで除外します</value>
   </data>
+	<data name="activity_closewindow_tooltip" xml:space="preserve">
+    <value>GetElementまたはGetWindowsで見つかったウィンドウを閉じるために使用する </value>
+  </data>
+	<data name="activity_getwindows" xml:space="preserve">
+    <value>Windowsを取得</value>
+  </data>
+	<data name="activity_closewindow" xml:space="preserve">
+    <value>ウィンドウを閉じる</value>
+  </data>
+	<data name="activity_closewindoe_element" xml:space="preserve">
+    <value>エレメント</value>
+  </data>
+	<data name="plugin_create_short_selector" xml:space="preserve">
+    <value>ショートセレクターの作成</value>
+  </data>
+	<data name="plugin_mouse_over_search_help" xml:space="preserve">
+    <value>ツリーから親へのマッピングが壊れている場合（DynamicAXのように）、マウスオーバーで検索できるようにする </value>
+  </data>
+	<data name="activity_getwindows_tooltip" xml:space="preserve">
+    <value>デスクトップで開いているすべてのウィンドウを取得する</value>
+  </data>
+	<data name="plugin_mouse_over_search" xml:space="preserve">
+    <value>マウスオーバーで検索</value>
+  </data>
+	<data name="activity_displayname_help" xml:space="preserve">
+    <value>ワークフローデザイナー内の表示名</value>
+  </data>
+	<data name="plugin_create_short_selector_help" xml:space="preserve">
+    <value>子孫検索も有効になっている場合は、短いセレクタを作成してみてください </value>
+  </data>
+	<data name="activity_closewindoe_element_help" xml:space="preserve">
+    <value>動作させる要素 通常は「Windowsを入手する」アクティビティから取得する </value>
+  </data>
+	<data name="activity_displayname" xml:space="preserve">
+    <value>表示名</value>
+  </data>
 </root>

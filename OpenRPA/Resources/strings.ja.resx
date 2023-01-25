@@ -730,60 +730,438 @@
     <value>警告</value>
   </data>
 	<data name="activity_break" xml:space="preserve">
-		<value>ブレイク</value>
-	</data>
+    <value>ブレイク</value>
+  </data>
 	<data name="activity_Breakabledowhile_tooltip" xml:space="preserve">
-		<value>含まれるワークフローを実行後、条件が満たされている間処理を繰り返す。（実行後に条件判断）</value>
-	</data>
+    <value>含まれるワークフローを実行後、条件が満たされている間処理を繰り返す。（実行後に条件判断）</value>
+  </data>
 	<data name="activity_breakablewhile_tooltip" xml:space="preserve">
-		<value>条件が満たされている間、含まれているワークフローを実行する。（実行前に条件判断）</value>
-	</data>
+    <value>条件が満たされている間、含まれているワークフローを実行する。（実行前に条件判断）</value>
+  </data>
 	<data name="open_package_manager" xml:space="preserve">
-		<value>パッケージマネージャを開く</value>
-	</data>
+    <value>パッケージマネージャを開く</value>
+  </data>
 	<data name="activity_Breakabledowhile" xml:space="preserve">
-		<value>Do While</value>
-	</data>
+    <value>Do While</value>
+  </data>
 	<data name="activity_breakablewhile" xml:space="preserve">
-		<value>While</value>
-	</data>
+    <value>While</value>
+  </data>
 	<data name="activity_break_tooltip" xml:space="preserve">
-		<value>ループを抜け出し、ループ後も実行を継続する</value>
-	</data>
+    <value>ループを抜け出し、ループ後も実行を継続する</value>
+  </data>
 	<data name="activity_continue" xml:space="preserve">
-		<value>コンテニュー</value>
-	</data>
+    <value>コンテニュー</value>
+  </data>
 	<data name="activity_continue_tooltip" xml:space="preserve">
-		<value>ループ本体の実行を停止し、次の項目に進む</value>
-	</data>
+    <value>ループ本体の実行を停止し、次の項目に進む</value>
+  </data>
 	<data name="author" xml:space="preserve">
-		<value>作成者</value>
-	</data>
+    <value>作成者</value>
+  </data>
 	<data name="childsession" xml:space="preserve">
-		<value>チャイルドセッション</value>
-	</data>
+    <value>チャイルドセッション</value>
+  </data>
 	<data name="include_prerelease" xml:space="preserve">
-		<value>プレリリースを含む</value>
-	</data>
+    <value>プレリリースを含む</value>
+  </data>
 	<data name="install" xml:space="preserve">
-		<value>インストール</value>
-	</data>
+    <value>インストール</value>
+  </data>
 	<data name="installed" xml:space="preserve">
-		<value>インストール済</value>
-	</data>
+    <value>インストール済</value>
+  </data>
 	<data name="main_settings_enable_child_sessions" xml:space="preserve">
-		<value>チャイルドセッションを有効にする</value>
-	</data>
+    <value>チャイルドセッションを有効にする</value>
+  </data>
 	<data name="playinchildsession" xml:space="preserve">
-		<value>チャイルドセッションを実行する</value>
-	</data>
+    <value>チャイルドセッションを実行する</value>
+  </data>
 	<data name="selectornetwork" xml:space="preserve">
-		<value>ネットワーク</value>
-	</data>
+    <value>ネットワーク</value>
+  </data>
 	<data name="uninstall" xml:space="preserve">
-		<value>アンインストール</value>
-	</data>
+    <value>アンインストール</value>
+  </data>
 	<data name="update" xml:space="preserve">
-		<value>アップデート</value>
-	</data>
+    <value>アップデート</value>
+  </data>
+	<data name="activity_addworkitem" xml:space="preserve">
+    <value>ワークアイテムの追加</value>
+  </data>
+	<data name="activity_addworkitem_failed_wiq" xml:space="preserve">
+    <value>失敗キュー</value>
+  </data>
+	<data name="activity_addworkitem_failed_wiq_help" xml:space="preserve">
+    <value>失敗した場合、このキューに新しいワークアイテムを追加する</value>
+  </data>
+	<data name="activity_addworkitem_files" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
+	<data name="activity_addworkitem_files_help" xml:space="preserve">
+    <value>これらのファイルを新しいワークアイテムに追加する</value>
+  </data>
+	<data name="activity_addworkitem_name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+	<data name="activity_addworkitem_name_help" xml:space="preserve">
+    <value>ワークアイテムのカスタム名を設定する</value>
+  </data>
+	<data name="activity_addworkitem_nextrun" xml:space="preserve">
+    <value>次の実行</value>
+  </data>
+	<data name="activity_breakableforeachof" xml:space="preserve">
+        <value>For Each</value>
+    </data>
+	<data name="activity_stopopenrpa" xml:space="preserve">
+        <value>OpenRPAの停止</value>
+    </data>
+	<data name="activity_popworkitem_wiqid_help" xml:space="preserve">
+        <value>ワークアイテムをポップするキューのID</value>
+    </data>
+	<data name="activity_updateworkitem_state_help" xml:space="preserve">
+        <value>ワークアイテムの状態をこの値に設定します </value>
+    </data>
+	<data name="selectoractivity" xml:space="preserve">
+        <value>アクティビティ</value>
+    </data>
+	<data name="activity_popworkitem_workitem_help" xml:space="preserve">
+        <value>あなたにチェックアウトしたワークアイテムは、それ以上アイテムがない場合、何も返しません </value>
+    </data>
+	<data name="activity_windowstate" xml:space="preserve">
+        <value>ウィンドウの状態</value>
+    </data>
+	<data name="activity_windowstate_help" xml:space="preserve">
+        <value>ウィンドウを任意の場所/モニターに移動した後の現在のウィンドウの状態を設定する</value>
+    </data>
+	<data name="activity_updateworkitem_exception_help" xml:space="preserve">
+        <value>エラー発生時にワークアイテムに例外を付加する </value>
+    </data>
+	<data name="activity_focus_help" xml:space="preserve">
+        <value>オートフォーカス、要素のリロード</value>
+    </data>
+	<data name="button_cancel" xml:space="preserve">
+        <value>キャンセル</value>
+    </data>
+	<data name="activity_addworkitem_wiqid" xml:space="preserve">
+        <value>キューID</value>
+    </data>
+	<data name="activity_bulkaddworkitems_wiqid" xml:space="preserve">
+        <value>キューID</value>
+    </data>
+	<data name="activity_popworkitem_wiqid" xml:space="preserve">
+        <value>キューID</value>
+    </data>
+	<data name="activity_deleteworkitem_tooltip" xml:space="preserve">
+        <value>キューから特定のワークアイテムおよび関連するすべてのファイルを削除する </value>
+    </data>
+	<data name="activity_addworkitem_tooltip" xml:space="preserve">
+        <value>キューに新しいワークアイテムを追加する</value>
+    </data>
+	<data name="activity_addworkitem_wiq" xml:space="preserve">
+        <value>キュー名</value>
+    </data>
+	<data name="activity_bulkaddworkitems_wiq" xml:space="preserve">
+        <value>キュー名</value>
+    </data>
+	<data name="activity_popworkitem_wiq" xml:space="preserve">
+        <value>キュー名</value>
+    </data>
+	<data name="activity_text_help" xml:space="preserve">
+        <value>クリップボードに追加するテキスト</value>
+    </data>
+	<data name="activity_image_help" xml:space="preserve">
+        <value>クリップボードに追加する画像</value>
+    </data>
+	<data name="activity_bulkaddworkitems_bulksize_help" xml:space="preserve">
+        <value>このサイズのバッチでワークアイテムを追加する ペイロードとファイルが大きければ大きいほど、この数値は小さくなるはずである（デフォルト50）</value>
+    </data>
+	<data name="activity_updateworkitem_files_help" xml:space="preserve">
+        <value>このワークアイテムに関連するファイルを追加・更新する </value>
+    </data>
+	<data name="activity_addworkitem_priority_help" xml:space="preserve">
+        <value>この項目の優先順位を0以外の数値で設定する 数値が小さいほど優先度は高くなる </value>
+    </data>
+	<data name="activity_bulkaddworkitems_priority_help" xml:space="preserve">
+        <value>この項目の優先順位を0以外の数値で設定する 数値が小さいほど優先度は高くなる </value>
+    </data>
+	<data name="activity_condition_help" xml:space="preserve">
+        <value>この条件が真の間、実行されるボディ</value>
+    </data>
+	<data name="activity_addworkitem_files_help" xml:space="preserve">
+        <value>これらのファイルを新しいワークアイテムに追加する </value>
+    </data>
+	<data name="activity_condition" xml:space="preserve">
+        <value>コンディション</value>
+    </data>
+	<data name="menu_get_server_version" xml:space="preserve">
+        <value>サーバーのバージョンを取得する</value>
+    </data>
+	<data name="activity_killself" xml:space="preserve">
+        <value>実行中の停止</value>
+    </data>
+	<data name="disable_serializable" xml:space="preserve">
+        <value>シリアライズ無効化</value>
+    </data>
+	<data name="activity_screen" xml:space="preserve">
+        <value>スクリーン</value>
+    </data>
+	<data name="activity_addworkitem_success_wiq" xml:space="preserve">
+        <value>成功キュー</value>
+    </data>
+	<data name="activity_killall" xml:space="preserve">
+        <value>全停止</value>
+    </data>
+	<data name="activity_bulkaddworkitems_filefields_help" xml:space="preserve">
+        <value>そのワークアイテムに添付されるフルパスとファイル名を含むカラム名の配列</value>
+    </data>
+	<data name="activity_click_to_view1" xml:space="preserve">
+        <value>ダブルクリックで表示</value>
+    </data>
+	<data name="activity_addworkitem_nextrun" xml:space="preserve">
+        <value>次の実行</value>
+    </data>
+	<data name="activity_bulkaddworkitems_nextrun" xml:space="preserve">
+        <value>次の実行</value>
+    </data>
+	<data name="activity_bulkaddworkitems_datatable" xml:space="preserve">
+        <value>データテーブル</value>
+    </data>
+	<data name="activity_bulkaddworkitems_tooltip" xml:space="preserve">
+        <value>データテーブルの各行に対して、新しいワークアイテムを追加する </value>
+    </data>
+	<data name="activity_addworkitem_nextrun_help" xml:space="preserve">
+        <value>デフォルトでは、ワークアイテムはすぐに実行されるか、キューの初期遅延秒数で設定された秒数だけ遅れて実行される このフィールドは、指定された日時以降にのみワークアイテムを実行するために使用する </value>
+    </data>
+	<data name="activity_bulkaddworkitems_nextrun_help" xml:space="preserve">
+        <value>デフォルトでは、ワークアイテムはすぐに実行されるか、キューの初期遅延秒数で設定された秒数だけ遅れて実行される このフィールドは、指定された日時以降にのみワークアイテムを実行するために使用する </value>
+    </data>
+	<data name="activity_popworkitem_folder_help" xml:space="preserve">
+        <value>デフォルトでは、ワークアイテムファイルはプロジェクトフォルダに保存されますが、ワークアイテムファイルの保存場所を変更する場合は、この設定を行う</value>
+    </data>
+	<data name="activity_updateworkitem_ignoremaxretries_help" xml:space="preserve">
+        <value>デフォルトでは、再試行回数が最大に達すると、ワークアイテムは失敗する この値をtrueに設定すると、再試行回数に達しても再投稿される</value>
+    </data>
+	<data name="openproject_background" xml:space="preserve">
+        <value>バックグランドワークフロー</value>
+    </data>
+	<data name="activity_bulkaddworkitems_bulksize" xml:space="preserve">
+        <value>バルクサイズ</value>
+    </data>
+	<data name="activity_arguments" xml:space="preserve">
+        <value>引数</value>
+    </data>
+	<data name="activity_throwbusinessruleexception_message_help" xml:space="preserve">
+        <value>ビジネスルール例外により、このワークフローが失敗した理由を簡単に説明してください どのようなデータが不足、不完全、または無効であったか？より詳細な情報を得るために、ペイロードを使用することをお勧めします </value>
+    </data>
+	<data name="activity_throwbusinessruleexception" xml:space="preserve">
+        <value>ビジネスルール例外を投げる</value>
+    </data>
+	<data name="activity_throwbusinessruleexception_tooltip" xml:space="preserve">
+        <value>ビジネスルール例外を投げる データの不足、不完全、または無効により、ワークフローが失敗している</value>
+    </data>
+	<data name="activity_addworkitem_files" xml:space="preserve">
+        <value>ファイル</value>
+    </data>
+	<data name="activity_updateworkitem_files" xml:space="preserve">
+        <value>ファイル</value>
+    </data>
+	<data name="activity_bulkaddworkitems_filefields" xml:space="preserve">
+        <value>ファイルカラム</value>
+    </data>
+	<data name="open_filename" xml:space="preserve">
+        <value>ファイル名</value>
+    </data>
+	<data name="activity_focus" xml:space="preserve">
+        <value>フォーカス</value>
+    </data>
+	<data name="activity_popworkitem_folder" xml:space="preserve">
+        <value>フォルダ</value>
+    </data>
+	<data name="pendingtokenwindows_message" xml:space="preserve">
+        <value>ブラウザのウィンドウが開かれました このロボットを認証するにはログインしてください </value>
+    </data>
+	<data name="project" xml:space="preserve">
+        <value>プロジェクト</value>
+    </data>
+	<data name="activity_addworkitem_payload" xml:space="preserve">
+        <value>ペイロード</value>
+    </data>
+	<data name="activity_popworkitem" xml:space="preserve">
+        <value>ポップ・ワークアイテム</value>
+    </data>
+	<data name="activity_arguments_help" xml:space="preserve">
+        <value>マッピングされた引数</value>
+    </data>
+	<data name="activity_map_variables1" xml:space="preserve">
+        <value>マップ変数</value>
+    </data>
+	<data name="activity_throwbusinessruleexception_message" xml:space="preserve">
+        <value>メッセージ</value>
+    </data>
+	<data name="activity_moveelement" xml:space="preserve">
+        <value>要素の移動</value>
+    </data>
+	<data name="activity_breakableforeachof_tooltip" xml:space="preserve">
+        <value>リスト内の各項目ごとに、含まれるワークフローを実行する</value>
+    </data>
+	<data name="robotorrole" xml:space="preserve">
+        <value>ロボット／役割</value>
+    </data>
+	<data name="activity_bulkaddworkitems_wiqid_help" xml:space="preserve">
+        <value>ワークアイテムを追加するキューID</value>
+    </data>
+	<data name="activity_bulkaddworkitems_wiq_help" xml:space="preserve">
+        <value>ワークアイテムを追加するキュー名</value>
+    </data>
+	<data name="workitemqueues" xml:space="preserve">
+        <value>ワークアイテムキュー</value>
+    </data>
+	<data name="activity_addworkitem_name_help" xml:space="preserve">
+        <value>ワークアイテムのカスタム名を設定する</value>
+    </data>
+	<data name="activity_addworkitem_payload_help" xml:space="preserve">
+        <value>ワークアイテムのペイロードに追加する値のリスト これらは更新ワークアイテムを使用した処理の一部として読み込まれ、更新されることができる </value>
+    </data>
+	<data name="activity_bulkaddworkitems" xml:space="preserve">
+        <value>ワークアイテムの一括追加</value>
+    </data>
+	<data name="activity_updateworkitem" xml:space="preserve">
+        <value>ワークアイテムの更新</value>
+    </data>
+	<data name="activity_deleteworkitem" xml:space="preserve">
+        <value>ワークアイテムの削除</value>
+    </data>
+	<data name="activity_updateworkitem_tooltip" xml:space="preserve">
+        <value>ワークアイテムの状態、ファイル、ペイロードのアップデート</value>
+    </data>
+	<data name="activity_addworkitem" xml:space="preserve">
+        <value>ワークアイテムの追加</value>
+    </data>
+	<data name="activity_popworkitem_wiq_help" xml:space="preserve">
+        <value>ワークアイテムをポップするキューの名前</value>
+    </data>
+	<data name="activity_updateworkitem_workitem_help" xml:space="preserve">
+        <value>ワークアイテムを更新し、状態を設定することを忘れないようにする</value>
+    </data>
+	<data name="activity_bulkaddworkitems_datatable_help" xml:space="preserve">
+        <value>ワークアイテムを作成するために使用するデータを含むデータテーブル</value>
+    </data>
+	<data name="activity_addworkitem_wiqid_help" xml:space="preserve">
+        <value>ワークアイテムを追加するキューのID</value>
+    </data>
+	<data name="activity_addworkitem_wiq_help" xml:space="preserve">
+        <value>ワークアイテムを追加するキュー名</value>
+    </data>
+	<data name="workflow" xml:space="preserve">
+        <value>ワークフロー</value>
+    </data>
+	<data name="activity_getworkflowinstance" xml:space="preserve">
+        <value>ワークフローインスタンスの取得</value>
+    </data>
+	<data name="activity_displayname_help1" xml:space="preserve">
+        <value>ワークフローデザイナー内の表示名</value>
+    </data>
+	<data name="activity_image" xml:space="preserve">
+        <value>画像</value>
+    </data>
+	<data name="activity_getworkflowinstance_tooltip" xml:space="preserve">
+        <value>現在のワークフローのインスタンスを取得する</value>
+    </data>
+	<data name="activity_killself_help" xml:space="preserve">
+        <value>現在のワークフローも停止させる</value>
+    </data>
+	<data name="activity_addworkitem_workitem" xml:space="preserve">
+        <value>作業項目</value>
+    </data>
+	<data name="activity_deleteworkitem_workitem" xml:space="preserve">
+        <value>作業項目</value>
+    </data>
+	<data name="activity_popworkitem_workitem" xml:space="preserve">
+        <value>作業項目</value>
+    </data>
+	<data name="activity_updateworkitem_workitem" xml:space="preserve">
+        <value>作業項目</value>
+    </data>
+	<data name="activity_deleteworkitem_workitem_help" xml:space="preserve">
+        <value>削除するワークアイテム</value>
+    </data>
+	<data name="activity_screen_help" xml:space="preserve">
+        <value>使用する画面/モニター</value>
+    </data>
+	<data name="activity_popworkitem_tooltip" xml:space="preserve">
+        <value>次の作業アイテムを取得し、チェックアウトする このとき、「作業アイテムの更新」で状態を更新することを忘れないように </value>
+    </data>
+	<data name="activity_addworkitem_failed_wiq" xml:space="preserve">
+        <value>失敗キュー</value>
+    </data>
+	<data name="activity_addworkitem_failed_wiq_help" xml:space="preserve">
+        <value>失敗した場合、このキューに新しいワークアイテムを追加する </value>
+    </data>
+	<data name="activity_killall_help" xml:space="preserve">
+        <value>実行中のすべてのワークフローを強制終了する falseを指定すると、選択したワークフローのみを強制終了する</value>
+    </data>
+	<data name="activity_stopopenrpa_tooltip" xml:space="preserve">
+        <value>実行中のワークフローを停止したり、ローカルロボット上で実行中のワークフローを全て終了させるために使用する</value>
+    </data>
+	<data name="activity_killifrunning" xml:space="preserve">
+        <value>実行中の場合は停止</value>
+    </data>
+	<data name="output" xml:space="preserve">
+        <value>出力</value>
+    </data>
+	<data name="selectoroutput" xml:space="preserve">
+        <value>出力</value>
+    </data>
+	<data name="openproject_save_output" xml:space="preserve">
+        <value>出力保存</value>
+    </data>
+	<data name="activity_updateworkitem_state" xml:space="preserve">
+        <value>状態</value>
+    </data>
+	<data name="state" xml:space="preserve">
+        <value>状態</value>
+    </data>
+	<data name="addnewworkitemqueue" xml:space="preserve">
+        <value>新しいワークアイテムキューを追加する</value>
+    </data>
+	<data name="activity_addworkitem_success_wiq_help" xml:space="preserve">
+        <value>成功した場合、このキューに新しいワークアイテムを追加する </value>
+    </data>
+	<data name="activity_killifrunning_help" xml:space="preserve">
+        <value>選択したワークフローの実行中のインスタンスを強制終了する </value>
+    </data>
+	<data name="openproject_send_output" xml:space="preserve">
+        <value>送信出力</value>
+    </data>
+	<data name="activity_addworkitem_workitem_help" xml:space="preserve">
+        <value>追加されたワークアイテム</value>
+    </data>
+	<data name="activity_displayname1" xml:space="preserve">
+        <value>表示名</value>
+    </data>
+	<data name="open_culture" xml:space="preserve">
+        <value>文化</value>
+    </data>
+	<data name="button_close" xml:space="preserve">
+        <value>閉じる</value>
+    </data>
+	<data name="activity_updateworkitem_ignoremaxretries" xml:space="preserve">
+        <value>無視する最大再試行回数</value>
+    </data>
+	<data name="activity_addworkitem_name" xml:space="preserve">
+        <value>名称</value>
+    </data>
+	<data name="activity_addworkitem_priority" xml:space="preserve">
+        <value>優先順位</value>
+    </data>
+	<data name="activity_bulkaddworkitems_priority" xml:space="preserve">
+        <value>優先順位</value>
+    </data>
+	<data name="activity_moveelement_tooltip" xml:space="preserve">
+        <value>要素の親ウィンドウを移動する</value>
+    </data>
+	<data name="activity_updateworkitem_exception" xml:space="preserve">
+        <value>例外</value>
+    </data>
 </root>

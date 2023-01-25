@@ -147,4 +147,7 @@
 	<data name="activity_shownotification_tooltip" xml:space="preserve">
     <value>画面右下コーナーに通知を一定時間表示する</value>
   </data>
+	<data name="activity_map_variables" xml:space="preserve">
+        <value>マップ変数</value>
+    </data>
 </root>

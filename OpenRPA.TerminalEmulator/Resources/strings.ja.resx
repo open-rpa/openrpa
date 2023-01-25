@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_click_to_view" xml:space="preserve">
+    <value>クリックで表示</value>
+  </data>
+	<data name="activity_displayname" xml:space="preserve">
+    <value>表示名</value>
+  </data>
+	<data name="activity_displayname_help" xml:space="preserve">
+    <value>ワークフローデザイナー内の表示名</value>
+  </data>
+	<data name="activity_drop_hint" xml:space="preserve">
+    <value>アクティビティを廃棄</value>
+  </data>
+	<data name="activity_get_now" xml:space="preserve">
+    <value>今すぐ入手</value>
+  </data>
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>アクティビティを廃棄</value>
+  </data>
+	<data name="activity_gettext" xml:space="preserve">
+    <value>テキストを取得</value>
+  </data>
+	<data name="activity_gettext_field" xml:space="preserve">
+    <value>フィールド</value>
+  </data>
+	<data name="activity_gettext_field_help" xml:space="preserve">
+    <value>フィールド（入力フィールド）単位でテキストを取得する</value>
+  </data>
+	<data name="activity_gettext_result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+	<data name="activity_gettext_result_help" xml:space="preserve">
+    <value>フィールドまたは文字列からの結果テキスト</value>
+  </data>
+	<data name="activity_gettext_string" xml:space="preserve">
+    <value>文字列</value>
+  </data>
+	<data name="activity_gettext_string_help" xml:space="preserve">
+    <value>文字列フィールドで取得</value>
+  </data>
+	<data name="activity_gettext_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_gettext_timeout_help" xml:space="preserve">
+    <value>フィールドや文字列の出現を待っている間のタイムアウト</value>
+  </data>
+	<data name="activity_gettext_tooltip" xml:space="preserve">
+    <value>フィールドまたは文字列のインデックスでテキストを取得</value>
+  </data>
+	<data name="activity_gettext_waitforkeyboard" xml:space="preserve">
+    <value>キーボードを待つ</value>
+  </data>
+	<data name="activity_gettext_waitforkeyboard_help" xml:space="preserve">
+    <value>trueの場合、キーボードのロックが解除されるまで待ってからテキストを取得します </value>
+  </data>
+	<data name="activity_gettextat_column" xml:space="preserve">
+    <value>カラム</value>
+  </data>
+	<data name="activity_gettextat_column_help" xml:space="preserve">
+    <value>読み出しを開始する列(X)</value>
+  </data>
+	<data name="activity_gettextat_length" xml:space="preserve">
+    <value>長さ</value>
+  </data>
+	<data name="activity_gettextat_length_help" xml:space="preserve">
+    <value>読み込む文字数</value>
+  </data>
+	<data name="activity_gettextat_result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+	<data name="activity_gettextat_result_help" xml:space="preserve">
+    <value>読み出し動作の結果</value>
+  </data>
+	<data name="activity_gettextat_row" xml:space="preserve">
+    <value>列</value>
+  </data>
+	<data name="activity_gettextat_row_help" xml:space="preserve">
+    <value>読み出しを開始する行(Y)</value>
+  </data>
+	<data name="activity_gettextat_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_gettextat_timeout_help" xml:space="preserve">
+    <value>キーボードの準備ができるまで、この時間待つ（有効な場合） </value>
+  </data>
+	<data name="activity_gettextat_waitforkeyboard" xml:space="preserve">
+    <value>キーボードを待つ</value>
+  </data>
+	<data name="activity_gettextat_waitforkeyboard_help" xml:space="preserve">
+    <value>trueの場合、キーボードのロックが解除されるまで待ってからテキストを取得します </value>
+  </data>
+	<data name="activity_gettextatat" xml:space="preserve">
+    <value>テキストを入手 At</value>
+  </data>
+	<data name="activity_gettextatat_tooltip" xml:space="preserve">
+    <value>画面上の指定された位置から一定数の文字を読み取る </value>
+  </data>
+	<data name="activity_open_recorder" xml:space="preserve">
+    <value>オープンレコーダー</value>
+  </data>
+	<data name="activity_recorder" xml:space="preserve">
+    <value>レコーダー</value>
+  </data>
+	<data name="activity_sendkey" xml:space="preserve">
+    <value>送信キー</value>
+  </data>
+	<data name="activity_sendkey_key" xml:space="preserve">
+    <value>キー</value>
+  </data>
+	<data name="activity_sendkey_key_help" xml:space="preserve">
+    <value>端末に送信するキー</value>
+  </data>
+	<data name="activity_sendkey_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_sendkey_timeout_help" xml:space="preserve">
+    <value>キーボードレディ待ちのタイムアウト</value>
+  </data>
+	<data name="activity_sendkey_tooltip" xml:space="preserve">
+    <value>特定のキーを端末に送信する</value>
+  </data>
+	<data name="activity_sendkey_waitforkeyboard" xml:space="preserve">
+    <value>キーボードを待つ</value>
+  </data>
+	<data name="activity_sendkey_waitforkeyboard_help" xml:space="preserve">
+    <value>trueの場合、キーを送信する前にキーボードのロックが解除されるのを待ちます </value>
+  </data>
+	<data name="activity_sendtext" xml:space="preserve">
+    <value>テキストを送信</value>
+  </data>
+	<data name="activity_sendtext_text" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+	<data name="activity_sendtext_text_help" xml:space="preserve">
+    <value>端末に送信するテキスト</value>
+  </data>
+	<data name="activity_sendtext_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_sendtext_timeout_help" xml:space="preserve">
+    <value>テキストが表示されるまでの待ち時間</value>
+  </data>
+	<data name="activity_sendtext_tooltip" xml:space="preserve">
+    <value>端末にテキストを送信する</value>
+  </data>
+	<data name="activity_sendtext_waitforkeyboard" xml:space="preserve">
+    <value>キーボードを待つ</value>
+  </data>
+	<data name="activity_sendtext_waitforkeyboard_help" xml:space="preserve">
+    <value>trueの場合、テキストを送信する前にキーボードのロックが解除されるのを待ちます </value>
+  </data>
+	<data name="activity_settext" xml:space="preserve">
+    <value>テキストを設定</value>
+  </data>
+	<data name="activity_settext_field" xml:space="preserve">
+    <value>フィールド</value>
+  </data>
+	<data name="activity_settext_field_help" xml:space="preserve">
+    <value>テキストを設定するフィールドインデックス</value>
+  </data>
+	<data name="activity_settext_text" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+	<data name="activity_settext_text_help" xml:space="preserve">
+    <value>フィールドに割り当てるテキスト</value>
+  </data>
+	<data name="activity_settext_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_settext_timeout_help" xml:space="preserve">
+    <value>SetTextは、このインデックスを持つフィールドが表示されるまで、この時間だけ待ちます </value>
+  </data>
+	<data name="activity_settext_tooltip" xml:space="preserve">
+    <value>端末セッションで指定したフィールドにテキストを設定する</value>
+  </data>
+	<data name="activity_settext_waitforkeyboard" xml:space="preserve">
+    <value>キーボードを待つ</value>
+  </data>
+	<data name="activity_settext_waitforkeyboard_help" xml:space="preserve">
+    <value>trueの場合、キーボードのロックが解除されるまで待ってからテキストを設定します </value>
+  </data>
+	<data name="activity_terminalsession" xml:space="preserve">
+    <value>端末セッション</value>
+  </data>
+	<data name="activity_terminalsession_hideui" xml:space="preserve">
+    <value>UIを隠す</value>
+  </data>
+	<data name="activity_terminalsession_hideui_help" xml:space="preserve">
+    <value>実行中の端末UIを隠す</value>
+  </data>
+	<data name="activity_terminalsession_hostname" xml:space="preserve">
+    <value>ホスト名</value>
+  </data>
+	<data name="activity_terminalsession_hostname_help" xml:space="preserve">
+    <value>接続するメインフレームのホスト名またはIPアドレス</value>
+  </data>
+	<data name="activity_terminalsession_port" xml:space="preserve">
+    <value>ポート</value>
+  </data>
+	<data name="activity_terminalsession_port_help" xml:space="preserve">
+    <value>接続するメインフレームのポート番号</value>
+  </data>
+	<data name="activity_terminalsession_termtype" xml:space="preserve">
+    <value>用語の種類</value>
+  </data>
+	<data name="activity_terminalsession_termtype_help" xml:space="preserve">
+    <value>メインフレームにサポートする端末の種類（および使用するメインフレームパーサーの種類） </value>
+  </data>
+	<data name="activity_terminalsession_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_terminalsession_timeout_help" xml:space="preserve">
+    <value>接続タイムアウト</value>
+  </data>
+	<data name="activity_waitfortext" xml:space="preserve">
+    <value>テキストを待つ</value>
+  </data>
+	<data name="activity_waitfortext_found" xml:space="preserve">
+    <value>発見</value>
+  </data>
+	<data name="activity_waitfortext_found_help" xml:space="preserve">
+    <value>タイムアウト前にテキストが見つかった場合、Trueを返す</value>
+  </data>
+	<data name="activity_waitfortext_text" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+	<data name="activity_waitfortext_text_help" xml:space="preserve">
+    <value>探すべきテキスト</value>
+  </data>
+	<data name="activity_waitfortext_throw" xml:space="preserve">
+    <value>投げる</value>
+  </data>
+	<data name="activity_waitfortext_throw_help" xml:space="preserve">
+    <value>テキストが見つからなかった場合に例外を投げる</value>
+  </data>
+	<data name="activity_waitfortext_timeout" xml:space="preserve">
+    <value>タイムアウト</value>
+  </data>
+	<data name="activity_waitfortext_timeout_help" xml:space="preserve">
+    <value>テキストが表示されるまでの待ち時間</value>
+  </data>
+	<data name="activity_waitfortext_tooltip" xml:space="preserve">
+    <value>端末の画面のどこかにテキストが表示されるのを待つ</value>
+  </data>
+	<data name="plugin_auto_close" xml:space="preserve">
+    <value>オートクローズ</value>
+  </data>
+	<data name="plugin_auto_close_help" xml:space="preserve">
+    <value>ワークフローが完了または失敗した後、すべての端末セッションを自動終了する</value>
+  </data>
+</root>

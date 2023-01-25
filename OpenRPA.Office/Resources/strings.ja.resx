@@ -406,4 +406,76 @@
 	<data name="activity_unprotectworksheet_tooltip" xml:space="preserve">
 		<value>現在のワークシートの保護を解除する</value>
 	</data>
+	<data name="activity_ExportWorkbook_workbook_help" xml:space="preserve">
+        <value>MicrosoftExcelのワークブック変数を使用して作業する</value>
+    </data>
+	<data name="activity_exportdocument_tooltip" xml:space="preserve">
+        <value>Word文書をpdfやxpsとして書き出すのに使用します </value>
+    </data>
+	<data name="activity_exportdocument" xml:space="preserve">
+        <value>ドキュメントをエクスポート</value>
+    </data>
+	<data name="activity_exportdocument_savechanges_help" xml:space="preserve">
+        <value>エクスポートを行う前にWord文書に変更を保存する</value>
+    </data>
+	<data name="activity_ExportWorkbook_savechanges_help" xml:space="preserve">
+        <value>エクスポート前にワークブックを保存する場合はtrueに設定する</value>
+    </data>
+	<data name="activity_insertrange_count" xml:space="preserve">
+        <value>カウント</value>
+    </data>
+	<data name="activity_readrange_guesscolumntype" xml:space="preserve">
+        <value>カラムの種類を推測する</value>
+    </data>
+	<data name="activity_insertrange_tooltip" xml:space="preserve">
+        <value>スプレッドシートに行や列を挿入する</value>
+    </data>
+	<data name="activity_readrange_guesscolumntype_help" xml:space="preserve">
+        <value>すべての列は文字列型になる これをtrueに設定すると、データの最初の行に基づいて列のタイプを推測する </value>
+    </data>
+	<data name="activity_insertrange_cell" xml:space="preserve">
+        <value>セルまたは範囲</value>
+    </data>
+	<data name="activity_insertrange_shiftright_help" xml:space="preserve">
+        <value>デフォルトでは下方向にシフトするが、これを有効にすると右方向にシフトする</value>
+    </data>
+	<data name="activity_exportdocument_document" xml:space="preserve">
+        <value>ドキュメント</value>
+    </data>
+	<data name="activity_exportdocument_document_help" xml:space="preserve">
+        <value>ドキュメントオブジェクトでエクスポートするドキュメントを選択</value>
+    </data>
+	<data name="activity_exportdocument_filename" xml:space="preserve">
+        <value>ファイル名</value>
+    </data>
+	<data name="activity_ExportWorkbook_filename" xml:space="preserve">
+        <value>ファイル名</value>
+    </data>
+	<data name="activity_exportdocument_filename_help" xml:space="preserve">
+        <value>ファイル名でエクスポートするMicrosoftWordを選択する 新しい名前は同じですが、拡張子が異なります </value>
+    </data>
+	<data name="activity_ExportWorkbook_workbook" xml:space="preserve">
+        <value>ワークブック</value>
+    </data>
+	<data name="activity_insertrange_shiftright" xml:space="preserve">
+        <value>右方向にシフト</value>
+    </data>
+	<data name="activity_insertrange_cell_help" xml:space="preserve">
+        <value>開始するセルまたは行(a1またはa:aまたは1:1)</value>
+    </data>
+	<data name="activity_ExportWorkbook_filename_help" xml:space="preserve">
+        <value>作業するワークブックのフルパスとファイル名</value>
+    </data>
+	<data name="activity_insertrange_count_help" xml:space="preserve">
+        <value>挿入する行数</value>
+    </data>
+	<data name="activity_insertrange" xml:space="preserve">
+        <value>挿入範囲</value>
+    </data>
+	<data name="activity_exportdocument_savechanges" xml:space="preserve">
+        <value>変更を保存する</value>
+    </data>
+	<data name="activity_ExportWorkbook_savechanges" xml:space="preserve">
+        <value>変更を保存する</value>
+    </data>
 </root>

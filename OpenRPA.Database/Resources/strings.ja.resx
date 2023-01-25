@@ -117,133 +117,100 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+	<data name="activity_database_datatable" xml:space="preserve">
+    <value>データテーブル</value>
   </data>
-	<data name="activity_closetab" xml:space="preserve">
-    <value>タブを閉じる</value>
+	<data name="activity_database_datatable_hint" xml:space="preserve">
+    <value>結果を保存するデータテーブル</value>
   </data>
-	<data name="activity_closetab_tooltip" xml:space="preserve">
-    <value>現在のタブを閉じる、もしくはすべてのタブを閉じる</value>
+	<data name="activity_database_query" xml:space="preserve">
+    <value>クエリ</value>
   </data>
-	<data name="activity_executescript" xml:space="preserve">
-    <value>スクリプトを実行</value>
+	<data name="activity_database_query_hint" xml:space="preserve">
+    <value>実行するクエリ</value>
   </data>
-	<data name="activity_executescript_tooltip" xml:space="preserve">
-    <value>現在のタブとデフォルトフレームをターゲットに、ブラウザでスクリプトを実行する</value>
+	<data name="activity_database_result" xml:space="preserve">
+    <value>結果</value>
   </data>
-	<data name="activity_getelement" xml:space="preserve">
-    <value>要素を取得</value>
+	<data name="activity_database_result_hint" xml:space="preserve">
+    <value>クエリーの結果</value>
   </data>
-	<data name="activity_getelement_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
+	<data name="activity_database_table" xml:space="preserve">
+    <value>テーブル</value>
   </data>
-	<data name="activity_getelement_highlight" xml:space="preserve">
-    <value>強調</value>
+	<data name="activity_database_table_hint" xml:space="preserve">
+    <value>行を挿入するテーブル</value>
   </data>
-	<data name="activity_getelement_loopaction" xml:space="preserve">
-    <value>アクションをループ</value>
+	<data name="activity_databasescope" xml:space="preserve">
+    <value>データベースへ接続</value>
   </data>
-	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
-    <value>このようにして、それぞれの結果の処理が終わったら、セレクタを再実行して新しいアイテムを探します。</value>
+	<data name="activity_databasescope_select" xml:space="preserve">
+    <value>データベースの選択</value>
   </data>
-	<data name="activity_getelement_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
+	<data name="activity_databasescope_tooltip" xml:space="preserve">
+    <value>データベースへの接続を開き、終了時に接続を閉じるデータベーススコープ</value>
   </data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>セレクタに基づいてブラウザ要素を検索</value>
-  </data>
-	<data name="activity_openurl" xml:space="preserve">
-    <value>URL を開く</value>
-  </data>
-	<data name="activity_openurl_getcurrent" xml:space="preserve">
-    <value>カレントを取得</value>
-  </data>
-	<data name="activity_openurl_tooltip" xml:space="preserve">
-    <value>選択したブラウザで指定のURLを開く</value>
-  </data>
-	<data name="activity_open_editor" xml:space="preserve">
-    <value>エディタを開く</value>
-  </data>
-	<data name="activity_waitfordownload" xml:space="preserve">
-    <value>ダウンロードを待機</value>
-  </data>
-	<data name="activity_waitfordownload_tooltip" xml:space="preserve">
-    <value>MM対応のブラウザでのダウンロード完了を待つ</value>
-  </data>
-	<data name="activity_waitforready" xml:space="preserve">
-    <value>準備状態を待機</value>
-  </data>
-	<data name="activity_waitforready_help" xml:space="preserve">
-    <value>ページが準備状態つまり非ロード中になるまで待機</value>
-  </data>
-	<data name="compensate_for_old_addon" xml:space="preserve">
-    <value>古い拡張を補う</value>
-  </data>
-	<data name="compensate_for_old_addon_help" xml:space="preserve">
-    <value>古い画素補正を使う</value>
-  </data>
-	<data name="debug_console_output" xml:space="preserve">
-    <value>デバッグ・コンソール</value>
-  </data>
-	<data name="debug_console_output_help" xml:space="preserve">
-    <value>ブラウザのコンソールにデバッグ情報を書き込む</value>
-  </data>
-	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
-    <value>値の設定後に待機</value>
-  </data>
-	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
-    <value>値を設定した後、タブの状態がレディになるのを待つ</value>
-  </data>
-	<data name="register_old_portname" xml:space="preserve">
-    <value>古いポート名を登録</value>
-  </data>
-	<data name="register_old_portname_help" xml:space="preserve">
-    <value>古いブラウザ拡張機能のポート名を登録</value>
-  </data>
-	<data name="unique_xpath_ids" xml:space="preserve">
-    <value>ユニーク ids</value>
-  </data>
-	<data name="unique_xpath_ids_help" xml:space="preserve">
-    <value>xpathのセレクタを作成する際に、これらの属性のいずれかをユニークなIDとして使用します。</value>
-  </data>
-	<data name="wait_for_tab_click" xml:space="preserve">
-    <value>タブを待機</value>
-  </data>
-	<data name="wait_for_tab_click_help" xml:space="preserve">
-    <value>ボタンをクリックした後、タブの状態がレディになるのを待つ</value>
-  </data>
-	<data name="activity_getelement_async" xml:space="preserve">
-    <value>非同期で要素を取得</value>
-  </data>
-	<data name="activity_getelement_async_tooltip" xml:space="preserve">
-    <value>セレクタに基づいてブラウザ要素を検索</value>
-  </data>
-	<data name="activity_getelement_tooltip1" xml:space="preserve">
-    <value>セレクタに基づいてWindowsのユーザーインターフェース要素を探す</value>
-  </data>
-	<data name="activity_gettab_tooltip" xml:space="preserve">
-    <value>Chrome/EdgeまたはFirefoxで現在のタブを取得するには、ブラウザが実行されていない場合は何も返しません</value>
-  </data>
-	<data name="plugin_detect_html_table_help" xml:space="preserve">
-    <value>HTMLテーブルをクリックした場合、録音を行う場合、自動追加テーブルを追加する</value>
-  </data>
-	<data name="plugin_detect_html_table" xml:space="preserve">
-    <value>HTMLテーブルを検出する</value>
-  </data>
-	<data name="activity_gettable_tooltip" xml:space="preserve">
-    <value>XPathsに基づく単純なテーブルデータ抽出</value>
-  </data>
-	<data name="activity_gettab" xml:space="preserve">
-    <value>タブを取得</value>
-  </data>
-	<data name="activity_gettable" xml:space="preserve">
-    <value>テーブルデータを取得</value>
+	<data name="activity_displayname" xml:space="preserve">
+    <value>表示名</value>
   </data>
 	<data name="activity_displayname_help" xml:space="preserve">
     <value>ワークフローデザイナー内の表示名</value>
   </data>
-	<data name="activity_displayname" xml:space="preserve">
-    <value>表示名</value>
+	<data name="activity_executenonquery" xml:space="preserve">
+    <value>非クエリーの実行</value>
+  </data>
+	<data name="activity_executenonquery_query" xml:space="preserve">
+    <value>クエリ</value>
+  </data>
+	<data name="activity_executenonquery_query_help" xml:space="preserve">
+    <value>実行するクエリ</value>
+  </data>
+	<data name="activity_executenonquery_tooltip" xml:space="preserve">
+    <value>UPDATE、INSERT、DELETE文の場合、Resultの値はコマンドによって影響を受けた行の数で、それ以外の場合、Resultの値は-1になる</value>
+  </data>
+	<data name="activity_executequery" xml:space="preserve">
+    <value>クエリーの実行</value>
+  </data>
+	<data name="activity_executequery_tooltip" xml:space="preserve">
+    <value>クエリを実行し、その結果をデータテーブルとして返す </value>
+  </data>
+	<data name="activity_executescalar" xml:space="preserve">
+    <value>スカラーを実行</value>
+  </data>
+	<data name="activity_executescalar_query" xml:space="preserve">
+    <value>クエリ</value>
+  </data>
+	<data name="activity_executescalar_query_help" xml:space="preserve">
+    <value>実行するクエリ</value>
+  </data>
+	<data name="activity_executescalar_tooltip" xml:space="preserve">
+    <value>ちょうど1つの結果を返すクエリを実行します </value>
+  </data>
+	<data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>ドロップ活動</value>
+  </data>
+	<data name="activity_updatefromtable" xml:space="preserve">
+    <value>データテーブルからの更新</value>
+  </data>
+	<data name="activity_updatefromtable_datatable" xml:space="preserve">
+    <value>更新したいデータがあるデータテーブルから</value>
+  </data>
+	<data name="activity_updatefromtable_datatable_help" xml:space="preserve">
+    <value>データテーブル</value>
+  </data>
+	<data name="activity_updatefromtable_result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+	<data name="activity_updatefromtable_result_help" xml:space="preserve">
+    <value>影響を受ける行数</value>
+  </data>
+	<data name="activity_updatefromtable_tablename" xml:space="preserve">
+    <value>テーブル名</value>
+  </data>
+	<data name="activity_updatefromtable_tablename_help" xml:space="preserve">
+    <value>行を挿入するテーブル</value>
+  </data>
+	<data name="activity_updatefromtable_tooltip" xml:space="preserve">
+    <value>現在のデータベースに対してデータテーブルのデータを挿入、更新、削除し、影響を受けた行の数を返す</value>
   </data>
 </root>

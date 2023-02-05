@@ -357,6 +357,10 @@ namespace OpenRPA
                         if (i.Workflow != null) i.Workflow.NotifyUIState();
                     }
                 }
+                if(list.Count > 0)
+                {
+                    WorkflowInstance.CleanUp();
+                }
             }
             catch (Exception ex)
             {

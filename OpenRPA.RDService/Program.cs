@@ -141,7 +141,6 @@ namespace OpenRPA.RDService
         private async static void WebSocketClient_OnClose(string reason)
         {
             Log.Information("Disconnected " + reason);
-            openrpa_watchid = "";
             await Task.Delay(1000);
             if (autoReconnect)
             {
@@ -165,7 +164,6 @@ namespace OpenRPA.RDService
         {
             return System.Convert.ToBase64String(bytes);
         }
-        private static string openrpa_watchid;
         private static async void WebSocketClient_OnOpen()
         {
             try
@@ -223,15 +221,15 @@ namespace OpenRPA.RDService
 
                 if (global.openflowconfig.supports_watch)
                 {
-                    if (string.IsNullOrEmpty(openrpa_watchid))
-                    {
+                    //if (string.IsNullOrEmpty(openrpa_watchid))
+                    //{
                         // "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}"
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'} } }]", onWatchEvent);
-                        openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent, "", "");
+                        await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent, "", "");
 
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[]", onWatchEvent);
                         await ReloadConfig();
-                    }
+                    //}
                 }
                 else
                 {

@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_auth" xml:space="preserve">
+    <value>授權</value>
+  </data>
+	<data name="activity_auth_hint" xml:space="preserve">
+    <value>使用者名稱或信箱</value>
+  </data>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+    <value>針對Rossum服務進行身份驗證並獲得令牌/金鑰</value>
+  </data>
+	<data name="activity_auth_username" xml:space="preserve">
+    <value>使用者名稱</value>
+  </data>
+	<data name="activity_exportfiledata" xml:space="preserve">
+    <value>匯出文件資料</value>
+  </data>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+    <value>獲取發票中擷取的資料的日期，僅在文件狀態為匯出狀態時有效</value>
+  </data>
+	<data name="activity_exportfile_file" xml:space="preserve">
+    <value>文件URL</value>
+  </data>
+	<data name="activity_exportfile_file_hint" xml:space="preserve">
+    <value>要從中獲取資料的文件的URL</value>
+  </data>
+	<data name="activity_exportfile_key" xml:space="preserve">
+    <value>金鑰</value>
+  </data>
+	<data name="activity_exportfile_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
+  </data>
+	<data name="activity_exportfile_queue" xml:space="preserve">
+    <value>佇列</value>
+  </data>
+	<data name="activity_exportfile_queue_hint" xml:space="preserve">
+    <value>用於匯出資料的佇列</value>
+  </data>
+	<data name="activity_getfilestatus" xml:space="preserve">
+    <value>獲得文件狀態</value>
+  </data>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+    <value>獲取佇列中文件的狀態，可以是
+importing-AI核心引擎正在處理文件以擷取資料； 文件的初始狀態。
+failed_import-導入失敗，例如 由於文件檔案格式錯誤。
+to_review-初始擷取步驟已完成，文件正在等待用戶驗證。
+reviewing-文件正在用戶界面中進行驗證。
+exporting-文件已經過驗證，正在等待連接器保存調用完成。
+exported-文件已驗證並成功通過了所有掛鉤； 這是文件的典型終端狀態。
+failed_export-連接器返回錯誤時。
+postponed-操作員已選擇推遲文件而不是匯出文件。
+deleted-用戶刪除文件時。
+purged-刪除後僅保留原始資料。</value>
+  </data>
+	<data name="activity_getqueues" xml:space="preserve">
+    <value>獲得佇列</value>
+  </data>
+	<data name="activity_getqueues_key" xml:space="preserve">
+    <value>金鑰</value>
+  </data>
+	<data name="activity_getqueues_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
+  </data>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+    <value>從Rossum獲取佇列列表，必須將文件上傳到通過網站設置了雜項設置的佇列</value>
+  </data>
+	<data name="activity_getstatus_file" xml:space="preserve">
+    <value>文件URL</value>
+  </data>
+	<data name="activity_getstatus_file_hint" xml:space="preserve">
+    <value>要從中獲取文件的狀態的URL</value>
+  </data>
+	<data name="activity_getstatus_key" xml:space="preserve">
+    <value>金鑰</value>
+  </data>
+	<data name="activity_getstatus_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
+  </data>
+	<data name="activity_uploadfile" xml:space="preserve">
+    <value>上傳文件</value>
+  </data>
+	<data name="activity_uploadfile_filename" xml:space="preserve">
+    <value>檔案名</value>
+  </data>
+	<data name="activity_uploadfile_filename_hint" xml:space="preserve">
+    <value>要上傳到佇列的文件</value>
+  </data>
+	<data name="activity_uploadfile_key" xml:space="preserve">
+    <value>金鑰</value>
+  </data>
+	<data name="activity_uploadfile_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
+  </data>
+	<data name="activity_uploadfile_queue" xml:space="preserve">
+    <value>佇列</value>
+  </data>
+	<data name="activity_uploadfile_queue_hint" xml:space="preserve">
+    <value>將文件上傳到佇列</value>
+  </data>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+    <value>上傳文件到Rossum佇列</value>
+  </data>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+    <value>等待文件狀態</value>
+  </data>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+    <value>在等待文件進入指定狀態時使工作流空閒</value>
+  </data>
+	<data name="activity_waitforfile_file" xml:space="preserve">
+    <value>文件URL</value>
+  </data>
+	<data name="activity_waitforfile_file_hint" xml:space="preserve">
+    <value>等待文件的URL</value>
+  </data>
+	<data name="activity_waitforfile_key" xml:space="preserve">
+    <value>金鑰</value>
+  </data>
+	<data name="activity_waitforfile_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
+  </data>
+	<data name="activity_waitforfile_status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+	<data name="activity_waitforfile_status_hint" xml:space="preserve">
+    <value>需要等待的狀態</value>
+  </data>
+</root>

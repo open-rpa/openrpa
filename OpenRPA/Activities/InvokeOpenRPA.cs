@@ -279,6 +279,10 @@ namespace OpenRPA.Activities
                 }
 
             }
+            catch (Exception ex) when (ex.InnerException is OpenRPA.BusinessRuleException)
+            {
+                throw ex.InnerException;
+            }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());

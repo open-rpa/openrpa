@@ -47,7 +47,7 @@ namespace OpenRPA.RDService
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Log.Error(ex.ToString());
             }
             finally
             {
@@ -102,12 +102,9 @@ namespace OpenRPA.RDService
 
 
 
-                Console.WriteLine("main 1");
                 log("GetParentProcessId");
-                Console.WriteLine("main 200");
                 var parentProcess = NativeMethods.GetParentProcessId();
                 log("Check parentProcess");
-                Console.WriteLine("main 5");
                 isService = (parentProcess.ProcessName.ToLower() == "services");
                 Console.WriteLine("****** isService: " + isService);
                 if (isService)
@@ -175,11 +172,13 @@ namespace OpenRPA.RDService
                 {
                     if (!string.IsNullOrEmpty(PluginConfig.tempjwt))
                     {
+                        Log.Information("Signin using tempjwt");
                         user = await global.webSocketClient.Signin(PluginConfig.tempjwt, "RDService", global.version);
                         if (user != null)
                         {
                             if (isService)
                             {
+                                Log.Information("Store new jwt");
                                 PluginConfig.jwt = Base64Encode(PluginConfig.ProtectString(PluginConfig.tempjwt));
                                 PluginConfig.tempjwt = null;
                                 PluginConfig.Save();
@@ -189,6 +188,7 @@ namespace OpenRPA.RDService
                     }
                     else if (PluginConfig.jwt != null && PluginConfig.jwt.Length > 0)
                     {
+                        Log.Information("Signing in");
                         user = await global.webSocketClient.Signin(PluginConfig.UnprotectString(Base64Decode(PluginConfig.jwt)), "RDService", global.version);
                         if (user != null)
                         {
@@ -204,8 +204,10 @@ namespace OpenRPA.RDService
                         return;
                     }
                 }
+                Log.Information("Get hostname and fqdn");
                 string computername = NativeMethods.GetHostName().ToLower();
                 string computerfqdn = NativeMethods.GetFQDN().ToLower();
+                Log.Information("Query for unattendedserver object in openrpa collection matcing computername " + computername + " and computerfqdn " + computerfqdn);
                 var servers = await global.webSocketClient.Query<unattendedserver>("openrpa", "{'_type':'unattendedserver', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}");
                 server = servers.FirstOrDefault();
                 if (servers.Length == 0)
@@ -218,21 +220,39 @@ namespace OpenRPA.RDService
                 //foreach (var c in clients) sessions.Add(new RobotUserSession(c));
                 // Log.Information("Loaded " + sessions.Count + " sessions");
                 // Create listener for robots to connect too
-
-                if (global.openflowconfig.supports_watch)
+                var supports_watch = true;
+                Log.Information("Check openflow config if it supports watches");
+                try
                 {
-                    //if (string.IsNullOrEmpty(openrpa_watchid))
-                    //{
+                    supports_watch = global.openflowconfig.supports_watch;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+                if(supports_watch)
+                {
+                    try
+                    {
+                        //if (string.IsNullOrEmpty(openrpa_watchid))
+                        //{
                         // "{'_type':'unattendedclient', 'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'}"
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[{ '$match': { 'fullDocument._type': {'computername':'" + computername + "', 'computerfqdn':'" + computerfqdn + "'} } }]", onWatchEvent);
                         await global.webSocketClient.Watch("openrpa", "[{ '$match': {'fullDocument.computername':'" + computername + "', 'fullDocument.computerfqdn':'" + computerfqdn + "'} }]", onWatchEvent, "", "");
 
                         // openrpa_watchid = await global.webSocketClient.Watch("openrpa", "[]", onWatchEvent);
                         await ReloadConfig();
-                    //}
+                        //}
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                        supports_watch = false;
+                    }
                 }
-                else
+                if (!supports_watch)
                 {
+                    Log.Information("Watches are not supported use timer instead");
                     if (reloadTimer == null)
                     {
                         reloadTimer = new System.Timers.Timer(PluginConfig.reloadinterval.TotalMilliseconds);

@@ -13,8 +13,9 @@ namespace OpenRPA.RDService
 
     public class RobotUserSession : IDisposable
     {
-        public RobotUserSession(unattendedclient client)
+        public RobotUserSession(unattendedclient client, unattendedserver server)
         {
+            this.server = server;
             this.client = client;
             BeginWork();
         }
@@ -72,6 +73,7 @@ namespace OpenRPA.RDService
         public Client rdp;
         public FreeRDP.Core.RDP freerdp;
         public unattendedclient client;
+        public unattendedserver server;
         private DateTime created = DateTime.Now;
         private DateTime lastheartbeat = DateTime.Now;
         private DateTime lastrdp = DateTime.Now - TimeSpan.FromMinutes(1);
@@ -104,8 +106,15 @@ namespace OpenRPA.RDService
                 // Is user signed in ?
                 // ownerexplorer = null;
                 //if (ownerexplorer == null)
+                var port = 3389;
                 var rdpip = "127.0.0.2";
+                if (!string.IsNullOrEmpty(server.connectionhost)) rdpip = server.connectionhost;
                 if (!string.IsNullOrEmpty(client.connectionhost)) rdpip = client.connectionhost;
+                if(rdpip.Contains(":"))
+                {
+                    port = int.Parse(rdpip.Split(':')[1]);
+                    rdpip = rdpip.Split(':')[0];
+                }
                 if (PluginConfig.usefreerdp && !skiprdp)
                 {
                     if (freerdp == null || freerdp.Connected == false)
@@ -120,11 +129,11 @@ namespace OpenRPA.RDService
                         var hostname = NativeMethods.GetHostName().ToLower();
                         try
                         {
-                            Log.Debug("Tesing connection to " + rdpip + " port 3389");
+                            Log.Debug("Tesing connection to " + rdpip + " port " + port);
                             //using (var tcpClient = new System.Net.Sockets.TcpClient())
                             //{
                             //    var ipAddress = System.Net.IPAddress.Parse(rdpip);
-                            //    var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
+                            //    var ipEndPoint = new System.Net.IPEndPoint(ipAddress, port);
                             //    tcpClient.Connect(ipEndPoint);
                             //}
                             Log.Debug("Success");
@@ -161,7 +170,7 @@ namespace OpenRPA.RDService
                                 ConnectionAttempts++;
                                 Log.Debug("Connecting RDP connection to " + rdpip + " for " + client.windowslogin);
                                 var settings = new FreeRDP.Core.ConnectionSettings();
-                                freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword, 3389, settings);
+                                freerdp.Connect(rdpip, "", client.windowslogin, client.windowspassword, port, settings);
                             }
                             else
                             {
@@ -230,11 +239,11 @@ namespace OpenRPA.RDService
                     {
                         try
                         {
-                            //Log.Debug("Tesing connection to " + rdpip + " port 3389");
+                            //Log.Debug("Tesing connection to " + rdpip + " port " + port);
                             //using (var tcpClient = new System.Net.Sockets.TcpClient())
                             //{
                             //    var ipAddress = System.Net.IPAddress.Parse(rdpip);
-                            //    var ipEndPoint = new System.Net.IPEndPoint(ipAddress, 3389);
+                            //    var ipEndPoint = new System.Net.IPEndPoint(ipAddress, port);
                             //    tcpClient.Connect(ipEndPoint);
                             //}
                             //Log.Debug("Success");
@@ -264,7 +273,7 @@ namespace OpenRPA.RDService
                                 client.windowslogin = client.windowsusername;
                             }
                         }
-                        rdp.CreateRdpConnectionasync(rdpip, "", client.windowslogin, client.windowspassword);
+                        rdp.CreateRdpConnectionasync(rdpip, "", client.windowslogin, client.windowspassword, port);
                         Log.Verbose("Connection initialized");
                         //if (client.windowsusername.StartsWith(hostname + @"\"))
                         //{

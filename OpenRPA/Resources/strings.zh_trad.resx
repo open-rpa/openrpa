@@ -1,0 +1,732 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="activity_add_variables" xml:space="preserve">
+    <value>增加變數</value>
+  </data>
+	<data name="activity_animatemouse" xml:space="preserve">
+    <value>動畫滑鼠</value>
+  </data>
+	<data name="activity_animatemouse_help" xml:space="preserve">
+    <value>可以看到移動的滑鼠，而不是立即移動到目的地</value>
+  </data>
+	<data name="activity_animatemove" xml:space="preserve">
+    <value>動畫移動</value>
+  </data>
+	<data name="activity_animatemove_help" xml:space="preserve">
+    <value>可見到移動的視窗，而不是立即移動到目的地</value>
+  </data>
+	<data name="activity_blocking" xml:space="preserve">
+    <value>阻斷</value>
+  </data>
+	<data name="activity_blocking_help" xml:space="preserve">
+    <value>阻斷執行直到結束</value>
+  </data>
+	<data name="activity_checkrunning" xml:space="preserve">
+    <value>檢查執行</value>
+  </data>
+	<data name="activity_checkrunning_help" xml:space="preserve">
+    <value>使用選擇器檢查應用程式是否已經在執行，如果設定為false，則無論如何都將啟動新應用程式</value>
+  </data>
+	<data name="activity_clickdelay" xml:space="preserve">
+    <value>點擊延時</value>
+  </data>
+	<data name="activity_clickdelay_help" xml:space="preserve">
+    <value>每次按鍵之間的延時</value>
+  </data>
+	<data name="activity_clickelement" xml:space="preserve">
+    <value>點擊元素</value>
+  </data>
+	<data name="activity_clickelement_tooltip" xml:space="preserve">
+    <value>點擊需要被GetElement發現的元素</value>
+  </data>
+	<data name="activity_click_to_view" xml:space="preserve">
+    <value>雙擊查看</value>
+  </data>
+	<data name="activity_closeapplication" xml:space="preserve">
+    <value>關閉應用</value>
+  </data>
+	<data name="activity_closeapplication_tooltip" xml:space="preserve">
+    <value>找到UI選擇器找到的應用並關閉</value>
+  </data>
+	<data name="activity_commentout" xml:space="preserve">
+    <value>註解</value>
+  </data>
+	<data name="activity_commentout_tooltip" xml:space="preserve">
+    <value>忽略此活動中的所有內容，方便快速註解掉某些內容</value>
+  </data>
+	<data name="activity_copyclipboard" xml:space="preserve">
+    <value>複製剪貼簿</value>
+  </data>
+	<data name="activity_copyclipboard_tooltip" xml:space="preserve">
+    <value>複製剪貼簿中資料到變數中</value>
+  </data>
+	<data name="activity_datatable" xml:space="preserve">
+    <value>資料表</value>
+  </data>
+	<data name="activity_datatable_help" xml:space="preserve">
+    <value>要使用的資料表</value>
+  </data>
+	<data name="activity_dataview" xml:space="preserve">
+    <value>資料視圖</value>
+  </data>
+	<data name="activity_dataview_help" xml:space="preserve">
+    <value>要使用的資料視圖</value>
+  </data>
+	<data name="activity_detector" xml:space="preserve">
+    <value>探測器</value>
+  </data>
+	<data name="activity_detector_help" xml:space="preserve">
+    <value>將等待此檢測器觸發，然後工作流程將繼續</value>
+  </data>
+	<data name="activity_detector_tooltip" xml:space="preserve">
+    <value>將工作流程置於空閒模式，等待選定的檢測器觸發</value>
+  </data>
+	<data name="activity_displayname" xml:space="preserve">
+    <value>顯示名</value>
+  </data>
+	<data name="activity_displayname_help" xml:space="preserve">
+    <value>工作流設計器中的顯示名</value>
+  </data>
+	<data name="activity_doubleclick" xml:space="preserve">
+    <value>雙擊</value>
+  </data>
+	<data name="activity_doubleclick_help" xml:space="preserve">
+    <value>雙擊而不是單擊</value>
+  </data>
+	<data name="activity_drop_hint" xml:space="preserve">
+    <value>丟棄activity</value>
+  </data>
+	<data name="activity_duration" xml:space="preserve">
+    <value>持續</value>
+  </data>
+	<data name="activity_duration_help" xml:space="preserve">
+    <value>將持續執行</value>
+  </data>
+	<data name="activity_element" xml:space="preserve">
+    <value>元素</value>
+  </data>
+	<data name="activity_element_help" xml:space="preserve">
+    <value>單擊此元素，所有GetElement活動的返回類型以及其他一些活動</value>
+  </data>
+	<data name="activity_focuselement" xml:space="preserve">
+    <value>獲得焦點Element</value>
+  </data>
+	<data name="activity_focuselement_tooltip" xml:space="preserve">
+    <value>設定element的焦點</value>
+  </data>
+	<data name="activity_force" xml:space="preserve">
+    <value>強制</value>
+  </data>
+	<data name="activity_force_help" xml:space="preserve">
+    <value>強制執行動作</value>
+  </data>
+	<data name="activity_foreachdatarow" xml:space="preserve">
+    <value>循環DataRow</value>
+  </data>
+	<data name="activity_foreachdatarow_tooltip" xml:space="preserve">
+    <value>疊代DataTable（資料表）中每一行</value>
+  </data>
+	<data name="activity_height" xml:space="preserve">
+    <value>高度</value>
+  </data>
+	<data name="activity_height_help" xml:space="preserve">
+    <value>如果設定，則移動視窗到這個位置</value>
+  </data>
+	<data name="activity_highlight" xml:space="preserve">
+    <value>高亮</value>
+  </data>
+	<data name="activity_highlightelement" xml:space="preserve">
+    <value>高亮元素</value>
+  </data>
+	<data name="activity_highlightelement_tooltip" xml:space="preserve">
+    <value>高亮GetElement找到的元素</value>
+  </data>
+	<data name="activity_ignoreerrors" xml:space="preserve">
+    <value>忽略錯誤</value>
+  </data>
+	<data name="activity_ignoreerrors_help" xml:space="preserve">
+    <value>如果有錯誤，忽略並繼續執行</value>
+  </data>
+	<data name="activity_imageresult" xml:space="preserve">
+    <value>圖像結果</value>
+  </data>
+	<data name="activity_imageresult_help" xml:space="preserve">
+    <value>以圖像的方式返回結果</value>
+  </data>
+	<data name="activity_insertclipboard" xml:space="preserve">
+    <value>插入剪貼簿</value>
+  </data>
+	<data name="activity_insertclipboard_tooltip" xml:space="preserve">
+    <value>將新內容插入用戶剪貼簿緩衝區</value>
+  </data>
+	<data name="activity_invokeopenflow" xml:space="preserve">
+    <value>調用OpenFlow</value>
+  </data>
+	<data name="activity_invokeopenflow_tooltip" xml:space="preserve">
+    <value>在OpenFlow內部為RPA使用註冊的節點中調用工作流程</value>
+  </data>
+	<data name="activity_invokeopenrpa" xml:space="preserve">
+    <value>調用OpenRPA</value>
+  </data>
+	<data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
+    <value>調用一個OpenRPA內的工作流</value>
+  </data>
+	<data name="activity_invokeremoteopenrpa" xml:space="preserve">
+    <value>調用遠程的OpenRPA</value>
+  </data>
+	<data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
+    <value>遠程機器人上調用OpenRPA工作流</value>
+  </data>
+	<data name="activity_keymodifiers" xml:space="preserve">
+    <value>Key 修飾符</value>
+  </data>
+	<data name="activity_keymodifiers_help" xml:space="preserve">
+    <value>在單擊時按住此鍵，僅在停用虛擬單擊時有效</value>
+  </data>
+	<data name="activity_map_variables" xml:space="preserve">
+    <value>映射變數</value>
+  </data>
+	<data name="activity_mousebutton" xml:space="preserve">
+    <value>滑鼠按鈕</value>
+  </data>
+	<data name="activity_mousebutton_help" xml:space="preserve">
+    <value>單擊的滑鼠按鈕</value>
+  </data>
+	<data name="activity_movemouse" xml:space="preserve">
+    <value>移動滑鼠</value>
+  </data>
+	<data name="activity_movemouse_tooltip" xml:space="preserve">
+    <value>將滑鼠游標移動到相對於通過GetElement找到的元素的位置（如果沒有提供元素，則移動到桌面）</value>
+  </data>
+	<data name="activity_offsetx" xml:space="preserve">
+    <value>X Offset</value>
+  </data>
+	<data name="activity_offsetx_help" xml:space="preserve">
+    <value>單擊發生在元素內的X偏移量</value>
+  </data>
+	<data name="activity_offsety" xml:space="preserve">
+    <value>Y Offset</value>
+  </data>
+	<data name="activity_offsety_help" xml:space="preserve">
+    <value>單擊發生在元素內的Y偏移量</value>
+  </data>
+	<data name="activity_openapplication" xml:space="preserve">
+    <value>打開應用</value>
+  </data>
+	<data name="activity_openapplication_tooltip" xml:space="preserve">
+    <value>根據選擇器搜索Windows元素，並為其賦予焦點（如果找不到）啟動應用程式</value>
+  </data>
+	<data name="activity_open_selector" xml:space="preserve">
+    <value>打開選擇器</value>
+  </data>
+	<data name="activity_postwait" xml:space="preserve">
+    <value>發布等待</value>
+  </data>
+	<data name="activity_postwait_help" xml:space="preserve">
+    <value>單擊後等待此時間，以幫助完成一個響應速度很慢的應用程式</value>
+  </data>
+	<data name="activity_result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+	<data name="activity_result_help" xml:space="preserve">
+    <value>保存結果到變數</value>
+  </data>
+	<data name="activity_selector" xml:space="preserve">
+    <value>選擇器</value>
+  </data>
+	<data name="activity_selector_help" xml:space="preserve">
+    <value>用於查找元素的選擇器支持使用{{variablename}}映射工作流變數</value>
+  </data>
+	<data name="activity_select_element" xml:space="preserve">
+    <value>選擇元素</value>
+  </data>
+	<data name="activity_sendctrlc" xml:space="preserve">
+    <value>發送 Ctrl+C</value>
+  </data>
+	<data name="activity_sendctrlc_help" xml:space="preserve">
+    <value>嘗試複製剪貼簿內容之前發送Ctrl + C</value>
+  </data>
+	<data name="activity_showballontop_message" xml:space="preserve">
+    <value>訊息</value>
+  </data>
+	<data name="activity_showballontop_message_hint" xml:space="preserve">
+    <value>要顯示的訊息</value>
+  </data>
+	<data name="activity_showballontop_title" xml:space="preserve">
+    <value>標題</value>
+  </data>
+	<data name="activity_showballontop_title_hint" xml:space="preserve">
+    <value>標題欄上的標題</value>
+  </data>
+	<data name="activity_showballoontip" xml:space="preserve">
+    <value>顯示氣球提示</value>
+  </data>
+	<data name="activity_showballoontip_tooltip" xml:space="preserve">
+    <value>在系統工具列附近顯示一個小氣球提示，將遵守操作系統訊息中心的設定</value>
+  </data>
+	<data name="activity_stringresult" xml:space="preserve">
+    <value>字串結果</value>
+  </data>
+	<data name="activity_stringresult_help" xml:space="preserve">
+    <value>返回一個字串結果</value>
+  </data>
+	<data name="activity_target" xml:space="preserve">
+    <value>目標</value>
+  </data>
+	<data name="activity_target_help" xml:space="preserve">
+    <value>目標用戶和角色</value>
+  </data>
+	<data name="activity_text" xml:space="preserve">
+    <value>文字</value>
+  </data>
+	<data name="activity_timeout" xml:space="preserve">
+    <value>超時</value>
+  </data>
+	<data name="activity_timeout_help" xml:space="preserve">
+    <value>等待很長時間，然後再放棄，否則將失敗或繼續，具體取決於其他設定</value>
+  </data>
+	<data name="activity_typetext" xml:space="preserve">
+    <value>輸入文字</value>
+  </data>
+	<data name="activity_typetext_tooltip" xml:space="preserve">
+    <value>將鍵盤筆觸發送到有焦點的地方，只應由recoder使用</value>
+  </data>
+	<data name="activity_virtualclick" xml:space="preserve">
+    <value>虛擬單擊</value>
+  </data>
+	<data name="activity_virtualclick_help" xml:space="preserve">
+    <value>嘗試進行虛擬點擊而不是使用滑鼠，並非所有元素都支持此功能</value>
+  </data>
+	<data name="activity_waitforcompleted" xml:space="preserve">
+    <value>等待直到結束</value>
+  </data>
+	<data name="activity_waitforcompleted_help" xml:space="preserve">
+    <value>等待完成，然後繼續工作流程</value>
+  </data>
+	<data name="activity_width" xml:space="preserve">
+    <value>寬度</value>
+  </data>
+	<data name="activity_width_help" xml:space="preserve">
+    <value>如果設定，將視窗移到該位置</value>
+  </data>
+	<data name="activity_workflow" xml:space="preserve">
+    <value>工作流</value>
+  </data>
+	<data name="activity_workflow_help" xml:space="preserve">
+    <value>使用這個工作流</value>
+  </data>
+	<data name="activity_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+	<data name="activity_x_help" xml:space="preserve">
+    <value>如果設定，將視窗移到該位置</value>
+  </data>
+	<data name="activity_y" xml:space="preserve">
+    <value>Y</value>
+  </data>
+	<data name="activity_y_help" xml:space="preserve">
+    <value>如果設定，將視窗移到該位置</value>
+  </data>
+	<data name="animatemouse" xml:space="preserve">
+    <value>使用動畫滑鼠</value>
+  </data>
+	<data name="browseraddons" xml:space="preserve">
+    <value>瀏覽插件</value>
+  </data>
+	<data name="button_ok" xml:space="preserve">
+    <value>確認</value>
+  </data>
+	<data name="cancelkey" xml:space="preserve">
+    <value>取消鍵</value>
+  </data>
+	<data name="chrome" xml:space="preserve">
+    <value>Chrome</value>
+  </data>
+	<data name="clickpostwait" xml:space="preserve">
+    <value>設定點擊後等待</value>
+  </data>
+	<data name="copy" xml:space="preserve">
+    <value>複製</value>
+  </data>
+	<data name="copyid" xml:space="preserve">
+    <value>Copy ID</value>
+  </data>
+	<data name="copyrelativefilename" xml:space="preserve">
+    <value>複製相對檔案名</value>
+  </data>
+	<data name="debug" xml:space="preserve">
+    <value>除錯</value>
+  </data>
+	<data name="delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+	<data name="designer_menu_commentout" xml:space="preserve">
+    <value>註解掉</value>
+  </data>
+	<data name="designer_menu_runfromhere" xml:space="preserve">
+    <value>從這裡執行</value>
+  </data>
+	<data name="designer_menu_runthis" xml:space="preserve">
+    <value>執行此活動</value>
+  </data>
+	<data name="designer_menu_uncomment" xml:space="preserve">
+    <value>解除註解</value>
+  </data>
+	<data name="details" xml:space="preserve">
+    <value>明細</value>
+  </data>
+	<data name="detectors" xml:space="preserve">
+    <value>探測器</value>
+  </data>
+	<data name="disable_local_caching" xml:space="preserve">
+    <value>停用本地快取</value>
+  </data>
+	<data name="dock_logging" xml:space="preserve">
+    <value>日誌</value>
+  </data>
+	<data name="dock_output" xml:space="preserve">
+    <value>輸出</value>
+  </data>
+	<data name="dock_properties" xml:space="preserve">
+    <value>屬性</value>
+  </data>
+	<data name="dock_snippets" xml:space="preserve">
+    <value>片段</value>
+  </data>
+	<data name="dock_toolbox" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+	<data name="dock_workflowinstances" xml:space="preserve">
+    <value>工作流實例</value>
+  </data>
+	<data name="download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+	<data name="edge" xml:space="preserve">
+    <value>Edge</value>
+  </data>
+	<data name="exitapplication" xml:space="preserve">
+    <value>退出應用</value>
+  </data>
+	<data name="export" xml:space="preserve">
+    <value>匯出</value>
+  </data>
+	<data name="files" xml:space="preserve">
+    <value>文件</value>
+  </data>
+	<data name="firefox" xml:space="preserve">
+    <value>Firefox</value>
+  </data>
+	<data name="general" xml:space="preserve">
+    <value>一般</value>
+  </data>
+	<data name="import" xml:space="preserve">
+    <value>導入</value>
+  </data>
+	<data name="logging" xml:space="preserve">
+    <value>日誌</value>
+  </data>
+	<data name="mainnew" xml:space="preserve">
+    <value>新建</value>
+  </data>
+	<data name="maintitle" xml:space="preserve">
+    <value>OpenRPA</value>
+  </data>
+	<data name="main_reload" xml:space="preserve">
+    <value>重整</value>
+  </data>
+	<data name="main_settings_recording_add_to_designer" xml:space="preserve">
+    <value>直接錄製到設計器</value>
+  </data>
+	<data name="minimize" xml:space="preserve">
+    <value>最小化</value>
+  </data>
+	<data name="name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+	<data name="newproject" xml:space="preserve">
+    <value>新項目</value>
+  </data>
+	<data name="newworkflow" xml:space="preserve">
+    <value>新工作流</value>
+  </data>
+	<data name="nodered" xml:space="preserve">
+    <value>NodeRED</value>
+  </data>
+	<data name="open" xml:space="preserve">
+    <value>打開</value>
+  </data>
+	<data name="openflow" xml:space="preserve">
+    <value>OpenFlow</value>
+  </data>
+	<data name="openrpa" xml:space="preserve">
+    <value>OpenRPA</value>
+  </data>
+	<data name="open_created" xml:space="preserve">
+    <value>創建於</value>
+  </data>
+	<data name="open_createdby" xml:space="preserve">
+    <value>創建者</value>
+  </data>
+	<data name="open_edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+	<data name="open_edit_xaml" xml:space="preserve">
+    <value>編輯 XAML</value>
+  </data>
+	<data name="open_modified" xml:space="preserve">
+    <value>最後修改於</value>
+  </data>
+	<data name="open_modifiedby" xml:space="preserve">
+    <value>最後修改著</value>
+  </data>
+	<data name="open_name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+	<data name="open_serializable" xml:space="preserve">
+    <value>序列化</value>
+  </data>
+	<data name="open_state" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+	<data name="packages" xml:space="preserve">
+    <value>包</value>
+  </data>
+	<data name="permissions" xml:space="preserve">
+    <value>權限</value>
+  </data>
+	<data name="permissionswindow_delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+	<data name="permissionswindow_new" xml:space="preserve">
+    <value>新建</value>
+  </data>
+	<data name="permissions_delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+	<data name="permissions_invoke" xml:space="preserve">
+    <value>調用</value>
+  </data>
+	<data name="permissions_read" xml:space="preserve">
+    <value>讀</value>
+  </data>
+	<data name="permissions_update" xml:space="preserve">
+    <value>修改</value>
+  </data>
+	<data name="play" xml:space="preserve">
+    <value>執行</value>
+  </data>
+	<data name="plugins" xml:space="preserve">
+    <value>插件</value>
+  </data>
+	<data name="record" xml:space="preserve">
+    <value>錄製</value>
+  </data>
+	<data name="recorderplugins" xml:space="preserve">
+    <value>錄製插件</value>
+  </data>
+	<data name="recordingoverlay" xml:space="preserve">
+    <value>錄製覆蓋</value>
+  </data>
+	<data name="rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+	<data name="ribbon_search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+	<data name="runplugins" xml:space="preserve">
+    <value>執行插件</value>
+  </data>
+	<data name="runtime" xml:space="preserve">
+    <value>執行</value>
+  </data>
+	<data name="save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+	<data name="selector" xml:space="preserve">
+    <value>選擇器</value>
+  </data>
+	<data name="selectorverbose" xml:space="preserve">
+    <value>選擇器詳細</value>
+  </data>
+	<data name="settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+	<data name="settingsfile" xml:space="preserve">
+    <value>設定文件</value>
+  </data>
+	<data name="signout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+	<data name="slowmotion" xml:space="preserve">
+    <value>慢動作</value>
+  </data>
+	<data name="status_disconnected" xml:space="preserve">
+    <value>斷開連接</value>
+  </data>
+	<data name="stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+	<data name="tesseract" xml:space="preserve">
+    <value>Tesseract</value>
+  </data>
+	<data name="tools" xml:space="preserve">
+    <value>工具</value>
+  </data>
+	<data name="tools_change_type" xml:space="preserve">
+    <value>改變類型</value>
+  </data>
+	<data name="tools_swap_animate" xml:space="preserve">
+    <value>交換動畫</value>
+  </data>
+	<data name="tools_swap_sendkeys" xml:space="preserve">
+    <value>交換SendKeys</value>
+  </data>
+	<data name="tools_swap_virtualclick" xml:space="preserve">
+    <value>交換虛擬單擊</value>
+  </data>
+	<data name="type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+	<data name="uilanguage" xml:space="preserve">
+    <value>UI 語言</value>
+  </data>
+	<data name="usesendkeys" xml:space="preserve">
+    <value>使用 SendKeys</value>
+  </data>
+	<data name="usevirtualclicks" xml:space="preserve">
+    <value>使用虛擬單擊</value>
+  </data>
+	<data name="value" xml:space="preserve">
+    <value>值</value>
+  </data>
+	<data name="verbose" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+	<data name="version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+	<data name="visualtracking" xml:space="preserve">
+    <value>視覺跟蹤</value>
+  </data>
+	<data name="warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+</root>

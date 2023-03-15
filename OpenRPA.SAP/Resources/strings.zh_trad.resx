@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_getelement" xml:space="preserve">
+    <value>獲取元素</value>
+  </data>
+  <data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>刪除活動</value>
+  </data>
+  <data name="activity_getelement_highlight" xml:space="preserve">
+    <value>高亮</value>
+  </data>
+  <data name="activity_getelement_open_selector" xml:space="preserve">
+    <value>打開選擇器</value>
+  </data>
+  <data name="activity_getelement_tooltip" xml:space="preserve">
+    <value>根據選擇器查找SAP元素</value>
+  </data>
+  <data name="activity_getproperty" xml:space="preserve">
+    <value>獲得屬性</value>
+  </data>
+  <data name="activity_getproperty_actionname" xml:space="preserve">
+    <value>屬性名稱</value>
+  </data>
+  <data name="activity_getproperty_actionname_help" xml:space="preserve">
+    <value>要獲取的屬性名稱</value>
+  </data>
+  <data name="activity_getproperty_path" xml:space="preserve">
+    <value>路徑</value>
+  </data>
+  <data name="activity_getproperty_path_help" xml:space="preserve">
+    <value>對象的路徑</value>
+  </data>
+  <data name="activity_getproperty_result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+  <data name="activity_getproperty_result_help" xml:space="preserve">
+    <value>獲得屬性的結果</value>
+  </data>
+  <data name="activity_getproperty_systemname" xml:space="preserve">
+    <value>系統名稱</value>
+  </data>
+  <data name="activity_getproperty_systemname_help" xml:space="preserve">
+    <value>要發送命令的系統名稱</value>
+  </data>
+  <data name="activity_getproperty_tooltip" xml:space="preserve">
+    <value>獲得SAP UI元素的屬性值</value>
+  </data>
+  <data name="activity_invokemethod" xml:space="preserve">
+    <value>調用方法</value>
+  </data>
+  <data name="activity_invokemethod_actionname" xml:space="preserve">
+    <value>動作名稱</value>
+  </data>
+  <data name="activity_invokemethod_actionname_help" xml:space="preserve">
+    <value>對對象執行的動作</value>
+  </data>
+  <data name="activity_invokemethod_parameters" xml:space="preserve">
+    <value>參數</value>
+  </data>
+  <data name="activity_invokemethod_parameters_help" xml:space="preserve">
+    <value>動作的參數</value>
+  </data>
+  <data name="activity_invokemethod_path" xml:space="preserve">
+    <value>路徑</value>
+  </data>
+  <data name="activity_invokemethod_path_help" xml:space="preserve">
+    <value>對象的路徑</value>
+  </data>
+  <data name="activity_invokemethod_result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+  <data name="activity_invokemethod_result_help" xml:space="preserve">
+    <value>調用方法的返回值（如果有）</value>
+  </data>
+  <data name="activity_invokemethod_systemname" xml:space="preserve">
+    <value>系統名稱</value>
+  </data>
+  <data name="activity_invokemethod_systemname_help" xml:space="preserve">
+    <value>要發送命令的系統名稱</value>
+  </data>
+  <data name="activity_invokemethod_tooltip" xml:space="preserve">
+    <value>調用SAP UI方法</value>
+  </data>
+  <data name="activity_login" xml:space="preserve">
+    <value>登入</value>
+  </data>
+  <data name="activity_login_client" xml:space="preserve">
+    <value>客戶端</value>
+  </data>
+  <data name="activity_login_client_help" xml:space="preserve">
+    <value>要使用的SAP客戶端</value>
+  </data>
+  <data name="activity_login_host" xml:space="preserve">
+    <value>主機名</value>
+  </data>
+  <data name="activity_login_host_help" xml:space="preserve">
+    <value>服務器地址或主機名</value>
+  </data>
+  <data name="activity_login_language" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="activity_login_language_help" xml:space="preserve">
+    <value>設定客戶端的語言</value>
+  </data>
+  <data name="activity_login_password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="activity_login_password_help" xml:space="preserve">
+    <value>用戶登入的密碼</value>
+  </data>
+  <data name="activity_login_systemname" xml:space="preserve">
+    <value>系統名稱</value>
+  </data>
+  <data name="activity_login_systemname_help" xml:space="preserve">
+    <value>按系統名稱搜索系統的會話，並且僅在未找到時才登入。保留為空時將始終登入到新會話</value>
+  </data>
+  <data name="activity_login_tooltip" xml:space="preserve">
+    <value>使用憑據登入到SAP，除非存在具有給定名稱的會話</value>
+  </data>
+  <data name="activity_login_username" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="activity_login_username_help" xml:space="preserve">
+    <value>要登入的該用戶名</value>
+  </data>
+  <data name="activity_map_variables" xml:space="preserve">
+    <value>Map變量</value>
+  </data>
+  <data name="activity_setproperty" xml:space="preserve">
+    <value>設定屬性</value>
+  </data>
+  <data name="activity_setproperty_actionname" xml:space="preserve">
+    <value>屬性名稱</value>
+  </data>
+  <data name="activity_setproperty_actionname_help" xml:space="preserve">
+    <value>要設定的屬性名稱</value>
+  </data>
+  <data name="activity_setproperty_parameters" xml:space="preserve">
+    <value>參數</value>
+  </data>
+  <data name="activity_setproperty_parameters_help" xml:space="preserve">
+    <value>動作的參數</value>
+  </data>
+  <data name="activity_setproperty_path" xml:space="preserve">
+    <value>路徑</value>
+  </data>
+  <data name="activity_setproperty_path_help" xml:space="preserve">
+    <value>對象路徑</value>
+  </data>
+  <data name="activity_setproperty_systemname" xml:space="preserve">
+    <value>系統名稱</value>
+  </data>
+  <data name="activity_setproperty_systemname_help" xml:space="preserve">
+    <value>要發送命令的系統名稱</value>
+  </data>
+  <data name="activity_setproperty_tooltip" xml:space="preserve">
+    <value>設定一個SAP UI 元素的屬性</value>
+  </data>
+  <data name="plugin_auto_launch_sap_bridge" xml:space="preserve">
+    <value>自動啟動</value>
+  </data>
+  <data name="plugin_auto_launch_sap_bridge_help" xml:space="preserve">
+    <value>機器人運行時自動啟動SAP橋接</value>
+  </data>
+  <data name="plugin_bridge_timeout_seconds" xml:space="preserve">
+    <value>橋接超時</value>
+  </data>
+  <data name="plugin_bridge_timeout_seconds_help" xml:space="preserve">
+    <value>每個請求到SAP 橋接的等待時間</value>
+  </data>
+  <data name="plugin_launch_sap_bridge" xml:space="preserve">
+    <value>啟動SAP橋接</value>
+  </data>
+  <data name="plugin_record_with_get_element" xml:space="preserve">
+    <value>記錄獲取元素</value>
+  </data>
+  <data name="plugin_record_with_get_element_help" xml:space="preserve">
+    <value>錄製時，請使用GetElement而不是SetProperty</value>
+  </data>
+</root>

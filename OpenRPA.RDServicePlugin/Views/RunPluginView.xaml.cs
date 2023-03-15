@@ -210,15 +210,19 @@ namespace OpenRPA.RDServicePlugin.Views
                     AddcurrentuserButton.Content = "Update current user";
                     chkautosignout.IsChecked = client.autosignout;
                     lblWindowsLogin.Text = client.windowslogin;
+                    RemovecurrentuserButton.IsEnabled = true;
+                    AddcurrentuserButton.IsEnabled = true;
                 }
                 else
                 {
+                    RemovecurrentuserButton.IsEnabled = false;
+                    AddcurrentuserButton.IsEnabled = true;
                     chkautosignout.IsChecked = true;
                 }
                 txtreloadinterval.Text = RDService.PluginConfig.reloadinterval.ToString();
                 chkUseFreeRDP.IsChecked = RDService.PluginConfig.usefreerdp;
-                AddcurrentuserButton.IsEnabled = false;
-                RemovecurrentuserButton.IsEnabled = false;
+                // AddcurrentuserButton.IsEnabled = false;
+                // RemovecurrentuserButton.IsEnabled = false;
                 ReauthenticateButton.IsEnabled = false;
                 StartServiceButton.IsEnabled = false;
                 StopServiceButton.IsEnabled = false;

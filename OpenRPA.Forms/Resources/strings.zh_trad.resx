@@ -121,7 +121,7 @@
     <value>警告訊息</value>
   </data>
 	<data name="activity_formdesigner_build" xml:space="preserve">
-    <value>創建表單/value>
+    <value>創建表單</value>
   </data>
 	<data name="activity_invokeform" xml:space="preserve">
     <value>調用公式</value>

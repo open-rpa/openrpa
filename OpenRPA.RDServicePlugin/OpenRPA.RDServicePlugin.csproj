@@ -15,7 +15,7 @@
 1.0.6 Improve high density robots
 1.0.4 update interfaces reference
 1.0.1 Improve UI and service installation</PackageReleaseNotes>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <PackageTags>OpenRPA</PackageTags>
     <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
     <Platforms>AnyCPU;x86</Platforms>

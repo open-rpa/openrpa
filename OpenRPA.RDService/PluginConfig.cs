@@ -12,17 +12,23 @@ namespace OpenRPA.RDService
     {
         private static string pluginname => "rdservice";
         private static Config _globallocal = null;
+        public static string configfile
+        {
+            get
+            {
+                var asm = System.Reflection.Assembly.GetEntryAssembly();
+                var filepath = asm.CodeBase.Replace("file:///", "");
+                var path = System.IO.Path.GetDirectoryName(filepath);
+                return System.IO.Path.Combine(path, "settings.json");
+            }
+        }
         public static Config globallocal
         {
             get
             {
                 if (_globallocal == null)
                 {
-                    var asm = System.Reflection.Assembly.GetEntryAssembly();
-                    var filepath = asm.CodeBase.Replace("file:///", "");
-                    var path = System.IO.Path.GetDirectoryName(filepath);
-                    _globallocal = AppSettings<Config>.Load(System.IO.Path.Combine(path, "settings.json"));
-                    Console.WriteLine(System.IO.Path.Combine(path, "settings.json"));
+                    _globallocal = AppSettings<Config>.Load(configfile);
                 }
                 return _globallocal;
             }

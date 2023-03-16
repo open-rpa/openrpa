@@ -29,6 +29,10 @@ namespace OpenRPA.Interfaces
                     var rs = rm.GetResourceSet(culture, true, false);
                     if (rs != null)
                         result.Add(culture);
+                    if (culture.TwoLetterISOLanguageName == "zh")
+                    {
+                        Console.WriteLine(culture.Name);
+                    }
                 }
                 catch (System.Globalization.CultureNotFoundException)
                 {

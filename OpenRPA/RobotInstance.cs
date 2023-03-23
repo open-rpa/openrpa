@@ -341,7 +341,7 @@ namespace OpenRPA
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             reloadTimer.Stop();
-            _ = LoadServerData();
+            _ = LoadServerData(false);
         }
         private static async void UnsavedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -479,7 +479,7 @@ namespace OpenRPA
             {
             }
         }
-        public async Task LoadServerData()
+        public async Task LoadServerData(bool isReRun)
         {
             Log.Debug("LoadServerData::begin");
             Window.IsLoading = true;
@@ -1017,6 +1017,10 @@ namespace OpenRPA
                 Window.OnOpen(null);
                 Log.Debug("LoadServerData::end");
             }
+            if(!isReRun)
+            {
+                _ = LoadServerData(true);
+            }
         }
         private void SetStatus(string message)
         {
@@ -1094,7 +1098,7 @@ namespace OpenRPA
                         if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
                     });
-                    await LoadServerData();
+                    await LoadServerData(false);
                     if (!isReadyForAction)
                     {
                         ParseCommandLineArgs();
@@ -1515,7 +1519,7 @@ namespace OpenRPA
             }
             try
             {
-                _ = LoadServerData();
+                _ = LoadServerData(false);
                 InitializeOTEL();
             }
             catch (Exception ex)

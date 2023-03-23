@@ -1355,7 +1355,7 @@ namespace OpenRPA
             }
             else
             {
-                _ = RobotInstance.instance.LoadServerData();
+                _ = RobotInstance.instance.LoadServerData(true);
             }
         }
         private bool CanImport(object _item)

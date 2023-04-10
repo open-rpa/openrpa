@@ -129,4 +129,16 @@
 	<data name="plugin_path" xml:space="preserve">
     <value>パス</value>
   </data>
+	<data name="plugin_raiseOnChanged" xml:space="preserve">
+        <value>変更時</value>
+    </data>
+	<data name="plugin_raiseOnCreated" xml:space="preserve">
+        <value>作成時</value>
+    </data>
+	<data name="plugin_raiseOnDeleted" xml:space="preserve">
+        <value>削除時</value>
+    </data>
+	<data name="plugin_raiseOnRenamed" xml:space="preserve">
+        <value>リネーム時</value>
+    </data>
 </root>

@@ -118,141 +118,129 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="activity_assignopenflow" xml:space="preserve">
-    <value>OpenFlow を割当</value>
+    <value>分配OpenFlow</value>
   </data>
 	<data name="activity_assignopenflow_tooltip" xml:space="preserve">
-    <value>ユーザーやロールにOpenFlowワークフローを割り当てる</value>
+    <value>將OpenFlow工作流程分配給用戶或角色</value>
   </data>
 	<data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+    <value>雙擊查看</value>
   </data>
 	<data name="activity_deletefile" xml:space="preserve">
-    <value>ファイルを削除</value>
+    <value>刪除文件</value>
   </data>
 	<data name="activity_deletefile_tooltip" xml:space="preserve">
-    <value>OpenFlowデータベースからファイルを削除する</value>
+    <value>從OpenFlow資料庫中刪除文件</value>
   </data>
 	<data name="activity_deleteone" xml:space="preserve">
-    <value>1件削除</value>
+    <value>刪除一條</value>
   </data>
 	<data name="activity_deleteone_tooltip" xml:space="preserve">
-    <value>OpenFlowデータベースの1つのアイテムを削除する</value>
+    <value>從OpenFlow資料庫中刪除一條</value>
   </data>
 	<data name="activity_filename" xml:space="preserve">
-    <value>ファイル名</value>
+    <value>檔案名</value>
   </data>
 	<data name="activity_filename_hint" xml:space="preserve">
-    <value>ファイル名</value>
+    <value>檔案名</value>
   </data>
 	<data name="activity_getcredentials" xml:space="preserve">
-    <value>資格情報を取得</value>
+    <value>獲取證書</value>
   </data>
 	<data name="activity_getcredentials_tooltip" xml:space="preserve">
-    <value>OpenFlowから暗号化された認証情報のセットを取得する。</value>
+    <value>從OpenFlow獲取一組加密的證書</value>
   </data>
 	<data name="activity_getfile" xml:space="preserve">
-    <value>ファイルを取得</value>
+    <value>獲得文件</value>
   </data>
 	<data name="activity_getfile_tooltip" xml:space="preserve">
-    <value>OpenFlowデータベース内に保存されたファイルのダウンロード</value>
+    <value>下載保存在OpenFlow資料庫中的文件</value>
   </data>
 	<data name="activity_grantpermission" xml:space="preserve">
-    <value>許可を付与</value>
+    <value>賦予權限</value>
   </data>
 	<data name="activity_grantpermission_tooltip" xml:space="preserve">
-    <value>指定されたオブジェクトのユーザーまたはロールに対する権限を追加またはアップデートします。次の手順で、OpenFlowでドキュメントをアップデートする必要があります。</value>
+    <value>添加或更新對指定對象的用戶或角色的權限，之後必須在OpenFlow中更新文件</value>
   </data>
 	<data name="activity_insertone" xml:space="preserve">
-    <value>1件挿入</value>
+    <value>新增一條</value>
   </data>
 	<data name="activity_insertone_tooltip" xml:space="preserve">
-    <value>1つのアイテムをOpenFlowデータベースに挿入する</value>
+    <value>在OpenFlow資料庫中新增一條</value>
   </data>
 	<data name="activity_insertorupdateone" xml:space="preserve">
-    <value>1件挿入または更新</value>
+    <value>新增或修改一條</value>
   </data>
 	<data name="activity_insertorupdateone_tooltip" xml:space="preserve">
-    <value>OpenFlowデータベースに1つの項目を挿入し、すでに存在する場合は更新します。 「Uniqueness」を指定しない限り、「Uniqueness」に記載されたフィールドに基づいて既存の項目が検索されます。</value>
+    <value>將一項新增OpenFlow資料庫，如果已經存在則進行更新。 除非您指定唯一性，否則檢查_id，它將根據唯一性中提到的欄位查找現有項</value>
   </data>
 	<data name="activity_local_path" xml:space="preserve">
-    <value>ローカルパス</value>
+    <value>當前路徑</value>
   </data>
 	<data name="activity_local_path_hint" xml:space="preserve">
-    <value>ファイルをこのフォルダーに保存する</value>
+    <value>保存文件到這個路徑</value>
   </data>
 	<data name="activity_perm_delete" xml:space="preserve">
-    <value>削除</value>
+    <value>刪除</value>
   </data>
 	<data name="activity_perm_read" xml:space="preserve">
-    <value>読込</value>
+    <value>讀取</value>
   </data>
 	<data name="activity_perm_update" xml:space="preserve">
     <value>更新</value>
   </data>
 	<data name="activity_query" xml:space="preserve">
-    <value>照会</value>
+    <value>查詢</value>
   </data>
 	<data name="activity_query_tooltip" xml:space="preserve">
-    <value>1つまたは複数の項目について、OpenFlowデータベースを照会する</value>
+    <value>在OpenFlow資料庫中查詢資料</value>
   </data>
 	<data name="activity_removepermission" xml:space="preserve">
-    <value>許可を除去</value>
+    <value>刪除權限</value>
   </data>
 	<data name="activity_removepermission_tooltip" xml:space="preserve">
-    <value>指定されたオブジェクトのユーザーまたはロールから権限を削除します。その後、OpenFlowでドキュメントを更新する必要があります</value>
+    <value>從指定對象的用戶或角色中刪除權限，則必須在OpenFlow之後更新文件</value>
   </data>
 	<data name="activity_savefile" xml:space="preserve">
-    <value>ファイルを保存</value>
+    <value>保存文件</value>
   </data>
 	<data name="activity_savefile_filename" xml:space="preserve">
-    <value>ファイル名</value>
+    <value>檔案名</value>
   </data>
 	<data name="activity_savefile_filename_help" xml:space="preserve">
-    <value>アップロードするファイルの完全なパスとファイル名。</value>
+    <value>要上傳文件的完整路徑和檔案名</value>
   </data>
 	<data name="activity_savefile_path" xml:space="preserve">
-    <value>パス</value>
+    <value>路徑</value>
   </data>
 	<data name="activity_savefile_path_help" xml:space="preserve">
-    <value>ファイルをサーバー上のこのサブフォルダに保存します。これは、ファイルを再取得する際に関連します。</value>
+    <value>將文件保存在伺服器上的此子文件夾中，再次獲取文件時具有相關性</value>
   </data>
 	<data name="activity_savefile_result" xml:space="preserve">
     <value>結果</value>
   </data>
 	<data name="activity_savefile_result_help" xml:space="preserve">
-    <value>新規アップロードされたファイルのIDを返す</value>
+    <value>返回新上傳文件的ID</value>
   </data>
 	<data name="activity_savefile_tooltip" xml:space="preserve">
-    <value>OpenFlowデータベースへのファイルのアップロードと保存</value>
+    <value>上傳文件並將其保存到OpenFlow資料庫中</value>
   </data>
 	<data name="activity_setcredentials" xml:space="preserve">
-    <value>資格情報を設定</value>
+    <value>設置證書</value>
   </data>
 	<data name="activity_setcredentials_tooltip" xml:space="preserve">
-    <value>OpenFlowで暗号化された認証情報を作成または更新することができます。</value>
+    <value>在OpenFlow中創建或更新一組加密的證書</value>
   </data>
 	<data name="activity_updatefromdataTable" xml:space="preserve">
-    <value>データテーブルから更新</value>
+    <value>從資料表更新</value>
   </data>
 	<data name="activity_updatefromdataTable_tooltip" xml:space="preserve">
-    <value>データテーブルで行われた変更をOpenFlowにコミットし、挿入および更新された行のリストを返します。</value>
+    <value>將對DataTable所做的更改提交回OpenFlow，返回新增和更新的行的列表</value>
   </data>
 	<data name="activity_waitforcompleted" xml:space="preserve">
-    <value>完了まで待機</value>
+    <value>等待直到結束</value>
   </data>
 	<data name="activity_waitforcompleted_help" xml:space="preserve">
-    <value>完了を待ってワークフローを続行する</value>
+    <value>等待完成，然後繼續工作流程</value>
   </data>
-	<data name="activity_count_tooltip" xml:space="preserve">
-        <value>エンティティ数のカウント クエリフィルタはオプション </value>
-    </data>
-	<data name="activity_count" xml:space="preserve">
-        <value>カウント</value>
-    </data>
-	<data name="activity_insertorupdatemany" xml:space="preserve">
-        <value>多数の挿入または更新</value>
-    </data>
-	<data name="activity_insertorupdatemany_tooltip" xml:space="preserve">
-        <value>独自のキーで複数の項目を更新（必要に応じて挿入）可能</value>
-    </data>
 </root>

@@ -117,133 +117,46 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
-  </data>
-	<data name="activity_closetab" xml:space="preserve">
-    <value>タブを閉じる</value>
-  </data>
-	<data name="activity_closetab_tooltip" xml:space="preserve">
-    <value>現在のタブを閉じる、もしくはすべてのタブを閉じる</value>
-  </data>
-	<data name="activity_executescript" xml:space="preserve">
-    <value>スクリプトを実行</value>
-  </data>
-	<data name="activity_executescript_tooltip" xml:space="preserve">
-    <value>現在のタブとデフォルトフレームをターゲットに、ブラウザでスクリプトを実行する</value>
-  </data>
 	<data name="activity_getelement" xml:space="preserve">
-    <value>要素を取得</value>
+    <value>獲得元素</value>
   </data>
 	<data name="activity_getelement_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
+    <value>刪除活動</value>
   </data>
 	<data name="activity_getelement_highlight" xml:space="preserve">
-    <value>強調</value>
-  </data>
-	<data name="activity_getelement_loopaction" xml:space="preserve">
-    <value>アクションをループ</value>
-  </data>
-	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
-    <value>このようにして、それぞれの結果の処理が終わったら、セレクタを再実行して新しいアイテムを探します。</value>
+    <value>高亮</value>
   </data>
 	<data name="activity_getelement_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
+    <value>打開選擇器</value>
   </data>
 	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>セレクタに基づいてブラウザ要素を検索</value>
+    <value>查找選擇器選擇的Windows UI元素</value>
   </data>
 	<data name="activity_openurl" xml:space="preserve">
-    <value>URL を開く</value>
+    <value>打開URL</value>
   </data>
 	<data name="activity_openurl_getcurrent" xml:space="preserve">
-    <value>カレントを取得</value>
+    <value>獲得當前URL</value>
   </data>
 	<data name="activity_openurl_tooltip" xml:space="preserve">
-    <value>選択したブラウザで指定のURLを開く</value>
-  </data>
-	<data name="activity_open_editor" xml:space="preserve">
-    <value>エディタを開く</value>
-  </data>
-	<data name="activity_waitfordownload" xml:space="preserve">
-    <value>ダウンロードを待機</value>
-  </data>
-	<data name="activity_waitfordownload_tooltip" xml:space="preserve">
-    <value>MM対応のブラウザでのダウンロード完了を待つ</value>
+    <value>在IE中打開指定的URL</value>
   </data>
 	<data name="activity_waitforready" xml:space="preserve">
-    <value>準備状態を待機</value>
+    <value>等待準備</value>
   </data>
 	<data name="activity_waitforready_help" xml:space="preserve">
-    <value>ページが準備状態つまり非ロード中になるまで待機</value>
+    <value>等待頁面準備就緒，而不是載入中的裝填</value>
   </data>
-	<data name="compensate_for_old_addon" xml:space="preserve">
-    <value>古い拡張を補う</value>
+	<data name="enable_caching_browser" xml:space="preserve">
+    <value>快取瀏覽器對象</value>
   </data>
-	<data name="compensate_for_old_addon_help" xml:space="preserve">
-    <value>古い画素補正を使う</value>
+	<data name="enable_caching_browser_help" xml:space="preserve">
+    <value>保存瀏覽器對象，而不是在每次調用時搜索視窗</value>
   </data>
-	<data name="debug_console_output" xml:space="preserve">
-    <value>デバッグ・コンソール</value>
+	<data name="enable_xpath_support" xml:space="preserve">
+    <value>允許XPath</value>
   </data>
-	<data name="debug_console_output_help" xml:space="preserve">
-    <value>ブラウザのコンソールにデバッグ情報を書き込む</value>
-  </data>
-	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
-    <value>値の設定後に待機</value>
-  </data>
-	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
-    <value>値を設定した後、タブの状態がレディになるのを待つ</value>
-  </data>
-	<data name="register_old_portname" xml:space="preserve">
-    <value>古いポート名を登録</value>
-  </data>
-	<data name="register_old_portname_help" xml:space="preserve">
-    <value>古いブラウザ拡張機能のポート名を登録</value>
-  </data>
-	<data name="unique_xpath_ids" xml:space="preserve">
-    <value>ユニーク ids</value>
-  </data>
-	<data name="unique_xpath_ids_help" xml:space="preserve">
-    <value>xpathのセレクタを作成する際に、これらの属性のいずれかをユニークなIDとして使用します。</value>
-  </data>
-	<data name="wait_for_tab_click" xml:space="preserve">
-    <value>タブを待機</value>
-  </data>
-	<data name="wait_for_tab_click_help" xml:space="preserve">
-    <value>ボタンをクリックした後、タブの状態がレディになるのを待つ</value>
-  </data>
-	<data name="activity_getelement_async" xml:space="preserve">
-    <value>非同期で要素を取得</value>
-  </data>
-	<data name="activity_getelement_async_tooltip" xml:space="preserve">
-    <value>セレクタに基づいてブラウザ要素を検索</value>
-  </data>
-	<data name="activity_getelement_tooltip1" xml:space="preserve">
-    <value>セレクタに基づいてWindowsのユーザーインターフェース要素を探す</value>
-  </data>
-	<data name="activity_gettab_tooltip" xml:space="preserve">
-    <value>Chrome/EdgeまたはFirefoxで現在のタブを取得するには、ブラウザが実行されていない場合は何も返しません</value>
-  </data>
-	<data name="plugin_detect_html_table_help" xml:space="preserve">
-    <value>HTMLテーブルをクリックした場合、録音を行う場合、自動追加テーブルを追加する</value>
-  </data>
-	<data name="plugin_detect_html_table" xml:space="preserve">
-    <value>HTMLテーブルを検出する</value>
-  </data>
-	<data name="activity_gettable_tooltip" xml:space="preserve">
-    <value>XPathsに基づく単純なテーブルデータ抽出</value>
-  </data>
-	<data name="activity_gettab" xml:space="preserve">
-    <value>タブを取得</value>
-  </data>
-	<data name="activity_gettable" xml:space="preserve">
-    <value>テーブルデータを取得</value>
-  </data>
-	<data name="activity_displayname_help" xml:space="preserve">
-    <value>ワークフローデザイナー内の表示名</value>
-  </data>
-	<data name="activity_displayname" xml:space="preserve">
-    <value>表示名</value>
+	<data name="enable_xpath_support_help" xml:space="preserve">
+    <value>在IE中啟用實驗性XPath支援</value>
   </data>
 </root>

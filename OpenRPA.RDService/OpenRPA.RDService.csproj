@@ -11,7 +11,7 @@
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
     <PackageIcon>terminalemulator.png</PackageIcon>
     <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
-    <Version>1.0.17</Version>
+    <Version>1.0.18</Version>
     <PackageReleaseNotes>1.0.17 Improve rdservice, add support for running without freerdp as a service
 1.0.16 Fix reconnecting bug
 1.0.15 Change target framework to 4.7.2

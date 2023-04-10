@@ -117,118 +117,16 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="activity_displayname" xml:space="preserve">
-    <value>表示名</value>
+	<data name="plugin_filter" xml:space="preserve">
+    <value>文件過濾</value>
   </data>
-	<data name="activity_displayname_help" xml:space="preserve">
-    <value>ワークフロー・デザイナ内の表示名</value>
+	<data name="plugin_includesubdir" xml:space="preserve">
+    <value>子目錄</value>
   </data>
-	<data name="activity_element" xml:space="preserve">
-    <value>要素</value>
+	<data name="plugin_name" xml:space="preserve">
+    <value>名稱</value>
   </data>
-	<data name="activity_element_help" xml:space="preserve">
-    <value>この要素に対する作業、すべての「要素を取得」アクティビティの戻り値のタイプ、およびその他の要素。</value>
+	<data name="plugin_path" xml:space="preserve">
+    <value>路徑</value>
   </data>
-	<data name="activity_getcolor" xml:space="preserve">
-    <value>色を取得</value>
-  </data>
-	<data name="activity_getcolor_tooltip" xml:space="preserve">
-    <value>指定した座標の色を取得する。</value>
-  </data>
-	<data name="activity_getelement" xml:space="preserve">
-    <value>要素を取得</value>
-  </data>
-	<data name="activity_getelement_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
-  </data>
-	<data name="activity_getelement_highlight" xml:space="preserve">
-    <value>強調</value>
-  </data>
-	<data name="activity_getelement_process_limit" xml:space="preserve">
-    <value>処理制限</value>
-  </data>
-	<data name="activity_getelement_select" xml:space="preserve">
-    <value>イメージを選択</value>
-  </data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>画面上または特定のアプリケーションウィンドウ内の画像を検索する</value>
-  </data>
-	<data name="activity_getimage" xml:space="preserve">
-    <value>イメージを取得</value>
-  </data>
-	<data name="activity_getimage_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
-  </data>
-	<data name="activity_getimage_highlight" xml:space="preserve">
-    <value>強調</value>
-  </data>
-	<data name="activity_getimage_select" xml:space="preserve">
-    <value>イメージを選択</value>
-  </data>
-	<data name="activity_getimage_tooltip" xml:space="preserve">
-    <value>「要素を取得」で見つけた他の画像や要素から、画面の画像を相対的に取得する。</value>
-  </data>
-	<data name="activity_gettext" xml:space="preserve">
-    <value>テキストを取得</value>
-  </data>
-	<data name="activity_gettext_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
-  </data>
-	<data name="activity_gettext_limit" xml:space="preserve">
-    <value>制限</value>
-  </data>
-	<data name="activity_gettext_limit_hint" xml:space="preserve">
-    <value>この単語だけを検索する</value>
-  </data>
-	<data name="activity_gettext_tooltip" xml:space="preserve">
-    <value>OCRを使用して、画像からすべてのテキストを取得します。</value>
-  </data>
-	<data name="activity_loadfile_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
-  </data>
-	<data name="activity_loadfile_filename" xml:space="preserve">
-    <value>ファイル名</value>
-  </data>
-	<data name="activity_loadfile_filename_hint" xml:space="preserve">
-    <value>ロードする画像ファイル</value>
-  </data>
-	<data name="activity_loadfromfile" xml:space="preserve">
-    <value>ファイルからロード</value>
-  </data>
-	<data name="activity_loadfromfile_tooltip" xml:space="preserve">
-    <value>ファイルから画像を読み込み、ImageElementを返す。</value>
-  </data>
-	<data name="activity_offsetx" xml:space="preserve">
-    <value>X オフセット</value>
-  </data>
-	<data name="activity_offsetx_help" xml:space="preserve">
-    <value>要素内のこのオフセットでクリックする</value>
-  </data>
-	<data name="activity_offsety" xml:space="preserve">
-    <value>Y オフセット</value>
-  </data>
-	<data name="activity_offsety_help" xml:space="preserve">
-    <value>要素内のこのオフセットでクリックする</value>
-  </data>
-	<data name="activity_takescreenshot" xml:space="preserve">
-    <value>スクリーンショットを撮る</value>
-  </data>
-	<data name="activity_takescreenshot_tooltip" xml:space="preserve">
-    <value>画面全体または「要素を取得」で見つけた特定の要素のスクリーンショットを撮る</value>
-  </data>
-	<data name="activity_printwindow" xml:space="preserve">
-		<value>ウィンドウの印刷</value>
-	</data>
-	<data name="activity_printwindow_tooltip" xml:space="preserve">
-		<value>画面がロックされていても、指定したウィンドウ名でアプリケーションウィンドウを印刷する</value>
-	</data>
-	<data name="plugin_recording_mouse_move_time" xml:space="preserve">
-		<value>マウス移動時間</value>
-	</data>
-	<data name="plugin_recording_mouse_move_time_help" xml:space="preserve">
-		<value>録画中に、マウスを「X」ミリ秒遅延させてから画像を取得する。</value>
-	</data>
-	<data name="activity_getelement_clear_process_limit" xml:space="preserve">
-        <value>プロセスリミットをクリア</value>
-    </data>
 </root>

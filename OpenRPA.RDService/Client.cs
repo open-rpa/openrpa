@@ -21,24 +21,27 @@ namespace OpenRPA.RDService
         private string domain;
         private string user;
         private string password;
-        public void CreateRdpConnectionasync(string server, string domain, string user, string password)
+        private int port = 3389;
+        public void CreateRdpConnectionasync(string server, string domain, string user, string password, int port)
         {
             Connecting = true;
             this.server = server;
             this.domain = domain;
             this.user = user;
             this.password = password;
+            this.port = port;
             var rdpClientThread = new Thread(ProcessTaskThread) { IsBackground = true };
             rdpClientThread.SetApartmentState(ApartmentState.STA);
             rdpClientThread.Start();
         }
-        public void CreateRdpConnection(string server, string domain, string user, string password)
+        public void CreateRdpConnection(string server, string domain, string user, string password, int port)
         {
             Connecting = true;
             this.server = server;
             this.domain = domain;
             this.user = user;
             this.password = password;
+            this.port = port;
             var rdpClientThread = new Thread(ProcessTaskThread) { IsBackground = true };
             rdpClientThread.SetApartmentState(ApartmentState.STA);
             rdpClientThread.Start();
@@ -72,6 +75,7 @@ namespace OpenRPA.RDService
                         rdpConnection.Server = server;
                         rdpConnection.Domain = domain;
                         rdpConnection.UserName = user;
+                        rdpConnection.AdvancedSettings7.RDPPort = port;
                         rdpConnection.AdvancedSettings7.ClearTextPassword = password;
                         rdpConnection.AdvancedSettings7.EnableCredSspSupport = true;
                         if (PluginConfig.width > 0 && PluginConfig.height > 0)

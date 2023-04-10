@@ -129,10 +129,6 @@ namespace OpenRPA
                             var exists = collection.FindById(_id);
                             if (exists != null) { collection.Update(entity); Log.Verbose("Updated in local db as version " + entity._version + " " + entity._type + " " + entity.name); }
                             if (exists == null) { collection.Insert(entity); Log.Verbose("Inserted in local db as version  " + entity._version + " " + entity._type + " " + entity.name); }
-                        } else
-                        {
-                            // WHY ????
-                            System.Diagnostics.Debugger.Break();
                         }
                     }
                     finally

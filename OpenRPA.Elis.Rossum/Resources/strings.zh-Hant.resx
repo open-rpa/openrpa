@@ -117,133 +117,128 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="activity_click_to_view" xml:space="preserve">
-    <value>ダブルクリックで表示</value>
+	<data name="activity_auth" xml:space="preserve">
+    <value>授權</value>
   </data>
-	<data name="activity_closetab" xml:space="preserve">
-    <value>タブを閉じる</value>
+	<data name="activity_auth_hint" xml:space="preserve">
+    <value>使用者名稱或信箱</value>
   </data>
-	<data name="activity_closetab_tooltip" xml:space="preserve">
-    <value>現在のタブを閉じる、もしくはすべてのタブを閉じる</value>
+	<data name="activity_auth_tooltip" xml:space="preserve">
+    <value>針對Rossum服務進行身份驗證並獲得令牌/金鑰</value>
   </data>
-	<data name="activity_executescript" xml:space="preserve">
-    <value>スクリプトを実行</value>
+	<data name="activity_auth_username" xml:space="preserve">
+    <value>使用者名稱</value>
   </data>
-	<data name="activity_executescript_tooltip" xml:space="preserve">
-    <value>現在のタブとデフォルトフレームをターゲットに、ブラウザでスクリプトを実行する</value>
+	<data name="activity_exportfiledata" xml:space="preserve">
+    <value>匯出文件資料</value>
   </data>
-	<data name="activity_getelement" xml:space="preserve">
-    <value>要素を取得</value>
+	<data name="activity_exportfiledata_tooltip" xml:space="preserve">
+    <value>獲取發票中擷取的資料的日期，僅在文件狀態為匯出狀態時有效</value>
   </data>
-	<data name="activity_getelement_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
+	<data name="activity_exportfile_file" xml:space="preserve">
+    <value>文件URL</value>
   </data>
-	<data name="activity_getelement_highlight" xml:space="preserve">
-    <value>強調</value>
+	<data name="activity_exportfile_file_hint" xml:space="preserve">
+    <value>要從中獲取資料的文件的URL</value>
   </data>
-	<data name="activity_getelement_loopaction" xml:space="preserve">
-    <value>アクションをループ</value>
+	<data name="activity_exportfile_key" xml:space="preserve">
+    <value>金鑰</value>
   </data>
-	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
-    <value>このようにして、それぞれの結果の処理が終わったら、セレクタを再実行して新しいアイテムを探します。</value>
+	<data name="activity_exportfile_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
   </data>
-	<data name="activity_getelement_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
+	<data name="activity_exportfile_queue" xml:space="preserve">
+    <value>佇列</value>
   </data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>セレクタに基づいてブラウザ要素を検索</value>
+	<data name="activity_exportfile_queue_hint" xml:space="preserve">
+    <value>用於匯出資料的佇列</value>
   </data>
-	<data name="activity_openurl" xml:space="preserve">
-    <value>URL を開く</value>
+	<data name="activity_getfilestatus" xml:space="preserve">
+    <value>獲得文件狀態</value>
   </data>
-	<data name="activity_openurl_getcurrent" xml:space="preserve">
-    <value>カレントを取得</value>
+	<data name="activity_getfilestatus_tooltip" xml:space="preserve">
+    <value>獲取佇列中文件的狀態，可以是
+importing-AI核心引擎正在處理文件以擷取資料； 文件的初始狀態。
+failed_import-導入失敗，例如 由於文件檔案格式錯誤。
+to_review-初始擷取步驟已完成，文件正在等待用戶驗證。
+reviewing-文件正在用戶界面中進行驗證。
+exporting-文件已經過驗證，正在等待連接器保存調用完成。
+exported-文件已驗證並成功通過了所有掛鉤； 這是文件的典型終端狀態。
+failed_export-連接器返回錯誤時。
+postponed-操作員已選擇推遲文件而不是匯出文件。
+deleted-用戶刪除文件時。
+purged-刪除後僅保留原始資料。</value>
   </data>
-	<data name="activity_openurl_tooltip" xml:space="preserve">
-    <value>選択したブラウザで指定のURLを開く</value>
+	<data name="activity_getqueues" xml:space="preserve">
+    <value>獲得佇列</value>
   </data>
-	<data name="activity_open_editor" xml:space="preserve">
-    <value>エディタを開く</value>
+	<data name="activity_getqueues_key" xml:space="preserve">
+    <value>金鑰</value>
   </data>
-	<data name="activity_waitfordownload" xml:space="preserve">
-    <value>ダウンロードを待機</value>
+	<data name="activity_getqueues_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
   </data>
-	<data name="activity_waitfordownload_tooltip" xml:space="preserve">
-    <value>MM対応のブラウザでのダウンロード完了を待つ</value>
+	<data name="activity_getqueues_tooltip" xml:space="preserve">
+    <value>從Rossum獲取佇列列表，必須將文件上傳到通過網站設置了雜項設置的佇列</value>
   </data>
-	<data name="activity_waitforready" xml:space="preserve">
-    <value>準備状態を待機</value>
+	<data name="activity_getstatus_file" xml:space="preserve">
+    <value>文件URL</value>
   </data>
-	<data name="activity_waitforready_help" xml:space="preserve">
-    <value>ページが準備状態つまり非ロード中になるまで待機</value>
+	<data name="activity_getstatus_file_hint" xml:space="preserve">
+    <value>要從中獲取文件的狀態的URL</value>
   </data>
-	<data name="compensate_for_old_addon" xml:space="preserve">
-    <value>古い拡張を補う</value>
+	<data name="activity_getstatus_key" xml:space="preserve">
+    <value>金鑰</value>
   </data>
-	<data name="compensate_for_old_addon_help" xml:space="preserve">
-    <value>古い画素補正を使う</value>
+	<data name="activity_getstatus_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
   </data>
-	<data name="debug_console_output" xml:space="preserve">
-    <value>デバッグ・コンソール</value>
+	<data name="activity_uploadfile" xml:space="preserve">
+    <value>上傳文件</value>
   </data>
-	<data name="debug_console_output_help" xml:space="preserve">
-    <value>ブラウザのコンソールにデバッグ情報を書き込む</value>
+	<data name="activity_uploadfile_filename" xml:space="preserve">
+    <value>檔案名</value>
   </data>
-	<data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
-    <value>値の設定後に待機</value>
+	<data name="activity_uploadfile_filename_hint" xml:space="preserve">
+    <value>要上傳到佇列的文件</value>
   </data>
-	<data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
-    <value>値を設定した後、タブの状態がレディになるのを待つ</value>
+	<data name="activity_uploadfile_key" xml:space="preserve">
+    <value>金鑰</value>
   </data>
-	<data name="register_old_portname" xml:space="preserve">
-    <value>古いポート名を登録</value>
+	<data name="activity_uploadfile_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
   </data>
-	<data name="register_old_portname_help" xml:space="preserve">
-    <value>古いブラウザ拡張機能のポート名を登録</value>
+	<data name="activity_uploadfile_queue" xml:space="preserve">
+    <value>佇列</value>
   </data>
-	<data name="unique_xpath_ids" xml:space="preserve">
-    <value>ユニーク ids</value>
+	<data name="activity_uploadfile_queue_hint" xml:space="preserve">
+    <value>將文件上傳到佇列</value>
   </data>
-	<data name="unique_xpath_ids_help" xml:space="preserve">
-    <value>xpathのセレクタを作成する際に、これらの属性のいずれかをユニークなIDとして使用します。</value>
+	<data name="activity_uploadfile_tooltip" xml:space="preserve">
+    <value>上傳文件到Rossum佇列</value>
   </data>
-	<data name="wait_for_tab_click" xml:space="preserve">
-    <value>タブを待機</value>
+	<data name="activity_waitforfilestatus" xml:space="preserve">
+    <value>等待文件狀態</value>
   </data>
-	<data name="wait_for_tab_click_help" xml:space="preserve">
-    <value>ボタンをクリックした後、タブの状態がレディになるのを待つ</value>
+	<data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
+    <value>在等待文件進入指定狀態時使工作流空閒</value>
   </data>
-	<data name="activity_getelement_async" xml:space="preserve">
-    <value>非同期で要素を取得</value>
+	<data name="activity_waitforfile_file" xml:space="preserve">
+    <value>文件URL</value>
   </data>
-	<data name="activity_getelement_async_tooltip" xml:space="preserve">
-    <value>セレクタに基づいてブラウザ要素を検索</value>
+	<data name="activity_waitforfile_file_hint" xml:space="preserve">
+    <value>等待文件的URL</value>
   </data>
-	<data name="activity_getelement_tooltip1" xml:space="preserve">
-    <value>セレクタに基づいてWindowsのユーザーインターフェース要素を探す</value>
+	<data name="activity_waitforfile_key" xml:space="preserve">
+    <value>金鑰</value>
   </data>
-	<data name="activity_gettab_tooltip" xml:space="preserve">
-    <value>Chrome/EdgeまたはFirefoxで現在のタブを取得するには、ブラウザが実行されていない場合は何も返しません</value>
+	<data name="activity_waitforfile_key_hint" xml:space="preserve">
+    <value>來自身份驗證活動的API金鑰</value>
   </data>
-	<data name="plugin_detect_html_table_help" xml:space="preserve">
-    <value>HTMLテーブルをクリックした場合、録音を行う場合、自動追加テーブルを追加する</value>
+	<data name="activity_waitforfile_status" xml:space="preserve">
+    <value>狀態</value>
   </data>
-	<data name="plugin_detect_html_table" xml:space="preserve">
-    <value>HTMLテーブルを検出する</value>
-  </data>
-	<data name="activity_gettable_tooltip" xml:space="preserve">
-    <value>XPathsに基づく単純なテーブルデータ抽出</value>
-  </data>
-	<data name="activity_gettab" xml:space="preserve">
-    <value>タブを取得</value>
-  </data>
-	<data name="activity_gettable" xml:space="preserve">
-    <value>テーブルデータを取得</value>
-  </data>
-	<data name="activity_displayname_help" xml:space="preserve">
-    <value>ワークフローデザイナー内の表示名</value>
-  </data>
-	<data name="activity_displayname" xml:space="preserve">
-    <value>表示名</value>
+	<data name="activity_waitforfile_status_hint" xml:space="preserve">
+    <value>需要等待的狀態</value>
   </data>
 </root>

@@ -12,6 +12,7 @@ namespace OpenRPA.RDService
         public unattendedserver() { _type = "unattendedserver"; }
         public string computername { get; set; }
         public string computerfqdn { get; set; }
+        public string connectionhost { get; set; }
         public bool enabled { get; set; }
         public bool singleuser { get; set; }
         public bool logoff { get; set; }

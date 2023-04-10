@@ -571,7 +571,7 @@ namespace OpenRPA
             }
             else
             {
-                _ = RobotInstance.instance.LoadServerData();
+                _ = RobotInstance.instance.LoadServerData(false);
             }
         }
         private bool CanPlayInChild(object _item)

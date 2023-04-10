@@ -1027,7 +1027,8 @@ namespace OpenRPA
                     foreach (var i in Instances.ToList())
                     {
                         // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(5))
-                        if (i.isCompleted && i._modified < DateTime.Now.AddMinutes(-15) && !i.isDirty)
+                        // if (i.isCompleted && i._modified > DateTime.Now.AddMinutes(-15) && !i.isDirty)
+                        if (i.isCompleted && !i.isDirty)
                         {
                             Log.Verbose("[workflow] Remove workflow with id '" + i.WorkflowId + "'");
                             Instances.Remove(i);

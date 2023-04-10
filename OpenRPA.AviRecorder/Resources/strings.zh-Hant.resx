@@ -117,118 +117,49 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="activity_getelement" xml:space="preserve">
-    <value>要素を取得</value>
+	<data name="activity_click_to_view" xml:space="preserve">
+    <value>雙擊查看</value>
   </data>
-	<data name="activity_getelement_loopaction" xml:space="preserve">
-    <value>アクションをループ</value>
+	<data name="activity_playrecording" xml:space="preserve">
+    <value>播放錄製的文件</value>
   </data>
-	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
-    <value>これを実行し、各結果の処理が完了したら、セレクタを再実行して新しい項目を探します。</value>
+	<data name="activity_playrecording_tooltip" xml:space="preserve">
+    <value>播放錄製的文件</value>
   </data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>セレクタを基準にWindows UI 要素を発見</value>
+	<data name="activity_play_hint" xml:space="preserve">
+    <value>播放這個影片檔案</value>
   </data>
-	<data name="detector_button_highlight" xml:space="preserve">
-    <value>強調</value>
+	<data name="activity_startrecording" xml:space="preserve">
+    <value>開始錄製</value>
   </data>
-	<data name="detector_button_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
+	<data name="activity_startrecording_tooltip" xml:space="preserve">
+    <value>開始錄製螢幕到文件</value>
   </data>
-	<data name="detector_button_select" xml:space="preserve">
-    <value>選択</value>
+	<data name="activity_start_hint" xml:space="preserve">
+    <value>保存到目錄</value>
   </data>
-	<data name="detector_name" xml:space="preserve">
-    <value>名前</value>
+	<data name="activity_stoprecording" xml:space="preserve">
+    <value>停止錄製</value>
   </data>
-	<data name="detector_selector" xml:space="preserve">
-    <value>セレクタ</value>
+	<data name="activity_stoprecording_tooltip" xml:space="preserve">
+    <value>停止螢幕錄製並保存到文件</value>
   </data>
-	<data name="enable_cache_help" xml:space="preserve">
-    <value>RAMを犠牲にして、より高速な自動化のための要素キャッシングを可能にします。</value>
+	<data name="activity_stop_hint" xml:space="preserve">
+    <value>保存影片檔案名</value>
   </data>
-	<data name="getelement_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
+	<data name="plugin_codec" xml:space="preserve">
+    <value>編碼</value>
   </data>
-	<data name="getelement_highlight" xml:space="preserve">
-    <value>強調</value>
+	<data name="plugin_enabled" xml:space="preserve">
+    <value>啟用</value>
   </data>
-	<data name="getelement_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
+	<data name="plugin_keep_successful" xml:space="preserve">
+    <value>保持成功</value>
   </data>
-	<data name="plugin_allow_child_searching" xml:space="preserve">
-    <value>子の検索を許可</value>
+	<data name="plugin_quality" xml:space="preserve">
+    <value>錄製質量</value>
   </data>
-	<data name="plugin_allow_child_searching_help" xml:space="preserve">
-    <value>セレクターの要素が見つからない場合は、すべての子で一致するものを自動的に検索します</value>
-  </data>
-	<data name="plugin_allow_multiple_hits" xml:space="preserve">
-    <value>複数ヒットを許可</value>
-  </data>
-	<data name="plugin_allow_multiple_hits_help" xml:space="preserve">
-    <value>セレクタ内の要素セレクタが複数の子を検索できるようにする</value>
-  </data>
-	<data name="plugin_enable_cache" xml:space="preserve">
-    <value>キャッシュを有効化</value>
-  </data>
-	<data name="plugin_enum_properties" xml:space="preserve">
-    <value>プロパティを列挙</value>
-  </data>
-	<data name="plugin_enum_properties_help" xml:space="preserve">
-    <value>各セレクタ要素に必要な最小限の属性をテストします。</value>
-  </data>
-	<data name="plugin_get_elements_in_different_thread" xml:space="preserve">
-    <value>異なるスレッド内の要素を取得</value>
-  </data>
-	<data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
-    <value>「要素を取得」は検索中に別のスレッドを使用して、セレクターがロボットを見つけた場合のロックを回避します</value>
-  </data>
-	<data name="plugin_search_descendants" xml:space="preserve">
-    <value>降順検索</value>
-  </data>
-	<data name="plugin_search_descendants_help" xml:space="preserve">
-    <value>すべての子孫を検索します。よりシンプルなセレクタに使用しますが、速度は遅くなります。</value>
-  </data>
-	<data name="plugin_traverse_selector_both_ways" xml:space="preserve">
-    <value>双方向でセレクタを走査</value>
-  </data>
-	<data name="plugin_traverse_selector_both_ways_help" xml:space="preserve">
-    <value>UIツリーをトラバースして、ゴーストセレクター要素をフィルターで除外します</value>
-  </data>
-	<data name="activity_closewindow_tooltip" xml:space="preserve">
-    <value>GetElementまたはGetWindowsで見つかったウィンドウを閉じるために使用する </value>
-  </data>
-	<data name="activity_getwindows" xml:space="preserve">
-    <value>Windowsを取得</value>
-  </data>
-	<data name="activity_closewindow" xml:space="preserve">
-    <value>ウィンドウを閉じる</value>
-  </data>
-	<data name="activity_closewindoe_element" xml:space="preserve">
-    <value>エレメント</value>
-  </data>
-	<data name="plugin_create_short_selector" xml:space="preserve">
-    <value>ショートセレクターの作成</value>
-  </data>
-	<data name="plugin_mouse_over_search_help" xml:space="preserve">
-    <value>ツリーから親へのマッピングが壊れている場合（DynamicAXのように）、マウスオーバーで検索できるようにする </value>
-  </data>
-	<data name="activity_getwindows_tooltip" xml:space="preserve">
-    <value>デスクトップで開いているすべてのウィンドウを取得する</value>
-  </data>
-	<data name="plugin_mouse_over_search" xml:space="preserve">
-    <value>マウスオーバーで検索</value>
-  </data>
-	<data name="activity_displayname_help" xml:space="preserve">
-    <value>ワークフローデザイナー内の表示名</value>
-  </data>
-	<data name="plugin_create_short_selector_help" xml:space="preserve">
-    <value>子孫検索も有効になっている場合は、短いセレクタを作成してみてください </value>
-  </data>
-	<data name="activity_closewindoe_element_help" xml:space="preserve">
-    <value>動作させる要素 通常は「Windowsを入手する」アクティビティから取得する </value>
-  </data>
-	<data name="activity_displayname" xml:space="preserve">
-    <value>表示名</value>
+	<data name="plugin_save_in_folder" xml:space="preserve">
+    <value>保存到資料夾</value>
   </data>
 </root>

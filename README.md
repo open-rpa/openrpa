@@ -5,11 +5,9 @@ Open Source Robotic Process Automation Software
 
 Download and try it out here [💾here](https://github.com/open-rpa/openrpa/releases/latest/download/OpenRPA.msi) and manage your [🔧OpenFlow account here](https://app.openiap.io)
 
-Join our [🤷💻🤦 Community Forum](https://bb.openiap.io/) for for help or giving feedback 
+Join our [🤷💻🤦 Community Forum](discourse.openiap.io/) for for help or giving feedback 
 
-Join our [💬 community](https://rocket.openiap.io/) for for help or giving feedback 
-
-Click here for [💲🤷Commercial Support](https://openrpa.dk/)
+Click here for [💲🤷Commercial Support](https://openiap.io/)
 
 Check out the [📘documentation](https://docs.openiap.io/) or knows issue and updated documentation on our [❔wiki pages](https://github.com/open-rpa/openrpa/wiki)
 

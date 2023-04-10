@@ -117,118 +117,37 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="activity_getelement" xml:space="preserve">
-    <value>要素を取得</value>
+	<data name="selector_buttons_cancel" xml:space="preserve">
+    <value>取消</value>
   </data>
-	<data name="activity_getelement_loopaction" xml:space="preserve">
-    <value>アクションをループ</value>
+	<data name="selector_buttons_cancel_hint" xml:space="preserve">
+    <value>取消變動並關閉選擇視窗</value>
   </data>
-	<data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
-    <value>これを実行し、各結果の処理が完了したら、セレクタを再実行して新しい項目を探します。</value>
+	<data name="selector_buttons_highlight" xml:space="preserve">
+    <value>高亮</value>
   </data>
-	<data name="activity_getelement_tooltip" xml:space="preserve">
-    <value>セレクタを基準にWindows UI 要素を発見</value>
+	<data name="selector_buttons_highlight_hint" xml:space="preserve">
+    <value>高亮當前選擇器選擇的元素</value>
   </data>
-	<data name="detector_button_highlight" xml:space="preserve">
-    <value>強調</value>
+	<data name="selector_buttons_ok" xml:space="preserve">
+    <value>確認</value>
   </data>
-	<data name="detector_button_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
+	<data name="selector_buttons_ok_hint" xml:space="preserve">
+    <value>接受改變並關閉選擇視窗</value>
   </data>
-	<data name="detector_button_select" xml:space="preserve">
-    <value>選択</value>
+	<data name="selector_buttons_select" xml:space="preserve">
+    <value>選擇</value>
   </data>
-	<data name="detector_name" xml:space="preserve">
-    <value>名前</value>
+	<data name="selector_buttons_select_hint" xml:space="preserve">
+    <value>選擇被點擊的元素</value>
   </data>
-	<data name="detector_selector" xml:space="preserve">
-    <value>セレクタ</value>
+	<data name="selector_buttons_sync" xml:space="preserve">
+    <value>同步樹</value>
   </data>
-	<data name="enable_cache_help" xml:space="preserve">
-    <value>RAMを犠牲にして、より高速な自動化のための要素キャッシングを可能にします。</value>
+	<data name="selector_buttons_sync_hint" xml:space="preserve">
+    <value>同步樹並轉到當前元素</value>
   </data>
-	<data name="getelement_drop_hint" xml:space="preserve">
-    <value>アクティビティをドロップ</value>
-  </data>
-	<data name="getelement_highlight" xml:space="preserve">
-    <value>強調</value>
-  </data>
-	<data name="getelement_open_selector" xml:space="preserve">
-    <value>セレクタを開く</value>
-  </data>
-	<data name="plugin_allow_child_searching" xml:space="preserve">
-    <value>子の検索を許可</value>
-  </data>
-	<data name="plugin_allow_child_searching_help" xml:space="preserve">
-    <value>セレクターの要素が見つからない場合は、すべての子で一致するものを自動的に検索します</value>
-  </data>
-	<data name="plugin_allow_multiple_hits" xml:space="preserve">
-    <value>複数ヒットを許可</value>
-  </data>
-	<data name="plugin_allow_multiple_hits_help" xml:space="preserve">
-    <value>セレクタ内の要素セレクタが複数の子を検索できるようにする</value>
-  </data>
-	<data name="plugin_enable_cache" xml:space="preserve">
-    <value>キャッシュを有効化</value>
-  </data>
-	<data name="plugin_enum_properties" xml:space="preserve">
-    <value>プロパティを列挙</value>
-  </data>
-	<data name="plugin_enum_properties_help" xml:space="preserve">
-    <value>各セレクタ要素に必要な最小限の属性をテストします。</value>
-  </data>
-	<data name="plugin_get_elements_in_different_thread" xml:space="preserve">
-    <value>異なるスレッド内の要素を取得</value>
-  </data>
-	<data name="plugin_get_elements_in_different_thread_help" xml:space="preserve">
-    <value>「要素を取得」は検索中に別のスレッドを使用して、セレクターがロボットを見つけた場合のロックを回避します</value>
-  </data>
-	<data name="plugin_search_descendants" xml:space="preserve">
-    <value>降順検索</value>
-  </data>
-	<data name="plugin_search_descendants_help" xml:space="preserve">
-    <value>すべての子孫を検索します。よりシンプルなセレクタに使用しますが、速度は遅くなります。</value>
-  </data>
-	<data name="plugin_traverse_selector_both_ways" xml:space="preserve">
-    <value>双方向でセレクタを走査</value>
-  </data>
-	<data name="plugin_traverse_selector_both_ways_help" xml:space="preserve">
-    <value>UIツリーをトラバースして、ゴーストセレクター要素をフィルターで除外します</value>
-  </data>
-	<data name="activity_closewindow_tooltip" xml:space="preserve">
-    <value>GetElementまたはGetWindowsで見つかったウィンドウを閉じるために使用する </value>
-  </data>
-	<data name="activity_getwindows" xml:space="preserve">
-    <value>Windowsを取得</value>
-  </data>
-	<data name="activity_closewindow" xml:space="preserve">
-    <value>ウィンドウを閉じる</value>
-  </data>
-	<data name="activity_closewindoe_element" xml:space="preserve">
-    <value>エレメント</value>
-  </data>
-	<data name="plugin_create_short_selector" xml:space="preserve">
-    <value>ショートセレクターの作成</value>
-  </data>
-	<data name="plugin_mouse_over_search_help" xml:space="preserve">
-    <value>ツリーから親へのマッピングが壊れている場合（DynamicAXのように）、マウスオーバーで検索できるようにする </value>
-  </data>
-	<data name="activity_getwindows_tooltip" xml:space="preserve">
-    <value>デスクトップで開いているすべてのウィンドウを取得する</value>
-  </data>
-	<data name="plugin_mouse_over_search" xml:space="preserve">
-    <value>マウスオーバーで検索</value>
-  </data>
-	<data name="activity_displayname_help" xml:space="preserve">
-    <value>ワークフローデザイナー内の表示名</value>
-  </data>
-	<data name="plugin_create_short_selector_help" xml:space="preserve">
-    <value>子孫検索も有効になっている場合は、短いセレクタを作成してみてください </value>
-  </data>
-	<data name="activity_closewindoe_element_help" xml:space="preserve">
-    <value>動作させる要素 通常は「Windowsを入手する」アクティビティから取得する </value>
-  </data>
-	<data name="activity_displayname" xml:space="preserve">
-    <value>表示名</value>
+	<data name="selector_menu_select" xml:space="preserve">
+    <value>選擇元素</value>
   </data>
 </root>

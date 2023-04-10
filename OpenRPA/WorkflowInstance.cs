@@ -201,7 +201,16 @@ namespace OpenRPA
                 }
             }
             else { throw new LockNotReceivedException("Failed adding new workflow instance in Create"); }
-            result.createApp(Workflow.Activity());
+            try
+            {
+                result.createApp(Workflow.Activity());
+            }
+            catch (Exception ex)
+            {
+                result.Abort("Create WorkflowApplication failed");
+                throw ex;
+            }
+            
             CleanUp();
             return result;
         }

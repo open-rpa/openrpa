@@ -1248,6 +1248,10 @@ namespace OpenRPA
                         {
                             Log.Error("RobotInstance.RobotInstance_WebSocketClient_OnOpen.userlogin: " + ex.Message);
                             errormessage = ex.Message;
+                            if (Config.local.noweblogin)
+                            {
+                                System.Threading.Thread.Sleep(3000);
+                            }
                         }
                     }
                     if (Config.local.jwt != null && Config.local.jwt.Length > 0)
@@ -1275,7 +1279,7 @@ namespace OpenRPA
                         }
                     }
                     if (global.webSocketClient == null || !global.webSocketClient.isConnected) return;
-                    if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin)
+                    if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin && !Config.local.noweblogin)
                     {
                         string jwt = null;
                         try

@@ -1249,6 +1249,10 @@ namespace OpenRPA
                         {
                             Log.Error("RobotInstance.RobotInstance_WebSocketClient_OnOpen.userlogin: " + ex.Message);
                             errormessage = ex.Message;
+                            if (Config.local.noweblogin)
+                            {
+                                System.Threading.Thread.Sleep(3000);
+                            }
                         }
                     }
                     if (Config.local.jwt != null && Config.local.jwt.Length > 0)
@@ -1276,7 +1280,7 @@ namespace OpenRPA
                         }
                     }
                     if (global.webSocketClient == null || !global.webSocketClient.isConnected) return;
-                    if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin)
+                    if (user == null && global.webSocketClient.isConnected && !global.webSocketClient.signedin && !Config.local.noweblogin)
                     {
                         string jwt = null;
                         try
@@ -1678,6 +1682,38 @@ namespace OpenRPA
                     }
                     if (data != null) command.data = JObject.FromObject(data);
                 }
+                else if(command.command == "killworkflow")
+                {
+                    if (string.IsNullOrEmpty(command.workflowid)) throw new ArgumentException("expect workflow id");
+
+                    if (Config.local.remote_allowed_killing_any)
+                    {
+                        command.command = "killworkflowsuccess";
+                        string instanceid = null;
+                        if (command.data != null && command.data.ContainsKey("instanceid"))
+                        {
+                            instanceid = (string)command.data.GetValue("instanceid");
+                        }
+
+                        foreach (var i in WorkflowInstance.Instances.ToList())
+                        {
+                            if (command.workflowid == i.WorkflowId && (string.IsNullOrEmpty(instanceid) || instanceid == i._id))
+                            { //kill all instances of the workflow with `workflowid`,or just the specific instance if `instanceid` provided
+                                if (!i.isCompleted)
+                                {
+                                    i.Abort("Killed remotly by killworkflow command");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        command.command = "error";
+                        command.data = JObject.FromObject(new Exception("kill workflow not allowed for " + global.webSocketClient.user + " running on " + System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower()));
+                    }
+                    if (data != null) command.data = JObject.FromObject(data);
+                }
+
                 if (command.command == null) return;
                 if (command.command == "invoke" && !string.IsNullOrEmpty(command.workflowid))
                 {
@@ -1864,7 +1900,7 @@ namespace OpenRPA
                 };
             }
             // string data = Newtonsoft.Json.JsonConvert.SerializeObject(command);
-            if (command.command == "error" || command.command == "killallworkflowssuccess" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
+            if (command.command == "error" || command.command == "killallworkflowssuccess" || command.command == "killworkflowsuccess" || ((command.command == "invoke" || command.command == "invokesuccess") && !string.IsNullOrEmpty(command.workflowid)))
             {
                 if (!string.IsNullOrEmpty(message.replyto) && message.replyto != message.queuename)
                 {

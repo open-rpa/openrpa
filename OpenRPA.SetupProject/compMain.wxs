@@ -285,6 +285,11 @@
 				<File Id="F4BCCF92B56B4313982A0457F0DAD1A4" Source="!(wix.MainSource)\zh\OpenRPA.Interfaces.resources.dll" />
 				<File Id="BB6C4642DAAB463798B57182BC26DCA2" Source="!(wix.MainSource)\zh\OpenRPA.Windows.resources.dll" />
 			</Component>
+			<Component Id='mainComponentzhhant' Win64='yes' Directory="mainzhhant" Guid='{B1C87CDE-A0F0-4B76-9EFF-D9737D242EE1}'>
+				<File Id="OpenRPA.resources.resources.dll_zhhant" Source="!(wix.MainSource)\zh-Hant\OpenRPA.resources.dll" />
+				<File Id="OpenRPA.Interfaces.resources.dll_zhhant" Source="!(wix.MainSource)\zh-Hant\OpenRPA.Interfaces.resources.dll" />
+				<File Id="OpenRPA.Windows.resources.dll_zhhant" Source="!(wix.MainSource)\zh-Hant\OpenRPA.Windows.resources.dll" />
+			</Component>
 
 		</ComponentGroup>
 
@@ -308,6 +313,8 @@
 			<Directory Id="mainja" Name="ja">
 			</Directory>
 			<Directory Id="mainzh" Name="zh">
+			</Directory>
+			<Directory Id="mainzhhant" Name="zh-Hant">
 			</Directory>
 		</DirectoryRef>
 

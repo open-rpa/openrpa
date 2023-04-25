@@ -1237,6 +1237,7 @@ namespace OpenRPA
                             Log.Debug("Signing in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                             user = await global.webSocketClient.Signin(Config.local.username, Config.local.UnprotectString(Config.local.password));
                             Log.Debug("Signed in as " + Config.local.username + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                            Show();
                             SetStatus("Connected to " + Config.local.wsurl + " as " + user.name);
                             if(!string.IsNullOrEmpty(Config.local.unsafepassword))
                             {

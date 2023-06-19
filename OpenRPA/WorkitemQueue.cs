@@ -44,6 +44,8 @@ namespace OpenRPA
         public string failed_wiq { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public async Task Save(bool skipOnline = false)
         {
+            Log.Warning("Due to inconsistencies in how work item queues are managed in OpenFlow and OpenRPA, saving work item queues is disabled for now.");
+            return;
             if(string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
             {
                 try
@@ -128,7 +130,7 @@ namespace OpenRPA
         {
             try
             {
-                if (!skipOnline) await Delete<WorkitemQueue>();
+                // if (!skipOnline) await Delete<WorkitemQueue>();
             }
             catch (Exception ex)
             {

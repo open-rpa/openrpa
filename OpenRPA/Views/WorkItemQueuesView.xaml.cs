@@ -258,6 +258,8 @@ namespace OpenRPA.Views
 
         async private void Button_CreateWorkItemQueue(object sender, RoutedEventArgs e)
         {
+            Log.Warning("Due to inconsistencies in how work item queues are managed in OpenFlow and OpenRPA, saving work item queues is disabled for now.");
+            return;
             try
             {
                 var dia = new OpenRPA.Views.WorkitemQueue();

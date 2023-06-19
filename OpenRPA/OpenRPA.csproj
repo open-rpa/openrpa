@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<!--<CefSharpTargetDir>cef</CefSharpTargetDir>-->
 		<CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
@@ -69,7 +69,7 @@
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
 		<PackageReference Include="NuGet.Common" Version="5.11.3" />
 		<PackageReference Include="NuGet.Packaging" Version="5.11.3" />
-		<PackageReference Include="NuGet.Protocol" Version="5.11.3" />
+		<PackageReference Include="NuGet.Protocol" Version="5.11.5" />
 		<PackageReference Include="NuGet.Resolver" Version="5.11.3" />
 		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.3.0" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />

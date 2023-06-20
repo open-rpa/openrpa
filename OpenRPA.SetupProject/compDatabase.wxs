@@ -33,6 +33,9 @@
       <Component Id='DatabaseComponentzh' Win64='yes' Directory="Databasezh" Guid="{2BD5BF36-335F-4747-94C7-BD49675729BF}">
         <File Id="OpenRPA.Database.resources.dll_zh" Source="!(wix.DatabaseSource)\zh\OpenRPA.Database.resources.dll" />
       </Component>
+      <Component Id='DatabaseComponentzhhant' Win64='yes' Directory="Databasezhhant" Guid="{6A5B9139-373B-4259-A66D-FA0167F1568A}">
+        <File Id="OpenRPA.Database.resources.dll_zhhant" Source="!(wix.DatabaseSource)\zh-Hant\OpenRPA.Database.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -49,6 +52,8 @@
       <Directory Id="Databaseru" Name="ru">
       </Directory>
       <Directory Id="Databasezh" Name="zh">
+      </Directory>
+      <Directory Id="Databasezhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
   </Fragment>

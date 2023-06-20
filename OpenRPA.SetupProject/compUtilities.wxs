@@ -37,6 +37,9 @@
       <Component Id='UtilitiesComponentzh' Win64='yes' Directory="Utilitieszh" Guid='{E54C73E4-55D8-4536-BD33-8091A2596354}'>
         <File Id="OpenRPA.Utilities.resources.dll_zh" Source="!(wix.UtilitiesSource)\zh\OpenRPA.Utilities.resources.dll" />
       </Component>
+      <Component Id='UtilitiesComponentzhhant' Win64='yes' Directory="Utilitieszhhant" Guid='{32B001FA-6BCB-437B-BB58-8998FAA4E8A1}'>
+        <File Id="OpenRPA.Utilities.resources.dll_zhhant" Source="!(wix.UtilitiesSource)\zh-Hant\OpenRPA.Utilities.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -55,6 +58,8 @@
       <Directory Id="Utilitiesja" Name="ja">
       </Directory>
       <Directory Id="Utilitieszh" Name="zh">
+      </Directory>
+      <Directory Id="Utilitieszhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

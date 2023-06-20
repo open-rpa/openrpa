@@ -46,8 +46,11 @@ namespace OpenRPA
         {
             if(string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
             {
+                throw new Exception("Due to inconsistencies in how work item queues are managed in OpenFlow and OpenRPA, saving work item queues is disabled for now.");
                 try
                 {
+                    //Log.Warning("Due to inconsistencies in how work item queues are managed in OpenFlow and OpenRPA, saving work item queues is disabled for now.");
+                    //return;
                     var wiq = await global.webSocketClient.AddWorkitemQueue(this, "", "");
                     EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
                 }
@@ -62,8 +65,8 @@ namespace OpenRPA
             {
                 if (!skipOnline)
                 {
-                    var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false, "", "");
-                    EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
+                    //var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, false, "", "");
+                    //EnumerableExtensions.CopyPropertiesTo(wiq, this, true);
                 }
             }
             var ___id = _id;
@@ -128,7 +131,7 @@ namespace OpenRPA
         {
             try
             {
-                if (!skipOnline) await Delete<WorkitemQueue>();
+                // if (!skipOnline) await Delete<WorkitemQueue>();
             }
             catch (Exception ex)
             {

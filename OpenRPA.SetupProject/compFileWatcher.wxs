@@ -32,6 +32,9 @@
       <Component Id='FileWatcherComponentzh' Win64='yes' Directory="FileWatcherzh" Guid='{2FD388BE-3AB7-424D-8F78-175F0E796BA4}'>
         <File Id="OpenRPA.FileWatcher.resources.dll_zh" Source="!(wix.FileWatcherSource)\zh\OpenRPA.FileWatcher.resources.dll" />
       </Component>
+      <Component Id='FileWatcherComponentzhhant' Win64='yes' Directory="FileWatcherzhhant" Guid='{DCF217E2-2A97-4600-AB15-D2EE9E781122}'>
+        <File Id="OpenRPA.FileWatcher.resources.dll_zhhant" Source="!(wix.FileWatcherSource)\zh-Hant\OpenRPA.FileWatcher.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -50,6 +53,8 @@
       <Directory Id="FileWatcherja" Name="ja">
       </Directory>
       <Directory Id="FileWatcherzh" Name="zh">
+      </Directory>
+      <Directory Id="FileWatcherzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

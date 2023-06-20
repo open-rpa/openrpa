@@ -34,6 +34,9 @@
       <Component Id='SAPComponentzh' Win64='yes' Directory="SAPzh" Guid='{D2914A73-9E9A-4EB6-AEF9-622E46060575}'>
         <File Id="OpenRPA.SAP.resources.dll_zh" Source="!(wix.SAPSource)\zh\OpenRPA.SAP.resources.dll" />
       </Component>
+      <Component Id='SAPComponentzhhant' Win64='yes' Directory="SAPzhhant" Guid='{1D9A0213-0DC2-4046-8DB4-BCED7E9363F5}'>
+        <File Id="OpenRPA.SAP.resources.dll_zhhant" Source="!(wix.SAPSource)\zh-Hant\OpenRPA.SAP.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -50,6 +53,8 @@
       <Directory Id="SAPru" Name="ru">
       </Directory>
       <Directory Id="SAPzh" Name="zh">
+      </Directory>
+      <Directory Id="SAPzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

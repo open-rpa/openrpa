@@ -23,6 +23,9 @@
       <Component Id='MSSpeechComponentzh' Win64='yes' Directory="MSSpeechzh" Guid='{CE9DEF12-1E5E-4689-98E7-8D24A65D6054}'>
         <File Id="OpenRPA.MSSpeech.resources.dll_zh" Source="!(wix.MSSpeechSource)\zh\OpenRPA.MSSpeech.resources.dll" />
       </Component>
+      <Component Id='MSSpeechComponentzhhant' Win64='yes' Directory="MSSpeechzhhant" Guid='{07544F65-8BC9-4D6C-A78D-E6551019B917}'>
+        <File Id="OpenRPA.MSSpeech.resources.dll_zhhant" Source="!(wix.MSSpeechSource)\zh-Hant\OpenRPA.MSSpeech.resources.dll" />
+      </Component>
     </ComponentGroup>
 
     <DirectoryRef Id="INSTALLDIR">
@@ -41,6 +44,8 @@
       <Directory Id="MSSpeechja" Name="ja">
       </Directory>-->
       <Directory Id="MSSpeechzh" Name="zh">
+      </Directory>
+      <Directory Id="MSSpeechzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
   </Fragment>

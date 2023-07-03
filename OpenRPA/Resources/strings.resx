@@ -570,9 +570,6 @@
   <data name="activity_map_variables" xml:space="preserve">
     <value>Map Variables</value>
   </data>
-  <data name="activity_map_variables1" xml:space="preserve">
-    <value>Map Variables</value>
-  </data>
   <data name="activity_mousebutton" xml:space="preserve">
     <value>Mouse Button</value>
   </data>

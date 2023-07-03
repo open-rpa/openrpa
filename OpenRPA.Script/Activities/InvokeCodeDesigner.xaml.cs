@@ -101,6 +101,24 @@ namespace OpenRPA.Script.Activities
                 Log.Error(ex.ToString());
             }
         }
+        private void Button2_Click(object sender, RoutedEventArgs e)
+        {
+            ModelItemDictionary dictionary = base.ModelItem.Properties["Arguments"].Dictionary;
+            var options = new System.Activities.Presentation.DynamicArgumentDesignerOptions() { Title = ModelItem.GetValue<string>("DisplayName") };
+            using (ModelEditingScope modelEditingScope = dictionary.BeginEdit())
+            {
+                if (System.Activities.Presentation.DynamicArgumentDialog.ShowDialog(base.ModelItem, dictionary, base.Context, base.ModelItem.View, options))
+                {
+                    modelEditingScope.Complete();
+                }
+                else
+                {
+                    modelEditingScope.Revert();
+                }
+            }
+
+        }
+
         private void ActivityDesigner_Loaded(object sender, RoutedEventArgs e)
         {
             var ec = ModelItemExtensions.GetEditingContext(ModelItem);

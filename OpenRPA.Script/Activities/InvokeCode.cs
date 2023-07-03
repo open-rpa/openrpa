@@ -17,6 +17,8 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using Python.Runtime;
 using NLog.Targets;
+using Newtonsoft.Json.Linq;
+using System.Management.Instrumentation;
 
 namespace OpenRPA.Script.Activities
 {
@@ -28,7 +30,12 @@ namespace OpenRPA.Script.Activities
     {
         public InvokeCode()
         {
-
+            var builder = new System.Activities.Presentation.Metadata.AttributeTableBuilder();
+            builder.AddCustomAttributes(typeof(InvokeCode), "Arguments",
+                new EditorAttribute(typeof(OpenRPA.Interfaces.Activities.ArgumentCollectionEditor),
+                typeof(System.Activities.Presentation.PropertyEditing.PropertyValueEditor)));
+            System.Activities.Presentation.Metadata.MetadataStore.AddAttributeTable(builder.CreateTable());
+            Arguments = new Dictionary<string, Argument>();
         }
         [RequiredArgument]
         public InArgument<string> Code { get; set; }
@@ -39,6 +46,7 @@ namespace OpenRPA.Script.Activities
         public string[] namespaces { get; set; }
         public static RunspacePool pool { get; set; } = null;
         public static Runspace runspace = null;
+        public Dictionary<string, Argument> Arguments { get; set; } = new Dictionary<string, Argument>();
         public static void ExecuteNewAppDomain(Action action)
         {
             AppDomain domain = null;
@@ -92,16 +100,32 @@ namespace OpenRPA.Script.Activities
                 var language = Language.Get(context);
                 var variables = new Dictionary<string, Type>();
                 var variablevalues = new Dictionary<string, object>();
-                var vars = context.DataContext.GetProperties();
-                foreach (dynamic v in vars)
+                if (Arguments == null || Arguments.Count == 0)
                 {
-                    Type rtype = v.PropertyType as Type;
-                    var value = v.GetValue(context.DataContext);
+                    var vars = context.DataContext.GetProperties();
+                    foreach (dynamic v in vars)
+                    {
+                        Type rtype = v.PropertyType as Type;
+                        var value = v.GetValue(context.DataContext);
 
-                    if (rtype == null && value != null) rtype = value.GetType();
-                    if (rtype == null) continue;
-                    variables.Add(v.DisplayName, rtype);
-                    variablevalues.Add(v.DisplayName, value);
+                        if (rtype == null && value != null) rtype = value.GetType();
+                        if (rtype == null) continue;
+                        variables.Add(v.DisplayName, rtype);
+                        variablevalues.Add(v.DisplayName, value);
+                    }
+                }
+                else
+                {
+                    Dictionary<string, object> arguments = (from argument in Arguments
+                                                            select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                    foreach (var a in arguments)
+                    {
+                        var value = a.Value;
+                        Type rtype = typeof(object);
+                        if (value != null) rtype = value.GetType();
+                        variables.Add(a.Key, rtype);
+                        variablevalues.Add(a.Key, value);
+                    }
                 }
                 string WorkflowInstanceId = context.WorkflowInstanceId.ToString();
 
@@ -151,21 +175,37 @@ namespace OpenRPA.Script.Activities
                         {
                             if (o != null) Log.Output(o.ToString());
                         }
-                        foreach (dynamic v in vars)
+                        if (Arguments == null || Arguments.Count == 0)
                         {
-                            var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
-                            var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                            try
+                            var vars = context.DataContext.GetProperties();
+                            foreach (dynamic v in vars)
                             {
-                                if (myVar != null && value != null)
+                                var value = runspace.SessionStateProxy.GetVariable(v.DisplayName);
+                                var myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                                try
                                 {
-                                    //var myValue = myVar.GetValue(context.DataContext);
-                                    myVar.SetValue(context.DataContext, value);
+                                    if (myVar != null && value != null)
+                                    {
+                                        //var myValue = myVar.GetValue(context.DataContext);
+                                        myVar.SetValue(context.DataContext, value);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
                                 }
                             }
-                            catch (Exception ex)
+
+                        }
+                        else
+                        {
+                            Dictionary<string, object> arguments = (from argument in Arguments
+                                                                    where argument.Value.Direction != ArgumentDirection.In
+                                                                    select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                            foreach (var a in arguments)
                             {
-                                Log.Error(ex.ToString());
+                                var value = runspace.SessionStateProxy.GetVariable(a.Key);
+                                Arguments[a.Key].Set(context, value);
                             }
                         }
                         PipelineOutput.Set(context, res);
@@ -195,17 +235,35 @@ namespace OpenRPA.Script.Activities
                             ahk.SetVar(parameter.Key, parameter.Value.ToString());
                         }
                         ahk.ExecRaw(code);
-                        foreach (dynamic v in vars)
+
+                        if (Arguments == null || Arguments.Count == 0)
                         {
-                            var value = ahk.GetVar(v.DisplayName);
-                            PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
-                            if (myVar != null && value != null)
+                            var vars = context.DataContext.GetProperties();
+                            foreach (dynamic v in vars)
                             {
-                                if (myVar.PropertyType == typeof(string))
-                                    myVar.SetValue(context.DataContext, value);
-                                else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
-                                else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
-                                else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                                var value = ahk.GetVar(v.DisplayName);
+                                PropertyDescriptor myVar = context.DataContext.GetProperties().Find(v.DisplayName, true);
+                                if (myVar != null && value != null)
+                                {
+                                    if (myVar.PropertyType == typeof(string))
+                                        myVar.SetValue(context.DataContext, value);
+                                    else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(value.ToString()));
+                                    else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(value.ToString()));
+                                    else Log.Information("Ignorering variable " + v.DisplayName + " of type " + myVar.PropertyType.FullName);
+                                }
+                            }
+                        }
+                        else
+                        {
+
+
+                            Dictionary<string, object> arguments = (from argument in Arguments
+                                                                    where argument.Value.Direction != ArgumentDirection.In
+                                                                    select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                            foreach (var a in arguments)
+                            {
+                                var value = ahk.GetVar(a.Key);
+                                Arguments[a.Key].Set(context, value);
                             }
                         }
                     }
@@ -288,23 +346,40 @@ namespace OpenRPA.Script.Activities
                                 {
                                     PyObject pyobj = scope.Get(parameter.Key);
                                     if (pyobj == null) continue;
-                                    PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
-                                    if (myVar == null) continue;
-                                    if (myVar.PropertyType == typeof(string))
-                                        myVar.SetValue(context.DataContext, pyobj.ToString());
-                                    else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
-                                    else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
+                                    if (Arguments == null || Arguments.Count == 0)
+                                    {
+                                        PropertyDescriptor myVar = context.DataContext.GetProperties().Find(parameter.Key, true);
+                                        if (myVar == null) continue;
+                                        if (myVar.PropertyType == typeof(string))
+                                            myVar.SetValue(context.DataContext, pyobj.ToString());
+                                        else if (myVar.PropertyType == typeof(int)) myVar.SetValue(context.DataContext, int.Parse(pyobj.ToString()));
+                                        else if (myVar.PropertyType == typeof(bool)) myVar.SetValue(context.DataContext, bool.Parse(pyobj.ToString()));
+                                        else
+                                        {
+                                            try
+                                            {
+                                                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), myVar.PropertyType);
+                                                myVar.SetValue(context.DataContext, obj);
+                                            }
+                                            catch (Exception _ex)
+                                            {
+                                                Log.Information("Failed variable " + parameter.Key + " of type " + myVar.PropertyType.FullName + " " + _ex.Message);
+                                            }
+                                        }
+                                    }
                                     else
                                     {
-                                        try
+                                        Dictionary<string, object> arguments = (from argument in Arguments
+                                                                                where argument.Value.Direction != ArgumentDirection.In
+                                                                                select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                                        foreach (var a in arguments)
                                         {
-                                            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), myVar.PropertyType);
-                                            myVar.SetValue(context.DataContext, obj);
+                                            if (a.Key == parameter.Key)
+                                            {
+                                                Arguments[a.Key].Set(context, pyobj);
+                                            }
                                         }
-                                        catch (Exception _ex)
-                                        {
-                                            Log.Information("Failed variable " + parameter.Key + " of type " + myVar.PropertyType.FullName + " " + _ex.Message);
-                                        }
+
                                     }
 
                                 }
@@ -348,9 +423,6 @@ namespace OpenRPA.Script.Activities
                 }
                 var assemblyLocations = GetAssemblyLocations();
                 CompileAndRun(language, sourcecode, assemblyLocations.ToArray(), variablevalues, context);
-
-
-
             }
             finally
             {
@@ -478,7 +550,7 @@ namespace OpenRPA.Script.Activities
                 }
                 catch (TargetInvocationException ex)
                 {
-                    if(ex.InnerException != null) throw ex.InnerException;
+                    if (ex.InnerException != null) throw ex.InnerException;
                     throw ex;
                 }
                 //ExceptionDispatchInfo exceptionDispatchInfo = null;
@@ -493,16 +565,32 @@ namespace OpenRPA.Script.Activities
 
                 //if (exceptionDispatchInfo != null) exceptionDispatchInfo.Throw();
 
-                var vars = context.DataContext.GetProperties();
-                foreach (dynamic v in vars)
+                if (Arguments == null || Arguments.Count == 0)
                 {
-
-                    var p = mt.GetField(v.DisplayName);
-                    if (p == null) continue;
-                    var value = p.GetValue(mt);
-                    v.SetValue(context.DataContext, value);
+                    var vars = context.DataContext.GetProperties();
+                    foreach (dynamic v in vars)
+                    {
+                        var p = mt.GetField(v.DisplayName);
+                        if (p == null) continue;
+                        var value = p.GetValue(mt);
+                        v.SetValue(context.DataContext, value);
+                    }
                 }
-            }
+                else
+                {
+                    Dictionary<string, object> arguments = (from argument in Arguments
+                                                            where argument.Value.Direction != ArgumentDirection.In
+                                                            select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
+                    foreach (var a in arguments)
+                    {
+                        var p = mt.GetField(a.Key);
+                        if (p == null) continue;
+                        var value = p.GetValue(mt);
+                        Arguments[a.Key].Set(context, value);
+                    }
+
+                }
+                }
         }
         private static string GetVBHeaderText(Dictionary<string, Type> variables, string moduleName, string[] namespaces)
         {

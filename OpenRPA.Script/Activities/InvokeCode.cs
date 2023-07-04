@@ -19,6 +19,9 @@ using Python.Runtime;
 using NLog.Targets;
 using Newtonsoft.Json.Linq;
 using System.Management.Instrumentation;
+using System.Windows.Markup;
+using Microsoft.CSharp.RuntimeBinder;
+using System.Reflection.Metadata;
 
 namespace OpenRPA.Script.Activities
 {
@@ -199,13 +202,42 @@ namespace OpenRPA.Script.Activities
                         }
                         else
                         {
-                            Dictionary<string, object> arguments = (from argument in Arguments
-                                                                    where argument.Value.Direction != ArgumentDirection.In
-                                                                    select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
-                            foreach (var a in arguments)
+                            foreach (var a in Arguments)
                             {
+                                if (a.Value.Direction == ArgumentDirection.In) continue;
                                 var value = runspace.SessionStateProxy.GetVariable(a.Key);
-                                Arguments[a.Key].Set(context, value);
+                                if (value == null)
+                                {
+                                    Arguments[a.Key].Set(context, null);
+                                }
+                                else if (a.Value.ArgumentType == typeof(string))
+                                {
+                                    Arguments[a.Key].Set(context, value.ToString());
+                                }
+                                else if (a.Value.ArgumentType == typeof(int))
+                                {
+                                    Arguments[a.Key].Set(context, int.Parse(value.ToString()));
+                                }
+                                else if (a.Value.ArgumentType == typeof(float))
+                                {
+                                    Arguments[a.Key].Set(context, float.Parse(value.ToString()));
+                                }
+                                else if (a.Value.ArgumentType == typeof(bool))
+                                {
+                                    Arguments[a.Key].Set(context, bool.Parse(value.ToString()));
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(value.ToString(), a.Value.ArgumentType);
+                                        Arguments[a.Key].Set(context, value);
+                                    }
+                                    catch (Exception _ex)
+                                    {
+                                        Log.Information("Failed variable " + a.Key + " of type " + a.Value.ArgumentType.FullName + " " + _ex.Message);
+                                    }
+                                }
                             }
                         }
                         PipelineOutput.Set(context, res);
@@ -256,14 +288,42 @@ namespace OpenRPA.Script.Activities
                         else
                         {
 
-
-                            Dictionary<string, object> arguments = (from argument in Arguments
-                                                                    where argument.Value.Direction != ArgumentDirection.In
-                                                                    select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
-                            foreach (var a in arguments)
+                            foreach (var a in Arguments)
                             {
+                                if (a.Value.Direction == ArgumentDirection.In) continue;
                                 var value = ahk.GetVar(a.Key);
-                                Arguments[a.Key].Set(context, value);
+                                if (value == null)
+                                {
+                                    Arguments[a.Key].Set(context, null);
+                                } 
+                                else if (a.Value.ArgumentType == typeof(string))
+                                {
+                                    Arguments[a.Key].Set(context, value.ToString());
+                                }
+                                else if (a.Value.ArgumentType == typeof(int))
+                                {
+                                    Arguments[a.Key].Set(context, int.Parse(value.ToString()));
+                                }
+                                else if (a.Value.ArgumentType == typeof(float))
+                                {
+                                    Arguments[a.Key].Set(context, float.Parse(value.ToString()));
+                                }
+                                else if (a.Value.ArgumentType == typeof(bool))
+                                {
+                                    Arguments[a.Key].Set(context, bool.Parse(value.ToString()));
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(value.ToString(), a.Value.ArgumentType);
+                                        Arguments[a.Key].Set(context, value);
+                                    }
+                                    catch (Exception _ex)
+                                    {
+                                        Log.Information("Failed variable " + a.Key + " of type " + a.Value.ArgumentType.FullName + " " + _ex.Message);
+                                    }
+                                }
                             }
                         }
                     }
@@ -369,14 +429,42 @@ namespace OpenRPA.Script.Activities
                                     }
                                     else
                                     {
-                                        Dictionary<string, object> arguments = (from argument in Arguments
-                                                                                where argument.Value.Direction != ArgumentDirection.In
-                                                                                select argument).ToDictionary((KeyValuePair<string, Argument> argument) => argument.Key, (KeyValuePair<string, Argument> argument) => argument.Value.Get(context));
-                                        foreach (var a in arguments)
+                                        foreach (var a in Arguments)
                                         {
                                             if (a.Key == parameter.Key)
                                             {
-                                                Arguments[a.Key].Set(context, pyobj);
+                                                if (pyobj == null)
+                                                {
+                                                    Arguments[a.Key].Set(context, null);
+                                                }
+                                                else if (a.Value.ArgumentType == typeof(string))
+                                                {
+                                                    Arguments[a.Key].Set(context, pyobj.ToString());
+                                                }
+                                                else if (a.Value.ArgumentType == typeof(int))
+                                                {
+                                                    Arguments[a.Key].Set(context, int.Parse(pyobj.ToString()));
+                                                }
+                                                else if (a.Value.ArgumentType == typeof(float))
+                                                {
+                                                    Arguments[a.Key].Set(context, float.Parse(pyobj.ToString()));
+                                                }
+                                                else if (a.Value.ArgumentType == typeof(bool))
+                                                {
+                                                    Arguments[a.Key].Set(context, bool.Parse(pyobj.ToString()));
+                                                }
+                                                else
+                                                {
+                                                    try
+                                                    {
+                                                        var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), a.Value.ArgumentType);
+                                                        Arguments[a.Key].Set(context, pyobj);
+                                                    }
+                                                    catch (Exception _ex)
+                                                    {
+                                                        Log.Information("Failed variable " + parameter.Key + " of type " + a.Value.ArgumentType.FullName + " " + _ex.Message);
+                                                    }
+                                                }
                                             }
                                         }
 

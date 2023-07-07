@@ -32,6 +32,9 @@
       <Component Id='IEComponentzh' Win64='yes' Directory="IEzh" Guid='{BA96C401-F651-4BC5-9D92-475A04B4154F}'>
         <File Id="OpenRPA.IE.resources.dll_zh" Source="!(wix.IESource)\zh\OpenRPA.IE.resources.dll" />
       </Component>
+      <Component Id='IEComponentzhhant' Win64='yes' Directory="IEzhhant" Guid='{4D86946A-2519-44A1-9842-40FD104B89E0}'>
+        <File Id="OpenRPA.IE.resources.dll_zhhant" Source="!(wix.IESource)\zh-Hant\OpenRPA.IE.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -50,6 +53,8 @@
       <Directory Id="IEja" Name="ja">
       </Directory>
       <Directory Id="IEzh" Name="zh">
+      </Directory>
+      <Directory Id="IEzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

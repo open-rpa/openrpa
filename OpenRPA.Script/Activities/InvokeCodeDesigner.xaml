@@ -35,7 +35,10 @@
         <DataTemplate x:Key="Expanded">
             <StackPanel>
                 <DockPanel Height="Auto" Width="Auto" LastChildFill="True">
-                    <Button Content="{x:Static or:strings.activity_open_editor}" Click="Button_Click" />
+                    <StackPanel>
+                        <Button Content="{x:Static or:strings.activity_open_editor}" Click="Button_Click" />
+                        <Button Content="{x:Static or:strings.activity_map_variables}" Click="Button2_Click" ></Button>
+                    </StackPanel>
                 </DockPanel>
 
             </StackPanel>

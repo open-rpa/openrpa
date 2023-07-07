@@ -47,6 +47,9 @@
       <Component Id='ImageComponentzh' Win64='yes' Directory="Imagezh" Guid='{517963D9-E48F-4371-9D57-D4653DBCF56E}'>
         <File Id="OpenRPA.Image.resources.dll_zh" Source="!(wix.ImageSource)\zh\OpenRPA.Image.resources.dll" />
       </Component>
+      <Component Id='ImageComponentzhhant' Win64='yes' Directory="Imagezhhant" Guid='{F5C27137-21FE-4843-B5F6-1787D2ACB753}'>
+        <File Id="OpenRPA.Image.resources.dll_zhhant" Source="!(wix.ImageSource)\zh-Hant\OpenRPA.Image.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -67,6 +70,8 @@
       <Directory Id="Imageja" Name="ja">
       </Directory>
       <Directory Id="Imagezh" Name="zh">
+      </Directory>
+      <Directory Id="Imagezhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

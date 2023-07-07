@@ -32,6 +32,9 @@
       <Component Id='ElisRossumComponentzh' Win64='yes' Directory="ElisRossumzh" Guid='{B8752606-DEDC-4875-BC49-FDA2A5572F69}'>
         <File Id="OpenRPA.Elis.Rossum.resources.dll_zh" Source="!(wix.ElisRossumSource)\zh\OpenRPA.Elis.Rossum.resources.dll" />
       </Component>
+      <Component Id='ElisRossumComponentzhhant' Win64='yes' Directory="ElisRossumzhhant" Guid='{4681DB89-17F6-413F-938D-5B346D42E38D}'>
+        <File Id="OpenRPA.Elis.Rossum.resources.dll_zhhant" Source="!(wix.ElisRossumSource)\zh-Hant\OpenRPA.Elis.Rossum.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -50,6 +53,8 @@
       <Directory Id="ElisRossumja" Name="ja">
       </Directory>
       <Directory Id="ElisRossumzh" Name="zh">
+      </Directory>
+      <Directory Id="ElisRossumzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

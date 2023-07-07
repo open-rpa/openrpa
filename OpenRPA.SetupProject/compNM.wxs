@@ -35,6 +35,9 @@
       <Component Id='NMComponentzh' Win64='yes' Directory="NMzh" Guid='{EF613074-F369-412D-8F7E-0D2A040E14E8}'>
         <File Id="OpenRPA.NM.resources.dll_zh" Source="!(wix.NMSource)\zh\OpenRPA.NM.resources.dll" />
       </Component>
+      <Component Id='NMComponentzhhant' Win64='yes' Directory="NMzhhant" Guid='{E6D02BC7-9D75-421E-B429-8303D760C012}'>
+        <File Id="OpenRPA.NM.resources.dll_zhhant" Source="!(wix.NMSource)\zh-Hant\OpenRPA.NM.resources.dll" />
+      </Component>
     </ComponentGroup>
 
     <DirectoryRef Id="INSTALLDIR">
@@ -53,6 +56,8 @@
       <Directory Id="NMja" Name="ja">
       </Directory>
       <Directory Id="NMzh" Name="zh">
+      </Directory>
+      <Directory Id="NMzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
   </Fragment>

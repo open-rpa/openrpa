@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Activities;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,18 +43,25 @@ namespace OpenRPA.Interfaces
         }
         public void IncIndex(NativeActivityContext context)
         {
-            //var Value = Index.Get(context);
-            //Value++;
-            //context.SetValue(Index, Value);
-            if (Variables.Count < 1) return;
-            var input = context.DataContext.GetProperties()[Variables[0].Name];
+            var input = GetTotalDescriptor(context);
+            if (input == null) return;
             if (input != null)
             {
                 try
                 {
                     var _index = 0;
                     var value = input.GetValue(context.DataContext);
-                    if (value != null) _index = (int)value;
+                    if (value != null)
+                    {
+                        if (value is int wfview)
+                        {
+                            _index = (int)value;
+                        }
+                        else if(int.TryParse(value.ToString(), out int current))
+                        {
+                            _index = current;
+                        }                        
+                    }
                     _index++;
                     input.SetValue(context.DataContext, _index);
                 }
@@ -62,19 +71,63 @@ namespace OpenRPA.Interfaces
                 }
             }
         }
-        public void SetIndex(NativeActivityContext context, int Value)
+        public Variable GetTotalVariable(NativeActivityContext context)
         {
-            //context.SetValue(Index, Value);
-            if (Variables.Count < 1) return;
-            var input = context.DataContext.GetProperties()[Variables[0].Name];
-            if (input != null) input.SetValue(context.DataContext, Value);
+            if (Variables.Count < 1) return null;
+            for (var i = 0; i < Variables.Count; i++)
+            {
+                var variable = Variables[i];
+                if (variable.Name == "Total" && variable.Type == typeof(int))
+                {
+                    return variable;
+                }
+            }
+            return null;
+        }
+        public PropertyDescriptor GetTotalDescriptor(NativeActivityContext context)
+        {
+            if (Variables.Count < 1) return null;
+            for (var i = 0; i < Variables.Count; i++)
+            {
+                var variable = Variables[i];
+                if (variable.Name == "Total" && variable.Type == typeof(int))
+                {
+                    return context.DataContext.GetProperties()[variable.Name];
+                }
+            }
+            return null;
+        }
+        public Variable GetIndexVariable(NativeActivityContext context)
+        {
+            if (Variables.Count < 1) return null;
+            for (var i = 0; i < Variables.Count; i++)
+            {
+                var variable = Variables[i];
+                if (variable.Name == "Index" && variable.Type == typeof(int))
+                {
+                    return variable;
+                }
+            }
+            return null;
+        }
+        public PropertyDescriptor GetIndexDescriptor(NativeActivityContext context)
+        {
+            if (Variables.Count < 1) return null;
+            for (var i = 0; i < Variables.Count; i++)
+            {
+                var variable = Variables[i];
+                if (variable.Name == "Index" && variable.Type == typeof(int))
+                {
+                    return context.DataContext.GetProperties()[variable.Name];
+                }
+            }
+            return null;
         }
         public void SetTotal(NativeActivityContext context, int Value)
         {
-            //context.SetValue(Total, Value);
-            if (Variables.Count < 2) return;
-            var input = context.DataContext.GetProperties()[Variables[1].Name];
-            if (input != null) input.SetValue(context.DataContext, Value);
+            var input = GetTotalDescriptor(context);
+            if (input == null) return;
+            input.SetValue(context.DataContext, Value);
         }
         [System.ComponentModel.Browsable(false)]
         public System.Collections.ObjectModel.Collection<Variable> Variables { get; set; } = new System.Collections.ObjectModel.Collection<Variable>();

@@ -32,6 +32,9 @@
       <Component Id='OpenFlowDBComponentzh' Win64='yes' Directory="OpenFlowDBzh" Guid='{A7DBE3A5-BACD-45E5-B760-6EE2C9BFA20B}'>
         <File Id="OpenRPA.OpenFlowDB.resources.dll_zh" Source="!(wix.OpenFlowDBSource)\zh\OpenRPA.OpenFlowDB.resources.dll" />
       </Component>
+      <Component Id='OpenFlowDBComponentzhhant' Win64='yes' Directory="OpenFlowDBzhhant" Guid='{71ACA97B-96FA-42B8-8480-B6A20730A1E3}'>
+        <File Id="OpenRPA.OpenFlowDB.resources.dll_zhhant" Source="!(wix.OpenFlowDBSource)\zh-Hant\OpenRPA.OpenFlowDB.resources.dll" />
+      </Component>
 
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
@@ -50,6 +53,8 @@
       <Directory Id="OpenFlowDBja" Name="ja">
       </Directory>
       <Directory Id="OpenFlowDBzh" Name="zh">
+      </Directory>
+      <Directory Id="OpenFlowDBzhhant" Name="zh-Hant">
       </Directory>
     </DirectoryRef>
 

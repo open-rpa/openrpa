@@ -458,7 +458,7 @@ namespace OpenRPA.Script.Activities
                                                     try
                                                     {
                                                         var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), a.Value.ArgumentType);
-                                                        Arguments[a.Key].Set(context, pyobj);
+                                                        Arguments[a.Key].Set(context, obj);
                                                     }
                                                     catch (Exception _ex)
                                                     {

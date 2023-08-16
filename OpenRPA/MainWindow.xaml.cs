@@ -2390,9 +2390,17 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "OnNewWorkflow");
             try
             {
+                string Name = Project.UniqueName("New Workflow", null);
+                Name = Microsoft.VisualBasic.Interaction.InputBox("Name?", "Name Workflow", Name);
+                if (string.IsNullOrEmpty(Name))
+                {
+                    Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Name is null");
+                    return;
+                }
+
                 if (SelectedContent is Views.WFDesigner designer)
                 {
-                    Workflow workflow = await Workflow.Create(designer.Workflow.Project(), "New Workflow");
+                    Workflow workflow = await Workflow.Create(designer.Workflow.Project(), Name);
                     OnOpenWorkflow(workflow);
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Designer selected");
                     return;
@@ -2402,21 +2410,21 @@ namespace OpenRPA
                 if (val is Detector d)
                 {
                     var project = RobotInstance.instance.Projects.Where(x => x._id == d.projectid).FirstOrDefault() as Project;
-                    Workflow workflow = await Workflow.Create(project, "New Workflow");
+                    Workflow workflow = await Workflow.Create(project, Name);
                     OnOpenWorkflow(workflow);
-                    Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
+                    Log.FunctionOutdent("MainWindow", "OnNewWorkflow", Name);
                     return;
                 }
                 if (val is Workflow wf)
                 {
-                    Workflow workflow = await Workflow.Create(wf.Project(), "New Workflow");
+                    Workflow workflow = await Workflow.Create(wf.Project(), Name);
                     OnOpenWorkflow(workflow);
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Workflow selected");
                     return;
                 }
                 if (val is Project p)
                 {
-                    Workflow workflow = await Workflow.Create(p, "New Workflow");
+                    Workflow workflow = await Workflow.Create(p, Name);
                     OnOpenWorkflow(workflow);
                     Log.FunctionOutdent("MainWindow", "OnNewWorkflow", "Project selected");
                     return;

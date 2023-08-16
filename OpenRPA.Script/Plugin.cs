@@ -90,7 +90,11 @@ namespace OpenRPA.Script
             {
                 if (!Python.Included.Installer.IsPythonInstalled())
                 {
-                    Python.Included.Installer.SetupPython(true).Wait();
+                    Python.Included.Installer.SetupPython(true);//.Wait();
+                    while (!Python.Included.Installer.IsPythonInstalled())
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
                 else
                 {

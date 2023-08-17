@@ -1812,6 +1812,10 @@ namespace OpenRPA
                                         {
                                             var v = k.Value.ToObject(typeof(Workitem));
                                             param.Add(k.Key, v);
+                                        }else if(k.Value.Type == JTokenType.Object && (p.type == typeof(JObject).FullName || p.type==typeof(object).FullName))
+                                        { 
+                                            // Type.GetType(p.type) may return null, so use typeof(JObject).FullName
+                                            param.Add(k.Key, k.Value.Value<JObject>());
                                         }
                                         else
                                         {

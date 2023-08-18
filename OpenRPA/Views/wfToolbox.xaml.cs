@@ -60,6 +60,7 @@ namespace OpenRPA.Views
 
                 // check if assemblies contain activities
                 int activitiesCount = 0;
+                Type scriptActivitiesType = null;
                 foreach (System.Reflection.Assembly activityLibrary in appAssemblies.Where(p => !p.IsDynamic))
                 {
                     try
@@ -134,10 +135,40 @@ namespace OpenRPA.Views
                             //    wfToolboxCategory.Tools.Add(new ToolboxItemWrapper(typeof(System.Activities.Core.Presentation.Factories.ParallelForEachWithBodyFactory<>), "ParallelForEach"));
                             //}
                         }
+
+                        if (scriptActivitiesType == null && activityLibrary.GetName().Name == "OpenRPA.Script")
+                        { 
+                            foreach (var type in activityLibrary.GetExportedTypes())
+                            {
+                                if(type.Name== "ScriptActivities")
+                                {
+                                    scriptActivitiesType = type;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     catch (Exception)
                     {
                     }
+                }
+
+                if(scriptActivitiesType != null)
+                {// load uniplore dynamic script activities
+                    List<ToolboxCategory> finalList = new List<ToolboxCategory>();
+                    List<ToolboxCategory> saCategories = (List<ToolboxCategory>)scriptActivitiesType.GetMethod("LoadScriptActivities").Invoke(null, new object[] { });
+                    foreach (var saCategory in saCategories)
+                    {
+                        if (saCategory.Tools.Count > 0)
+                        {
+                            finalList.Add(saCategory);
+                            activitiesCount += saCategory.Tools.Count;
+                        }
+                    }
+
+                    tb.Categories.ToList().ForEach(finalList.Add);
+                    tb.Categories.Clear();
+                    finalList.ForEach(tb.Categories.Add);
                 }
             }
             catch (Exception ex)

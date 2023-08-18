@@ -93,14 +93,22 @@ namespace OpenRPA.Script.Activities
         private static bool python_doinit = true;
         protected override void Execute(CodeActivityContext context)
         {
+            var code = Code.Get(context);
+            var language = Language.Get(context);
+            Execute(context, code, language, Arguments, PipelineOutput);
+        }
+
+        public void Execute(CodeActivityContext context, string code, string language, Dictionary<string, Argument> Arguments,
+            OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput)
+        {
             string currentdir = System.IO.Directory.GetCurrentDirectory();
             try
             {
                 System.IO.Directory.SetCurrentDirectory(Interfaces.Extensions.ProjectsDirectory);
 
 
-                var code = Code.Get(context);
-                var language = Language.Get(context);
+                //var code = Code.Get(context);
+                //var language = Language.Get(context);
                 var variables = new Dictionary<string, Type>();
                 var variablevalues = new Dictionary<string, object>();
                 if (Arguments == null || Arguments.Count == 0)

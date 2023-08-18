@@ -65,6 +65,7 @@
   <ItemGroup>
     <None Remove="Activities\Editor.xaml" />
     <None Remove="Activities\InvokeCodeDesigner.xaml" />
+    <None Remove="Activities\ScriptActivitiesCodeDesigner.xaml" />
     <None Remove="Activities\PipInstallDesigner.xaml" />
     <None Remove="lib\Python.Runtime.NETStandard.dll" />
     <None Remove="Python.Runtime.NETStandard.dll" />
@@ -98,6 +99,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InvokeCodeDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Activities\ScriptActivitiesCodeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RecordPluginView.xaml">

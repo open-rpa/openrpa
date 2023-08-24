@@ -1,5 +1,6 @@
 ﻿using OpenRPA.Input;
 using System;
+using System.Activities.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -166,27 +167,38 @@ namespace OpenRPA.Interfaces
                 return await action();
             }
         }
+        private static readonly object statelock = new object();
         public static void RunUI(Action action)
         {
             try
             {
-                if(AutomationHelper.syncContext == null)
-                {
-                    AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
-                }
-                
-
-                AutomationHelper.syncContext.Send(o =>
+                if (System.Threading.Monitor.TryEnter(statelock, Config.local.thread_lock_timeout_seconds * 1000))
                 {
                     try
                     {
-                        action();
+                        if (AutomationHelper.syncContext == null)
+                        {
+                            AutomationHelper.syncContext = System.Threading.SynchronizationContext.Current;
+                        }
+                        AutomationHelper.syncContext.Send(o =>
+                        {
+                            try
+                            {
+                                action();
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        }, null);
+
                     }
-                    catch (Exception ex)
+                    finally
                     {
-                        Log.Error(ex.ToString());
+                        System.Threading.Monitor.Exit(statelock);
                     }
-                }, null);
+                }
+                else { throw new LockNotReceivedException("Failed returning list of workflow instances"); }
             }
             catch (Exception ex)
             {

@@ -172,7 +172,7 @@ namespace OpenRPA.Interfaces
         {
             try
             {
-                if (System.Threading.Monitor.TryEnter(statelock, Config.local.thread_lock_timeout_seconds * 1000))
+                if (System.Threading.Monitor.TryEnter(statelock, 10))
                 {
                     try
                     {

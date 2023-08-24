@@ -198,7 +198,9 @@ namespace OpenRPA.Interfaces
                         System.Threading.Monitor.Exit(statelock);
                     }
                 }
-                else { throw new LockNotReceivedException("Failed returning list of workflow instances"); }
+                else { 
+                    // throw new LockNotReceivedException("Failed returning list of workflow instances"); 
+                }
             }
             catch (Exception ex)
             {

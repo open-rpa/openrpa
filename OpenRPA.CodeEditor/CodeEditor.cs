@@ -43,7 +43,20 @@ namespace OpenRPA.CodeEditor
                     }
                 });
                 var completionService = CompletionService.GetService(ce.document);
-                var completionList = await Task.Run(async () => await completionService.GetCompletionsAsync(ce.document, 0));
+                var completionList = await Task.Run(async () =>
+                {
+                    try
+                    {
+                        if (ce != null && ce.document != null)
+                        {
+                            return await completionService.GetCompletionsAsync(ce.document, 0);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    return null;
+                });
             }
             catch (Exception ex)
             {

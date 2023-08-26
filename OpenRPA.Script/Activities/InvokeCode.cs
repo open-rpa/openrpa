@@ -452,6 +452,58 @@ namespace OpenRPA.Script.Activities
                                                 else if (a.Value.ArgumentType == typeof(bool))
                                                 {
                                                     Arguments[a.Key].Set(context, bool.Parse(pyobj.ToString()));
+                                                }else if(a.Value.ArgumentType == typeof(object))
+                                                {
+                                                    if (PyString.IsStringType(pyobj))
+                                                    {
+                                                        Arguments[a.Key].Set(context, pyobj.ToString());
+                                                    }
+                                                    else if (PyNumber.IsNumberType(pyobj) && ("True" == pyobj.ToString() || "False" == pyobj.ToString()))
+                                                    {
+                                                        Arguments[a.Key].Set(context, bool.Parse(pyobj.ToString()));
+                                                    }
+                                                    else if (PyInt.IsIntType(pyobj))
+                                                    {
+                                                        Arguments[a.Key].Set(context, int.Parse(pyobj.ToString()));
+                                                    }
+                                                    else if (PyFloat.IsFloatType(pyobj))
+                                                    {
+                                                        Arguments[a.Key].Set(context, float.Parse(pyobj.ToString()));
+                                                    }else if (PyDict.IsDictType(pyobj))
+                                                    {
+                                                        try
+                                                        {
+                                                            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), typeof(JObject));
+                                                            Arguments[a.Key].Set(context, obj);
+                                                        }
+                                                        catch (Exception _ex)
+                                                        {
+                                                            Log.Information("Failed variable " + parameter.Key + " of type " + a.Value.ArgumentType.FullName + " " + _ex.Message);
+                                                        }
+                                                    }else if(PyList.IsListType(pyobj))
+                                                    {
+                                                        try
+                                                        {
+                                                            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), typeof(JArray));
+                                                            Arguments[a.Key].Set(context, obj);
+                                                        }
+                                                        catch (Exception _ex)
+                                                        {
+                                                            Log.Information("Failed variable " + parameter.Key + " of type " + a.Value.ArgumentType.FullName + " " + _ex.Message);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        try
+                                                        {
+                                                            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(pyobj.ToString(), a.Value.ArgumentType);
+                                                            Arguments[a.Key].Set(context, obj);
+                                                        }
+                                                        catch (Exception _ex)
+                                                        {
+                                                            Log.Information("Failed variable " + parameter.Key + " of type " + a.Value.ArgumentType.FullName + " " + _ex.Message);
+                                                        }
+                                                    }
                                                 }
                                                 else
                                                 {

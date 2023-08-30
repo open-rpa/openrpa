@@ -3,7 +3,11 @@ layout: page
 title: Plugin model
 description: Concepts behind the plugin model
 ---
-The main idea is to make an extensible robot. By giving other developers access to easily create the functionality that is needed, hopefully the whole community can benefit (if published as open source too, you don't need to) and increase the use cases for the robot. There are currently 3 different ways you can extend the functionality of the robot
+The main idea is to make an extensible robot. By giving other developers access to easily create the functionality that is needed, hopefully the whole community can benefit (if published as open source too, you don't need to) and increase the use cases for the robot. There are currently 4 different ways you can extend the functionality of the robot
+
+## New Script Activities
+
+Please go to: [script-activities](plugin-of-script-activities)
 
 ## New activities
 

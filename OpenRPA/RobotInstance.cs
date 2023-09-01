@@ -322,19 +322,19 @@ namespace OpenRPA
         public void MainWindowReadyForAction()
         {
             Log.FunctionIndent("RobotInstance", "MainWindowReadyForAction");
+            try
+            {
+                if (!Config.local.isagent) Show();
+                ReadyForAction?.Invoke();
+                Input.InputDriver.Instance.Initialize();
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
             GenericTools.RunUI(() =>
             {
-                try
-                {
-                    if (!Config.local.isagent) Show();
-                    ReadyForAction?.Invoke();
-                    Input.InputDriver.Instance.Initialize();
-
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
             });
             Log.FunctionOutdent("RobotInstance", "MainWindowReadyForAction");
         }

@@ -26,6 +26,7 @@ namespace OpenRPA.Database
         public OutArgument<int> Result { get; set; }
         [Editor(typeof(CommandTypeEditor), typeof(ExtendedPropertyValueEditor)), Category("Misc")]
         public InArgument<string> CommandType { get; set; }
+        public InArgument<int> CommandTimeout { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var vars = context.DataContext.GetProperties();
@@ -33,10 +34,14 @@ namespace OpenRPA.Database
             foreach (dynamic v in vars) { if (v.DisplayName == "conn") connection = v.GetValue(context.DataContext); }
             var query = Query.Get(context);
             var strcommandtype = CommandType.Get(context);
+            var commandTimeout = CommandTimeout.Get(context);
+            if (CommandTimeout.Expression == null) commandTimeout = 1000 * 30; // 30 seconds is default
+
+
             System.Data.CommandType commandtype = System.Data.CommandType.Text;
             if (!string.IsNullOrEmpty(strcommandtype) && strcommandtype.ToLower() == "storedprocedure") commandtype = System.Data.CommandType.StoredProcedure;
             if (!string.IsNullOrEmpty(strcommandtype) && strcommandtype.ToLower() == "tabledirect") commandtype = System.Data.CommandType.TableDirect;
-            var result = connection.ExecuteNonQuery(query, commandtype);
+            var result = connection.ExecuteNonQuery(query, commandtype, commandTimeout);
             Result.Set(context, result);
         }
         [LocalizedDisplayName("activity_displayname", typeof(Resources.strings)), LocalizedDescription("activity_displayname_help", typeof(Resources.strings))]

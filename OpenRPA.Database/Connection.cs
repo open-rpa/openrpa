@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenRPA.Database
@@ -44,18 +45,19 @@ namespace OpenRPA.Database
         {
             conn.Open();
         }
-        public int ExecuteNonQuery(string Query, CommandType commandType)
+        public int ExecuteNonQuery(string Query, CommandType commandType, int Timeout)
         {
             using (var cmd = factory.CreateCommand())
             {
                 cmd.CommandText = Query;
                 cmd.Connection = conn;
                 cmd.CommandType = commandType;
+                cmd.CommandTimeout = Timeout;
                 // if (Params != null) cmd.Parameters.AddRange(Params);
                 return cmd.ExecuteNonQuery();
             }
         }
-        internal DataTable ExecuteQuery(string Query, CommandType commandType)
+        internal DataTable ExecuteQuery(string Query, CommandType commandType, int Timeout)
         {
             DataTable result = new DataTable();
             using (var cmd = factory.CreateCommand())
@@ -63,6 +65,7 @@ namespace OpenRPA.Database
                 cmd.CommandText = Query;
                 cmd.Connection = conn;
                 cmd.CommandType = commandType;
+                cmd.CommandTimeout = Timeout;
                 // if (Params != null) cmd.Parameters.AddRange(Params);
                 var adapter = factory.CreateDataAdapter();
                 adapter.SelectCommand = cmd;
@@ -70,13 +73,14 @@ namespace OpenRPA.Database
             }
             return result;
         }
-        public object ExecuteScalar(string Query, CommandType commandType)
+        public object ExecuteScalar(string Query, CommandType commandType, int Timeout)
         {
             using (var cmd = factory.CreateCommand())
             {
                 cmd.CommandText = Query;
                 cmd.Connection = conn;
                 cmd.CommandType = commandType;
+                cmd.CommandTimeout = Timeout;
                 // if (Params != null) cmd.Parameters.AddRange(Params);
                 return cmd.ExecuteScalar();
             }

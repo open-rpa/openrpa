@@ -21,6 +21,7 @@ namespace OpenRPA.Database
     {
         [Browsable(false)]
         public ActivityAction<Connection> Body { get; set; }
+        [Browsable(false)]
         public InArgument<TimeSpan> Timeout { get; set; }
         [RequiredArgument]
         public InArgument<string> DataProvider { get; set; }

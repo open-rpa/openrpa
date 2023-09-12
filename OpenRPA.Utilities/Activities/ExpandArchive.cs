@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using ExcelDataReader;
 using System.Data;
 using System.IO.Compression;
+using System.IO;
 
 namespace OpenRPA.Utilities
 {
@@ -26,17 +27,29 @@ namespace OpenRPA.Utilities
         [RequiredArgument]
         public InArgument<string> Filename { get; set; }
         public InArgument<bool> Overwrite { get; set; }
+        public InArgument<string> Encoding { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var overwrite = Overwrite.Get(context);
             var filename = Filename.Get(context);
+            var encoding = Encoding.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
             var path = Path.Get(context);
             path = Environment.ExpandEnvironmentVariables(path);
             if(!string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(filename))
             {
-                var archive = ZipFile.OpenRead(filename);
-                archive.ExtractToDirectory(path, overwrite);
+                if(string.IsNullOrEmpty(encoding))
+                {
+                    var archive = ZipFile.OpenRead(filename);
+                    archive.ExtractToDirectory(path, overwrite);
+                }
+                else
+                {
+                    using (FileStream zipToOpen = new FileStream(filename, FileMode.Open)) {
+                        ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read, false, System.Text.Encoding.GetEncoding(encoding));
+                        archive.ExtractToDirectory(path, overwrite);
+                    }
+                }
             }
         }
 

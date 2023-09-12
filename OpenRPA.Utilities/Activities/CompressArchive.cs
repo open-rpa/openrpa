@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using ExcelDataReader;
 using System.Data;
+using System.IO.Compression;
+using System.IO;
 
 namespace OpenRPA.Utilities
 {
@@ -28,12 +30,13 @@ namespace OpenRPA.Utilities
         public InArgument<int> CompressionLevel { get; set; }
         public InArgument<bool> IncludeBaseDirectory { get; set; }
         public InArgument<bool> Overwrite { get; set; }
-
+        public InArgument<string> Encoding { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             var includeBaseDirectory = IncludeBaseDirectory.Get(context);
             var compressionLevel = CompressionLevel.Get(context);
             var filename = Filename.Get(context);
+            var encoding = Encoding.Get(context);
             filename = Environment.ExpandEnvironmentVariables(filename);
             var path = Path.Get(context);
             path = Environment.ExpandEnvironmentVariables(path);
@@ -48,7 +51,15 @@ namespace OpenRPA.Utilities
                         throw new System.IO.IOException("The file '" + filename + "' already exists.");
                     }
                 }
-                System.IO.Compression.ZipFile.CreateFromDirectory(path, filename, (System.IO.Compression.CompressionLevel)compressionLevel, includeBaseDirectory);
+                if (string.IsNullOrEmpty(encoding))
+                {
+                    ZipFile.CreateFromDirectory(path, filename, (CompressionLevel)compressionLevel, includeBaseDirectory);
+                } else
+                {
+                    ZipFile.CreateFromDirectory(path, filename, (CompressionLevel)compressionLevel, includeBaseDirectory,
+                        System.Text.Encoding.GetEncoding(encoding));
+
+                }
             }
         }
     }

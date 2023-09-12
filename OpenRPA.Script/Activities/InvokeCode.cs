@@ -98,6 +98,16 @@ namespace OpenRPA.Script.Activities
             Execute(context, code, language, Arguments, PipelineOutput);
         }
 
+        public static void InitPython()
+        {
+            if (python_doinit)
+            {
+                Python.Runtime.PythonEngine.Initialize();
+                _ = Python.Runtime.PythonEngine.BeginAllowThreads();
+                python_doinit = false;
+            }
+        }
+
         public void Execute(CodeActivityContext context, string code, string language, Dictionary<string, Argument> Arguments,
             OutArgument<Collection<System.Management.Automation.PSObject>> PipelineOutput)
         {
@@ -365,12 +375,7 @@ namespace OpenRPA.Script.Activities
                         IntPtr lck = IntPtr.Zero;
                         try
                         {
-                            if (python_doinit)
-                            {
-                                Python.Runtime.PythonEngine.Initialize();
-                                _ = Python.Runtime.PythonEngine.BeginAllowThreads();
-                                python_doinit = false;
-                            }
+                            InitPython();
                             // lck = PythonEngine.AcquireLock();
                             doRelease = true;
                             using (Python.Runtime.Py.GIL())

@@ -527,7 +527,19 @@ namespace OpenRPA.Script.Activities
 
             if (language == "Python")
             {
-                args = ToPythonObject(args);
+                try
+                {
+                    InvokeCode.InitPython();
+                    using (Python.Runtime.Py.GIL())
+                    {
+                        args = ToPythonObject(args);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning(ex.ToString());
+                    throw new Exception("Failed for 'ToPythonObject': " + ex.ToString());
+                }
             }
 
             rpa_args.Set(context, args);

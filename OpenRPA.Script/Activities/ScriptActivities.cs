@@ -5,14 +5,12 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Reflection;
 
-
 using OpenRPA.Interfaces;
 using System.Activities;
 using System.Collections.ObjectModel;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
-using Python.Runtime;
 using System.Collections.Concurrent;
 using System.Text;
 using System.Drawing;
@@ -462,61 +460,6 @@ namespace OpenRPA.Script.Activities
             designerIconFile = scriptItem.DesignerIconFile;
         }
 
-
-        private PyObject ToPythonObject(object obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }else if (obj is JObject)
-            {
-                PyDict pyDict = new PyDict();
-                foreach (var item in (JObject)obj)
-                {
-                    pyDict.SetItem(item.Key, ToPythonObject(item.Value));
-                }
-                return pyDict;
-            }
-            else if (obj is JArray)
-            {
-                PyList pyList = new PyList();
-                foreach (var item in (JArray)obj)
-                {
-                    pyList.Append(ToPythonObject(item));
-                }
-                return pyList;
-            }
-            else if (obj is JValue)
-            {
-                object value = ((JValue)obj).Value;
-                return ToPythonObject(value);
-            }
-            else if (ScriptActivities.IsDictionary(obj, typeof(string)))
-            {
-                IDictionary<string, object> dict = (IDictionary<string, object>)obj;
-                PyDict pyDict = new PyDict();
-                foreach (var item in dict)
-                {
-                    pyDict.SetItem(item.Key, ToPythonObject(item.Value));
-                }
-                return pyDict;
-            }
-            else if (ScriptActivities.IsList(obj, null))
-            {
-                IList<object> list = (IList<object>)obj;
-                PyList pyList = new PyList();
-                foreach (var item in list)
-                {
-                    pyList.Append(ToPythonObject(item));
-                }
-                return pyList;
-            }
-            else
-            {
-                return obj.ToPython();
-            }
-        }
-
         protected override void Execute(CodeActivityContext context)
         {
             ScriptItem item = ScriptItemDict[TypeKey];
@@ -527,19 +470,7 @@ namespace OpenRPA.Script.Activities
 
             if (language == "Python")
             {
-                try
-                {
-                    InvokeCode.InitPython();
-                    using (Python.Runtime.Py.GIL())
-                    {
-                        args = ToPythonObject(args);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Warning(ex.ToString());
-                    throw new Exception("Failed for 'ToPythonObject': " + ex.ToString());
-                }
+                args = ParseUtils.ToPyObjectWithGIL(args);
             }
 
             rpa_args.Set(context, args);

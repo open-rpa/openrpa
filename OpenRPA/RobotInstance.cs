@@ -895,7 +895,8 @@ namespace OpenRPA
                 var host = Environment.MachineName.ToLower();
                 var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
                 SetStatus("query idle or running openrpa_instances");
-                var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
+                var runninginstances = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", 
+                    "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "', '_createdbyid': '" + global.webSocketClient.user._id + "'}", top: 1000);
                 // var runpending = false;
                 foreach (var i in runninginstances)
                 {

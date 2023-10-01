@@ -371,13 +371,13 @@ namespace OpenRPA.Script.Activities
                             System.IO.Directory.SetCurrentDirectory(path);
                         }
 
-                        bool doRelease = false;
+                        //bool doRelease = false;
                         IntPtr lck = IntPtr.Zero;
                         try
                         {
                             InitPython();
                             // lck = PythonEngine.AcquireLock();
-                            doRelease = true;
+                            //doRelease = true;
                             using (Python.Runtime.Py.GIL())
                             {
                                 //// create a Python scope
@@ -627,7 +627,10 @@ namespace OpenRPA.Script.Activities
                     }
                     throw new Exception(text);
                 }
-                cache.Add(code, compile);
+                if(!cache.ContainsKey(code))
+                {
+                    cache.Add(code, compile);
+                } 
             }
             else
             {

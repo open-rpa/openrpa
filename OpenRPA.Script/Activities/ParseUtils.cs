@@ -159,7 +159,7 @@ namespace OpenRPA.Script.Activities
         public static JObject PyDictToJObject(PyDict dict)
         {
             JObject jobj = new JObject();
-            foreach(var key in dict.Keys())
+            foreach(string key in dict.Keys())
             {
                 PyObject pyobj = dict.GetItem(key);
                 JToken value;

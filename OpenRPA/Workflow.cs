@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -581,14 +582,14 @@ namespace OpenRPA
             return _activity;
         }
         public IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId,
-            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking)
+            OpenRPA.Interfaces.idleOrComplete idleOrComplete, OpenRPA.Interfaces.VisualTrackingHandler VisualTracking, int ident)
         {
             if (this.Parameters == null) this.Parameters = new List<workflowparameter>();
             if (this.Parameters.Count == 0)
             {
                 ParseParameters();
             }
-            var instance = WorkflowInstance.Create(this, Parameters);
+            var instance = WorkflowInstance.Create(this, Parameters, ident);
             instance.queuename = queuename; instance.correlationId = correlationId; instance.isDirty = true;
             if (idleOrComplete != null) instance.OnIdleOrComplete += idleOrComplete;
             if (VisualTracking != null) instance.OnVisualTracking += VisualTracking;

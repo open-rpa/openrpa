@@ -46,8 +46,8 @@ namespace OpenRPA.Views
         public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
         private string SelectedVariableName = null;
         private Selection selection = null;
-        private readonly MenuItem runthis;
-        private readonly MenuItem runFromHere;
+        // private readonly MenuItem runthis;
+        // private readonly MenuItem runFromHere;
         private readonly MenuItem comment;
         private readonly MenuItem uncomment;
         public bool BreakPointhit { get; set; }
@@ -292,12 +292,12 @@ namespace OpenRPA.Views
 
             comment = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_commentout };
             uncomment = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_uncomment };
-            runthis = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runthis };
-            runFromHere = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runfromhere };
+            //runthis = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runthis };
+            // runFromHere = new MenuItem() { Header = OpenRPA.Resources.strings.designer_menu_runfromhere };
             comment.Click += OnComment;
             uncomment.Click += OnUncomment;
-            runthis.Click += OnRunthis;
-            runFromHere.Click += OnRunFromHere;
+            // runthis.Click += OnRunthis;
+            // runFromHere.Click += OnRunFromHere;
 
             WorkflowDesigner = new WorkflowDesigner();
             DesignerConfigurationService configService = WorkflowDesigner.Context.Services.GetRequiredService<DesignerConfigurationService>();
@@ -1474,11 +1474,11 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                    BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
                    if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0 || Singlestep == true)
                    {
-                       instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking);
+                       instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking, 0);
                    }
                    else
                    {
-                       instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null);
+                       instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null, 0);
                    }
                }
                ReadOnly = true;
@@ -1835,132 +1835,132 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 }
             }
         }
-        private void OnRunthis(object sender, RoutedEventArgs e)
-        {
-            var thisselection = selection;
-            if (selection == null) return;
-            if (selection.SelectedObjects.Count() == 0) return;
-            var modelitem = selection.SelectedObjects.ElementAt(0);
-            var p = modelitem.Properties["Id"];
-            var id = (string)p.ComputedValue;
+        //private void OnRunthis(object sender, RoutedEventArgs e)
+        //{
+        //    var thisselection = selection;
+        //    if (selection == null) return;
+        //    if (selection.SelectedObjects.Count() == 0) return;
+        //    var modelitem = selection.SelectedObjects.ElementAt(0);
+        //    var p = modelitem.Properties["Id"];
+        //    var id = (string)p.ComputedValue;
 
-            GenericTools.RunUI(() =>
-            {
-                this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
-                if (BreakPointhit)
-                {
-                    Singlestep = false;
-                    BreakPointhit = false;
-                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
-                    if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
-                    return;
-                }
-                WorkflowDesigner.Flush();
+        //    GenericTools.RunUI(() =>
+        //    {
+        //        this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
+        //        if (BreakPointhit)
+        //        {
+        //            Singlestep = false;
+        //            BreakPointhit = false;
+        //            if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
+        //            if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
+        //            return;
+        //        }
+        //        WorkflowDesigner.Flush();
 
-                if (global.isConnected)
-                {
-                    if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
-                    {
-                        Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
-                        return;
-                    }
-                }
-                WorkflowInstance instance = null;
-                if (instance == null)
-                {
-                    var param = new Dictionary<string, object>();
-                    BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
-                    if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
-                    {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
-                    }
-                    else
-                    {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
-                    }
-                }
-                ReadOnly = true;
-                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
+        //        if (global.isConnected)
+        //        {
+        //            if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
+        //            {
+        //                Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
+        //                return;
+        //            }
+        //        }
+        //        WorkflowInstance instance = null;
+        //        if (instance == null)
+        //        {
+        //            var param = new Dictionary<string, object>();
+        //            BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+        //            if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
+        //            {
+        //                instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
+        //            }
+        //            else
+        //            {
+        //                instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
+        //            }
+        //        }
+        //        ReadOnly = true;
+        //        if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
 
-                if (!_activityIdMapping.ContainsKey(id))
-                {
-                    InitializeStateEnvironment();
-                }
-                // if (instance != null) instance.Run();
-                if (_activityIdMapping.ContainsKey(id))
-                {
-                    var a = _activityIdMapping[id];
-                    var root = _activityIdMapping["1.1"];
-                    //var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
-                    //var rootModel = modelService.Root;
-                    //instance.Run(root, id);
-                    instance.RunThis(root, a);
-                }
-                else
-                {
-                    Log.Error("Failed finding activity " + id + ", try and close and reopen the designer");
-                }
+        //        if (!_activityIdMapping.ContainsKey(id))
+        //        {
+        //            InitializeStateEnvironment();
+        //        }
+        //        // if (instance != null) instance.Run();
+        //        if (_activityIdMapping.ContainsKey(id))
+        //        {
+        //            var a = _activityIdMapping[id];
+        //            var root = _activityIdMapping["1.1"];
+        //            //var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+        //            //var rootModel = modelService.Root;
+        //            //instance.Run(root, id);
+        //            instance.RunThis(root, a);
+        //        }
+        //        else
+        //        {
+        //            Log.Error("Failed finding activity " + id + ", try and close and reopen the designer");
+        //        }
 
-            });
-        }
-        private void OnRunFromHere(object sender, RoutedEventArgs e)
-        {
-            var thisselection = selection;
-            if (selection == null) return;
-            if (selection.SelectedObjects.Count() == 0) return;
-            var modelitem = selection.SelectedObjects.ElementAt(0);
-            var p = modelitem.Properties["Id"];
-            var id = (string)p.ComputedValue;
+        //    });
+        //}
+        //private void OnRunFromHere(object sender, RoutedEventArgs e)
+        //{
+        //    var thisselection = selection;
+        //    if (selection == null) return;
+        //    if (selection.SelectedObjects.Count() == 0) return;
+        //    var modelitem = selection.SelectedObjects.ElementAt(0);
+        //    var p = modelitem.Properties["Id"];
+        //    var id = (string)p.ComputedValue;
 
-            GenericTools.RunUI(() =>
-            {
-                this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
-                if (BreakPointhit)
-                {
-                    Singlestep = false;
-                    BreakPointhit = false;
-                    if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
-                    if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
-                    return;
-                }
-                WorkflowDesigner.Flush();
-                InitializeStateEnvironment();
-                if (global.isConnected)
-                {
-                    if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
-                    {
-                        Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
-                        return;
-                    }
-                }
-                WorkflowInstance instance = null;
-                if (instance == null)
-                {
-                    var param = new Dictionary<string, object>();
-                    BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
-                    if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
-                    {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
-                    }
-                    else
-                    {
-                        instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
-                    }
-                }
-                ReadOnly = true;
-                if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
+        //    GenericTools.RunUI(() =>
+        //    {
+        //        this.VisualTracking = VisualTracking; this.SlowMotion = SlowMotion;
+        //        if (BreakPointhit)
+        //        {
+        //            Singlestep = false;
+        //            BreakPointhit = false;
+        //            if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
+        //            if (ResumeRuntimeFromHost != null) ResumeRuntimeFromHost.Set();
+        //            return;
+        //        }
+        //        WorkflowDesigner.Flush();
+        //        InitializeStateEnvironment();
+        //        if (global.isConnected)
+        //        {
+        //            if (!Workflow.hasRight(global.webSocketClient.user, Interfaces.entity.ace_right.invoke))
+        //            {
+        //                Log.Error("Access denied, " + global.webSocketClient.user.username + " does not have invoke permission");
+        //                return;
+        //            }
+        //        }
+        //        WorkflowInstance instance = null;
+        //        if (instance == null)
+        //        {
+        //            var param = new Dictionary<string, object>();
+        //            BreakpointLocations = WorkflowDesigner.DebugManagerView.GetBreakpointLocations();
+        //            if (SlowMotion || VisualTracking || BreakpointLocations.Count > 0)
+        //            {
+        //                instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, OnVisualTracking) as WorkflowInstance;
+        //            }
+        //            else
+        //            {
+        //                instance = Workflow.CreateInstance(param, null, null, IdleOrComplete, null) as WorkflowInstance;
+        //            }
+        //        }
+        //        ReadOnly = true;
+        //        if (!VisualTracking && Config.local.minimize) GenericTools.Minimize();
 
-                // if (instance != null) instance.Run();
+        //        // if (instance != null) instance.Run();
 
-                var a = _activityIdMapping[id];
-                var root = _activityIdMapping["1.1"];
-                //var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
-                //var rootModel = modelService.Root;
-                //instance.Run(root, id);
-                instance.RunFromHere(root, a);
+        //        var a = _activityIdMapping[id];
+        //        var root = _activityIdMapping["1.1"];
+        //        //var modelService = WorkflowDesigner.Context.Services.GetService<ModelService>();
+        //        //var rootModel = modelService.Root;
+        //        //instance.Run(root, id);
+        //        instance.RunFromHere(root, a);
 
-            });
-        }
+        //    });
+        //}
         public static async Task<string> LoadImages(string xaml)
         {
             WorkflowDesigner wfDesigner;

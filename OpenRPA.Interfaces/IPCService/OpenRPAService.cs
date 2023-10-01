@@ -232,11 +232,11 @@ namespace OpenRPA.Interfaces.IPCService
                                 {
                                     designer.BreakpointLocations = null;
                                     // instance = workflow.CreateInstance(Arguments, null, null, designer.IdleOrComplete, designer.OnVisualTracking);
-                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, designer.OnVisualTracking);
+                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, designer.OnVisualTracking, 0);
                                 }
                                 else
                                 {
-                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, null);
+                                    instance = workflow.CreateInstance(_instance.Value.Arguments, null, null, IdleOrComplete, null, 0);
                                 }
                                 instance.caller = _instance.Value.UniqueId;
 

@@ -29,7 +29,7 @@ namespace OpenRPA.Interfaces
         bool background { get; set; }
         string ProjectAndName { get; set; }
         List<workflowparameter> Parameters { get; set; }
-        IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking);
+        IWorkflowInstance CreateInstance(Dictionary<string, object> Parameters, string queuename, string correlationId, idleOrComplete idleOrComplete, VisualTrackingHandler VisualTracking, int ident);
         string UniqueFilename();
         Task Delete(bool skipOnline = false);
         Task Save(bool skipOnline = false);

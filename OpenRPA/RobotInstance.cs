@@ -934,6 +934,7 @@ namespace OpenRPA
                     }
                 }
                 var localInstances = dbWorkflowInstances.Find(x => x.isDirty || x.isLocalOnly).ToList();
+                localInstances = localInstances.OrderBy(x => x.ident).ToList();
                 foreach (var i in localInstances)
                 {
                     await i.Save<WorkflowInstance>();
@@ -953,8 +954,9 @@ namespace OpenRPA
                           Log.Debug("RunPendingInstances::end ");
                           if(first_connect)
                           {
-                              foreach (var i in WorkflowInstance.Instances)
+                              foreach (var i in WorkflowInstance.Instances.OrderBy(x => x.ident).ToList())
                               {
+                                  var ident = i.ident;
                                   if (i.Bookmarks != null && i.Bookmarks.Count > 0)
                                   {
                                       foreach (var b in i.Bookmarks)
@@ -1864,14 +1866,14 @@ namespace OpenRPA
                                 if (RobotInstance.instance.GetWorkflowDesignerByIDOrRelativeFilename(command.workflowid) is Views.WFDesigner designer)
                                 {
                                     designer.BreakpointLocations = null;
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking);
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, designer.IdleOrComplete, designer.OnVisualTracking, 0);
                                     (instance as WorkflowInstance).TraceId = command.traceId;
                                     (instance as WorkflowInstance).SpanId = command.spanId;
                                     designer.Run(Window.VisualTracking, Window.SlowMotion, instance);
                                 }
                                 else
                                 {
-                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null);
+                                    instance = workflow.CreateInstance(param, message.replyto, message.correlationId, Window.IdleOrComplete, null, 0);
                                     (instance as WorkflowInstance).TraceId = command.traceId;
                                     (instance as WorkflowInstance).SpanId = command.spanId;
                                     instance.Run();

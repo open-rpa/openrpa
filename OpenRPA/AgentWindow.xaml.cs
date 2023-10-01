@@ -853,7 +853,7 @@ namespace OpenRPA
                     GenericTools.Minimize();
                     IWorkflowInstance instance;
                     var param = new Dictionary<string, object>();
-                    instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null);
+                    instance = workflow.CreateInstance(param, null, null, IdleOrComplete, null, 0);
                     instance.Run();
                 }
                 catch (Exception ex)

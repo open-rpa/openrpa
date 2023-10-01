@@ -70,6 +70,7 @@ namespace OpenRPA
         public string errorsource { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [JsonIgnore, LiteDB.BsonIgnore]
         public Exception Exception { get { return GetProperty<Exception>(); } set { SetProperty(value); } }
+        public int ident { get { return GetProperty<int>(); } set { SetProperty(value); } }
         public bool isCompleted
         {
             get
@@ -167,7 +168,7 @@ namespace OpenRPA
             }
             if (Workflow != null) Workflow.NotifyUIState();
         }
-        public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters)
+        public static WorkflowInstance Create(Workflow Workflow, Dictionary<string, object> Parameters, int ident)
         {
             if (Workflow == null) throw new Exception("Workflow is mandatory for WorkflowInstance.Create");
             if (RobotInstance.openrpa_workflow_run_count != null) RobotInstance.openrpa_workflow_run_count.Add(1, RobotInstance.tags);
@@ -176,6 +177,7 @@ namespace OpenRPA
             result.RelativeFilename = Workflow.RelativeFilename;
             result.projectid = Workflow.projectid;
             result.projectname = Workflow.Project().name;
+            result.ident = ident;
 
             var _ref = (result as IWorkflowInstance);
             foreach (var runner in Plugins.runPlugins)
@@ -928,6 +930,7 @@ namespace OpenRPA
         {
             if (Config.local.disable_instance_store) return;
             if (hasRanPending) return;
+            hasRanPending = true;
             // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
             try
@@ -944,7 +947,7 @@ namespace OpenRPA
                 var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running" || string.IsNullOrEmpty(x.state)) && x.fqdn == fqdn).ToList();
                 if (results.Count == 0) return;
                 Log.Information("Try running " + results.Count + " pending workflows");
-                foreach (WorkflowInstance i in results)
+                foreach (WorkflowInstance i in results.OrderBy(x => x.ident).ToList())
                 {
                     try
                     {

@@ -1341,7 +1341,7 @@ namespace OpenRPA
                                     }
                                     GenericTools.RunUI(() =>
                                     {
-                                        if (pendingwin.result == false)
+                                        if (pendingwin == null || pendingwin.result == false)
                                         {
                                             try
                                             {

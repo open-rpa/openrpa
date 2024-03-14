@@ -418,7 +418,7 @@ namespace OpenRPA
                             try
                             {
                                 var c = new System.Drawing.RectangleConverter();
-                                value = c.ConvertFromString(value.ToString());
+                                value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
                                 return (T)value;
                             }
                             catch (Exception)
@@ -427,7 +427,7 @@ namespace OpenRPA
                             try
                             {
                                 var c = new System.Drawing.RectangleConverter();
-                                value = c.ConvertFromString(null, new System.Globalization.CultureInfo("en-US"), value.ToString());
+                                value = c.ConvertFromString(value.ToString());
                                 return (T)value;
                             }
                             catch (Exception)

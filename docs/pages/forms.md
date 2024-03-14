@@ -3,8 +3,9 @@ layout: page
 title: Design a simple form
 description: Create a simple user form
 ---
-## User forms
-
-If you want to collect user input or just make it easy for your self to give input to a workflow, you can use the Workflow node in NodeRed in collaboration with forms created in OpenFlow.
-
-
+<body style="margin: 0; background: rgba(255, 255, 255, 1.0);">
+    [Moved to](https://docs.openiap.io)
+    <script>
+        window.location.replace("https://docs.openiap.io");
+    </script>
+</body>

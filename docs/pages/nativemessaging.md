@@ -3,9 +3,9 @@ layout: page
 title: Browser integration using Native Messaging
 description: Explaning browser integration using Native Messaging
 ---
-# Native Messaging
-
-Install chrome plugin from [this link](https://chrome.google.com/webstore/detail/hpnihnhlcnfejboocnckgchjdofeaphe) 
-
-You can Install the Mozilla Firefox plugin from [this link](https://addons.mozilla.org/en-US/firefox/addon/openrpa/)
-
+<body style="margin: 0; background: rgba(255, 255, 255, 1.0);">
+    [Moved to](https://docs.openiap.io/docs/activities/Native-Messaging.html)
+    <script>
+        window.location.replace("https://docs.openiap.io/docs/activities/Native-Messaging.html");
+    </script>
+</body>

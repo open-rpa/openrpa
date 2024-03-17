@@ -96,9 +96,9 @@ namespace OpenRPA.Views
                     d.isLocalOnly = true;
                 }
                 d.Start(true);
-                var dexists = RobotInstance.instance.dbDetectors.FindById(d._id);
-                if (dexists == null) RobotInstance.instance.dbDetectors.Insert(d);
-                if (dexists != null) RobotInstance.instance.dbDetectors.Update(d);
+                var dexists = await StorageProvider.FindById<Detector>(d._id);
+                if (dexists == null) await StorageProvider.Insert(d);
+                if (dexists != null) await StorageProvider.Update(d);
             }
             catch (Exception ex)
             {
@@ -121,8 +121,8 @@ namespace OpenRPA.Views
                         var wiq = item as OpenRPA.WorkitemQueue;
                         if (wiq != null)
                         {
-                            await global.webSocketClient.DeleteWorkitemQueue(wiq, true, "", "");
-                            RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
+                            // await global.webSocketClient.DeleteWorkitemQueue(wiq, true, "", "");
+                            await StorageProvider.Delete<OpenRPA.WorkitemQueue>(wiq._id);
                             WorkItemQueues.Remove(wiq);
                             var p = OpenProject.Instance.Projects.Where(x => x._id == wiq.projectid).FirstOrDefault() as Project;
                             reloadOpenProjects = true;

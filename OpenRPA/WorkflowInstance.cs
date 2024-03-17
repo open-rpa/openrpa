@@ -761,7 +761,8 @@ namespace OpenRPA
                         foreach (var b in Bookmarks)
                         {
                             var i = Instances.Where(x => x._id == b.Key).FirstOrDefault();
-                            if (i == null) i = RobotInstance.instance.dbWorkflowInstances.FindById(b.Key);
+                            // TODO: Check if will lock up ?
+                            if (i == null) i = StorageProvider.FindById<WorkflowInstance>(b.Key).Result;
                             if (i != null && i.isCompleted)
                             {
                                 wfApp.ResumeBookmark(b.Key, i);
@@ -931,104 +932,99 @@ namespace OpenRPA
             if (Config.local.disable_instance_store) return;
             if (hasRanPending) return;
             hasRanPending = true;
-            // var span = RobotInstance.instance.source.StartActivity("RunPendingInstances", System.Diagnostics.ActivityKind.Internal);
             Log.FunctionIndent("RobotInstance", "RunPendingInstances");
-            try
-            {
-                //if (!global.isConnected)
-                //{
-                //    Log.FunctionOutdent("RobotInstance", "RunPendingInstances", "Not connected");
-                //    return;
-                //}
-                var host = Environment.MachineName.ToLower();
-                var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
-                //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
+            // TODO: Re-implement RunPendingInstances
+            //try
+            //{
+            //    var host = Environment.MachineName.ToLower();
+            //    var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+            //    //var results = await global.webSocketClient.Query<WorkflowInstance>("openrpa_instances", "{'$or':[{state: 'idle'}, {state: 'running'}], fqdn: '" + fqdn + "'}", top: 1000);
 
-                var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running" || string.IsNullOrEmpty(x.state)) && x.fqdn == fqdn).ToList();
-                if (results.Count == 0) return;
-                Log.Information("Try running " + results.Count + " pending workflows");
-                foreach (WorkflowInstance i in results.OrderBy(x => x.ident).ToList())
-                {
-                    try
-                    {
-                        if (i.Workflow == null) i.Workflow = RobotInstance.instance.Workflows.Where(x => x._id == i.WorkflowId).FirstOrDefault() as Workflow;
-                        if (i.Workflow == null)
-                        {
-                            i.state = "aborted";
-                            i.hasError = true;
-                            i.errormessage = "Cannot run WorkflowInstance " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
-                            continue;
-                        }
-                        else if (i.Workflow.Serializable == false)
-                        {
-                            i.state = "aborted";
-                            i.hasError = true;
-                            i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state (non serializable)";
-                            continue;
-                        }
-                        else if (string.IsNullOrEmpty(i.xml))
-                        {
-                            i.state = "aborted";
-                            i.hasError = true;
-                            i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state";
-                            continue;
-                        }
-                        var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(i.WorkflowId) as Workflow;
-                        if (workflow == null)
-                        {
-                            i.state = "aborted";
-                            i.hasError = true;
-                            i.errormessage = "Cannot run WorkflowInstance, second try " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
-                            await i.Save<WorkflowInstance>();
-                            continue;
-                        }
-                        if (RobotInstance.instance.Window != null) i.OnIdleOrComplete += RobotInstance.instance.Window.IdleOrComplete;
-                        var _ref = (i as IWorkflowInstance);
-                        foreach (var runner in Plugins.runPlugins)
-                        {
-                            if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
-                        }
-                        i.createApp(workflow.Activity());
-                        if (System.Threading.Monitor.TryEnter(Instances, 1000))
-                        {
-                            try
-                            {
-                                Instances.Add(i);
-                            }
-                            finally
-                            {
-                                System.Threading.Monitor.Exit(Instances);
-                            }
-                        }
-                        else { throw new LockNotReceivedException("Failed adding workflow instance in running pending"); }
-                        i.Run();
-                    }
-                    catch (Exception ex)
-                    {
-                        i.state = "failed";
-                        i.Exception = ex;
-                        i.errormessage = ex.Message;
-                        Log.Error("RunPendingInstances: " + ex.ToString());
-                    }
-                    finally
-                    {
-                        i.isDirty = true;
-                        if (!string.IsNullOrEmpty(i.errormessage)) Log.Error(i.errormessage);
-                        await i.Save<WorkflowInstance>();
-                        i.Workflow?.NotifyUIState();
-                    }
-                }
+            //    var results = RobotInstance.instance.dbWorkflowInstances.Find(x => (x.state == "idle" || x.state == "running" || string.IsNullOrEmpty(x.state)) && x.fqdn == fqdn).ToList();
+            //    if (results.Count == 0) return;
+            //    Log.Information("Try running " + results.Count + " pending workflows");
+            //    foreach (WorkflowInstance i in results.OrderBy(x => x.ident).ToList())
+            //    {
+            //        try
+            //        {
+            //            if (i.Workflow == null) i.Workflow = RobotInstance.instance.Workflows.Where(x => x._id == i.WorkflowId).FirstOrDefault() as Workflow;
+            //            if (i.Workflow == null)
+            //            {
+            //                i.state = "aborted";
+            //                i.hasError = true;
+            //                i.errormessage = "Cannot run WorkflowInstance " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
+            //                continue;
+            //            }
+            //            else if (i.Workflow.Serializable == false)
+            //            {
+            //                i.state = "aborted";
+            //                i.hasError = true;
+            //                i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state (non serializable)";
+            //                continue;
+            //            }
+            //            else if (string.IsNullOrEmpty(i.xml))
+            //            {
+            //                i.state = "aborted";
+            //                i.hasError = true;
+            //                i.errormessage = "Cannot load instance " + i.InstanceId + " it contains no state";
+            //                continue;
+            //            }
+            //            var workflow = RobotInstance.instance.GetWorkflowByIDOrRelativeFilename(i.WorkflowId) as Workflow;
+            //            if (workflow == null)
+            //            {
+            //                i.state = "aborted";
+            //                i.hasError = true;
+            //                i.errormessage = "Cannot run WorkflowInstance, second try " + i.InstanceId + ", for unknown Workflow " + i.WorkflowId + " / " + i.name;
+            //                await i.Save<WorkflowInstance>();
+            //                continue;
+            //            }
+            //            if (RobotInstance.instance.Window != null) i.OnIdleOrComplete += RobotInstance.instance.Window.IdleOrComplete;
+            //            var _ref = (i as IWorkflowInstance);
+            //            foreach (var runner in Plugins.runPlugins)
+            //            {
+            //                if (!runner.onWorkflowStarting(ref _ref, true)) throw new Exception("Runner plugin " + runner.Name + " declined running workflow instance");
+            //            }
+            //            i.createApp(workflow.Activity());
+            //            if (System.Threading.Monitor.TryEnter(Instances, 1000))
+            //            {
+            //                try
+            //                {
+            //                    Instances.Add(i);
+            //                }
+            //                finally
+            //                {
+            //                    System.Threading.Monitor.Exit(Instances);
+            //                }
+            //            }
+            //            else { throw new LockNotReceivedException("Failed adding workflow instance in running pending"); }
+            //            i.Run();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            i.state = "failed";
+            //            i.Exception = ex;
+            //            i.errormessage = ex.Message;
+            //            Log.Error("RunPendingInstances: " + ex.ToString());
+            //        }
+            //        finally
+            //        {
+            //            i.isDirty = true;
+            //            if (!string.IsNullOrEmpty(i.errormessage)) Log.Error(i.errormessage);
+            //            await i.Save<WorkflowInstance>();
+            //            i.Workflow?.NotifyUIState();
+            //        }
+            //    }
                 
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.ToString());
-            }
-            finally
-            {
-                hasRanPending = true;
-                Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex.ToString());
+            //}
+            //finally
+            //{
+            //    hasRanPending = true;
+            //    Log.FunctionOutdent("RobotInstance", "RunPendingInstances");
+            //}
         }
         public static void CleanUp()
         {
@@ -1057,16 +1053,17 @@ namespace OpenRPA
                 }
                 try
                 {
-                    if(!Config.local.skip_online_state && !string.IsNullOrEmpty(Config.local.wsurl))
-                    {
-                        var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted") && !x.isDirty);
-                        if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");
-                    }
-                    else
-                    {
-                        var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted"));
-                        if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");
-                    }
+                    // TODO: Must re-implement cleanup !!!
+                    //if (!Config.local.skip_online_state && !string.IsNullOrEmpty(Config.local.wsurl))
+                    //{
+                    //    var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted") && !x.isDirty);
+                    //    if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");
+                    //}
+                    //else
+                    //{
+                    //    var count = RobotInstance.instance.dbWorkflowInstances.DeleteMany(x => (x.isCompleted || x.hasError || x.state == "aborted"));
+                    //    if (count > 0) Log.Debug("Deleted " + count + " items from workflow history.");
+                    //}
                 } catch (Exception ex) {
                     Log.Error(ex.ToString());
                 }

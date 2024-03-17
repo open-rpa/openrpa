@@ -43,10 +43,10 @@ namespace OpenRPA.Store
             try
             {
                 var instance = WorkflowInstance.Instances.Where(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
-                if (instance == null)
-                {
-                    instance = RobotInstance.instance.dbWorkflowInstances.Find(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
-                }
+                //if (instance == null)
+                //{
+                //        RobotInstance.instance.dbWorkflowInstances.Find(x => x.InstanceId == instanceId.ToString()).FirstOrDefault();
+                //}
                 if (instance != null)
                 {
                     if (string.IsNullOrEmpty(instance.xml))

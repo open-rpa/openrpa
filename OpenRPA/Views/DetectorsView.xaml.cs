@@ -109,9 +109,9 @@ namespace OpenRPA.Views
                 }
                 d.Start(true);
                 updateUIList = true;
-                var dexists = RobotInstance.instance.dbDetectors.FindById(d._id);
-                if (dexists == null) RobotInstance.instance.dbDetectors.Insert(d);
-                if (dexists != null) RobotInstance.instance.dbDetectors.Update(d);
+                var dexists = await StorageProvider.FindById<Detector>(d._id);
+                if (dexists == null) await StorageProvider.Insert(d);
+                if (dexists != null) await StorageProvider.Update(d);
             }
             catch (Exception ex)
             {

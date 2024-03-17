@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <TargetFramework>net462</TargetFramework>
+	  <Authors>Allan Zimmermann</Authors>
+	  <Product>OpenRPA</Product>
+	  <Description>OpenRPA litedb storage provider</Description>
+	  <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+	  <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
+	  <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	  <Version>1.0.1</Version>
+	  <Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
+	  <PackageTags>OpenRPA</PackageTags>
+	  <RepositoryUrl>https://github.com/open-rpa/openrpa</RepositoryUrl>
+	  <Platforms>AnyCPU;x86</Platforms>
+	  <Company>OpenIAP</Company>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>..\debug</OutputPath>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+		<OutputPath>..\debug86</OutputPath>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>..\dist</OutputPath>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+		<OutputPath>..\dist</OutputPath>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|AnyCPU'">
+		<OutputPath></OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='PrepInstaller|x86'">
+		<OutputPath />
+	</PropertyGroup>
+	<Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
+		<PropertyGroup>
+			<NuspecProperties>$(NuspecProperties);id=$(AssemblyName)</NuspecProperties>
+			<NuspecProperties>$(NuspecProperties);config=$(Configuration)</NuspecProperties>
+			<NuspecProperties>$(NuspecProperties);version=$(PackageVersion)</NuspecProperties>
+			<NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
+			<NuspecProperties>$(NuspecProperties);author=$(Authors)</NuspecProperties>
+		</PropertyGroup>
+	</Target>
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\LiteDB\LiteDB\LiteDB.csproj" />
+	  <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
+	</ItemGroup>
+
+</Project>

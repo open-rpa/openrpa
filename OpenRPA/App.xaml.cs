@@ -237,6 +237,7 @@ namespace OpenRPA
                 RobotInstance.instance.Status += App_Status;
                 Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
                 Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
+                RobotInstance.instance.Initialize();
             }
             catch (Exception ex)
             {

@@ -170,7 +170,7 @@ namespace OpenRPA.Interfaces
         private static readonly object statelock = new object();
         public static void RunUI(Action action)
         {
-            if (System.Windows.Application.Current.Dispatcher.CheckAccess())
+            if (System.Windows.Application.Current == null || System.Windows.Application.Current.Dispatcher.CheckAccess())
             {
                 action();
             } else

@@ -74,7 +74,7 @@ namespace OpenRPA
             }
             return default(T);
         }
-        private static string[] isDirtyIgnored = { "isDirty", "isLocalOnly", "IsExpanded", "IsExpanded", "IsSelected", "_type", "_id" };
+        private static string[] isDirtyIgnored = { "isDirty", "isLocalOnly", "IsExpanded", "IsSelected", "_type", "_id" };
         /// <summary>
         /// Saves a property value to the internal backing field
         /// </summary>
@@ -105,12 +105,23 @@ namespace OpenRPA
                         if (!_disabledirty)
                         {
                             var stack = (new System.Diagnostics.StackTrace());
+                            var hasLiteDB = false;
+                            for(var i = 0; i < stack.FrameCount; i++)
+                            {
+                                var frame = stack.GetFrame(i);
+                                var mname = frame.GetMethod().Module.ScopeName;
+                                if(mname == "LiteDB.dll")
+                                {
+                                    hasLiteDB = true;
+                                    break;
+                                }
+                            }
                             modulename = stack.GetFrame(1).GetMethod().Module.ScopeName;
                             if (stack.FrameCount > 3) modulename2 = stack.GetFrame(3).GetMethod().Module.ScopeName;
                             if (modulename2 == "Newtonsoft.Json.dll")
                             {
                             }
-                            else if (modulename2 == "LiteDB.dll")
+                            else if (modulename2 == "LiteDB.dll" || hasLiteDB == true)
                             {
                             }
                             else if (modulename2 == "CommonLanguageRuntimeLibrary")

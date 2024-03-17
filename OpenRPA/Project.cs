@@ -118,22 +118,12 @@ namespace OpenRPA
                 SetProperty(value);
                 if (Views.OpenProject.isUpdating) return;
                 if (!_backingFieldValues.ContainsKey("IsExpanded")) return;
-                //if (value && orgvalue != value && (_Workflows ==null || _Workflows.Count == 0)) UpdateWorkflowsList();
-                //if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name) && orgvalue != value) RobotInstance.instance.Projects.Update(this);
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                 {
-                    var wf = RobotInstance.instance.dbProjects.FindById(_id);
-                    if (wf._version == _version)
+                    Task.Run(async () =>
                     {
-                        Log.Verbose("Saving " + this.name + " with version " + this._version);
-                        RobotInstance.instance.dbProjects.Update(this);
-                    }
-                    else
-                    {
-                        Log.Verbose("Setting " + this.name + " with version " + this._version);
-                        wf.IsExpanded = value;
-                    }
-                    RobotInstance.instance.dbProjects.Update(this);
+                        await StorageProvider.Update<Project>(this);
+                    });
                 }
             }
         }
@@ -143,30 +133,17 @@ namespace OpenRPA
             get { return GetProperty<bool>(); }
             set
             {
-                if (Views.OpenProject.isUpdating) return;
                 if (value == GetProperty<bool>()) return;
                 SetProperty(value);
+                if (Views.OpenProject.isUpdating) return;
                 if (!_backingFieldValues.ContainsKey("IsSelected")) return;
                 if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
                 {
-                    if (!string.IsNullOrEmpty(_id) && !string.IsNullOrEmpty(name))
+                    Task.Run(async () =>
                     {
-                        var wf = RobotInstance.instance.dbProjects.FindById(_id);
-                        if (wf == null) return;
-                        if (wf._version == _version)
-                        {
-                            Log.Verbose("Saving " + this.name + " with version " + this._version);
-                            RobotInstance.instance.dbProjects.Update(this);
-                        }
-                        else
-                        {
-                            Log.Verbose("Setting " + this.name + " with version " + this._version);
-                            wf.IsSelected = value;
-                        }
-                        RobotInstance.instance.dbProjects.Update(this);
-                    }
+                        await StorageProvider.Update<Project>(this);
+                    });
                 }
-
             }
         }
         public static async Task<Project> Create(string Path, string Name)
@@ -226,11 +203,12 @@ namespace OpenRPA
                     _wiq.projectid = _id;
                     if (!string.IsNullOrEmpty(_wiq._id))
                     {
-                        var exists = RobotInstance.instance.dbWorkItemQueues.FindById(_wiq._id);
+                        var exists = await StorageProvider.FindById<WorkitemQueue>(_wiq._id);
                         if (exists == null)
                         {
-                            exists = RobotInstance.instance.dbWorkItemQueues.Find(x => x.name.ToLower() == _wiq.name.ToLower()).FirstOrDefault();
-                        } else
+                            exists = (await StorageProvider.FindAll<WorkitemQueue>()).Where(x => x.name.ToLower() == _wiq.name.ToLower()).FirstOrDefault();
+                        } 
+                        else
                         {
                             if (string.IsNullOrEmpty(exists.name)) exists.name = "";
                             if (exists.name.ToLower() != _wiq.name.ToLower())
@@ -271,7 +249,7 @@ namespace OpenRPA
                     var _d = JsonConvert.DeserializeObject<Detector>(json);
                     if (!string.IsNullOrEmpty(_d._id))
                     {
-                        var exists = RobotInstance.instance.dbDetectors.FindById(_d._id);
+                        var exists = await StorageProvider.FindById<Detector>(_d._id);
                         if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
                     }
                     if (string.IsNullOrEmpty(_d._id)) _d._id = Guid.NewGuid().ToString();
@@ -287,11 +265,11 @@ namespace OpenRPA
                 {
                     var _wf = JsonConvert.DeserializeObject<Workflow>(json);
 
-                    var exists = RobotInstance.instance.dbWorkflows.FindById(_wf._id);
+                    var exists = await StorageProvider.FindById<Workflow>(_wf._id);
                     _wf.projectid = _id;
                     if (exists == null)
                     {
-                        exists = RobotInstance.instance.dbWorkflows.Find(x => x.ProjectAndName.ToLower() == _wf.ProjectAndName.ToLower()).FirstOrDefault();
+                        exists = (await StorageProvider.FindAll<Workflow>()).Where(x => x.ProjectAndName.ToLower() == _wf.ProjectAndName.ToLower()).FirstOrDefault();
                     }
                     else
                     {
@@ -442,8 +420,8 @@ namespace OpenRPA
                     {
                         if (!ex.Message.Contains("not found") && !ex.Message.Contains("denied")) throw;
                     }
-                    GenericTools.RunUI(()=> {
-                        RobotInstance.instance.dbWorkItemQueues.Delete(wiq._id);
+                    GenericTools.RunUI(async ()=> {
+                        await StorageProvider.Delete<WorkitemQueue>(wiq._id);
                         RobotInstance.instance.WorkItemQueues.Remove(wiq);
                     });
                 }
@@ -487,10 +465,10 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            var exists = RobotInstance.instance.dbProjects.FindById(_id);
+            var exists = await StorageProvider.FindById<Project>(_id);
             if (exists != null)
             {
-                RobotInstance.instance.dbProjects.Delete(_id);
+                await StorageProvider.Delete<Project>(this._id);
             }
             GenericTools.RunUI(() =>
             {

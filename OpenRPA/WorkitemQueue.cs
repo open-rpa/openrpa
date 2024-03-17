@@ -141,8 +141,8 @@ namespace OpenRPA
             {
                 try
                 {
+                    await StorageProvider.Delete<WorkitemQueue>(this._id);
                     RobotInstance.instance.WorkItemQueues.Remove(this);
-                    RobotInstance.instance.dbWorkItemQueues.Delete(_id);
                 }
                 catch (Exception ex) {
                     Log.Error("Error removing " + name + "/" + _id + " " + ex.Message);
@@ -160,15 +160,16 @@ namespace OpenRPA
         }
         public async Task Purge()
         {
-            if (string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
-            {
-                var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true, "", "");
-            } else if (string.IsNullOrEmpty( Config.local.wsurl))
-            {
-                RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);
-                RobotInstance.instance.Workitems.Clear();
-                RobotInstance.instance.Workitems.AddRange(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
-            }
+            throw new NotImplementedException("This feature has not been implemented, please purge queue from openflow web interface");
+            //if (string.IsNullOrEmpty(_id) && global.webSocketClient != null && global.webSocketClient.isConnected)
+            //{
+            //    var wiq = await global.webSocketClient.UpdateWorkitemQueue(this, true, "", "");
+            //} else if (string.IsNullOrEmpty( Config.local.wsurl))
+            //{
+            //    RobotInstance.instance.dbWorkitems.DeleteMany(x => x.wiq == name);
+            //    RobotInstance.instance.Workitems.Clear();
+            //    RobotInstance.instance.Workitems.AddRange(RobotInstance.instance.dbWorkitems.FindAll().OrderBy(x => x.name));
+            //}
         }
         public override string ToString()
         {

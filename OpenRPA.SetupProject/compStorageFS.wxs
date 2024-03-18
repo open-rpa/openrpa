@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="StorageFSComponents">
+      <Component Id='StorageFSComponent' Guid='{079E3990-1D1F-4381-B023-B3DA6E64042B}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.Storage.Filesystem.dll" Source="!(wix.ScriptSource)\OpenRPA.Storage.Filesystem.dll" />
+        <File Id="OpenRPA.Storage.Filesystem.pdb" Source="!(wix.ScriptSource)\OpenRPA.Storage.Filesystem.pdb" />
+      </Component>
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>

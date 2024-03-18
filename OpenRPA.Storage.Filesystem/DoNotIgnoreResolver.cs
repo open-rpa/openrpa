@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.Storage.Filesystem
 {
-    public class IgnoreJsonIgnoreContractResolver : DefaultContractResolver
+    public class DoNotIgnoreResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {

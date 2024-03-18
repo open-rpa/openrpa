@@ -107,7 +107,7 @@ namespace OpenRPA.Storage.Filesystem
             // When working locally, we do NOT want to ignore these properties
             var settings = new JsonSerializerSettings
             {
-                ContractResolver = new IgnoreJsonIgnoreContractResolver()
+                ContractResolver = new DoNotIgnoreResolver()
             };
             var json = JsonConvert.SerializeObject(item, settings);
             var o = JObject.Parse(json);
@@ -135,7 +135,7 @@ namespace OpenRPA.Storage.Filesystem
             // When working locally, we do NOT want to ignore these properties
             var settings = new JsonSerializerSettings
             {
-                ContractResolver = new IgnoreJsonIgnoreContractResolver()
+                ContractResolver = new DoNotIgnoreResolver()
             };
             var json = JsonConvert.SerializeObject(item, settings);
             var o = JObject.Parse(json);

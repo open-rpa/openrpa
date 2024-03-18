@@ -18,6 +18,7 @@ namespace OpenRPA.Storage.LiteDB
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task Initialize()
         {
+            if (!PluginConfig.enabled) return;
             BsonMapper.Global.MaxDepth = 50;
             BsonMapper.Global.TypeDescriptor = "__type";
 
@@ -131,7 +132,6 @@ namespace OpenRPA.Storage.LiteDB
         private ILiteCollection<T> Collection<T> () where T : class
         {
             ILiteCollection<T> result = null;
-
             if (typeof(IWorkflow).IsAssignableFrom(typeof(T)))
             {
                 result  = db.GetCollection<T>("workflows");
@@ -164,29 +164,34 @@ namespace OpenRPA.Storage.LiteDB
         }
         public async Task<T[]> FindAll<T>() where T : apibase
         {
+            if (!PluginConfig.enabled) return Array.Empty<T>();
             if (isDisposing) return Array.Empty<T>();
             return Collection<T>().FindAll().Select(w => w as T).ToArray();
         }
         public async Task<T> FindById<T>(string id) where T : apibase
         {
+            if (!PluginConfig.enabled) return null;
             if (isDisposing) return null;
             return Collection<T>().FindById(id);
         }
         public async Task<T> Insert<T>(T item) where T : apibase
         {
+            if (!PluginConfig.enabled) return item;
             if (isDisposing) return item;
             var id = Collection<T>().Insert(item);
             return await FindById<T>(id);
         }
         public async Task<T> Update<T>(T item) where T : apibase
         {
+            if (!PluginConfig.enabled) return item;
             if (isDisposing) return item;
             Collection<T>().Update(item);
             return item;
         }
         public async Task Delete<T>(string id) where T : apibase
         {
-            if(isDisposing) return;
+            if (!PluginConfig.enabled) return;
+            if (isDisposing) return;
             Collection<T>().Delete(id);
         }
         private bool isDisposing = false;

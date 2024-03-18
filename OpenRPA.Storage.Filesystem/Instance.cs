@@ -12,12 +12,12 @@ namespace OpenRPA.Storage.Filesystem
     public class Instance : IStorage
     {
         public string Name { get; set; }
-        public bool strict { get; set; }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task Initialize()
         {
-            strict = false;
+            _ = PluginConfig.strict;
+            if (!PluginConfig.enabled) return;
         }
         private string Collection<T>() where T : class
         {
@@ -58,6 +58,7 @@ namespace OpenRPA.Storage.Filesystem
         }
         public async Task<T[]> FindAll<T>() where T : apibase
         {
+            if (!PluginConfig.enabled) return Array.Empty<T>();
             var result = new System.Collections.Generic.List<T>();
             string path = Collection<T>();
             if (!System.IO.Directory.Exists(path)) return result.ToArray();
@@ -96,6 +97,7 @@ namespace OpenRPA.Storage.Filesystem
         }
         public async Task<T> FindById<T>(string id) where T : apibase
         {
+            if (!PluginConfig.enabled) return null;
             string path = Collection<T>();
             string filepath = System.IO.Path.Combine(path, id) + ".json";
             if (!System.IO.File.Exists(filepath)) return null;
@@ -108,6 +110,7 @@ namespace OpenRPA.Storage.Filesystem
         }
         public async Task<T> Insert<T>(T item) where T : apibase
         {
+            if (!PluginConfig.enabled) return item;
             // When working locally, we do NOT want to ignore these properties
             var settings = new JsonSerializerSettings
             {
@@ -125,7 +128,7 @@ namespace OpenRPA.Storage.Filesystem
                 json = JsonConvert.SerializeObject(o, settings);
             }
             string filepath = System.IO.Path.Combine(path, id) + ".json";
-            if (strict == true && System.IO.File.Exists(filepath)) throw new Exception("Object with " + id + " already exists!");
+            if (PluginConfig.strict == true && System.IO.File.Exists(filepath)) throw new Exception("Object with " + id + " already exists!");
             if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
             System.IO.File.WriteAllText(filepath, json);
             var o2 = JObject.Parse(json);
@@ -136,6 +139,7 @@ namespace OpenRPA.Storage.Filesystem
         }
         public async Task<T> Update<T>(T item) where T : apibase
         {
+            if (!PluginConfig.enabled) return item;
             // When working locally, we do NOT want to ignore these properties
             var settings = new JsonSerializerSettings
             {
@@ -147,20 +151,21 @@ namespace OpenRPA.Storage.Filesystem
             var id = (string)o["_id"];
             if (id == null || id == "") throw new Exception("object is missing an _id");
             string filepath = System.IO.Path.Combine(path, id) + ".json";
-            if (strict == true && !System.IO.File.Exists(filepath)) throw new Exception("Object with " + id + " does not exists!");
+            if (PluginConfig.strict == true && !System.IO.File.Exists(filepath)) throw new Exception("Object with " + id + " does not exists!");
             if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
             System.IO.File.WriteAllText(filepath, json);
             return item;
         }
         public async Task Delete<T>(string id) where T : apibase
         {
+            if (!PluginConfig.enabled) return;
             string path = Collection<T>();
             string filepath = System.IO.Path.Combine(path, id) + ".json";
             if (System.IO.File.Exists(filepath))
             {
                 System.IO.File.Delete(filepath);
             }
-            else if (strict == true)
+            else if (PluginConfig.strict == true)
             {
                 throw new Exception("Object with " + id + " does not exists!");
             }

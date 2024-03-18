@@ -151,7 +151,12 @@ namespace OpenRPA.Storage.LiteDB
             else if (typeof(IWorkitem).IsAssignableFrom(typeof(T)))
             {
                 result = db.GetCollection<T>("workitems");
-            } else
+            }
+            else if (typeof(IWorkflowInstance).IsAssignableFrom(typeof(T)))
+            {
+                result = db.GetCollection<T>("openrpa_instances");
+            }
+            else
             {
                 return null;
             }

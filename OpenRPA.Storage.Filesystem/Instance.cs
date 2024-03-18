@@ -50,6 +50,10 @@ namespace OpenRPA.Storage.Filesystem
             {
                 return System.IO.Path.Combine(basepath, "workitems");
             }
+            else if (typeof(IWorkflowInstance).IsAssignableFrom(typeof(T)))
+            {
+                return System.IO.Path.Combine(basepath, "openrpa_instances");
+            }
             return null;
         }
         public async Task<T[]> FindAll<T>() where T : apibase

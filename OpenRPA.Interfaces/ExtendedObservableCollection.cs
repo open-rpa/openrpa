@@ -116,7 +116,7 @@ namespace OpenRPA.Interfaces
                             break;
                     }
 
-                });
+                }, 500);
             }
         }
         new public void Move(int oldIndex, int newIndex) { basecollection.Move(oldIndex, newIndex); }

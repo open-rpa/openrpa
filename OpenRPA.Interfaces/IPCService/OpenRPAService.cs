@@ -254,7 +254,7 @@ namespace OpenRPA.Interfaces.IPCService
                             {
                                 if (instance != null) instance.Run();
                             }
-                        });
+                        }, 10000);
                     }
                     catch (Exception ex)
                     {
@@ -342,7 +342,7 @@ namespace OpenRPA.Interfaces.IPCService
                     catch (Exception)
                     {
                     }
-                });
+                }, 60000);
             }
         }
         public string Ping() { return "pong"; }

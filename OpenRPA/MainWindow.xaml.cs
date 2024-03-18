@@ -168,7 +168,7 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
-                });
+                }, 10000);
             }
             Log.FunctionOutdent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
         }
@@ -2224,7 +2224,7 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
-            });
+            }, 10000);
             //Task.Run(() =>
             //{
             //    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
@@ -3478,7 +3478,7 @@ namespace OpenRPA
                 GenericTools.RunUI(() =>
                 {
                     CommandManager.InvalidateRequerySuggested();
-                });
+                }, 100);
             }
 
             try

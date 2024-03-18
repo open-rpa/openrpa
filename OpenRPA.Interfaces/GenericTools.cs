@@ -39,7 +39,7 @@ namespace OpenRPA.Interfaces
                 {
                     Log.Error(ex.ToString());
                 }
-            });
+            }, 1000);
         }
         public static void Minimize(IntPtr hWnd)
         {
@@ -85,7 +85,7 @@ namespace OpenRPA.Interfaces
                 {
                     Log.Error(ex.ToString());
                 }
-            });
+            }, 1000);
         }
         public static void Restore(System.Windows.Window window)
         {
@@ -108,7 +108,7 @@ namespace OpenRPA.Interfaces
                 {
                     Log.Error(ex.ToString());
                 }
-            });
+            }, 1000);
         }
         public static void Restore(IntPtr hWnd)
         {
@@ -168,7 +168,7 @@ namespace OpenRPA.Interfaces
             }
         }
         private static readonly object statelock = new object();
-        public static void RunUI(Action action)
+        public static void RunUI(Action action, int timeout_ms = 10000)
         {
             if (System.Windows.Application.Current == null || System.Windows.Application.Current.Dispatcher.CheckAccess())
             {
@@ -177,8 +177,7 @@ namespace OpenRPA.Interfaces
             {
                 try
                 {
-                    // if (System.Threading.Monitor.TryEnter(statelock, Config.local.thread_lock_timeout_seconds * 1000))
-                    if (System.Threading.Monitor.TryEnter(statelock, 1000))
+                    if (System.Threading.Monitor.TryEnter(statelock, timeout_ms))
                     {
                         try
                         {

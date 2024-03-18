@@ -29,7 +29,7 @@ namespace OpenRPA
             GenericTools.RunUI(() =>
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            });
+            }, 100);
         }
         private string _FilterText = "";
         public string FilterText
@@ -68,7 +68,7 @@ namespace OpenRPA
             get
             {
                 int result = 0;
-                GenericTools.RunUI(() => { result = Projects.Count(); });
+                GenericTools.RunUI(() => { result = Projects.Count(); }, 100);
                 return result;
             }
         }
@@ -219,9 +219,6 @@ namespace OpenRPA
             {
                 Log.Error(ex.ToString());
             }
-            GenericTools.RunUI(() =>
-            {
-            });
             Log.FunctionOutdent("RobotInstance", "MainWindowReadyForAction");
         }
         private void ReloadTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -890,10 +887,7 @@ namespace OpenRPA
                 //          Log.Error(ex.ToString());
                 //      }
                 //  });
-                GenericTools.RunUI(() =>
-                {
-                    NotifyPropertyChanged("FilterText");
-                });
+                NotifyPropertyChanged("FilterText");
                 WorkflowInstance.CleanUp();
             }
             catch (Exception ex)
@@ -995,7 +989,7 @@ namespace OpenRPA
                     {
                         if (!Config.local.isagent) Show();
                         ReadyForAction?.Invoke();
-                    });
+                    }, 60000);
                     await LoadServerData(false);
                     if (!isReadyForAction)
                     {
@@ -1017,7 +1011,7 @@ namespace OpenRPA
             GenericTools.RunUI(() =>
             {
                 if (Window != null) Window.Hide();
-            });
+            }, 100);
             Log.FunctionOutdent("RobotInstance", "Hide");
         }
         private async void CreateMainWindow()
@@ -1082,7 +1076,7 @@ namespace OpenRPA
             GenericTools.RunUI(() =>
             {
                 if (Window != null) Window.Show();
-            });
+            }, 100);
             Log.FunctionOutdent("RobotInstance", "Show");
         }
         private void Close()
@@ -1092,7 +1086,7 @@ namespace OpenRPA
             {
                 if (Window != null) Window.Close();
                 Application.Current.Shutdown();
-            });
+            }, 60000);
             Log.FunctionOutdent("RobotInstance", "Close");
         }
         private async void RobotInstance_WebSocketClient_OnOpen()
@@ -1196,7 +1190,7 @@ namespace OpenRPA
                                     Hide();
                                     pendingwin = new Views.PendingToken();
                                     pendingwin.Show();
-                                });
+                                }, 10000);
 
 
                                 GenericTools.OpenUrl(url + "/Login?key=" + key);
@@ -1246,7 +1240,7 @@ namespace OpenRPA
                                             {
                                             }
                                         }
-                                    });
+                                    }, 10000);
                                 }
                             }
                             catch (Exception ex)
@@ -1265,7 +1259,7 @@ namespace OpenRPA
                                 {
                                     if(pendingwin != null) pendingwin.Close();
                                     pendingwin = null;
-                                });
+                                }, 10000);
                             }
 
                             if (!string.IsNullOrEmpty(jwt))
@@ -1377,7 +1371,7 @@ namespace OpenRPA
             {
                 if (!Config.local.isagent) Show();
                 ReadyForAction?.Invoke();
-            });
+            }, 10000);
             if (Window != null)
             {
                 Window.MainWindow_WebSocketClient_OnOpen();
@@ -1405,7 +1399,7 @@ namespace OpenRPA
                         Log.Error(ex.ToString());
                     }
                     if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) SetStatus("Connected to " + Config.local.wsurl + " as " + user?.name);
-                });
+                }, 10000);
             }
             try
             {
@@ -1473,7 +1467,7 @@ namespace OpenRPA
                 {
                     if (!Config.local.isagent) Show();
                     ReadyForAction?.Invoke();
-                });
+                }, 10000);
                 if (connect_attempts == 1)
                 {
                     try
@@ -1785,7 +1779,7 @@ namespace OpenRPA
                                 errormessage = ex.Message;
                                 Log.Error(ex.ToString());
                             }
-                        });
+                        }, 60000);
                     }
                     finally
                     {
@@ -2255,7 +2249,7 @@ namespace OpenRPA
                         {
                             Log.Error(ex.ToString());
                         }
-                    });
+                    }, 60000);
                 }
                 if (_type == "workitemqueue" && collection == "mq")
                 {
@@ -2298,7 +2292,7 @@ namespace OpenRPA
                         {
                             Log.Error(ex.ToString());
                         }
-                    });
+                    }, 60000);
                 }
             }
             catch (Exception ex)
@@ -2358,7 +2352,7 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
-            });
+            }, 60000);
         }
     }
 }

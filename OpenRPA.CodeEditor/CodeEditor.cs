@@ -41,7 +41,7 @@ namespace OpenRPA.CodeEditor
                     {
                         Log.Error("CodeEditor.init-inner: " + ex.ToString());
                     }
-                });
+                }, 10000);
                 var completionService = CompletionService.GetService(ce.document);
                 var completionList = await Task.Run(async () =>
                 {
@@ -244,7 +244,7 @@ namespace OpenRPA.CodeEditor
                         document = document.WithText(SourceText.From(header + Text + footer));
                     }
                 }
-            });
+            }, 10000);
             return document;
         }
         private async Task ShowCompletionAsync(char? triggerChar)

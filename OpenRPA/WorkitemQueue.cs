@@ -210,8 +210,7 @@ namespace OpenRPA
             {
                 GenericTools.RunUI(() => {
                     RobotInstance.instance.Workitems.Add(this);
-                });
-                
+                });                
             }
         }
     }

@@ -362,10 +362,7 @@ namespace OpenRPA
             isDirty = true;
             if (runWatch != null) runWatch.Stop();
             OnIdleOrComplete?.Invoke(this, EventArgs.Empty);
-            GenericTools.RunUI(() =>
-            {
-                Workflow.SetLastState("aborted");
-            });
+            Workflow.SetLastState("aborted");
         }
         public void ResumeBookmark(string bookmarkName, object value, bool ignoreCompleted)
         {

@@ -471,7 +471,7 @@ namespace OpenRPA
                     GenericTools.RunUI(() =>
                     {
                         CommandManager.InvalidateRequerySuggested();
-                    });
+                    }, 100);
                 }
 
                 if (instance.hasError || instance.isCompleted)

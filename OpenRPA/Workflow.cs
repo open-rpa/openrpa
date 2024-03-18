@@ -264,7 +264,7 @@ namespace OpenRPA
                     });
 
                 }
-                GenericTools.RunUI(() => NotifyUIState());
+                GenericTools.RunUI(() => NotifyUIState(), 100);
             }
         }
         [JsonIgnore]

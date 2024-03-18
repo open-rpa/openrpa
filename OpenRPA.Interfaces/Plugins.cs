@@ -179,7 +179,7 @@ namespace OpenRPA.Interfaces
                         Log.Debug("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         // SetStatus("Initialize plugin " + plugin.Name);
                         plugin.Initialize(client);
-                        GenericTools.RunUI(() => recordPlugins.Add(plugin));
+                        GenericTools.RunUI(() => recordPlugins.Add(plugin), 10000);
                     }
 
                 }
@@ -258,7 +258,7 @@ namespace OpenRPA.Interfaces
                         plugin = (IRunPlugin)Activator.CreateInstance(type);
                         Log.Debug("LoadPlugins::Initialize RunPlugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         plugin.Initialize(client);
-                        GenericTools.RunUI(() => runPlugins.Add(plugin));
+                        GenericTools.RunUI(() => runPlugins.Add(plugin), 10000);
                     }
                 }
                 catch (Exception ex)

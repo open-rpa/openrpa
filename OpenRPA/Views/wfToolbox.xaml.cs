@@ -148,8 +148,9 @@ namespace OpenRPA.Views
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Log.Error(ex.ToString());
                     }
                 }
 

@@ -3,21 +3,9 @@ layout: page
 title: Documentation overview
 description: List of different parts of the documentation
 ---
-Here is a short description of different parts of the robot
-
-[Recording](recording) with the robot
-
-Basic [debugging](debugging) in robot workflows
-
-Working with the [selector window](selector-window)
-
-Demystifying the [type text activity](typetext-syntax) syntax 
-
-All most complete list of [basic activities](activities)
-
-Working with [detectors](detectors)
-
-How to connect the robot with [Chrome and Firefox](nativemessaging)
-
-The basics behind the [plugin model](plugin-model) used by the robot
-
+<body style="margin: 0; background: rgba(255, 255, 255, 1.0);">
+    [Moved to](https://docs.openiap.io)
+    <script>
+        window.location.replace("https://docs.openiap.io");
+    </script>
+</body>

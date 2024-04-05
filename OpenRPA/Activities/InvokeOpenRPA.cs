@@ -152,7 +152,7 @@ namespace OpenRPA.Activities
                     {
                         error = ex;
                     }
-                });
+                }, 60000);
                 if (error != null) throw error;
                 if (instance != null)
                 {
@@ -175,7 +175,7 @@ namespace OpenRPA.Activities
                     {
                         instance.Run();
                     }
-                });
+                }, 60000);
             }
             catch (Exception ex)
             {

@@ -326,7 +326,7 @@ namespace OpenRPA.Interfaces.Selector
                     Log.Debug("init selector model, with " + treeelements.Count() + " root elements");
                     vm.init(treeelements);
                     // vm.FocusElement(vm.Selector);
-                });
+                }, 10000);
             });
         }
         private void Window_Closed(object sender, EventArgs e)

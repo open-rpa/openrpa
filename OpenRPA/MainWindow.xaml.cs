@@ -168,7 +168,7 @@ namespace OpenRPA
                     {
                         Log.Error(ex.ToString());
                     }
-                });
+                }, 10000);
             }
             Log.FunctionOutdent("MainWindow", "MainWindow_WebSocketClient_OnOpen");
         }
@@ -431,17 +431,9 @@ namespace OpenRPA
             InputDriver.Instance.Dispose();
             StopDetectorPlugins();
             SaveLayout();
-            if (RobotInstance.instance.db != null)
+            foreach (var s in Plugins.Storages)
             {
-                try
-                {
-                    RobotInstance.instance.db.Dispose();
-                    RobotInstance.instance.db = null;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
+                s.Dispose();
             }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
@@ -1308,7 +1300,7 @@ namespace OpenRPA
                             {
                                 _wiq._acl = p._acl;
                                 _wiq.isDirty = true;
-                                RobotInstance.instance.dbWorkItemQueues.Update(_wiq);
+                                await StorageProvider.Update(_wiq);
                             }
                             await p.Save();
                         }
@@ -2232,7 +2224,7 @@ namespace OpenRPA
                 {
                     Log.Error(ex.ToString());
                 }
-            });
+            }, 10000);
             //Task.Run(() =>
             //{
             //    var sw = new System.Diagnostics.Stopwatch(); sw.Start();
@@ -3486,7 +3478,7 @@ namespace OpenRPA
                 GenericTools.RunUI(() =>
                 {
                     CommandManager.InvalidateRequerySuggested();
-                });
+                }, 100);
             }
 
             try

@@ -508,7 +508,7 @@ namespace OpenRPA.Views
                 Workflow.Xaml = WorkflowDesigner.Text;
                 var _hasChanged = HasChanged;
                 HasChanged = false;
-                RobotInstance.instance.dbWorkflows.Update(Workflow);
+                await StorageProvider.Update(Workflow);
                 await Workflow.Save();
                 if (_hasChanged)
                 {

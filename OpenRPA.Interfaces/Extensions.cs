@@ -173,6 +173,7 @@ namespace OpenRPA.Interfaces
 
             for (int i = 0; i < sortableList.Count; i++)
             {
+                if (collection.Count != sortableList.Count) return;
                 collection.Move(collection.IndexOf(sortableList[i]), i);
             }
         }

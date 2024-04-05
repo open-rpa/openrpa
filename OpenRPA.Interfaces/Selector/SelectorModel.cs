@@ -189,7 +189,7 @@ namespace OpenRPA.Interfaces.Selector
                         HighlightImage = Extensions.GetImageSourceFromResource("searchfound.png");
                         NotifyPropertyChanged("HighlightImage");
                     }
-                });
+                }, 10000);
             });
             // return (results.Count() > 0);
             return true;

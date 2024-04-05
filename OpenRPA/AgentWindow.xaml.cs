@@ -298,17 +298,9 @@ namespace OpenRPA
             InputDriver.Instance.CallNext = true;
             InputDriver.Instance.Dispose();
             SaveLayout();
-            if (RobotInstance.instance.db != null)
+            foreach(var s in Plugins.Storages)
             {
-                try
-                {
-                    RobotInstance.instance.db.Dispose();
-                    RobotInstance.instance.db = null;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.ToString());
-                }
+                s.Dispose();
             }
             // automation threads will not allways abort, and mousemove hook will "hang" the application for several seconds
             Application.Current.Shutdown();
@@ -479,7 +471,7 @@ namespace OpenRPA
                     GenericTools.RunUI(() =>
                     {
                         CommandManager.InvalidateRequerySuggested();
-                    });
+                    }, 100);
                 }
 
                 if (instance.hasError || instance.isCompleted)

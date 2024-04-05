@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+
+    <ComponentGroup Id="StorageLiteDbComponents">
+      <Component Id='StorageLiteDbComponent' Guid='{D0AC728D-DFBC-4734-AA22-230ECB94449F}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="OpenRPA.Storage.LiteDB.dll" Source="!(wix.ScriptSource)\OpenRPA.Storage.LiteDB.dll" />
+        <File Id="OpenRPA.Storage.LiteDB.pdb" Source="!(wix.ScriptSource)\OpenRPA.Storage.LiteDB.pdb" />
+      </Component>
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>

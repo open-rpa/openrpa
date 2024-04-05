@@ -164,7 +164,7 @@ namespace OpenRPA
                 assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
                 if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
 
-                folderPath = Interfaces.Extensions.ProjectsDirectory;
+                folderPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
                 assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
                 if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
 
@@ -237,6 +237,7 @@ namespace OpenRPA
                 RobotInstance.instance.Status += App_Status;
                 Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
                 Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);
+                RobotInstance.instance.Initialize();
             }
             catch (Exception ex)
             {

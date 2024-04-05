@@ -16,6 +16,7 @@ namespace OpenRPA.Interfaces
         public static Dictionary<string, Type> detectorPluginTypes = new Dictionary<string, Type>();
         public static ObservableCollection<IRunPlugin> runPlugins = new ObservableCollection<IRunPlugin>();
         public static ObservableCollection<ISnippet> Snippets = new ObservableCollection<ISnippet>();
+        public static ObservableCollection<IStorage> Storages = new ObservableCollection<IStorage>();
         public static ICollection<Type> WorkflowExtensionsTypes = new List<Type>();
         public static IDetectorPlugin AddDetector(IOpenRPAClient client, IDetector entity)
         {
@@ -75,6 +76,7 @@ namespace OpenRPA.Interfaces
             ICollection<Type> snippetTypes = new List<Type>();
             ICollection<Type> runPluginTypes = new List<Type>();
             ICollection<Type> IDetectorPluginTypes = new List<Type>();
+            ICollection<Type> StorageTypes = new List<Type>();
             Log.Information("Begin loading plugins");
             Log.Debug("LoadPlugins::Get types " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
             foreach (var a in assemblies)
@@ -144,7 +146,17 @@ namespace OpenRPA.Interfaces
                 }
                 catch (Exception) { }
             }
-            
+
+            Log.Debug("LoadPlugins::Get all IStorage " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+            var IStoragetype  = typeof(IStorage);
+            foreach (var p in alltypes)
+            {
+                try
+                {
+                    if (IStoragetype.IsAssignableFrom(p) && p.IsInterface == false) StorageTypes.Add(p);
+                }
+                catch (Exception) { }
+            }
 
             foreach (var type in IDetectorPluginTypes)
                 if (!detectorPluginTypes.ContainsKey(type.FullName)) detectorPluginTypes.Add(type.FullName, type);
@@ -167,7 +179,7 @@ namespace OpenRPA.Interfaces
                         Log.Debug("LoadPlugins::Initialize plugin " + plugin.Name + " " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         // SetStatus("Initialize plugin " + plugin.Name);
                         plugin.Initialize(client);
-                        GenericTools.RunUI(() => recordPlugins.Add(plugin));
+                        GenericTools.RunUI(() => recordPlugins.Add(plugin), 10000);
                     }
 
                 }
@@ -201,6 +213,32 @@ namespace OpenRPA.Interfaces
                     Log.Error(ex.ToString());
                 }
             }
+            foreach (Type type in StorageTypes)
+            {
+                try
+                {
+                    IStorage plugin = null;
+                    foreach (var p in Storages)
+                    {
+                        if (p.GetType() == type)
+                        {
+                            plugin = p;
+                            break;
+                        }
+                    }
+                    if (plugin == null)
+                    {
+                        plugin = (IStorage)Activator.CreateInstance(type);
+                        Log.Debug("LoadPlugins::Initialize storage " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
+                        plugin.Initialize();
+                        Storages.Add(plugin);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                }
+            }
             foreach (Type type in runPluginTypes)
             {
                 try
@@ -220,7 +258,7 @@ namespace OpenRPA.Interfaces
                         plugin = (IRunPlugin)Activator.CreateInstance(type);
                         Log.Debug("LoadPlugins::Initialize RunPlugin " + plugin.Name + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                         plugin.Initialize(client);
-                        GenericTools.RunUI(() => runPlugins.Add(plugin));
+                        GenericTools.RunUI(() => runPlugins.Add(plugin), 10000);
                     }
                 }
                 catch (Exception ex)

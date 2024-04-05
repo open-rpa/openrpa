@@ -42,6 +42,8 @@
     <Compile Include="compMSSpeech.wxs" />
     <Compile Include="compPS.wxs" />
     <Compile Include="compTerminalEmulator.wxs" />
+    <Compile Include="compStorageLiteDb.wxs" />
+    <Compile Include="compStorageFS.wxs" />
     <Compile Include="FeatureTreeDlg.wxs" />
     <Compile Include="mainfiles.wxs" />
     <Compile Include="Product.wxs" />

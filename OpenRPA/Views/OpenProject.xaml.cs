@@ -808,7 +808,7 @@ namespace OpenRPA.Views
                             var json = System.IO.File.ReadAllText(filename);
                             Detector _d = Newtonsoft.Json.JsonConvert.DeserializeObject<Detector>(json);
                             _d._acl = p._acl;
-                            var exists = RobotInstance.instance.dbDetectors.FindById(_d._id);
+                            var exists = await StorageProvider.FindById<Detector>(_d._id);
                             if (exists != null) { _d._id = null; } else { _d.isLocalOnly = true; }
                             _d.projectid = p._id;
                             await _d.Save();

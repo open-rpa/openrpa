@@ -11,7 +11,7 @@
 		<Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-		<Version>1.4.56</Version>
+		<Version>1.4.57.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>openrpa.png</PackageIcon>
 		<Configurations>Debug;Release;ReleaseNuget;PrepInstaller</Configurations>
@@ -474,7 +474,6 @@
 		</Page>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\LiteDB\LiteDB\LiteDB.csproj" />
 		<ProjectReference Include="..\OpenRPA.CodeEditor\OpenRPA.CodeEditor.csproj" />
 		<ProjectReference Include="..\OpenRPA.Net\OpenRPA.Net.csproj">
 			<IncludeAssets>all</IncludeAssets>

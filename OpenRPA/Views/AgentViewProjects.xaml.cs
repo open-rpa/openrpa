@@ -40,7 +40,8 @@ namespace OpenRPA.Views
         {
             get
             {
-                return RobotInstance.instance.dbProjects.FindAll().ToList();
+                // TODO: Check if will lock up ?
+                return StorageProvider.FindAll<Project>().Result.ToList();
             }
         }
         public AgentViewProjects(AgentWindow main)

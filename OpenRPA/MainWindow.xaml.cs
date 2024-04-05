@@ -3687,6 +3687,7 @@ namespace OpenRPA
                     {
                         item.designer.NavigateTo(item.originalitem);
                     }
+                    RobotInstance.instance.FilterText = SearchBox.Text;
                 }
                 catch (Exception ex)
                 {

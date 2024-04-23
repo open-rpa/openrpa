@@ -20,7 +20,9 @@ namespace OpenRPA.Net
     {
         static SemaphoreSlim ProcessingSemaphore = new SemaphoreSlim(1, 1);
         static SemaphoreSlim SendStringSemaphore = new SemaphoreSlim(1, 1);
-        public WebSocket ws { get; private set; } = null;
+        // public WebSocket ws { get; private set; } = null;
+        public ClientWebSocket ws { get; private set; } = null;
+        
         public int websocket_package_size = 4096;
         public string url { get; set; }
         private CancellationTokenSource src = new CancellationTokenSource();
@@ -36,6 +38,14 @@ namespace OpenRPA.Net
         public TokenUser user { get; set; }
         public bool signedin { get; private set; }
         public string jwt { get; private set; }
+        public System.Net.WebSockets.WebSocketState State
+        {
+            get
+            {
+                if (ws == null) return WebSocketState.None;
+                return ws.State;
+            }
+        }
         public bool isConnected
         {
             get
@@ -79,14 +89,16 @@ namespace OpenRPA.Net
                 if (ws == null)
                 {
                     // ws = (ClientWebSocket)SystemClientWebSocket.CreateClientWebSocket();
-                    if (VersionHelper.IsWindows8OrGreater())
-                    {
-                        ws = new ClientWebSocket();
-                    }
-                    else
-                    {
-                        ws = new System.Net.WebSockets.Managed.ClientWebSocket();
-                    }
+                    ws = new ClientWebSocket();
+                    // <PackageReference Include="System.Net.WebSockets.Client.Managed" Version="1.0.22" />
+                    //if (VersionHelper.IsWindows8OrGreater())
+                    //{
+                    //    ws = new ClientWebSocket();
+                    //}
+                    //else
+                    //{
+                    //    ws = new System.Net.WebSockets.Managed.ClientWebSocket();
+                    //}
                     src = new CancellationTokenSource();
                 }
                 if (ws.State == System.Net.WebSockets.WebSocketState.Connecting || ws.State == System.Net.WebSockets.WebSocketState.Open) return;

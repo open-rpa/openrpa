@@ -851,8 +851,7 @@ namespace OpenRPA
             {
                 if (string.IsNullOrEmpty(Config.local.wsurl)) return "";
                 if (global.webSocketClient == null) return "null";
-                if (global.webSocketClient.ws == null) return "ws null";
-                return global.webSocketClient.ws.State.ToString();
+                return global.webSocketClient.State.ToString();
             }
         }
         public string wsmsgqueue
@@ -861,7 +860,6 @@ namespace OpenRPA
             {
                 if (string.IsNullOrEmpty(Config.local.wsurl)) return "";
                 if (global.webSocketClient == null) return "";
-                if (global.webSocketClient.ws == null) return "";
                 if (global.webSocketClient.MessageQueueSize == 0) return "";
                 return "(" + global.webSocketClient.MessageQueueSize.ToString() + ")";
             }

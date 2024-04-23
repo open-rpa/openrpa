@@ -1494,14 +1494,14 @@ namespace OpenRPA
         {
             try
             {
-                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Connecting) return;
-                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Open) return;
+                if (global.webSocketClient != null && global.webSocketClient.State == System.Net.WebSockets.WebSocketState.Connecting) return;
+                if (global.webSocketClient != null && global.webSocketClient.State == System.Net.WebSockets.WebSocketState.Open) return;
                 await Task.Delay(ReconnectDelay);
                 ReconnectDelay += 5000;
                 if (ReconnectDelay > 60000 * 2) ReconnectDelay = 60000 * 2;
                 connect_attempts++;
-                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Connecting) return;
-                if (global.webSocketClient != null && global.webSocketClient.ws != null && global.webSocketClient.ws.State == System.Net.WebSockets.WebSocketState.Open) return;
+                if (global.webSocketClient != null && global.webSocketClient.State == System.Net.WebSockets.WebSocketState.Connecting) return;
+                if (global.webSocketClient != null && global.webSocketClient.State == System.Net.WebSockets.WebSocketState.Open) return;
                 SetStatus("Connecting to " + Config.local.wsurl);
                 await global.webSocketClient.Connect();
             }

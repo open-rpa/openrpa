@@ -231,11 +231,32 @@
   <data name="debug_console_output_help" xml:space="preserve">
     <value>Write debug informtation to browser console</value>
   </data>
+  <data name="detector_button_open_selector" xml:space="preserve">
+    <value>Open Selector</value>
+  </data>
+  <data name="detector_button_select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="detector_name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="detector_url" xml:space="preserve">
+    <value>URL</value>
+  </data>
   <data name="plugin_detect_html_table" xml:space="preserve">
     <value>Detect html table</value>
   </data>
   <data name="plugin_detect_html_table_help" xml:space="preserve">
     <value>Auto add Get Table if clicked on HTML table doing recording</value>
+  </data>
+  <data name="plugin_ignore_case" xml:space="preserve">
+    <value>Ignore lower and uppercase doing match ?</value>
+  </data>
+  <data name="plugin_ignore_case_help" xml:space="preserve">
+    <value>Ignore Case</value>
+  </data>
+  <data name="plugin_urldetector_general_help" xml:space="preserve">
+    <value>Type a url or use Select button to grab by clicking a page. URL can also be a  regular expression for more complex cases.</value>
   </data>
   <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
     <value>Wait after set value</value>

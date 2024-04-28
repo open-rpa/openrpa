@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace OpenRPA.NM
 {
@@ -519,11 +520,59 @@ namespace OpenRPA.NM
                 try
                 {
                     tabs.Add(msg.tab);
+                    DetectorCheck(tab);
                 }
                 finally
                 {
                     System.Threading.Monitor.Exit(tabs);
                 }
+            }
+        }
+        private static DateTime lastURLDetector = DateTime.Now;
+        private static void DetectorCheck(NativeMessagingMessageTab tab)
+        {
+            try
+            {
+                TimeSpan ts = DateTime.Now.Subtract(lastURLDetector);
+                if (ts.TotalSeconds < 2) return;
+                if (tab == null || string.IsNullOrEmpty(tab.url)) return;
+                URLDetectorPlugin plugin = null;
+                foreach (var p in Plugins.detectorPlugins)
+                {
+                    if (p is URLDetectorPlugin _plugin)
+                    {
+                        plugin = _plugin;
+                    }
+                }
+                if (plugin == null || string.IsNullOrEmpty(plugin.URL)) return;
+                RegexOptions options = RegexOptions.None;
+                if(plugin.IgnoreCase)
+                {
+                    options = RegexOptions.IgnoreCase;
+                }
+                var ma = Regex.Match(tab.url, plugin.URL, options);
+                if (!ma.Success) return;
+                lastURLDetector = DateTime.Now;
+                var e = new URLDetectorEvent(tab.url);
+                plugin.RaiseDetector(e);
+                foreach (var wi in Plugin.client.WorkflowInstances.ToList())
+                {
+                    if (wi.isCompleted) continue;
+                    if (wi.Bookmarks != null)
+                    {
+                        foreach (var b in wi.Bookmarks)
+                        {
+                            if (b.Key == "DownloadDetectorPlugin")
+                            {
+                                wi.ResumeBookmark(b.Key, e, true);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
         private static void tabupdated(NativeMessagingMessage msg)
@@ -551,6 +600,7 @@ namespace OpenRPA.NM
             tab.url = msg.tab.url;
             tab.width = msg.tab.width;
             tab.windowId = msg.tab.windowId;
+            DetectorCheck(tab);
         }
         private static void tabremoved(NativeMessagingMessage msg)
         {

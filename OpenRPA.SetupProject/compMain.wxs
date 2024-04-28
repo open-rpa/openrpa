@@ -74,7 +74,7 @@
 				<File Id="filC3531745E3934A2AA3E3B573EF05822B" Source="!(wix.MainSource)\System.Composition.Runtime.dll" />
 				<File Id="fil4247AF19BBEC43CB533A0DF22E9A3DEB" Source="!(wix.MainSource)\System.Composition.TypedParts.dll" />
 				<File Id="fil1E24D2F3B531B1D76E1631314436BD58" Source="!(wix.MainSource)\System.Memory.dll" />
-				<File Id="fil377C264A4908CE349FB2070D4C79A5B4" Source="!(wix.MainSource)\System.Net.WebSockets.Client.Managed.dll" />
+				<!--<File Id="fil377C264A4908CE349FB2070D4C79A5B4" Source="!(wix.MainSource)\System.Net.WebSockets.Client.Managed.dll" />-->
 				<File Id="fil41D7AC86F0924A477EE48B3AF9E39249" Source="!(wix.MainSource)\System.Numerics.Vectors.dll" />
 				<File Id="fil741DE04C3124C1446D2FFF811D83E100" Source="!(wix.MainSource)\System.Reflection.Metadata.dll" />
 				<File Id="fil8974B12282083EB6B4CB7BAC26546374" Source="!(wix.MainSource)\System.Runtime.CompilerServices.Unsafe.dll" />

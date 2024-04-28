@@ -403,6 +403,42 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Selector.
+        /// </summary>
+        public static string detector_button_open_selector {
+            get {
+                return ResourceManager.GetString("detector_button_open_selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string detector_button_select {
+            get {
+                return ResourceManager.GetString("detector_button_select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string detector_name {
+            get {
+                return ResourceManager.GetString("detector_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL.
+        /// </summary>
+        public static string detector_url {
+            get {
+                return ResourceManager.GetString("detector_url", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detect html table.
         /// </summary>
         public static string plugin_detect_html_table {
@@ -417,6 +453,33 @@ namespace OpenRPA.NM.Resources {
         public static string plugin_detect_html_table_help {
             get {
                 return ResourceManager.GetString("plugin_detect_html_table_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore lower and uppercase doing match ?.
+        /// </summary>
+        public static string plugin_ignore_case {
+            get {
+                return ResourceManager.GetString("plugin_ignore_case", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore Case.
+        /// </summary>
+        public static string plugin_ignore_case_help {
+            get {
+                return ResourceManager.GetString("plugin_ignore_case_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type a url or use Select button to grab by clicking a page. URL can also be a  regular expression for more complex cases..
+        /// </summary>
+        public static string plugin_urldetector_general_help {
+            get {
+                return ResourceManager.GetString("plugin_urldetector_general_help", resourceCulture);
             }
         }
         

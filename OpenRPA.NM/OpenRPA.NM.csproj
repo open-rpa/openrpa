@@ -102,6 +102,7 @@
     <None Remove="Snippets\GoogleSearchPaging.xaml" />
     <None Remove="Views\DownloadDetectorView.xaml" />
     <None Remove="Views\RecordPluginView.xaml" />
+    <None Remove="Views\URLDetectorView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\designer\gettable.png" />
@@ -143,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\OpenURLDesigner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\URLDetectorView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DownloadDetectorView.xaml">

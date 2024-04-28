@@ -28,6 +28,7 @@ namespace OpenRPA.Java.Views
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
+            Entity.isDirty = true;
             PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
         public JavaClickDetectorView(JavaClickDetectorPlugin plugin)

@@ -442,6 +442,7 @@ namespace OpenRPA
         private void Window_StateChanged(object sender, EventArgs e)
         {
             Log.FunctionIndent("MainWindow", "Window_StateChanged");
+            if (!Config.local.minimize_to_tray) return;
             if (WindowState == WindowState.Minimized)
             {
                 Visibility = Visibility.Hidden;

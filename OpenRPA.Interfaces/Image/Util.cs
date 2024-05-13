@@ -272,5 +272,29 @@ namespace OpenRPA.Interfaces.Image
             }
             return b;
         }
+        public static async Task<string> LoadImages(string xaml)
+        {
+            var doc = new System.Xml.XmlDocument(); bool foundone = false;
+            doc.LoadXml(xaml);
+            var nodes = doc.SelectNodes("//*[@Image]");
+            foreach (System.Xml.XmlNode n in nodes)
+            {
+                var image = n.Attributes["Image"].Value;
+                Console.WriteLine("Image: " + image);
+                if (System.Text.RegularExpressions.Regex.Match(image, "[a-f0-9]{24}").Success)
+                {
+                    Log.Debug("Loading image id " + image);
+                    using (var b = await Interfaces.Image.Util.LoadBitmap(image))
+                    {
+                        image = Interfaces.Image.Util.Bitmap2Base64(b);
+                    }
+                    foundone = true;
+                    n.Attributes["Image"].Value = image;
+                }
+            }
+            if (foundone) return doc.OuterXml;
+            return xaml;
+        }
+
     }
 }

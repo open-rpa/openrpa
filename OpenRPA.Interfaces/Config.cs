@@ -55,6 +55,7 @@ namespace OpenRPA
         public bool use_animate_mouse { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public TimeSpan use_postwait { get { return GetProperty(null, TimeSpan.Zero); } set { SetProperty(null, value); } }
         public bool minimize { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
+        public bool minimize_to_tray { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool recording_add_to_designer { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public TimeSpan reloadinterval { get { return GetProperty(null, TimeSpan.FromMinutes(5)); } set { SetProperty(null, value); } }
         public TimeSpan move_animation_run_time { get { return GetProperty(null, TimeSpan.FromMilliseconds(500)); } set { SetProperty(null, value); } }
@@ -237,6 +238,7 @@ namespace OpenRPA
                 _ = use_animate_mouse;
                 _ = use_postwait;
                 _ = minimize;
+                _ = minimize_to_tray;
                 _ = recording_add_to_designer;
                 _ = reloadinterval;
                 _ = move_animation_run_time;

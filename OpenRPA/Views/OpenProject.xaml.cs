@@ -100,6 +100,15 @@ namespace OpenRPA.Views
                 return new RelayCommand<object>(OnGetServerVersion, CanGetServerVersion);
             }
         }
+        public ICommand CopyCommand
+        {
+            get
+            {
+                if (RobotInstance.instance.Window is MainWindow main) return new RelayCommand<object>(main.OnCopy, main.CanCopy);
+                return null;
+            }
+        }
+
         public ICommand SerializableCommand
         {
             get

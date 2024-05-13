@@ -442,6 +442,7 @@ namespace OpenRPA
         private void Window_StateChanged(object sender, EventArgs e)
         {
             Log.FunctionIndent("MainWindow", "Window_StateChanged");
+            if (!Config.local.minimize_to_tray) return;
             if (WindowState == WindowState.Minimized)
             {
                 Visibility = Visibility.Hidden;
@@ -2469,7 +2470,16 @@ namespace OpenRPA
         {
             try
             {
-                return (SelectedContent is Views.WFDesigner);
+                if (SelectedContent is Views.WFDesigner) return true;
+                if (SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val is Workflow wf)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
             catch (Exception ex)
             {
@@ -2482,14 +2492,34 @@ namespace OpenRPA
             Log.FunctionIndent("MainWindow", "OnCopy");
             try
             {
-                var designer = (Views.WFDesigner)SelectedContent;
-                await designer.SaveAsync();
-                Workflow workflow = await Workflow.Create(designer.Workflow.Project(), "Copy of " + designer.Workflow.name);
-                var xaml = designer.Workflow.Xaml;
-                xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
-                workflow.Xaml = xaml;
-                workflow.name = "Copy of " + designer.Workflow.name;
-                _onOpenWorkflow(workflow, true);
+                string xaml = "";
+                Workflow workflow = null;
+                if (SelectedContent is Views.WFDesigner)
+                {
+                    var designer = (Views.WFDesigner)SelectedContent;
+                    await designer.SaveAsync();
+                    xaml = designer.Workflow.Xaml;
+                    workflow = await Workflow.Create(designer.Workflow.Project(), "Copy of " + designer.Workflow.name);
+                    workflow.name = "Copy of " + designer.Workflow.name;
+                    xaml = await Interfaces.Image.Util.LoadImages(xaml);
+                    xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
+                    workflow.Xaml = xaml;
+                    _onOpenWorkflow(workflow, true);
+                }
+                if (SelectedContent is Views.OpenProject view)
+                {
+                    var val = view.listWorkflows.SelectedValue;
+                    if (val is Workflow wf)
+                    {
+                        xaml = wf.Xaml;
+                        workflow = await Workflow.Create(wf.Project(), "Copy of " + wf.name);
+                        workflow.name = "Copy of " + wf.name;
+                        xaml = await Interfaces.Image.Util.LoadImages(xaml);
+                        xaml = Views.WFDesigner.SetWorkflowName(xaml, workflow.name);
+                        workflow.Xaml = xaml;
+                        await workflow.Save();
+                    }
+                }
             }
             catch (Exception ex)
             {

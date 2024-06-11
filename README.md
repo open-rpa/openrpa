@@ -4,6 +4,7 @@ Open Source Robotic Process Automation Software
 [![GitHub issues](https://img.shields.io/github/issues/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/issues) [![GitHub forks](https://img.shields.io/github/forks/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/network) [![GitHub license](https://img.shields.io/github/license/open-rpa/openrpa.svg)](https://github.com/open-rpa/openrpa/blob/master/LICENSE) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/open-rpa/openrpa/graphs/commit-activity) [![Analytics](https://ga-beacon-296408.ew.r.appspot.com/UA-139588965-1/main?pixel)](https://github.com/skadefro/ga-beacon)
 
 Download and try it out here [💾here](https://github.com/open-rpa/openrpa/releases/latest/download/OpenRPA.msi) and manage your [🔧OpenFlow account here](https://app.openiap.io)
+For windows 11, if OpenRPA does not start or crashes, try [💾here](https://github.com/open-rpa/openrpa/releases/latest/download/OpenRPA.py.3.11.4.msi) 
 
 Join our [🤷💻🤦 Community Forum](discourse.openiap.io/) for for help or giving feedback 
 

@@ -117,7 +117,7 @@
 		<Feature Id="JavaFeature" Title="Java Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
 			<ComponentGroupRef Id="JavaComponents" />
 		</Feature>
-		<Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+		<Feature Id="ScriptFeature" Title="Generic Scripting support" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
 			<ComponentGroupRef Id="ScriptComponents" />
 		</Feature>
 		<Feature Id="TerminalEmulator" Title="(BETA) Mainframe Terminal Emulator" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >

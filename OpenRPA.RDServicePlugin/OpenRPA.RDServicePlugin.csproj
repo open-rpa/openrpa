@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Plugin to manage OpenRPS'a Windows Service that monitors Remote Desktop and keep sessions alive so OpenRPA can work unattended</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>

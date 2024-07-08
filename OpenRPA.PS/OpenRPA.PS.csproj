@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <AssemblyName>OpenRPA.PS</AssemblyName>
     <RootNamespace>OpenRPA.PS</RootNamespace>
     <Configurations>Debug;Release;PrepInstaller</Configurations>

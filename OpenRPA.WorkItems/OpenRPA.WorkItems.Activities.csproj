@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net46</TargetFramework>
+		<TargetFramework>net481</TargetFramework>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<Version>1.0.24</Version>

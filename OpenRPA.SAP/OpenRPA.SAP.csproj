@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <PackageIcon>sap.png</PackageIcon>
     <Platforms>AnyCPU;x86</Platforms>
     <Configurations>Debug;Release;PrepInstaller</Configurations>

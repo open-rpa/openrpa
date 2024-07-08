@@ -3,7 +3,7 @@
 		<!--<CefSharpTargetDir>cef</CefSharpTargetDir>-->
 		<CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net462</TargetFramework>
+		<TargetFramework>net481</TargetFramework>
 		<ApplicationIcon>Resources\open_rpa.ico</ApplicationIcon>
 		<StartupObject />
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>

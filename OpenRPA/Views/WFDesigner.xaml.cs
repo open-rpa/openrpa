@@ -46,8 +46,8 @@ namespace OpenRPA.Views
         public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
         private string SelectedVariableName = null;
         private Selection selection = null;
-        // private readonly MenuItem runthis;
-        // private readonly MenuItem runFromHere;
+        private readonly MenuItem runthis;
+        private readonly MenuItem runFromHere;
         private readonly MenuItem comment;
         private readonly MenuItem uncomment;
         public bool BreakPointhit { get; set; }

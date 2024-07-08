@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <Authors>Allan Zimmermann</Authors>
     <Product>OpenRPA</Product>
     <Description>A couple of activities to allow executing scripts and various different languages</Description>

@@ -80,8 +80,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.WorkItems.Activitie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open3270Library", "Open3270\src\Open3270Library\Open3270Library.csproj", "{0C1C4A52-4B1A-49E3-B980-B11C6D8B51EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.TerminalEmulator", "OpenRPA.TerminalEmulator\OpenRPA.TerminalEmulator.csproj", "{2554EBD6-765C-4B12-A57D-6BC1069C769B}"
-EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Telnet", "vb5250\telnet\Telnet.vbproj", "{226C3783-97D2-4DB4-9C6A-F88567376874}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vb5250", "vb5250", "{86A0EDE3-9272-4CA5-A499-F2E1190A80EE}"
@@ -94,9 +92,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSspi", "vb5250\NSspi\NSspi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatchVSCode", "PatchVSCode\PatchVSCode.csproj", "{DCB604FC-D13D-4403-B3E8-972754B1329B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Storage.LiteDB", "OpenRPA.Storage.LiteDB\OpenRPA.Storage.LiteDB.csproj", "{67A40B0C-454D-46E8-B4DF-C402336F9FA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Storage.LiteDB", "OpenRPA.Storage.LiteDB\OpenRPA.Storage.LiteDB.csproj", "{67A40B0C-454D-46E8-B4DF-C402336F9FA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenRPA.Storage.Filesystem", "OpenRPA.Storage.Filesystem\OpenRPA.Storage.Filesystem.csproj", "{FA3B5892-998E-49C1-BC2F-2E5B10F2B422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRPA.Storage.Filesystem", "OpenRPA.Storage.Filesystem\OpenRPA.Storage.Filesystem.csproj", "{FA3B5892-998E-49C1-BC2F-2E5B10F2B422}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -476,18 +474,6 @@ Global
 		{0C1C4A52-4B1A-49E3-B980-B11C6D8B51EE}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{0C1C4A52-4B1A-49E3-B980-B11C6D8B51EE}.Release|x86.ActiveCfg = Release|Any CPU
 		{0C1C4A52-4B1A-49E3-B980-B11C6D8B51EE}.Release|x86.Build.0 = Release|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.All|Any CPU.ActiveCfg = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.All|Any CPU.Build.0 = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.All|x86.ActiveCfg = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.All|x86.Build.0 = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Debug|x86.Build.0 = Debug|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Release|x86.ActiveCfg = Release|Any CPU
-		{2554EBD6-765C-4B12-A57D-6BC1069C769B}.Release|x86.Build.0 = Release|Any CPU
 		{226C3783-97D2-4DB4-9C6A-F88567376874}.All|Any CPU.ActiveCfg = Debug|Any CPU
 		{226C3783-97D2-4DB4-9C6A-F88567376874}.All|Any CPU.Build.0 = Debug|Any CPU
 		{226C3783-97D2-4DB4-9C6A-F88567376874}.All|x86.ActiveCfg = Debug|x86
@@ -586,7 +572,7 @@ Global
 		{4B4CD933-BF62-4F92-B8FA-6771758C5197} = {86A0EDE3-9272-4CA5-A499-F2E1190A80EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {40D49710-F666-4479-96E1-FFC3BA0D3D5A}
 	EndGlobalSection
 EndGlobal

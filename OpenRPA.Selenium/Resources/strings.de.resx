@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Doppelklicken Sie auf die Anzeige</value>
+  </data>
+  <data name="activity_closetab" xml:space="preserve">
+    <value>Tab schließen</value>
+  </data>
+  <data name="activity_closetab_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_closetab_tooltip" xml:space="preserve">
+    <value>Schließen Sie die aktuelle Registerkarte oder schließen Sie alle Registerkarten</value>
+  </data>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Anzeigename</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>DisplayName im Workflow Designer</value>
+  </data>
+  <data name="activity_executescript" xml:space="preserve">
+    <value>Skript ausführen</value>
+  </data>
+  <data name="activity_executescript_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_executescript_tooltip" xml:space="preserve">
+    <value>Führen Sie das Skript im Browser aus, zielen Sie auf die aktuelle Registerkarte und den Standard -Frame.</value>
+  </data>
+  <data name="activity_getelement" xml:space="preserve">
+    <value>Element bekommen</value>
+  </data>
+  <data name="activity_getelement_async" xml:space="preserve">
+    <value>Element asynchronisiert</value>
+  </data>
+  <data name="activity_getelement_async_tooltip" xml:space="preserve">
+    <value>Finden Sie ein Browserelemente basierend auf dem Selektor</value>
+  </data>
+  <data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>Drop -Aktivität</value>
+  </data>
+  <data name="activity_getelement_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_getelement_highlight" xml:space="preserve">
+    <value>Markieren</value>
+  </data>
+  <data name="activity_getelement_loopaction" xml:space="preserve">
+    <value>Schleifenaktion</value>
+  </data>
+  <data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
+    <value>Tun Sie dies, sobald die Verarbeitung jedes Ergebniss abgeschlossen ist, dann den Selektor erneut auszusetzen und nach neuen Elementen zu suchen.</value>
+  </data>
+  <data name="activity_getelement_open_selector" xml:space="preserve">
+    <value>Open Selector</value>
+  </data>
+  <data name="activity_getelement_tooltip" xml:space="preserve">
+    <value>Finden Sie ein Browserelement basierend auf dem Selektor</value>
+  </data>
+  <data name="activity_gettab" xml:space="preserve">
+    <value>Registerkarte Holen Sie sich</value>
+  </data>
+  <data name="activity_gettab_helpurl" xml:space="preserve">
+    <value>https://OpenRPA.imt-soft.com/en/native-messaging#get-tab</value>
+  </data>
+  <data name="activity_gettab_tooltip" xml:space="preserve">
+    <value>Die aktuelle Registerkarte in Chrome/Edge oder Firefox abrufen, geben Sie nichts zurück, wenn der Browser nicht ausgeführt wird.</value>
+  </data>
+  <data name="activity_gettable" xml:space="preserve">
+    <value>Tischdaten abrufen</value>
+  </data>
+  <data name="activity_gettable_helpurl" xml:space="preserve">
+    <value>https://OpenRPA.imt-soft.com/en/native-messaging#get-table</value>
+  </data>
+  <data name="activity_gettable_tooltip" xml:space="preserve">
+    <value>Einfache Tabellendatenextraktion basierend auf XPaths</value>
+  </data>
+  <data name="activity_open_editor" xml:space="preserve">
+    <value>Open Editor</value>
+  </data>
+  <data name="activity_openurl" xml:space="preserve">
+    <value>Öffne URL</value>
+  </data>
+  <data name="activity_openurl_getcurrent" xml:space="preserve">
+    <value>Aktuelle,</value>
+  </data>
+  <data name="activity_openurl_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_openurl_tooltip" xml:space="preserve">
+    <value>Öffnen Sie die angegebene URL im ausgewählten Browser</value>
+  </data>
+  <data name="activity_waitfordownload" xml:space="preserve">
+    <value>Warten Sie auf Download</value>
+  </data>
+  <data name="activity_waitfordownload_tooltip" xml:space="preserve">
+    <value>Warten auf einen Download, der in einem NM -unterstützten Browser abgeschlossen ist.</value>
+  </data>
+  <data name="activity_waitforready" xml:space="preserve">
+    <value>Warte auf fertig</value>
+  </data>
+  <data name="activity_waitforready_help" xml:space="preserve">
+    <value>Warten Sie, bis die Seitenseite fertig ist / wird nicht geladen</value>
+  </data>
+  <data name="compensate_for_old_addon" xml:space="preserve">
+    <value>Ausgleich für die alte Verlängerung</value>
+  </data>
+  <data name="compensate_for_old_addon_help" xml:space="preserve">
+    <value>Fügen Sie Pixelkompensation für das alte Hinzufügen hinzu</value>
+  </data>
+  <data name="debug_console_output" xml:space="preserve">
+    <value>Debuggkonsole</value>
+  </data>
+  <data name="debug_console_output_help" xml:space="preserve">
+    <value>Schreiben Sie Debug -Informationen in die Browserkonsole</value>
+  </data>
+  <data name="plugin_detect_html_table" xml:space="preserve">
+    <value>HTML -Tabelle erkennen</value>
+  </data>
+  <data name="plugin_detect_html_table_help" xml:space="preserve">
+    <value>Automatische Hinzufügen hinzufügen Tabelle, wenn Sie auf die HTML -Tabelle klicken und die Aufzeichnung durchführen.</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+    <value>Warten Sie nach dem Wert Wert</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+    <value>Warten Sie, bis der Registerkartenstatus im Bereitschaftszustand ist, nachdem Sie einen Wert festgelegt haben.</value>
+  </data>
+  <data name="register_old_portname" xml:space="preserve">
+    <value>Old Portname registrieren</value>
+  </data>
+  <data name="register_old_portname_help" xml:space="preserve">
+    <value>Registrieren Sie alte Browser -Erweiterungsportnamen</value>
+  </data>
+  <data name="unique_xpath_ids" xml:space="preserve">
+    <value>Einzigartige IDs</value>
+  </data>
+  <data name="unique_xpath_ids_help" xml:space="preserve">
+    <value>Verwenden Sie diese Attribute als eindeutige ID beim Erstellen von XPath -Selektoren</value>
+  </data>
+  <data name="wait_for_tab_click" xml:space="preserve">
+    <value>Warten Sie auf Registerkarte</value>
+  </data>
+  <data name="wait_for_tab_click_help" xml:space="preserve">
+    <value>Warten Sie, bis der Registerkartenstatus im Bereitschaftszustand ist, nachdem Sie auf eine Schaltfläche geklickt haben.</value>
+  </data>
+</root>

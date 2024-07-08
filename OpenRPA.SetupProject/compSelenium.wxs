@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <ComponentGroup Id="SeleniumComponents">
+      <Component Id='SeleniumComponent' Guid='{c9672112-a8c2-46ed-9a95-24c7e6ab5663}' Win64='yes' Directory="INSTALLDIR">
+        <File Id="iAutobot.Selenium.dll" Source="!(wix.MainSource)\iAutobot.Selenium.dll" />
+        <File Id="iAutobot.Selenium.pdb" Source="!(wix.MainSource)\iAutobot.Selenium.pdb" />
+        <File Id="WebDriver.dll" Source="!(wix.MainSource)\WebDriver.dll" />
+        <File Id="WebDriver.Support.dll" Source="!(wix.MainSource)\WebDriver.Support.dll" />
+      </Component>
+      <Component Id='SeleniumOpenRPASub' Win64='yes' Directory="SeleninumWindowsSub" Guid='{3c520eee-b206-4451-8292-00f543f948b6}'>
+        <File Id="iAutobot.SeleniumManager.exe" Source="!(wix.MainSource)\selenium-manager\windows\selenium-manager.exe" />
+      </Component>
+      <Component Id='SeleniumComponentde' Win64='yes' Directory="mainde" Guid='{c47d0f61-b8dc-415f-bfd0-cdefc3f82196}'>
+        <File Id="iAutobot.Selenium.resources.dll_de" Source="!(wix.MainSource)\de\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentda' Win64='yes' Directory="mainda" Guid='{2ce5901a-3686-4b9b-aee1-fa4471c452f8}'>
+        <File Id="iAutobot.Selenium.resources.dll_da" Source="!(wix.MainSource)\da\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentes' Win64='yes' Directory="maines" Guid='{cfbee810-50b8-4057-b43b-fade092a9093}'>
+        <File Id="iAutobot.Selenium.resources.dll_es" Source="!(wix.MainSource)\es\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentpt' Win64='yes' Directory="mainpt" Guid='{5915234e-d81f-4849-a981-7068d65afadd}'>
+        <File Id="iAutobot.Selenium.resources.dll_pt" Source="!(wix.MainSource)\pt\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentro' Win64='yes' Directory="mainro" Guid='{da5984b0-774c-47db-bf5e-4eeb0d56ef93}'>
+        <File Id="iAutobot.Selenium.resources.dll_ro" Source="!(wix.MainSource)\ro\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentru' Win64='yes' Directory="mainru" Guid='{8206fc2c-6570-447c-9a09-69af869fd70d}'>
+        <File Id="iAutobot.Selenium.resources.dll_ru" Source="!(wix.MainSource)\ru\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentja' Win64='yes' Directory="mainja" Guid='{fd3a2c2c-ff3c-4870-882a-9faaca5f1b9f}'>
+        <File Id="iAutobot.Selenium.resources.dll_ja" Source="!(wix.MainSource)\ja\iAutobot.Selenium.resources.dll" />
+      </Component>
+      <Component Id='SeleniumComponentzh' Win64='yes' Directory="mainzh" Guid='{ce370dcb-a5f8-408e-aae5-4ceca2fde8a8}'>
+        <File Id="iAutobot.Selenium.resources.dll_zh" Source="!(wix.MainSource)\zh\iAutobot.Selenium.resources.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="SeleninumSub" Name="selenium-manager">
+        <Directory Id="SeleninumWindowsSub" Name="windows">
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

@@ -1,0 +1,67 @@
+﻿<sap:ActivityDesigner x:Class="OpenRPA.Selenium.OpenBrowserDesigner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:Converters="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:c="clr-namespace:OpenRPA.Interfaces;assembly=OpenRPA.Interfaces"
+    xmlns:or="clr-namespace:OpenRPA.Selenium.Resources" 
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+     MaxWidth="400px">
+
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="16,16" ></Rect>
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="/OpenRPA.Selenium;component/Resources/designer/default.png" ></BitmapImage>
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+
+    <sap:ActivityDesigner.Resources>
+        <Converters:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+        <c:InArgumentStringConverter x:Key="InArgumentStringConverter" />
+        <Converters:ModelToObjectValueConverter x:Key="ModelToObjectValueConverter" />
+        <DataTemplate x:Key="Expanded">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Label Content="Reference as" Grid.Row="1"/>
+                <TextBox Text="{Binding ModelItem.Body.Argument.Name}" Grid.Row="2" Grid.ColumnSpan="2" />
+
+                <sap:WorkflowItemPresenter Item="{Binding ModelItem.Body.Handler}"
+                 HintText="Drop here" AllowedItemType="sa:Activity"
+                   Grid.Row="3" Grid.ColumnSpan="2" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="Collapsed">
+        </DataTemplate>
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="false">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed }"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+</sap:ActivityDesigner>

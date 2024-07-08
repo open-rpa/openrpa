@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>Дважды щелкните, чтобы просмотреть</value>
+  </data>
+  <data name="activity_closetab" xml:space="preserve">
+    <value>Закрыть вкладку</value>
+  </data>
+  <data name="activity_closetab_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_closetab_tooltip" xml:space="preserve">
+    <value>«Закрыть текущую вкладку или закройте все вкладки»</value>
+  </data>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Отображаемое имя</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>DisplayName внутри дизайнера рабочего процесса</value>
+  </data>
+  <data name="activity_executescript" xml:space="preserve">
+    <value>Выполнить скрипт</value>
+  </data>
+  <data name="activity_executescript_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_executescript_tooltip" xml:space="preserve">
+    <value>«Выполнить скрипт в браузере, нацеливаясь на вкладку« Текущий »и« Фрейм »по умолчанию»</value>
+  </data>
+  <data name="activity_getelement" xml:space="preserve">
+    <value>Получите элемент</value>
+  </data>
+  <data name="activity_getelement_async" xml:space="preserve">
+    <value>Получите элемент асинхрон</value>
+  </data>
+  <data name="activity_getelement_async_tooltip" xml:space="preserve">
+    <value>«Найдите элементы браузера на основе селектора»</value>
+  </data>
+  <data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>ДЕЛАГО ДЕЙСТВИЯ</value>
+  </data>
+  <data name="activity_getelement_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_getelement_highlight" xml:space="preserve">
+    <value>Выделять</value>
+  </data>
+  <data name="activity_getelement_loopaction" xml:space="preserve">
+    <value>Целье</value>
+  </data>
+  <data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
+    <value>«Делайте это, после того, как сделано обработка каждого результата, затем повторяет селектор и ищет новые элементы»</value>
+  </data>
+  <data name="activity_getelement_open_selector" xml:space="preserve">
+    <value>Открытый селектор</value>
+  </data>
+  <data name="activity_getelement_tooltip" xml:space="preserve">
+    <value>«Найдите элемент браузера на основе селектора»</value>
+  </data>
+  <data name="activity_gettab" xml:space="preserve">
+    <value>Получить вкладку</value>
+  </data>
+  <data name="activity_gettab_helpurl" xml:space="preserve">
+    <value>https://OpenRPA.imt-soft.com/en/native-messaging#get-tab</value>
+  </data>
+  <data name="activity_gettab_tooltip" xml:space="preserve">
+    <value>Получите вкладку Current в Chrome/Edge или Firefox, ничего не верните, если браузер не работает</value>
+  </data>
+  <data name="activity_gettable" xml:space="preserve">
+    <value>Получить данные таблицы</value>
+  </data>
+  <data name="activity_gettable_helpurl" xml:space="preserve">
+    <value>https://OpenRPA.imt-soft.com/en/native-messaging#get-table</value>
+  </data>
+  <data name="activity_gettable_tooltip" xml:space="preserve">
+    <value>«Простая извлечение данных таблицы на основе XPaths»</value>
+  </data>
+  <data name="activity_open_editor" xml:space="preserve">
+    <value>Открытый редактор</value>
+  </data>
+  <data name="activity_openurl" xml:space="preserve">
+    <value>Открытый URL</value>
+  </data>
+  <data name="activity_openurl_getcurrent" xml:space="preserve">
+    <value>Получите ток</value>
+  </data>
+  <data name="activity_openurl_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_openurl_tooltip" xml:space="preserve">
+    <value>«Откройте указанный URL -адрес в выбранном браузере»</value>
+  </data>
+  <data name="activity_waitfordownload" xml:space="preserve">
+    <value>Подожди скачать</value>
+  </data>
+  <data name="activity_waitfordownload_tooltip" xml:space="preserve">
+    <value>Жду загрузки, чтобы завершить в браузере, поддерживаемом NM</value>
+  </data>
+  <data name="activity_waitforready" xml:space="preserve">
+    <value>Подождите готово</value>
+  </data>
+  <data name="activity_waitforready_help" xml:space="preserve">
+    <value>«Подождите, страница страницы будет готова / не загружается»</value>
+  </data>
+  <data name="compensate_for_old_addon" xml:space="preserve">
+    <value>Компенсация старого расширения</value>
+  </data>
+  <data name="compensate_for_old_addon_help" xml:space="preserve">
+    <value>Добавить компенсацию пикселей для старого добавления</value>
+  </data>
+  <data name="debug_console_output" xml:space="preserve">
+    <value>Консоль отладки</value>
+  </data>
+  <data name="debug_console_output_help" xml:space="preserve">
+    <value>«Напишите информацию от отладки в консоли браузера»</value>
+  </data>
+  <data name="plugin_detect_html_table" xml:space="preserve">
+    <value>Обнаружение таблицы HTML</value>
+  </data>
+  <data name="plugin_detect_html_table_help" xml:space="preserve">
+    <value>Автоматическое добавление таблицы, если нажав на таблицу HTML, выполняя запись</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+    <value>Подождите после установленного значения</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+    <value>«Подождите, пока статус вкладки будет в состоянии готовых после установки значения»</value>
+  </data>
+  <data name="register_old_portname" xml:space="preserve">
+    <value>Зарегистрируйте старое порта</value>
+  </data>
+  <data name="register_old_portname_help" xml:space="preserve">
+    <value>«Зарегистрируйте имена портов удлинителя старого браузера»</value>
+  </data>
+  <data name="unique_xpath_ids" xml:space="preserve">
+    <value>Уникальные идентификаторы</value>
+  </data>
+  <data name="unique_xpath_ids_help" xml:space="preserve">
+    <value>«Используйте эти атрибуты в качестве уникальных идентификаторов при создании селекторов XPath»</value>
+  </data>
+  <data name="wait_for_tab_click" xml:space="preserve">
+    <value>Подождите вкладку</value>
+  </data>
+  <data name="wait_for_tab_click_help" xml:space="preserve">
+    <value>«Подождите, пока статус вкладки будет в состоянии готового кнопки после нажатия кнопки»</value>
+  </data>
+</root>

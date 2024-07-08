@@ -35,6 +35,7 @@
     <Compile Include="compElisRossum.wxs" />
     <Compile Include="compPDPlugin.wxs" />
     <Compile Include="compRDServicePlugin.wxs" />
+    <Compile Include="compSelenium.wxs" />
     <Compile Include="compUtilities.wxs" />
     <Compile Include="compUpdater.wxs.old" />
     <Compile Include="compDatabase.wxs" />

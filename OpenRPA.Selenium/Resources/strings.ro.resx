@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="activity_click_to_view" xml:space="preserve">
+    <value>„Faceți dublu clic pentru a vizualiza</value>
+  </data>
+  <data name="activity_closetab" xml:space="preserve">
+    <value>Închideți fila</value>
+  </data>
+  <data name="activity_closetab_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_closetab_tooltip" xml:space="preserve">
+    <value>„Închideți fila curentă sau închideți toate filele</value>
+  </data>
+  <data name="activity_displayname" xml:space="preserve">
+    <value>Numele de afișare</value>
+  </data>
+  <data name="activity_displayname_help" xml:space="preserve">
+    <value>DisplayName în interiorul designerului fluxului de lucru</value>
+  </data>
+  <data name="activity_executescript" xml:space="preserve">
+    <value>Executați script</value>
+  </data>
+  <data name="activity_executescript_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_executescript_tooltip" xml:space="preserve">
+    <value>Executați script în browser, direcționând fila curentă și cadrul implicit</value>
+  </data>
+  <data name="activity_getelement" xml:space="preserve">
+    <value>„Obțineți element</value>
+  </data>
+  <data name="activity_getelement_async" xml:space="preserve">
+    <value>„Obțineți element async</value>
+  </data>
+  <data name="activity_getelement_async_tooltip" xml:space="preserve">
+    <value>„Găsiți elemente de browser bazate pe selecționar</value>
+  </data>
+  <data name="activity_getelement_drop_hint" xml:space="preserve">
+    <value>„Activitatea de cădere</value>
+  </data>
+  <data name="activity_getelement_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_getelement_highlight" xml:space="preserve">
+    <value>A evidentia</value>
+  </data>
+  <data name="activity_getelement_loopaction" xml:space="preserve">
+    <value>„Acțiune buclă</value>
+  </data>
+  <data name="activity_getelement_loopaction_tooltop" xml:space="preserve">
+    <value>„Faceți acest lucru, odată ce procesarea fiecărui rezultat, apoi reluă selectorul și caută articole noi</value>
+  </data>
+  <data name="activity_getelement_open_selector" xml:space="preserve">
+    <value>„Open Selector</value>
+  </data>
+  <data name="activity_getelement_tooltip" xml:space="preserve">
+    <value>„Găsiți un element de browser bazat pe selector</value>
+  </data>
+  <data name="activity_gettab" xml:space="preserve">
+    <value>„Obțineți fila</value>
+  </data>
+  <data name="activity_gettab_helpurl" xml:space="preserve">
+    <value>https://OpenRPA.imt-soft.com/en/native-messaging#get-tab</value>
+  </data>
+  <data name="activity_gettab_tooltip" xml:space="preserve">
+    <value>Obțineți fila curentă în Chrome/Edge sau Firefox, nu returnați nimic dacă browserul nu rulează</value>
+  </data>
+  <data name="activity_gettable" xml:space="preserve">
+    <value>„Obțineți date de tabel</value>
+  </data>
+  <data name="activity_gettable_helpurl" xml:space="preserve">
+    <value>https://OpenRPA.imt-soft.com/en/native-messaging#get-table</value>
+  </data>
+  <data name="activity_gettable_tooltip" xml:space="preserve">
+    <value>„Extracția simplă a datelor tabelului bazat pe XPaths</value>
+  </data>
+  <data name="activity_open_editor" xml:space="preserve">
+    <value>„Editor deschis</value>
+  </data>
+  <data name="activity_openurl" xml:space="preserve">
+    <value>„URL deschis</value>
+  </data>
+  <data name="activity_openurl_getcurrent" xml:space="preserve">
+    <value>„Obțineți curent</value>
+  </data>
+  <data name="activity_openurl_helpurl" xml:space="preserve">
+    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+  </data>
+  <data name="activity_openurl_tooltip" xml:space="preserve">
+    <value>Deschideți adresa URL specificată în browserul selectat</value>
+  </data>
+  <data name="activity_waitfordownload" xml:space="preserve">
+    <value>Așteptați descărcare</value>
+  </data>
+  <data name="activity_waitfordownload_tooltip" xml:space="preserve">
+    <value>Așteaptă o descărcare pentru a fi finalizată într -un browser acceptat NM</value>
+  </data>
+  <data name="activity_waitforready" xml:space="preserve">
+    <value>„Așteptați gata</value>
+  </data>
+  <data name="activity_waitforready_help" xml:space="preserve">
+    <value>„Așteptați ca pagina să fie gata / nu se încarcă</value>
+  </data>
+  <data name="compensate_for_old_addon" xml:space="preserve">
+    <value>„Compensați extensia veche</value>
+  </data>
+  <data name="compensate_for_old_addon_help" xml:space="preserve">
+    <value>Adăugați compensația de pixeli pentru adăugarea veche</value>
+  </data>
+  <data name="debug_console_output" xml:space="preserve">
+    <value>„Consola de depanare</value>
+  </data>
+  <data name="debug_console_output_help" xml:space="preserve">
+    <value>„Scrieți informații de depanare către Browser Console</value>
+  </data>
+  <data name="plugin_detect_html_table" xml:space="preserve">
+    <value>Detectează tabelul HTML</value>
+  </data>
+  <data name="plugin_detect_html_table_help" xml:space="preserve">
+    <value>Adăugați automat tabel dacă faceți clic pe tabelul HTML efectuând înregistrare</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value" xml:space="preserve">
+    <value>Așteptați după valoarea setată</value>
+  </data>
+  <data name="plugin_wait_for_tab_after_set_value_help" xml:space="preserve">
+    <value>Așteptați ca starea filei să fie în stare gata de pregătire după setarea unei valori</value>
+  </data>
+  <data name="register_old_portname" xml:space="preserve">
+    <value>Înregistrați -vă vechea nume de port</value>
+  </data>
+  <data name="register_old_portname_help" xml:space="preserve">
+    <value>Înregistrați nume de porturi vechi de extensie a browserului</value>
+  </data>
+  <data name="unique_xpath_ids" xml:space="preserve">
+    <value>„ID -uri unice</value>
+  </data>
+  <data name="unique_xpath_ids_help" xml:space="preserve">
+    <value>„Utilizați pe aceste atribute ca ID unice atunci când creați selectori XPath</value>
+  </data>
+  <data name="wait_for_tab_click" xml:space="preserve">
+    <value>Așteptați fila</value>
+  </data>
+  <data name="wait_for_tab_click_help" xml:space="preserve">
+    <value>„Așteptați ca starea filei să fie în stare gata după ce faceți clic pe un buton</value>
+  </data>
+</root>

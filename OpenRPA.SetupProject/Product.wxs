@@ -150,6 +150,9 @@
 		<Feature Id="StorageFSFeature" Title="Store/cache data as JSon files on local filesystem" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
 			<ComponentGroupRef Id="StorageFSComponents" />
 		</Feature>
+    <Feature Id="SeleniumFeature" Title="Selenium auto Browser Chrome/Firefox/Edge" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+      <ComponentGroupRef Id="SeleniumComponents" />
+    </Feature>
 		<!--<Feature Id="PDPluginFeature" Title="Process Discovery Harvesting Run Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
 			<ComponentGroupRef Id="PDPluginComponents" />
 		</Feature>-->

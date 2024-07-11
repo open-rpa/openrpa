@@ -164,7 +164,7 @@ namespace OpenRPA
                 assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
                 if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
 
-                folderPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+                folderPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions-runtime-cache");
                 assemblyPath = System.IO.Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
                 if (System.IO.File.Exists(assemblyPath)) return Assembly.LoadFrom(assemblyPath);
 
@@ -232,6 +232,22 @@ namespace OpenRPA
                     {
                         Config.local.files_pending_deletion = new string[] { };
                         Config.Save();
+                    }
+                }
+                var runtimeCachePath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions-runtime-cache");
+                if (Directory.Exists(runtimeCachePath))
+                {
+                    foreach (var cachedDll in Directory.GetFiles(runtimeCachePath))
+                    {
+                        try { 
+                            File.Delete(cachedDll);
+                            Log.Debug($"INIT CLEANUP::Removed leftover cached dll {cachedDll}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"INIT ERROR::Could not remove cached dll {cachedDll}: {ex}");
+                            Log.Output($"INIT ERROR::Could not remove cached dll on startup (it shouldn't exist): {cachedDll}: {ex}");
+                        }
                     }
                 }
                 RobotInstance.instance.Status += App_Status;

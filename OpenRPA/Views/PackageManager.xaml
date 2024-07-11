@@ -172,9 +172,9 @@
                           Height="20" Margin="5,0" VerticalAlignment="Center" 
                           SelectedValue="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.SelectedVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 </ComboBox>
-                <!--<Button Content="{x:Static or:strings.update}" Grid.Row="2" Grid.Column="2" Height="20" Margin="5,0" HorizontalAlignment="Stretch" 
+                <Button Content="{x:Static or:strings.update}" Grid.Row="2" Grid.Column="2" Height="20" Margin="5,0" HorizontalAlignment="Stretch" 
                         Visibility="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.IsInstalled,Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
-                        Command="{Binding Data.InstallCommand, Source={StaticResource proxy}}" CommandParameter="{Binding ElementName=listPackageSourceItems, Path=SelectedValue}"  />-->
+                        Command="{Binding Data.InstallCommand, Source={StaticResource proxy}}" CommandParameter="{Binding ElementName=listPackageSourceItems, Path=SelectedValue}"  />
                 <Button Content="{x:Static or:strings.install}" Grid.Row="2" Grid.Column="2" Height="20" Margin="5,0" HorizontalAlignment="Stretch" 
                         Visibility="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.IsInstalled,Mode=OneWay, Converter={StaticResource BoolNotVisibilityConverter}}" 
                         IsEnabled="{Binding ElementName=listPackageSourceItems, Path=SelectedValue.CanInstall,Mode=OneWay}" 

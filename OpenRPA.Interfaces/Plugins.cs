@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -285,7 +286,17 @@ namespace OpenRPA.Interfaces
                 var extensions = System.IO.Path.Combine(Extensions.ProjectsDirectory, "extensions");
                 if(System.IO.Directory.Exists(extensions))
                 {
-                    foreach (var path in System.IO.Directory.GetFiles(extensions, "*.dll")) dllFileNames.Add(path);
+                    var runtimeCacheFolder = extensions + "-runtime-cache";
+                    if(!Directory.Exists(runtimeCacheFolder))
+                    {
+                        Directory.CreateDirectory(runtimeCacheFolder);
+                    }
+                    foreach (var path in System.IO.Directory.GetFiles(extensions, "*.dll"))
+                    {
+                        var cachePath = Path.Combine(runtimeCacheFolder, Path.GetFileName(path));
+                        File.Copy(path, cachePath, true);
+                        dllFileNames.Add(cachePath);
+                    }
                 }
             }
             catch (Exception)

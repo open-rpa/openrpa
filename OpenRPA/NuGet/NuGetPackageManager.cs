@@ -24,13 +24,22 @@ namespace OpenRPA
             "DataConnectionDialog", "Forge.Forms", "ToastNotifications", "HtmlAgilityPack", "EMGU.CV", "ZedGraph", "FastMember", "Humanizer",
             "MahApps", "ControlzEx", "MaterialDesignColors", "MaterialDesignThemes", "OpenRPA"
         };
-        public NuGetFramework _nuGetFramework = null;
+        private NuGetFramework _nuGetFramework = null;
         public NuGetFramework NuGetFramework
         {
             get
             {
                 if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net462");
                 return _nuGetFramework;
+            }
+        }
+        private DependencyResolver _dependencyResolver = null;
+        public DependencyResolver DependencyResolver
+        {
+            get
+            {
+                if (_dependencyResolver == null) _dependencyResolver = new DependencyResolver();
+                return _dependencyResolver;
             }
         }
         public NuGetPackageManager()
@@ -65,6 +74,17 @@ namespace OpenRPA
                     });
                 });
             }
+        }
+        public async Task<bool> ResolveProjectDependencies()
+        {
+            try
+            {
+                await DependencyResolver.ResolveAllDependencies(RobotInstance.instance.Projects, NuGetFramework, DefaultSourceRepositoryProvider);
+            } catch (Exception ex)
+            {
+                Log.Error("Could not resolve dependencies for loaded projects: " + ex.Message);
+            }
+            return true;
         }
         public async Task<List<IPackageSearchMetadata>> Search(Project project, PackageSource source, bool includePrerelease, string searchString)
         {

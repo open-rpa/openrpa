@@ -53,6 +53,9 @@ namespace OpenRPA.Views
             InitializeComponent();
             NuGetPackageManager.Instance.Initialize(this);
             this.Title = "NuGet Package Manager for " + project.name;
+
+            // hack to invoke
+            _ = NuGetPackageManager.Instance.ResolveProjectDependencies();
         }
         public PackageSourceWrapper SelectedPackageSource { get; set; }
         private PackageSearchItem _SelectedPackageItem;

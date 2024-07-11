@@ -525,7 +525,7 @@ namespace OpenRPA
                     }
                     catch (Exception)
                     {
-                        PendingDeletion.Add(target);
+                        PendingDeletion.Add(target); // TODO: won't be needed when reinstalling on startup
                     }
                 }
             }

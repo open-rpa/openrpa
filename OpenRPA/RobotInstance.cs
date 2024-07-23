@@ -765,7 +765,7 @@ namespace OpenRPA
                         }
                     });
                 }
-                foreach (var _id in updatePackages) // TODO: go through all packages on startup?
+                foreach (var _id in updatePackages)
                 {
                     try
                     {

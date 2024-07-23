@@ -46,10 +46,8 @@ namespace OpenRPA.Views
         public Dictionary<string, ModelItem> _activityIdModelItemMapping = new Dictionary<string, ModelItem>();
         private string SelectedVariableName = null;
         private Selection selection = null;
-#if DEBUG
-        private readonly MenuItem runthis;
-        private readonly MenuItem runFromHere;
-#endif
+        // private readonly MenuItem runthis;
+        // private readonly MenuItem runFromHere;
         private readonly MenuItem comment;
         private readonly MenuItem uncomment;
         public bool BreakPointhit { get; set; }
@@ -364,8 +362,8 @@ namespace OpenRPA.Views
             modelService.ModelChanged -= new EventHandler<ModelChangedEventArgs>(ModelChanged);
             modelService.ModelChanged += new EventHandler<ModelChangedEventArgs>(ModelChanged);
 #if DEBUG
-            WorkflowDesigner.ContextMenu.Items.Add(runthis);
-            WorkflowDesigner.ContextMenu.Items.Add(runFromHere);
+            //WorkflowDesigner.ContextMenu.Items.Add(runthis);
+            //WorkflowDesigner.ContextMenu.Items.Add(runFromHere);
 #endif
             WorkflowDesigner.ContextMenu.Items.Add(comment);
             try

@@ -65,9 +65,6 @@
   <ItemGroup>
     <None Remove="Activities\Editor.xaml" />
     <None Remove="Activities\InvokeCodeDesigner.xaml" />
-    <None Remove="Activities\ScriptActivitiesCodeDesigner.xaml" />
-    <None Remove="Activities\PipInstallDesigner.xaml" />
-    <None Remove="lib\Python.Runtime.NETStandard.dll" />
     <None Remove="Python.Runtime.NETStandard.dll" />
     <None Remove="Resources\Autohotkey.xshd" />
     <None Remove="Resources\designer\invokecode.png" />
@@ -78,30 +75,18 @@
     <None Remove="Views\RecordPluginView.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\Python.Runtime.NETStandard.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\toolbox\invokecode.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.1.3.50" />
-    <PackageReference Include="Python.Included" Version="3.7.3.13" />
     <PackageReference Include="sharpAHK" Version="1.0.0.5" />
     <PackageReference Include="System.Management.Automation.dll" Version="10.0.10586" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Activities\PipInstallDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Activities\Editor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Activities\InvokeCodeDesigner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Activities\ScriptActivitiesCodeDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RecordPluginView.xaml">

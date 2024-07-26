@@ -80,43 +80,43 @@ namespace OpenRPA.Script
             Plugin.client = client;
             _ = PluginConfig.csharp_intellisense;
             _ = PluginConfig.vb_intellisense;
-            _ = PluginConfig.use_embedded_python;
-            _ = PluginConfig.py_create_no_window;
+            //_ = PluginConfig.use_embedded_python;
+            //_ = PluginConfig.py_create_no_window;
 
             //System.Diagnostics.Debugger.Launch();
             //System.Diagnostics.Debugger.Break();
             bool hadError = false;
-            if (PluginConfig.use_embedded_python)
-            {
-                if (!Python.Included.Installer.IsPythonInstalled())
-                {
-                    Python.Included.Installer.SetupPython(true);//.Wait();
-                    while (!Python.Included.Installer.IsPythonInstalled())
-                    {
-                        Thread.Sleep(1000);
-                    }
-                }
-                else
-                {
-                    Python.Included.Installer.SetupPython(false).Wait();
-                }
-                var path = Python.Included.Installer.EmbeddedPythonHome;
-                PythonUtil.Setup.SetPythonPath(path, true);
-                // Python.Runtime.PythonEngine.Initialize();
-            }
-            else
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path, false);
-                    PythonUtil.Setup.Run();
-                }
-                catch (Exception ex)
-                {
-                    hadError = true;
-                    Log.Error(ex.ToString());
-                }
-            }
+            //if (PluginConfig.use_embedded_python)
+            //{
+            //    if (!Python.Included.Installer.IsPythonInstalled())
+            //    {
+            //        Python.Included.Installer.SetupPython(true);//.Wait();
+            //        while (!Python.Included.Installer.IsPythonInstalled())
+            //        {
+            //            Thread.Sleep(1000);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Python.Included.Installer.SetupPython(false).Wait();
+            //    }
+            //    var path = Python.Included.Installer.EmbeddedPythonHome;
+            //    PythonUtil.Setup.SetPythonPath(path, true);
+            //    // Python.Runtime.PythonEngine.Initialize();
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        if (!string.IsNullOrEmpty(PluginConfig.python_exe_path)) PythonUtil.Setup.SetPythonPath(PluginConfig.python_exe_path, false);
+            //        PythonUtil.Setup.Run();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        hadError = true;
+            //        Log.Error(ex.ToString());
+            //    }
+            //}
             // PythonUtil.Setup.Run();
             //Python.Runtime.PythonEngine.Initialize();
             if (!hadError)

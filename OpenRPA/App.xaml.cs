@@ -235,7 +235,6 @@ namespace OpenRPA
                     }
                 }
 
-                // TODO: Clean extensions folder here
                 if (Config.local.restoreDependenciesOnStartup)
                 {
                     Log.Debug("Package restore on startup enabled -> cleaning existing extensions.");

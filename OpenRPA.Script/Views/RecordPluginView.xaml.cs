@@ -47,36 +47,36 @@ namespace OpenRPA.Script.Views
             if (use_embedded_python.IsChecked == null) return;
             PluginConfig.csharp_intellisense = csharp_intellisense.IsChecked.Value;
             PluginConfig.vb_intellisense = vb_intellisense.IsChecked.Value;
-            //if (PluginConfig.use_embedded_python != use_embedded_python.IsChecked.Value)
-            //{
-            //    PluginConfig.use_embedded_python = use_embedded_python.IsChecked.Value;
-            //    python_exe_path = python_exe_path;
-            //}
+            if (PluginConfig.use_embedded_python != use_embedded_python.IsChecked.Value)
+            {
+                PluginConfig.use_embedded_python = use_embedded_python.IsChecked.Value;
+                python_exe_path = python_exe_path;
+            }
 
             Config.Save();
         }
-        //public string python_exe_path
-        //{
-        //    get
-        //    {
-        //        return PluginConfig.python_exe_path;
-        //    }
-        //    set
-        //    {
-        //        PluginConfig.python_exe_path = value;
-        //        if (System.IO.Directory.Exists(value))
-        //        {
-        //            try
-        //            {
-        //                PythonUtil.Setup.SetPythonPath(value, true);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Log.Error(ex.ToString());
-        //            }
-        //        }
-        //        Config.Save();
-        //    }
-        //}
+        public string python_exe_path
+        {
+            get
+            {
+                return PluginConfig.python_exe_path;
+            }
+            set
+            {
+                PluginConfig.python_exe_path = value;
+                if (System.IO.Directory.Exists(value))
+                {
+                    try
+                    {
+                        PythonUtil.Setup.SetPythonPath(value, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+                Config.Save();
+            }
+        }
     }
 }

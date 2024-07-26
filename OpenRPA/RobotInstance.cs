@@ -770,13 +770,16 @@ namespace OpenRPA
                 {
                     // just started a new instance, load all project dependencies
                     first_serverDataLoad = false;
-                    try
+                    if (Config.local.restoreDependenciesOnStartup)
                     {
-                        await NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: true);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.ToString());
+                        try
+                        {
+                            await NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
                     }
                 }
                 else

@@ -236,18 +236,21 @@ namespace OpenRPA
                 }
 
                 // TODO: Clean extensions folder here
-                var extensionsPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
-                if (Directory.Exists(extensionsPath))
+                if (Config.local.restoreDependenciesOnStartup)
                 {
-                    foreach (var file in Directory.GetFiles(extensionsPath))
+                    var extensionsPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+                    if (Directory.Exists(extensionsPath))
                     {
-                        try
+                        foreach (var file in Directory.GetFiles(extensionsPath))
                         {
-                            File.Delete(file);
-                        }
-                        catch (Exception ex)
-                        { 
-                            Log.Error("Could not clean extension: " + ex.ToString());
+                            try
+                            {
+                                File.Delete(file);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error("Could not clean extension: " + ex.ToString());
+                            }
                         }
                     }
                 }

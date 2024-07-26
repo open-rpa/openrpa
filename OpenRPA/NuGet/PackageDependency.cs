@@ -1,6 +1,8 @@
 ﻿using NuGet.Versioning;
 using NuGet.Frameworks;
 using OpenRPA.Interfaces;
+using System.IO.Packaging;
+using System;
 
 namespace OpenRPA
 {
@@ -16,7 +18,6 @@ namespace OpenRPA
             Version = version;
             Project = project;
             TargetFramework = targetFramework;
-            DependencyPath = project.name;
         }
 
         public string Id { get; set; }
@@ -27,7 +28,7 @@ namespace OpenRPA
 
         public override string ToString()
         {
-            return $"{Id} {Version} from Project '{Project.name}' ({Project._id}), dependency path: {DependencyPath}";
+            return $"{Id} {Version} from Project '{Project.name}' ({Project._id}), dependency path: {DependencyPath} >> {Id} ({Version.ToNormalizedString()})";
         }
         public PackageDependency AddToDependencyPath(string path)
         {

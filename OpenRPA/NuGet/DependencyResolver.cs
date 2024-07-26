@@ -14,6 +14,7 @@ using NuGet.Versioning;
 using OpenRPA.Interfaces;
 using NuGet.Common;
 using Newtonsoft.Json;
+using NuGet.Packaging.Core;
 
 namespace OpenRPA
 {
@@ -29,7 +30,9 @@ namespace OpenRPA
             }
             foreach (var dependency in project.dependencies)
             {
-                result.Add(new PackageDependency(dependency.Key, dependency.Value, project, framework));
+                var newDependency = new PackageDependency(dependency.Key, dependency.Value, project, framework);
+                newDependency.DependencyPath = project.name + " (v" + project._version + ")";
+                result.Add(newDependency);
             }
 
             return result;
@@ -62,6 +65,7 @@ namespace OpenRPA
                             foreach (var dependency in dependencyGroup.Packages)
                             {
                                 var newDependency = new PackageDependency(dependency.Id, dependency.VersionRange.MinVersion, project, targetFramework);
+                                newDependency.DependencyPath = dependencyPath;
                                 newDependency.AddToDependencyPath(packageId + " (" + version.ToNormalizedString() + ")");
                                 dependencies.Add(newDependency);
 
@@ -81,23 +85,8 @@ namespace OpenRPA
             return allDependencies.SelectMany(dependencies => dependencies).ToList();
         }
 
-        public Dictionary<string, Dictionary<NuGetFramework, PackageDependency>> GetHighestVersionDependencies(List<PackageDependency> dependencies)
-        {
-            var highestVersionDict = dependencies
-                .GroupBy(d => d.Id)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.GroupBy(d => d.TargetFramework)
-                          .ToDictionary(
-                              gf => gf.Key,
-                              gf => gf.OrderByDescending(d => d.Version).First()
-                          )
-                );
-
-            return highestVersionDict;
-        }
-
-        public async Task ResolveAllDependencies(IEnumerable<IProject> projects, NuGetFramework framework, SourceRepositoryProvider sourceRepositoryProvider)
+        public async Task<(Dictionary<string, List<PackageDependency>> clashes, List<PackageIdentity> forInstallation)> 
+            ResolveAllDependencies(IEnumerable<IProject> projects, NuGetFramework framework, SourceRepositoryProvider sourceRepositoryProvider)
         {
             var allDependencies = new List<List<PackageDependency>>();
 
@@ -107,7 +96,6 @@ namespace OpenRPA
 
                 foreach (var dependency in initialDependencies)
                 {
-                    dependency.AddToDependencyPath(project.name);
                     var resolvedDependencies = await GetAllDependenciesAsync(dependency.Id, dependency.Version, project, framework, sourceRepositoryProvider, dependency.DependencyPath);
                     resolvedDependencies.Add(dependency); // Include the initial dependency
                     allDependencies.Add(resolvedDependencies);
@@ -115,12 +103,25 @@ namespace OpenRPA
             }
 
             var flatDependencies = FlattenDependencies(allDependencies);
-            var outputString = JsonConvert.SerializeObject(flatDependencies, Formatting.Indented);
-            Log.Output(outputString);
-            var highestVersionDependencies = GetHighestVersionDependencies(flatDependencies);
-            outputString = JsonConvert.SerializeObject(highestVersionDependencies, Formatting.Indented);
-            Log.Output(outputString);
-            // TODO: continue here
+            Log.Debug($"Found {flatDependencies.Count} dependencies in the trees, deduplicating now...");
+
+            var dependenciesById = flatDependencies.GroupBy(d => d.Id);
+            var clashes = new Dictionary<string, List<PackageDependency>>();
+            var forInstallation = new List<PackageIdentity>();
+            foreach (var packageGroup in dependenciesById)
+            {
+                var distinctVersions = packageGroup.Select(d => d.Version).Distinct().OrderBy(v => v).ToList();
+                if (distinctVersions.Count > 1)
+                {
+                    clashes[packageGroup.Key] = packageGroup.ToList();
+                }
+                
+                var packToInstall = new PackageIdentity(packageGroup.Key, distinctVersions.Max());
+                forInstallation.Add(packToInstall);
+            }
+            Log.Debug($"Identified {forInstallation.Count} packages to install, with {clashes.Count} version clash(es).");
+            return (clashes, forInstallation);
+
         }
 
     }

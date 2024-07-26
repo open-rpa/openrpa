@@ -75,11 +75,30 @@ namespace OpenRPA
                 });
             }
         }
-        public async Task<bool> ResolveProjectDependencies()
+        public async Task<bool> ResolveProjectDependencies(bool installAll = false)
         {
             try
             {
-                await DependencyResolver.ResolveAllDependencies(RobotInstance.instance.Projects, NuGetFramework, DefaultSourceRepositoryProvider);
+                (var clashes, var forInstallation) = await DependencyResolver.ResolveAllDependencies(RobotInstance.instance.Projects, NuGetFramework, DefaultSourceRepositoryProvider);
+                
+                if (installAll)
+                {
+                    string targetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+                    foreach (var packageToInstall in forInstallation)
+                    {
+                        Log.Output($"Installing {packageToInstall}");
+
+                        // TODO: continue here with installation
+                        InstallPackage(targetFolder, packageToInstall, true, true);
+                    }
+                }
+
+                foreach (var clash in clashes)
+                {
+                    string paths = String.Join(Environment.NewLine, clash.Value.Select(d => d.DependencyPath));
+                    Log.Output($"ATTENTION: Package clash on {clash.Key}:{Environment.NewLine}{paths}");
+                }
+
             } catch (Exception ex)
             {
                 Log.Error("Could not resolve dependencies for loaded projects: " + ex.Message);
@@ -269,7 +288,7 @@ namespace OpenRPA
             }
             return sortedRepositories;
         }
-        public async Task GetPackageDependencies(PackageIdentity package, SourceCacheContext cacheContext, ISet<SourcePackageDependencyInfo> availablePackages)
+        public async Task GetPackageDependencies(PackageIdentity package, SourceCacheContext cacheContext, ISet<SourcePackageDependencyInfo> availablePackages, bool skipDependencies = false)
         {
             if (availablePackages.Contains(package)) return;
             var repositories = GetSortedRepositories();
@@ -288,15 +307,18 @@ namespace OpenRPA
                 catch (Exception)
                 {
                 }
-                foreach (var dependency in dependencyInfo.Dependencies)
+                if (!skipDependencies)
                 {
-                    var identity = new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion);
-                    await GetPackageDependencies(identity, cacheContext, availablePackages);
+                    foreach (var dependency in dependencyInfo.Dependencies)
+                    {
+                        var identity = new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion);
+                        await GetPackageDependencies(identity, cacheContext, availablePackages);
+                    }
                 }
                 break;
             }
         }
-        public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(Project project, PackageIdentity identity, bool LoadDlls)
+        public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(Project project, PackageIdentity identity, bool LoadDlls, bool skipDepdencies = false)
         {
             var result = new List<IPackageSearchMetadata>();
 
@@ -304,7 +326,7 @@ namespace OpenRPA
             {
                 var repositories = DefaultSourceRepositoryProvider.GetRepositories();
                 var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
-                await GetPackageDependencies(identity, cacheContext, availablePackages);
+                await GetPackageDependencies(identity, cacheContext, availablePackages, skipDepdencies);
 
                 var resolverContext = new PackageResolverContext(
                     DependencyBehavior.Lowest,
@@ -347,7 +369,7 @@ namespace OpenRPA
                     // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
                     string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
                    
-                    InstallPackage(TargetFolder, packageToInstall, LoadDlls);
+                    InstallPackage(TargetFolder, packageToInstall, LoadDlls, skipDepdencies);
                 }
             }
             return result;
@@ -365,7 +387,7 @@ namespace OpenRPA
             }
             return res;
         }
-        public bool InstallPackage(string TargetFolder, PackageIdentity identity, bool LoadDlls)
+        public bool InstallPackage(string TargetFolder, PackageIdentity identity, bool LoadDlls, bool skipDependencies = false)
         {
             bool ret = true;
 
@@ -395,23 +417,26 @@ namespace OpenRPA
                 InstallFile(TargetFolder, installedPath, f, LoadDlls);
             }
 
-            try
+            if (!skipDependencies)
             {
-                var dependencies = packageReader.GetPackageDependencies();
-                nearest = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
-                foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest)))
+                try
                 {
-                    foreach (var p in dep.Packages)
+                    var dependencies = packageReader.GetPackageDependencies();
+                    nearest = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
+                    foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest)))
                     {
-                        var local = getLocal(p.Id);
-                        InstallPackage(TargetFolder, local.Identity, LoadDlls);
+                        foreach (var p in dep.Packages)
+                        {
+                            var local = getLocal(p.Id);
+                            InstallPackage(TargetFolder, local.Identity, LoadDlls);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                ret = false;
-                Log.Error(ex.ToString());
+                catch (Exception ex)
+                {
+                    ret = false;
+                    Log.Error(ex.ToString());
+                }
             }
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))

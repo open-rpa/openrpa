@@ -770,7 +770,7 @@ namespace OpenRPA
                     try
                     {
                         var p = Projects.FindById(_id);
-                        await p.InstallDependencies(true);
+                        await p.InstallDependencies(true); // TODO: Load for all with dependency clash check on first startup
                     }
                     catch (Exception ex)
                     {

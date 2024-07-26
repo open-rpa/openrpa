@@ -234,6 +234,9 @@ namespace OpenRPA
                         Config.Save();
                     }
                 }
+
+                // TODO: Clean extensions folder here
+
                 RobotInstance.instance.Status += App_Status;
                 Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);
                 Plugins.LoadPlugins(RobotInstance.instance, Interfaces.Extensions.PluginsDirectory, false);

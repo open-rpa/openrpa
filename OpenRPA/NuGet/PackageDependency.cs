@@ -16,16 +16,24 @@ namespace OpenRPA
             Version = version;
             Project = project;
             TargetFramework = targetFramework;
+            DependencyPath = project.name;
         }
 
         public string Id { get; set; }
         public NuGetVersion Version { get; set; }
         public IProject Project { get; set; }
         public NuGetFramework TargetFramework { get; set; }
+        public string DependencyPath { get; set; }
 
         public override string ToString()
         {
-            return $"{Id} {Version} from Project '{Project.name}' ({Project._id})";
+            return $"{Id} {Version} from Project '{Project.name}' ({Project._id}), dependency path: {DependencyPath}";
         }
+        public PackageDependency AddToDependencyPath(string path)
+        {
+            this.DependencyPath += " >> " + path;
+            return this;
+        }
+
     }
 }

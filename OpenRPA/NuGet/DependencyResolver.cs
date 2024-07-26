@@ -35,7 +35,7 @@ namespace OpenRPA
             return result;
         }
 
-        public async Task<List<PackageDependency>> GetAllDependenciesAsync(string packageId, NuGetVersion version, IProject project, NuGetFramework targetFramework, SourceRepositoryProvider sourceRepositoryProvider)
+        public async Task<List<PackageDependency>> GetAllDependenciesAsync(string packageId, NuGetVersion version, IProject project, NuGetFramework targetFramework, SourceRepositoryProvider sourceRepositoryProvider, string dependencyPath)
         {
             var dependencies = new List<PackageDependency>();
             bool packageFound = false;
@@ -61,10 +61,12 @@ namespace OpenRPA
                             packageFound = true;
                             foreach (var dependency in dependencyGroup.Packages)
                             {
-                                dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.MinVersion, project, targetFramework));
+                                var newDependency = new PackageDependency(dependency.Id, dependency.VersionRange.MinVersion, project, targetFramework);
+                                newDependency.AddToDependencyPath(packageId + " (" + version.ToNormalizedString() + ")");
+                                dependencies.Add(newDependency);
 
                                 // Recursively resolve dependencies
-                                var subDependencies = await GetAllDependenciesAsync(dependency.Id, dependency.VersionRange.MinVersion, project, targetFramework, sourceRepositoryProvider);
+                                var subDependencies = await GetAllDependenciesAsync(dependency.Id, dependency.VersionRange.MinVersion, project, targetFramework, sourceRepositoryProvider, newDependency.DependencyPath);
                                 dependencies.AddRange(subDependencies);
                             }
                         }
@@ -105,7 +107,8 @@ namespace OpenRPA
 
                 foreach (var dependency in initialDependencies)
                 {
-                    var resolvedDependencies = await GetAllDependenciesAsync(dependency.Id, dependency.Version, project, framework, sourceRepositoryProvider);
+                    dependency.AddToDependencyPath(project.name);
+                    var resolvedDependencies = await GetAllDependenciesAsync(dependency.Id, dependency.Version, project, framework, sourceRepositoryProvider, dependency.DependencyPath);
                     resolvedDependencies.Add(dependency); // Include the initial dependency
                     allDependencies.Add(resolvedDependencies);
                 }

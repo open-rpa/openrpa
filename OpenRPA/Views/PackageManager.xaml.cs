@@ -54,8 +54,8 @@ namespace OpenRPA.Views
             NuGetPackageManager.Instance.Initialize(this);
             this.Title = "NuGet Package Manager for " + project.name;
 
-            // hack to invoke
-            _ = NuGetPackageManager.Instance.ResolveProjectDependencies(true);
+            // TODO: should this be kept here? In this setup it just does the checks
+            _ = NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: false);
         }
         public PackageSourceWrapper SelectedPackageSource { get; set; }
         private PackageSearchItem _SelectedPackageItem;

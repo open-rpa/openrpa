@@ -236,6 +236,21 @@ namespace OpenRPA
                 }
 
                 // TODO: Clean extensions folder here
+                var extensionsPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+                if (Directory.Exists(extensionsPath))
+                {
+                    foreach (var file in Directory.GetFiles(extensionsPath))
+                    {
+                        try
+                        {
+                            File.Delete(file);
+                        }
+                        catch (Exception ex)
+                        { 
+                            Log.Error("Could not clean extension: " + ex.ToString());
+                        }
+                    }
+                }
 
                 RobotInstance.instance.Status += App_Status;
                 Input.InputDriver.Instance.initCancelKey(Config.local.cancelkey);

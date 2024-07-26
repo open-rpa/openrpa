@@ -784,7 +784,14 @@ namespace OpenRPA
                     else
                     {
                         // just run the check
-                        await NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: false);
+                        try
+                        {
+                            await NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: false);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.ToString());
+                        }
                     }
                 }
                 else

@@ -13,6 +13,8 @@ using NuGet.Packaging.Core;
 using NuGet.Frameworks;
 using NuGet.Resolver;
 using NuGet.Protocol;
+using System.IO;
+using System.Diagnostics;
 
 namespace OpenRPA
 {
@@ -79,24 +81,36 @@ namespace OpenRPA
         {
             try
             {
+                string extensionsFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+
                 (var clashes, var forInstallation) = await DependencyResolver.ResolveAllDependencies(RobotInstance.instance.Projects, NuGetFramework, DefaultSourceRepositoryProvider);
-                
+
+                var availableExtensions = GetAvailableExtensions(extensionsFolder);
+
                 if (installAll)
                 {
-                    string targetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
                     foreach (var packageToInstall in forInstallation)
                     {
                         Log.Output($"Installing {packageToInstall}");
-
-                        // TODO: continue here with installation
-                        InstallPackage(targetFolder, packageToInstall, true, true);
+                        InstallPackage(extensionsFolder, packageToInstall, true, true);
+                    }
+                } 
+                else
+                {
+                    Log.Output("Restart OpenRPA with setting 'restoreDependenciesOnStartup = true' to automatically clean and reinstall dependencies for all projects on startup.");
+                    foreach (var packageToInstall in forInstallation)
+                    {
+                        if (!CheckIfExtensionAvailable(packageToInstall, availableExtensions))
+                        {
+                            Log.Output($"!! ATTENTION: Required package {packageToInstall} not found under extensions folder!");
+                        }
                     }
                 }
 
                 foreach (var clash in clashes)
                 {
-                    string paths = String.Join(Environment.NewLine, clash.Value.Select(d => d.DependencyPath));
-                    Log.Output($"ATTENTION: Package clash on {clash.Key}:{Environment.NewLine}{paths}");
+                    string paths = String.Join(Environment.NewLine, clash.Value.Select(d => d.FullDependencyPath));
+                    Log.Output($"ATTENTION: Package clash on {clash.Key} (on restore highest version gets installed):{Environment.NewLine}{paths}");
                 }
 
             } catch (Exception ex)
@@ -105,6 +119,37 @@ namespace OpenRPA
             }
             return true;
         }
+
+        private List<FileVersionInfo> GetAvailableExtensions(string extensionsFolder)
+        {
+            var fileVersionInfos = new List<FileVersionInfo>();
+            var extensionDlls = Directory.GetFiles(extensionsFolder, "*.dll");
+            foreach (var extensionDll in extensionDlls)
+            {
+                fileVersionInfos.Add(FileVersionInfo.GetVersionInfo(extensionDll));
+            }
+            return fileVersionInfos;
+        }
+
+        private bool CheckIfExtensionAvailable(PackageIdentity package, List<FileVersionInfo> availableExtensions)
+        {
+            bool isAvailable = false;
+            var matching = availableExtensions.Where(fvi => Path.GetFileNameWithoutExtension(fvi.FileName) == package.Id).FirstOrDefault();
+            if (matching != null)
+            {
+                isAvailable = true;
+                if (matching.ProductVersion.StartsWith(package.Version.ToNormalizedString()))
+                {
+                    Log.Output($"Package {package} found installed under {matching.FileName}:{matching.ProductVersion}");
+                }
+                else
+                {
+                    Log.Output($"Attention: Package {package} found, but with mismatched version under {matching.FileName}:{matching.ProductVersion}");
+                }
+            }
+            return isAvailable;
+        }
+
         public async Task<List<IPackageSearchMetadata>> Search(Project project, PackageSource source, bool includePrerelease, string searchString)
         {
             var result = new List<IPackageSearchMetadata>();

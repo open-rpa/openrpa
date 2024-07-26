@@ -238,6 +238,7 @@ namespace OpenRPA
                 // TODO: Clean extensions folder here
                 if (Config.local.restoreDependenciesOnStartup)
                 {
+                    Log.Debug("Package restore on startup enabled -> cleaning existing extensions.");
                     var extensionsPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
                     if (Directory.Exists(extensionsPath))
                     {

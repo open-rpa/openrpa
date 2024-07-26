@@ -119,7 +119,7 @@ namespace OpenRPA
                 var packToInstall = new PackageIdentity(packageGroup.Key, distinctVersions.Max());
                 forInstallation.Add(packToInstall);
             }
-            Log.Debug($"Identified {forInstallation.Count} packages to install, with {clashes.Count} version clash(es).");
+            Log.Output($"Identified {forInstallation.Count} packages to install, with {clashes.Count} version clash(es).");
             return (clashes, forInstallation);
 
         }

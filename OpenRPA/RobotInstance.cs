@@ -781,6 +781,11 @@ namespace OpenRPA
                             Log.Error(ex.ToString());
                         }
                     }
+                    else
+                    {
+                        // just run the check
+                        await NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: false);
+                    }
                 }
                 else
                 {

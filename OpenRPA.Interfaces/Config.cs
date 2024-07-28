@@ -29,7 +29,7 @@ namespace OpenRPA
         public string ocrlanguage { get { return GetProperty(null, "eng"); } set { SetProperty(null, value); } }
         // public string[] openworkflows { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public string[] files_pending_deletion { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
-        public bool restoreDependenciesOnStartup { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
+        public bool restore_dependencies_on_startup { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public System.Drawing.Rectangle mainwindow_position { get { return GetProperty(null, System.Drawing.Rectangle.Empty); } set { SetProperty(null, value); } }
         public string designerlayout { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool record_overlay { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
@@ -213,7 +213,7 @@ namespace OpenRPA
                 _ = isagent;
                 _ = culture;
                 _ = ocrlanguage;
-                _ = restoreDependenciesOnStartup;
+                _ = restore_dependencies_on_startup;
                 //_ = openworkflows;
                 _ = mainwindow_position;
                 _ = designerlayout;

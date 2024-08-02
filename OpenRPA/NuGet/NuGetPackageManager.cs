@@ -13,6 +13,8 @@ using NuGet.Packaging.Core;
 using NuGet.Frameworks;
 using NuGet.Resolver;
 using NuGet.Protocol;
+using System.IO;
+using System.Diagnostics;
 
 namespace OpenRPA
 {
@@ -24,13 +26,22 @@ namespace OpenRPA
             "DataConnectionDialog", "Forge.Forms", "ToastNotifications", "HtmlAgilityPack", "EMGU.CV", "ZedGraph", "FastMember", "Humanizer",
             "MahApps", "ControlzEx", "MaterialDesignColors", "MaterialDesignThemes", "OpenRPA"
         };
-        public NuGetFramework _nuGetFramework = null;
+        private NuGetFramework _nuGetFramework = null;
         public NuGetFramework NuGetFramework
         {
             get
             {
                 if (_nuGetFramework == null) _nuGetFramework = NuGetFramework.ParseFolder("net462");
                 return _nuGetFramework;
+            }
+        }
+        private DependencyResolver _dependencyResolver = null;
+        public DependencyResolver DependencyResolver
+        {
+            get
+            {
+                if (_dependencyResolver == null) _dependencyResolver = new DependencyResolver();
+                return _dependencyResolver;
             }
         }
         public NuGetPackageManager()
@@ -66,6 +77,79 @@ namespace OpenRPA
                 });
             }
         }
+        public async Task<bool> ResolveProjectDependencies(bool installAll = false)
+        {
+            try
+            {
+                string extensionsFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
+
+                (var clashes, var forInstallation) = await DependencyResolver.ResolveAllDependencies(RobotInstance.instance.Projects, NuGetFramework, DefaultSourceRepositoryProvider);
+
+                var availableExtensions = GetAvailableExtensions(extensionsFolder);
+
+                if (installAll)
+                {
+                    foreach (var packageToInstall in forInstallation)
+                    {
+                        Log.Output($"Installing {packageToInstall}");
+                        InstallPackage(extensionsFolder, packageToInstall, true, true);
+                    }
+                } 
+                else
+                {
+                    Log.Output("Restart OpenRPA with setting 'restoreDependenciesOnStartup = true' to automatically clean and reinstall dependencies for all projects on startup.");
+                    foreach (var packageToInstall in forInstallation)
+                    {
+                        if (!CheckIfExtensionAvailable(packageToInstall, availableExtensions))
+                        {
+                            Log.Output($"!! ATTENTION: Required package {packageToInstall} not found under extensions folder!");
+                        }
+                    }
+                }
+
+                foreach (var clash in clashes)
+                {
+                    string paths = String.Join(Environment.NewLine, clash.Value.Select(d => d.FullDependencyPath));
+                    Log.Output($"ATTENTION: Package clash on {clash.Key} (on restore highest version gets installed):{Environment.NewLine}{paths}");
+                }
+
+            } catch (Exception ex)
+            {
+                Log.Error("Could not resolve dependencies for loaded projects: " + ex.Message);
+            }
+            return true;
+        }
+
+        private List<FileVersionInfo> GetAvailableExtensions(string extensionsFolder)
+        {
+            var fileVersionInfos = new List<FileVersionInfo>();
+            var extensionDlls = Directory.GetFiles(extensionsFolder, "*.dll");
+            foreach (var extensionDll in extensionDlls)
+            {
+                fileVersionInfos.Add(FileVersionInfo.GetVersionInfo(extensionDll));
+            }
+            return fileVersionInfos;
+        }
+
+        private bool CheckIfExtensionAvailable(PackageIdentity package, List<FileVersionInfo> availableExtensions)
+        {
+            bool isAvailable = false;
+            var matching = availableExtensions.Where(fvi => Path.GetFileNameWithoutExtension(fvi.FileName) == package.Id).FirstOrDefault();
+            if (matching != null)
+            {
+                isAvailable = true;
+                if (matching.ProductVersion.StartsWith(package.Version.ToNormalizedString()))
+                {
+                    Log.Output($"Package {package} found installed under {matching.FileName}:{matching.ProductVersion}");
+                }
+                else
+                {
+                    Log.Output($"Attention: Package {package} found, but with mismatched version under {matching.FileName}:{matching.ProductVersion}");
+                }
+            }
+            return isAvailable;
+        }
+
         public async Task<List<IPackageSearchMetadata>> Search(Project project, PackageSource source, bool includePrerelease, string searchString)
         {
             var result = new List<IPackageSearchMetadata>();
@@ -249,7 +333,7 @@ namespace OpenRPA
             }
             return sortedRepositories;
         }
-        public async Task GetPackageDependencies(PackageIdentity package, SourceCacheContext cacheContext, ISet<SourcePackageDependencyInfo> availablePackages)
+        public async Task GetPackageDependencies(PackageIdentity package, SourceCacheContext cacheContext, ISet<SourcePackageDependencyInfo> availablePackages, bool skipDependencies = false)
         {
             if (availablePackages.Contains(package)) return;
             var repositories = GetSortedRepositories();
@@ -268,15 +352,18 @@ namespace OpenRPA
                 catch (Exception)
                 {
                 }
-                foreach (var dependency in dependencyInfo.Dependencies)
+                if (!skipDependencies)
                 {
-                    var identity = new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion);
-                    await GetPackageDependencies(identity, cacheContext, availablePackages);
+                    foreach (var dependency in dependencyInfo.Dependencies)
+                    {
+                        var identity = new PackageIdentity(dependency.Id, dependency.VersionRange.MinVersion);
+                        await GetPackageDependencies(identity, cacheContext, availablePackages);
+                    }
                 }
                 break;
             }
         }
-        public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(Project project, PackageIdentity identity, bool LoadDlls)
+        public async Task<List<IPackageSearchMetadata>> DownloadAndInstall(Project project, PackageIdentity identity, bool LoadDlls, bool skipDepdencies = false)
         {
             var result = new List<IPackageSearchMetadata>();
 
@@ -284,7 +371,7 @@ namespace OpenRPA
             {
                 var repositories = DefaultSourceRepositoryProvider.GetRepositories();
                 var availablePackages = new HashSet<SourcePackageDependencyInfo>(PackageIdentityComparer.Default);
-                await GetPackageDependencies(identity, cacheContext, availablePackages);
+                await GetPackageDependencies(identity, cacheContext, availablePackages, skipDepdencies);
 
                 var resolverContext = new PackageResolverContext(
                     DependencyBehavior.Lowest,
@@ -327,7 +414,7 @@ namespace OpenRPA
                     // string TargetFolder = System.IO.Path.Combine(project.Path, "extensions");
                     string TargetFolder = System.IO.Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");
                    
-                    InstallPackage(TargetFolder, packageToInstall, LoadDlls);
+                    InstallPackage(TargetFolder, packageToInstall, LoadDlls, skipDepdencies);
                 }
             }
             return result;
@@ -345,7 +432,7 @@ namespace OpenRPA
             }
             return res;
         }
-        public bool InstallPackage(string TargetFolder, PackageIdentity identity, bool LoadDlls)
+        public bool InstallPackage(string TargetFolder, PackageIdentity identity, bool LoadDlls, bool skipDependencies = false)
         {
             bool ret = true;
 
@@ -375,23 +462,26 @@ namespace OpenRPA
                 InstallFile(TargetFolder, installedPath, f, LoadDlls);
             }
 
-            try
+            if (!skipDependencies)
             {
-                var dependencies = packageReader.GetPackageDependencies();
-                nearest = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
-                foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest)))
+                try
                 {
-                    foreach (var p in dep.Packages)
+                    var dependencies = packageReader.GetPackageDependencies();
+                    nearest = frameworkReducer.GetNearest(NuGetFramework, dependencies.Select(x => x.TargetFramework));
+                    foreach (var dep in dependencies.Where(x => x.TargetFramework.Equals(nearest)))
                     {
-                        var local = getLocal(p.Id);
-                        InstallPackage(TargetFolder, local.Identity, LoadDlls);
+                        foreach (var p in dep.Packages)
+                        {
+                            var local = getLocal(p.Id);
+                            InstallPackage(TargetFolder, local.Identity, LoadDlls);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                ret = false;
-                Log.Error(ex.ToString());
+                catch (Exception ex)
+                {
+                    ret = false;
+                    Log.Error(ex.ToString());
+                }
             }
 
             if (System.IO.Directory.Exists(installedPath + @"\build"))

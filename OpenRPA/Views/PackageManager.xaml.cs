@@ -53,6 +53,9 @@ namespace OpenRPA.Views
             InitializeComponent();
             NuGetPackageManager.Instance.Initialize(this);
             this.Title = "NuGet Package Manager for " + project.name;
+
+            // TODO: should this be kept here? In this setup it just does the checks but might be better on closing instead?
+            _ = NuGetPackageManager.Instance.ResolveProjectDependencies(installAll: false);
         }
         public PackageSourceWrapper SelectedPackageSource { get; set; }
         private PackageSearchItem _SelectedPackageItem;

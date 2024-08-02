@@ -235,7 +235,7 @@ namespace OpenRPA
                     }
                 }
 
-                if (Config.local.restoreDependenciesOnStartup)
+                if (Config.local.restore_dependencies_on_startup)
                 {
                     Log.Debug("Package restore on startup enabled -> cleaning existing extensions.");
                     var extensionsPath = Path.Combine(Interfaces.Extensions.ProjectsDirectory, "extensions");

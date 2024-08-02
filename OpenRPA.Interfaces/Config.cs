@@ -86,6 +86,7 @@ namespace OpenRPA
         public bool disable_instance_store { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool skip_online_state { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public int thread_lock_timeout_seconds { get { return GetProperty(null, 10); } set { SetProperty(null, value); } }
+        public bool thread_exit_on_lock_timeout { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         public bool skip_child_session_check { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
         private void loadEntropy()
         {
@@ -258,6 +259,7 @@ namespace OpenRPA
                 _ = skip_online_state;
                 _ = thread_lock_timeout_seconds;
                 _ = skip_child_session_check;
+                _ = thread_exit_on_lock_timeout;
 
                 _ = max_trace_lines;
                 _ = max_output_lines;

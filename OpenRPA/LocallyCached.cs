@@ -134,7 +134,14 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(savelock);
                     }
                 }
-                else { throw new LockNotReceivedException("Locally Cached savelock"); }
+                else { 
+                    if(Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Locally Cached savelock"); 
+                }
             }
             catch (Exception)
             {
@@ -173,7 +180,14 @@ namespace OpenRPA
                             System.Threading.Monitor.Exit(savelock);
                         }
                     }
-                    else { throw new LockNotReceivedException("Locally Cached savelock"); }
+                    else {
+                        if (Config.local.thread_exit_on_lock_timeout)
+                        {
+                            Log.Error("Locally Cached savelock");
+                            System.Environment.Exit(1);
+                        }
+                        throw new LockNotReceivedException("Locally Cached savelock"); 
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -199,7 +213,14 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(savelock);
                     }
                 }
-                else { throw new LockNotReceivedException("Locally Cached savelock"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Locally Cached savelock"); 
+                }
             }
         }
     }

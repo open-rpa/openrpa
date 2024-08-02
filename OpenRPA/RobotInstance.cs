@@ -143,7 +143,6 @@ namespace OpenRPA
                 }
             }
         }
-        private static readonly object statelock = new object();
         public IMainWindow Window { get; set; }
         public List<IWorkflowInstance> WorkflowInstances
         {
@@ -161,7 +160,14 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(WorkflowInstance.Instances);
                     }
                 }
-                else { throw new LockNotReceivedException("Failed returning list of workflow instances"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Failed returning list of workflow instances"); 
+                }
                 return result;
             }
         }
@@ -770,7 +776,7 @@ namespace OpenRPA
                 {
                     // just started a new instance, load all project dependencies
                     first_serverDataLoad = false;
-                    if (Config.local.restoreDependenciesOnStartup)
+                    if (Config.local.restore_dependencies_on_startup)
                     {
                         try
                         {

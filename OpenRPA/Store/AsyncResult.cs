@@ -55,7 +55,14 @@ namespace OpenRPA.Store
                         System.Threading.Monitor.Exit(ThisLock);
                     }
                 }
-                else { throw new LockNotReceivedException("Async ThisLock"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Interfaces.Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Async ThisLock"); 
+                }
                 return manualResetEvent;
             }
         }
@@ -125,7 +132,14 @@ namespace OpenRPA.Store
                         System.Threading.Monitor.Exit(ThisLock);
                     }
                 }
-                else { throw new LockNotReceivedException("Async ThisLock"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Interfaces.Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Async ThisLock"); 
+                }
             }            
             if (callback != null)
             {

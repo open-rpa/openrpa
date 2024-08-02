@@ -396,7 +396,14 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
                     }
                 }
-                else { throw new LockNotReceivedException("Saving Project"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Saving Project"); 
+                }
             });
         }
         public async Task Update(IProject item, bool skipOnline = false)
@@ -483,7 +490,14 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(RobotInstance.instance.Projects);
                     }
                 }
-                else { throw new LockNotReceivedException("Delete Project"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Delete Project"); 
+                }
             });
         }
         public override string ToString()

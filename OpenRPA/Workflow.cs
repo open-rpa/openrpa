@@ -410,7 +410,14 @@ namespace OpenRPA
                     System.Threading.Monitor.Exit(RobotInstance.instance.Workflows);
                 }
             }
-            else { throw new LockNotReceivedException("Failed saving workflow"); }
+            else {
+                if (Config.local.thread_exit_on_lock_timeout)
+                {
+                    Log.Error("Locally Cached savelock");
+                    System.Environment.Exit(1);
+                }
+                throw new LockNotReceivedException("Failed saving workflow"); 
+            }
         }
         public async Task Update(IWorkflow item, bool skipOnline = false)
         {
@@ -468,7 +475,14 @@ namespace OpenRPA
                         System.Threading.Monitor.Exit(RobotInstance.instance.Workflows);
                     }
                 }
-                else { throw new LockNotReceivedException("Failed deleting workflow"); }
+                else {
+                    if (Config.local.thread_exit_on_lock_timeout)
+                    {
+                        Log.Error("Locally Cached savelock");
+                        System.Environment.Exit(1);
+                    }
+                    throw new LockNotReceivedException("Failed deleting workflow"); 
+                }
             }
             catch (Exception ex)
             {

@@ -56,11 +56,19 @@ namespace OpenRPA
                     System.Threading.Monitor.Exit(RobotInstance.instance.Detectors);
                 }
             }
-            else { throw new LockNotReceivedException("Saving detector"); }
+            else
+            {
+                if (Config.local.thread_exit_on_lock_timeout)
+                {
+                    Log.Error("Locally Cached savelock");
+                    System.Environment.Exit(1);
+                }
+                throw new LockNotReceivedException("Saving detector");
+            }
         }
         public async Task Delete(bool skipOnline = false)
         {
-            if(!skipOnline) await Delete<Detector>();
+            if (!skipOnline) await Delete<Detector>();
             if (System.Threading.Monitor.TryEnter(RobotInstance.instance.Detectors, Config.local.thread_lock_timeout_seconds * 1000))
             {
                 try
@@ -72,7 +80,15 @@ namespace OpenRPA
                     System.Threading.Monitor.Exit(RobotInstance.instance.Detectors);
                 }
             }
-            else { throw new LockNotReceivedException("Deleting detector"); }
+            else
+            {
+                if (Config.local.thread_exit_on_lock_timeout)
+                {
+                    Log.Error("Locally Cached savelock");
+                    System.Environment.Exit(1);
+                }
+                throw new LockNotReceivedException("Deleting detector");
+            }
         }
         public void ExportFile(string filepath)
         {
@@ -91,12 +107,13 @@ namespace OpenRPA
                     return;
                 }
             }
-            if(doRegisterExchange) _ = RegisterExchange();
-            if(RobotInstance.instance != null && RobotInstance.instance.Window != null)
+            if (doRegisterExchange) _ = RegisterExchange();
+            if (RobotInstance.instance != null && RobotInstance.instance.Window != null)
             {
                 dp.OnDetector -= RobotInstance.instance.Window.OnDetector;
                 dp.OnDetector += RobotInstance.instance.Window.OnDetector;
-            } else
+            }
+            else
             {
                 Log.Error("Failed registering detector event sink for " + name + " main window not loaded yet !!!!!");
             }
@@ -113,7 +130,7 @@ namespace OpenRPA
                 var reqver = Version.Parse("1.3.103"); // exchange support for detectors was not added until 1.3.103
                 if (ver < reqver) return;
                 if (dp.Entity != null && dp.Entity.detectortype == "exchange" && !string.IsNullOrEmpty(dp.Entity._id))
-                {                    
+                {
                     await global.webSocketClient.RegisterExchange(dp.Entity._id, "fanout", false, "", "");
                 }
             }

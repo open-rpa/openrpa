@@ -202,7 +202,14 @@ namespace OpenRPA
                     System.Threading.Monitor.Exit(Instances);
                 }
             }
-            else { throw new LockNotReceivedException("Failed adding new workflow instance in Create"); }
+            else {
+                if (Config.local.thread_exit_on_lock_timeout)
+                {
+                    Log.Error("Locally Cached savelock");
+                    System.Environment.Exit(1);
+                }
+                throw new LockNotReceivedException("Failed adding new workflow instance in Create"); 
+            }
             try
             {
                 result.createApp(Workflow.Activity());
@@ -743,7 +750,14 @@ namespace OpenRPA
                             System.Threading.Monitor.Exit(Instances);
                         }
                     }
-                    else { throw new LockNotReceivedException("Failed running workflow instance"); }
+                    else {
+                        if (Config.local.thread_exit_on_lock_timeout)
+                        {
+                            Log.Error("Locally Cached savelock");
+                            System.Environment.Exit(1);
+                        }
+                        throw new LockNotReceivedException("Failed running workflow instance"); 
+                    }
                 }
                 else
                 {
@@ -1065,7 +1079,14 @@ namespace OpenRPA
                     Log.Error(ex.ToString());
                 }
             }
-            else { throw new LockNotReceivedException("Failed cleaning up old workflow instance"); }
+            else {
+                if (Config.local.thread_exit_on_lock_timeout)
+                {
+                    Log.Error("Locally Cached savelock");
+                    System.Environment.Exit(1);
+                }
+                throw new LockNotReceivedException("Failed cleaning up old workflow instance"); 
+            }
         }
         public override string ToString()
         {

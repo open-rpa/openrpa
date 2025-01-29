@@ -192,6 +192,8 @@
 				<File Id="OpenTelemetry.Api.dll" Source="!(wix.MainSource)\OpenTelemetry.Api.dll" />
 				<File Id="OpenTelemetry.dll" Source="!(wix.MainSource)\OpenTelemetry.dll" />
 				<File Id="OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" Source="!(wix.MainSource)\OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" />
+				<File Id="OpenTelemetry.Api.ProviderBuilderExtensions.dll" Source="!(wix.MainSource)\OpenTelemetry.Api.ProviderBuilderExtensions.dll" />
+				
 
 				<File Id="Google.Protobuf.dll" Source="!(wix.MainSource)\Google.Protobuf.dll" />
 				<File Id="Grpc.Core.Api.dll" Source="!(wix.MainSource)\Grpc.Core.Api.dll" />

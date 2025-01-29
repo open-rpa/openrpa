@@ -76,6 +76,7 @@ namespace OpenRPA
         public bool enable_analytics { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public string otel_trace_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public string otel_metric_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
+        public string otel_log_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }        
         public int otel_trace_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public int otel_metric_interval { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public int max_projects { get { return GetProperty(null, 100); } set { SetProperty(null, value); } }

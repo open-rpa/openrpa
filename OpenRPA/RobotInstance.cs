@@ -18,6 +18,8 @@ using OpenTelemetry.Logs;
 using System.ComponentModel;
 using Newtonsoft.Json;
 using System.Management.Instrumentation;
+using Microsoft.Extensions.Options;
+using OpenTelemetry;
 
 namespace OpenRPA
 {
@@ -1954,6 +1956,7 @@ namespace OpenRPA
         // private InstrumentationWithActivitySource Sampler = null;
         private TracerProvider StatsTracerProvider;
         private TracerProvider LocalTracerProvider;
+        public static ILogger<Tracing> LocalLogProvider;
         private Object StatsMeterProvider;
         private Object LocalMeterProvider;
         // private TracerProvider tracerProvider;
@@ -2019,7 +2022,6 @@ namespace OpenRPA
                         otlpOptions.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                     })
                     .Build();
-
                 }
                 if ((Config.local.enable_analytics && StatsMeterProvider == null) || (LocalMeterProvider == null && !string.IsNullOrEmpty(Config.local.otel_metric_url)))
                 {
@@ -2163,6 +2165,41 @@ namespace OpenRPA
                             opt.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                         })
                         .Build();
+                }
+                if (LocalLogProvider == null && !string.IsNullOrEmpty(Config.local.otel_log_url))
+                {
+                    var loggerFactory = LoggerFactory.Create(builder =>
+                    {
+                        builder.AddOpenTelemetry((opt) =>
+                        {
+                            opt.IncludeFormattedMessage = true;
+                            opt.IncludeScopes = true;
+                            opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(
+                                serviceName: "OpenRPA",
+                                serviceVersion: global.version));
+                            var protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                            var processorType = ExportProcessorType.Batch;
+                            opt.AddOtlpExporter((exporterOptions, processorOptions) =>
+                            {
+                                exporterOptions.Protocol = protocol;
+                                exporterOptions.Endpoint = new Uri(Config.local.otel_log_url);
+
+                                if (processorType == ExportProcessorType.Simple)
+                                {
+                                    processorOptions.ExportProcessorType = ExportProcessorType.Simple;
+                                }
+                                else
+                                {
+                                    processorOptions.ExportProcessorType = ExportProcessorType.Batch;
+                                    processorOptions.BatchExportProcessorOptions = new BatchExportLogRecordProcessorOptions() { ScheduledDelayMilliseconds = 2000 };
+                                }
+                            });
+                        });
+                    });
+
+                    LocalLogProvider = loggerFactory.CreateLogger<Tracing>();
+                    LocalLogProvider.LogInformation("Tracing initialized on {app} runnig as {windowsuser} / {username} version {version}", WorkflowTrackingParticipant.hostname, Environment.UserName, Config.local.username, global.version);
+
                 }
                 return true;
             }

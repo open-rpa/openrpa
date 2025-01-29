@@ -10,6 +10,8 @@ using System.Management.Instrumentation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.CodeAnalysis;
 
 namespace OpenRPA.Interfaces
 {
@@ -108,80 +110,137 @@ namespace OpenRPA.Interfaces
         public static ThreadLocal<string> InstanceId = new ThreadLocal<string>();
         public override void WriteLine(string message, string category)
         {
-            if (string.IsNullOrEmpty(logpath))
+            try
             {
-                logpath = Extensions.ProjectsDirectory;
-            }
-            if (InstanceId.IsValueCreated)
-            {
-                var i = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.Value).LastOrDefault();
-                // message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
-                IProject project = i?.Workflow?.Project();
-                if (i != null && i.Workflow != null && project != null && category != "Network")
+                if (string.IsNullOrEmpty(logpath))
                 {
+                    logpath = Extensions.ProjectsDirectory;
+                }
+                try
+                {
+                    IProject project = null;
+                    IWorkflow workflow = null;
+                    if (InstanceId.IsValueCreated)
+                    {
+                        var i = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.Value).LastOrDefault();
+                        // message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
+                        workflow = i?.Workflow;
+                        project = i?.Workflow?.Project();
+                    }
+                    
                     // if (i.console == null) i.console = new List<WorkflowConsoleLog>();
                     int lvl = 7;
-                    if (category == "Error") lvl = 0;
-                    if (category == "Warning") lvl = 1;
-                    if (category == "Output" || category == "Information" || category == "") lvl = 2;
-                    if (category == "Debug") lvl = 3;
-                    if (category == "Verbose") lvl = 4;
-                    if ((i.Workflow.save_output || project.save_output) && !Config.local.skip_online_state)
+                    if (category == "Error")
                     {
-                        var msg = new WorkflowConsoleLog() { msg = message, lvl = lvl };
-                        if (Monitor.TryEnter(i, 1000))
-                        {
-                            try
-                            {
-                                if (i.console == null) i.console = new List<WorkflowConsoleLog>();
-                                i.console.Insert(0, msg);
-                                i.isDirty = true;
-                            }
-                            finally
-                            {
-                                Monitor.Exit(i);
-                            }
-                        }
+                        lvl = 0;
+                        if(project != null) RobotInstance.LocalLogProvider?.LogError("[{projectname}][{workflowname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogError(message);
                     }
-                    if ((i.Workflow.send_output || project.send_output) && !string.IsNullOrEmpty(i.queuename) && !string.IsNullOrEmpty(i.correlationId))
+                    else if (category == "Warning")
                     {
-                        try
-                        {
-                            mq.RobotOutputCommand command = new mq.RobotOutputCommand();
-                            command.command = "output";
-                            command.level = lvl;
-                            command.workflowid = i.WorkflowId;
-                            command.data = message;
-                            global.webSocketClient.QueueMessage(i.queuename, command, null, i.correlationId, 0, true, i.TraceId, i.SpanId);
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        lvl = 1;
+                        if (project != null) RobotInstance.LocalLogProvider?.LogWarning("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogWarning(message);
                     }
-                    //message = "[" + i.queuename + "]" + message;
-                    //message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
-                }
-                else
-                {
-                    //message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
-                }
-            } 
-            else
-            {
-                //message = "[" + Thread.CurrentThread.ManagedThreadId + "][null]" + message;
-            }
+                    else if (category == "Output" || category == "Information" || category == "")
+                    {
+                        lvl = 2;
+                        if (project != null) RobotInstance.LocalLogProvider?.LogInformation("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogInformation(message);
+                    }
+                    else if (category == "Debug")
+                    {
+                        lvl = 3;
+                        if (project != null) RobotInstance.LocalLogProvider?.LogDebug("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogDebug(message);
+                    }
+                    else if (category == "Verbose")
+                    {
+                        lvl = 4;
+                        if (project != null) RobotInstance.LocalLogProvider?.LogTrace("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogTrace(message);
+                    }
+                    else if (category == "network")
+                    {
+                        if (project != null) RobotInstance.LocalLogProvider?.LogTrace("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogTrace(message);
+                    }
+                    else
+                    {
+                        if (project != null) RobotInstance.LocalLogProvider?.LogTrace("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
+                        if (project == null) RobotInstance.LocalLogProvider?.LogTrace(message);
+                    }
 
-            if (category == "Tracing") return;
-            DateTime dt = DateTime.Now;
-            if (category == "Output")
-            {
-                _OutputMessages = _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
-                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
+                    if (InstanceId.IsValueCreated)
+                    {
+                        var i = WorkflowInstance.Instances.Where(x => x.InstanceId == InstanceId.Value).LastOrDefault();
+                        // message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
+                        if (i != null && i.Workflow != null && project != null && category != "Network")
+                        {
+                            if ((i.Workflow.save_output || project.save_output) && !Config.local.skip_online_state)
+                            {
+                                var msg = new WorkflowConsoleLog() { msg = message, lvl = lvl };
+                                if (Monitor.TryEnter(i, 1000))
+                                {
+                                    try
+                                    {
+                                        if (i.console == null) i.console = new List<WorkflowConsoleLog>();
+                                        i.console.Insert(0, msg);
+                                        i.isDirty = true;
+                                    }
+                                    finally
+                                    {
+                                        Monitor.Exit(i);
+                                    }
+                                }
+                            }
+                            if ((i.Workflow.send_output || project.send_output) && !string.IsNullOrEmpty(i.queuename) && !string.IsNullOrEmpty(i.correlationId))
+                            {
+                                try
+                                {
+                                    mq.RobotOutputCommand command = new mq.RobotOutputCommand();
+                                    command.command = "output";
+                                    command.level = lvl;
+                                    command.workflowid = i.WorkflowId;
+                                    command.data = message;
+                                    global.webSocketClient.QueueMessage(i.queuename, command, null, i.correlationId, 0, true, i.TraceId, i.SpanId);
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                            //message = "[" + i.queuename + "]" + message;
+                            //message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
+                        }
+                        else
+                        {
+                            //message = "[" + Thread.CurrentThread.ManagedThreadId + "][" + InstanceId.Value + "]" + message;
+                        }
+                    }
+                    else
+                    {
+                        //message = "[" + Thread.CurrentThread.ManagedThreadId + "][null]" + message;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                if (category == "Tracing") return;
+                DateTime dt = DateTime.Now;
+                if (category == "Output")
+                {
+                    _OutputMessages = _OutputMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+                    OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("OutputMessages"));
+                }
+                if (category == "Output" && !Config.local.log_output) return;
+                _TraceMessages = _TraceMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
+                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
+                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
             }
-            if (category == "Output" && !Config.local.log_output) return;
-            _TraceMessages = _TraceMessages.Insert(0, string.Format(@"[{0:HH\:mm\:ss\.fff}][{1}] {2}" + Environment.NewLine, dt, category, message));
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Trace"));
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("TraceMessages"));
+            catch (Exception)
+            {
+            }
         }
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         public DateTime lastEvent = DateTime.Now;

@@ -45,6 +45,7 @@ namespace OpenRPA.Net
         public bool enable_analytics { get; set; } = true;
         public string otel_trace_url { get; set; } = "";
         public string otel_metric_url { get; set; } = "";
+        public string otel_log_url { get; set; } = "";        
         public int otel_trace_interval { get; set; } = 0;
         public int otel_metric_interval { get; set; } = 0;
     }

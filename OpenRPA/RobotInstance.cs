@@ -20,6 +20,8 @@ using Newtonsoft.Json;
 using System.Management.Instrumentation;
 using Microsoft.Extensions.Options;
 using OpenTelemetry;
+using Microsoft.CodeAnalysis;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace OpenRPA
 {
@@ -1466,7 +1468,7 @@ namespace OpenRPA
             }
             try
             {
-                foreach (var d in Plugins.detectorPlugins)
+                foreach (var d in Plugins.detectorPlugins.ToList())
                 {
                     var _d = d.Entity as Detector;
                     if (global.webSocketClient != null && global.webSocketClient.isConnected && global.webSocketClient.signedin) await _d.RegisterExchange();
@@ -2168,6 +2170,24 @@ namespace OpenRPA
                 }
                 if (LocalLogProvider == null && !string.IsNullOrEmpty(Config.local.otel_log_url))
                 {
+                    var fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+                    var username = Environment.UserName;
+                    if(!string.IsNullOrEmpty(Config.local.username))
+                    {
+                        username = Config.local.username;
+                    }
+                    if (global.webSocketClient != null && global.webSocketClient.user != null && !string.IsNullOrEmpty(global.webSocketClient.user.name))
+                    {
+                        username = global.webSocketClient.user.name;
+                    }
+                    var _tags = new TagList();
+                    _tags.Add(new KeyValuePair<string, object>("ofid", Config.local.openflow_uniqueid));
+                    _tags.Add(new KeyValuePair<string, object>("host", WorkflowTrackingParticipant.hostname));
+                    _tags.Add(new KeyValuePair<string, object>("fqdn", fqdn));
+                    _tags.Add(new KeyValuePair<string, object>("username", username));
+                    _tags.Add(new KeyValuePair<string, object>("version", global.version));
+                    tags = _tags;
+
                     var loggerFactory = LoggerFactory.Create(builder =>
                     {
                         builder.AddOpenTelemetry((opt) =>
@@ -2176,7 +2196,7 @@ namespace OpenRPA
                             opt.IncludeScopes = true;
                             opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(
                                 serviceName: "OpenRPA",
-                                serviceVersion: global.version));
+                                serviceVersion: global.version).AddAttributes(_tags));
                             var protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
                             var processorType = ExportProcessorType.Batch;
                             opt.AddOtlpExporter((exporterOptions, processorOptions) =>
@@ -2198,7 +2218,8 @@ namespace OpenRPA
                     });
 
                     LocalLogProvider = loggerFactory.CreateLogger<Tracing>();
-                    LocalLogProvider.LogInformation("Tracing initialized on {app} runnig as {windowsuser} / {username} version {version}", WorkflowTrackingParticipant.hostname, Environment.UserName, Config.local.username, global.version);
+                    // LocalLogProvider.LogInformation("Tracing initialized on {app} runnig as {windowsuser} / {username} version {version}", WorkflowTrackingParticipant.hostname, Environment.UserName, Config.local.username, global.version);
+                    (new LoggerEntry("Tracing initialized on " + WorkflowTrackingParticipant.hostname + " for OpenRPA version " + global.version)).Information();
 
                 }
                 return true;

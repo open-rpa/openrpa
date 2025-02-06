@@ -12,9 +12,76 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.CodeAnalysis;
+using OpenTelemetry.Logs;
+using System.Diagnostics.Metrics;
 
 namespace OpenRPA.Interfaces
 {
+    //public static partial class LoggerExtensions
+    //{
+    //    [LoggerMessage(
+    //    Level = LogLevel.Critical,
+    //    Message = "Could not open socket to `{e}`")]
+    //    static partial void SocketError(this ILogger<Tracing> logger, LoggerEntry e);
+
+    //    [LoggerMessage(Level = LogLevel.Critical)]
+    //    static partial void Critical(this ILogger<Tracing> logger, [LogProperties()] in LoggerEntry e);
+    //    [LoggerMessage(Level = LogLevel.Error)]
+    //    static partial void Error(this ILogger<Tracing> logger, [LogProperties()] in LoggerEntry e);
+    //    [LoggerMessage(Level = LogLevel.Warning)]
+    //    static partial void Warning(this ILogger<Tracing> logger, [LogProperties()] in LoggerEntry e);
+    //    [LoggerMessage(Level = LogLevel.Debug)]
+    //    static partial void Debug(this ILogger<Tracing> logger, [LogProperties()] in LoggerEntry e);
+    //    [LoggerMessage(Level = LogLevel.Trace)]
+    //    static partial void Trace(this ILogger<Tracing> logger, [LogProperties()] in LoggerEntry e);
+    //}
+    public class LoggerEntry
+    {
+        public LoggerEntry(string message)
+        {
+            this.message = message;
+            this.project = null;
+            this.workflow = null;
+            ofid = Config.local.openflow_uniqueid;
+            host = Environment.MachineName.ToLower();
+            fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+        }
+        public LoggerEntry(string message, IProject project, IWorkflow workflow)
+        {
+            this.message = message;
+            this.project = null;
+            if (project != null) this.project = project.name;
+            this.workflow = null;
+            if (workflow != null) this.workflow = workflow.name;
+            ofid = Config.local.openflow_uniqueid;
+            host = Environment.MachineName.ToLower();
+            fqdn = System.Net.Dns.GetHostEntry(Environment.MachineName).HostName.ToLower();
+        }
+        public string message { get; set; }
+        public string project{ get; set; }
+        public string workflow { get; set; }
+        public string ofid { get; set; }
+        public string fqdn { get; set; }
+        public string host { get; set; }
+        public void Critical() { Log(LogLevel.Critical); }
+        public void Error() { Log(LogLevel.Error); }
+        public void Warning() { Log(LogLevel.Warning); }
+        public void Information() { Log(LogLevel.Information); }
+        public void Debug() { Log(LogLevel.Debug); }
+        public void Trace() { Log(LogLevel.Trace); }
+        public void Log(LogLevel logLevel)
+        {
+            message = message.Replace("{", "(").Replace("}", ")");
+            if (!string.IsNullOrEmpty(project) && !string.IsNullOrEmpty(workflow))
+            {
+                RobotInstance.LocalLogProvider?.Log(logLevel, "[{project}][{workflow}] " + message, project, workflow);
+            }
+            else
+            {
+                RobotInstance.LocalLogProvider?.Log(logLevel, message);
+            }
+        }
+    }
     public class Tracing : TraceListener, System.ComponentModel.INotifyPropertyChanged //, ILogEventSink
     {
         // private int maxLines = 20;
@@ -133,42 +200,35 @@ namespace OpenRPA.Interfaces
                     if (category == "Error")
                     {
                         lvl = 0;
-                        if(project != null) RobotInstance.LocalLogProvider?.LogError("[{projectname}][{workflowname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogError(message);
+                        (new LoggerEntry(message, project, workflow)).Error();
                     }
                     else if (category == "Warning")
                     {
                         lvl = 1;
-                        if (project != null) RobotInstance.LocalLogProvider?.LogWarning("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogWarning(message);
+                        (new LoggerEntry(message, project, workflow)).Warning();
                     }
                     else if (category == "Output" || category == "Information" || category == "")
                     {
                         lvl = 2;
-                        if (project != null) RobotInstance.LocalLogProvider?.LogInformation("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogInformation(message);
+                        (new LoggerEntry(message, project, workflow)).Information();
                     }
                     else if (category == "Debug")
                     {
                         lvl = 3;
-                        if (project != null) RobotInstance.LocalLogProvider?.LogDebug("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogDebug(message);
+                        (new LoggerEntry(message, project, workflow)).Debug();
                     }
                     else if (category == "Verbose")
                     {
                         lvl = 4;
-                        if (project != null) RobotInstance.LocalLogProvider?.LogTrace("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogTrace(message);
+                        (new LoggerEntry(message, project, workflow)).Trace();
                     }
                     else if (category == "network")
                     {
-                        if (project != null) RobotInstance.LocalLogProvider?.LogTrace("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogTrace(message);
+                        (new LoggerEntry(message, project, workflow)).Trace();
                     }
                     else
                     {
-                        if (project != null) RobotInstance.LocalLogProvider?.LogTrace("[{projectname}][{workflowname}] " + message, project.name, workflow.name);
-                        if (project == null) RobotInstance.LocalLogProvider?.LogTrace(message);
+                        (new LoggerEntry(message, project, workflow)).Trace();
                     }
 
                     if (InstanceId.IsValueCreated)

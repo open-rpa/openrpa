@@ -195,6 +195,7 @@
 				<File Id="OpenTelemetry.Api.ProviderBuilderExtensions.dll" Source="!(wix.MainSource)\OpenTelemetry.Api.ProviderBuilderExtensions.dll" />
 				
 
+
 				<File Id="Google.Protobuf.dll" Source="!(wix.MainSource)\Google.Protobuf.dll" />
 				<File Id="Grpc.Core.Api.dll" Source="!(wix.MainSource)\Grpc.Core.Api.dll" />
 				<File Id="Grpc.Core.dll" Source="!(wix.MainSource)\Grpc.Core.dll" />
@@ -204,7 +205,9 @@
 				<File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Abstractions.dll" />
 				<File Id="Microsoft.Extensions.Configuration.Binder.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.Binder.dll" />
 				<File Id="Microsoft.Extensions.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Configuration.dll" />
+				<File Id="Microsoft.Extensions.DependencyInjection.dll" Source="!(wix.MainSource)\Microsoft.Extensions.DependencyInjection.dll" />
 				<File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+				<File Id="Microsoft.Extensions.Diagnostics.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Diagnostics.Abstractions.dll" />
 				<File Id="Microsoft.Extensions.Logging.Abstractions.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Abstractions.dll" />
 				<File Id="Microsoft.Extensions.Logging.Configuration.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.Configuration.dll" />
 				<File Id="Microsoft.Extensions.Logging.dll" Source="!(wix.MainSource)\Microsoft.Extensions.Logging.dll" />

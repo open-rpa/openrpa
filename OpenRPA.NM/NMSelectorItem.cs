@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    class NMSelectorItem : SelectorItem
+    public class NMSelectorItem : SelectorItem
     {
         public NMSelectorItem() { }
         public NMSelectorItem(SelectorItem item)

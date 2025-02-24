@@ -79,7 +79,7 @@ namespace OpenRPA.Java.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-java.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/openrpa/Selector-Window.html#difference-between-technologies-in-openrpa-nm-sap-windows-etc.
         /// </summary>
         public static string activity_getelement_helpurl {
             get {

@@ -148,7 +148,7 @@
     <value>Drop activity</value>
   </data>
   <data name="activity_getelement_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id84</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#getelement</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
     <value>Highlight</value>
@@ -169,7 +169,7 @@
     <value>Drop activity</value>
   </data>
   <data name="activity_getimage_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id84</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#getimage</value>
   </data>
   <data name="activity_getimage_highlight" xml:space="preserve">
     <value>Highlight</value>
@@ -187,7 +187,7 @@
     <value>Drop activity</value>
   </data>
   <data name="activity_gettext_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id86</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#gettext</value>
   </data>
   <data name="activity_gettext_limit" xml:space="preserve">
     <value>Limit to</value>
@@ -211,7 +211,7 @@
     <value>Load From File</value>
   </data>
   <data name="activity_loadfromfile_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id87</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#loadfromfile</value>
   </data>
   <data name="activity_loadfromfile_tooltip" xml:space="preserve">
     <value>Load an image from a file and return an ImageElement</value>
@@ -238,7 +238,7 @@
     <value>Take Screenshot</value>
   </data>
   <data name="activity_takescreenshot_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id88</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#takescreenshot</value>
   </data>
   <data name="activity_takescreenshot_tooltip" xml:space="preserve">
     <value>Take screenshot of the entire screen or a specific element found using Get Element</value>

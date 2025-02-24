@@ -124,7 +124,7 @@
     <value>Close Tab</value>
   </data>
   <data name="activity_closetab_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+    <value>https://docs.openiap.io/docs/activities/Native-Messaging.html</value>
   </data>
   <data name="activity_closetab_tooltip" xml:space="preserve">
     <value>Close the current tab, or close all tabs</value>
@@ -139,7 +139,7 @@
     <value>Execute Script</value>
   </data>
   <data name="activity_executescript_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+    <value>https://docs.openiap.io/docs/activities/Native-Messaging.html</value>
   </data>
   <data name="activity_executescript_tooltip" xml:space="preserve">
     <value>Execute script in the browser, targeting current tab and default frame</value>
@@ -181,13 +181,13 @@
     <value>Get Table Data</value>
   </data>
   <data name="activity_gettable_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-table</value>
+    <value>https://www.youtube.com/watch?v=OTq577zRct0</value>
   </data>
   <data name="activity_gettable_tooltip" xml:space="preserve">
     <value>Simple table data extraction based on xpaths</value>
   </data>
   <data name="activity_gettab_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-tab</value>
+    <value>https://docs.openiap.io/docs/activities/Native-Messaging.html#get-tab</value>
   </data>
   <data name="activity_gettab_tooltip" xml:space="preserve">
     <value>Get current tab in chrome/edge or firefox, return nothing if browser not running</value>
@@ -199,7 +199,7 @@
     <value>Get current</value>
   </data>
   <data name="activity_openurl_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#openrpa-nm</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#openurl</value>
   </data>
   <data name="activity_openurl_tooltip" xml:space="preserve">
     <value>Open the specefied url in the selected browser</value>

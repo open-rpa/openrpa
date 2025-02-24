@@ -115,7 +115,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#add-workitem.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/flow/Workitems.html#add-workitem.
         /// </summary>
         public static string activity_addworkitem_helpurl {
             get {
@@ -358,7 +358,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#break.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#break.
         /// </summary>
         public static string activity_break_helpurl {
             get {
@@ -385,7 +385,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#do-while.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#do-while.
         /// </summary>
         public static string activity_Breakabledowhile_helpurl {
             get {
@@ -430,7 +430,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#while.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#while.
         /// </summary>
         public static string activity_breakablewhile_helpurl {
             get {
@@ -511,7 +511,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#bulk-add-workitems.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/flow/Workitems.html#bulk-add-workitems.
         /// </summary>
         public static string activity_bulkaddworkitems_helpurl {
             get {
@@ -664,7 +664,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id1.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#clickelement.
         /// </summary>
         public static string activity_clickelement_helpurl {
             get {
@@ -691,7 +691,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id63.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#closeapplication.
         /// </summary>
         public static string activity_closeapplication_helpurl {
             get {
@@ -718,7 +718,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id64.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#commentout.
         /// </summary>
         public static string activity_commentout_helpurl {
             get {
@@ -763,7 +763,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Basic-Activities#continue.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#continue.
         /// </summary>
         public static string activity_continue_helpurl {
             get {
@@ -790,7 +790,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id64.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#copyclipboard.
         /// </summary>
         public static string activity_copyclipboard_helpurl {
             get {
@@ -853,7 +853,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#delete-workitem.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/flow/Workitems.html#delete-workitem.
         /// </summary>
         public static string activity_deleteworkitem_helpurl {
             get {
@@ -907,7 +907,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id65.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#detector.
         /// </summary>
         public static string activity_detector_helpurl {
             get {
@@ -1087,7 +1087,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id65.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#foreachdatarow.
         /// </summary>
         public static string activity_foreachdatarow_helpurl {
             get {
@@ -1159,7 +1159,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id66.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#highlightelement.
         /// </summary>
         public static string activity_highlightelement_helpurl {
             get {
@@ -1240,7 +1240,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id67.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#insertclipboard.
         /// </summary>
         public static string activity_insertclipboard_helpurl {
             get {
@@ -1267,7 +1267,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id68.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeopenflow.
         /// </summary>
         public static string activity_invokeopenflow_helpurl {
             get {
@@ -1294,7 +1294,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id69.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeopenrpa.
         /// </summary>
         public static string activity_invokeopenrpa_helpurl {
             get {
@@ -1321,7 +1321,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id70.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeremoteopenrpa.
         /// </summary>
         public static string activity_invokeremoteopenrpa_helpurl {
             get {
@@ -1465,7 +1465,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id71.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#movemouse.
         /// </summary>
         public static string activity_movemouse_helpurl {
             get {
@@ -1537,7 +1537,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id72.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#openapplication.
         /// </summary>
         public static string activity_openapplication_helpurl {
             get {
@@ -1582,7 +1582,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#pop-workitem.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/flow/Workitems.html#pop-workitem.
         /// </summary>
         public static string activity_popworkitem_helpurl {
             get {
@@ -1798,7 +1798,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id73.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#shownotification.
         /// </summary>
         public static string activity_showballoontip_helpurl {
             get {
@@ -1897,7 +1897,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#throw-business-rule-exception.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/flow/Workitems.html#throw-business-rule-exception.
         /// </summary>
         public static string activity_throwbusinessruleexception_helpurl {
             get {
@@ -1960,7 +1960,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id74.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#typetext.
         /// </summary>
         public static string activity_typetext_helpurl {
             get {
@@ -2023,7 +2023,7 @@ namespace OpenRPA.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Workitems#update-workitem.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/flow/Workitems.html#update-workitem.
         /// </summary>
         public static string activity_updateworkitem_helpurl {
             get {

@@ -133,7 +133,7 @@
     <value>Add these files to new Workitem</value>
   </data>
   <data name="activity_addworkitem_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#add-workitem</value>
+    <value>https://docs.openiap.io/docs/flow/Workitems.html#add-workitem</value>
   </data>
   <data name="activity_addworkitem_name" xml:space="preserve">
     <value>Name</value>
@@ -220,7 +220,7 @@
     <value>Do While</value>
   </data>
   <data name="activity_Breakabledowhile_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Basic-Activities#do-while</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#do-while</value>
   </data>
   <data name="activity_Breakabledowhile_tooltip" xml:space="preserve">
     <value>Execute the contained workflow while condition is true</value>
@@ -235,13 +235,13 @@
     <value>While</value>
   </data>
   <data name="activity_breakablewhile_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Basic-Activities#while</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#while</value>
   </data>
   <data name="activity_breakablewhile_tooltip" xml:space="preserve">
     <value>Execute the contained workflow while condition is true</value>
   </data>
   <data name="activity_break_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Basic-Activities#break</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#break</value>
   </data>
   <data name="activity_break_tooltip" xml:space="preserve">
     <value>Breaks out of a loop and continues execution after the loop</value>
@@ -268,7 +268,7 @@
     <value>Array of Column names that contains full path and filename to be attached to that workitem</value>
   </data>
   <data name="activity_bulkaddworkitems_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#bulk-add-workitems</value>
+    <value>https://docs.openiap.io/docs/flow/Workitems.html#bulk-add-workitems</value>
   </data>
   <data name="activity_bulkaddworkitems_nextrun" xml:space="preserve">
     <value>Next Run</value>
@@ -313,7 +313,7 @@
     <value>Click Element</value>
   </data>
   <data name="activity_clickelement_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id1</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#clickelement</value>
   </data>
   <data name="activity_clickelement_tooltip" xml:space="preserve">
     <value>Click on an element found with GetElement</value>
@@ -328,7 +328,7 @@
     <value>Close Application</value>
   </data>
   <data name="activity_closeapplication_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id63</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#closeapplication</value>
   </data>
   <data name="activity_closeapplication_tooltip" xml:space="preserve">
     <value>Find application based on a UI selector and then closes the Application</value>
@@ -337,7 +337,7 @@
     <value>Comment Out</value>
   </data>
   <data name="activity_commentout_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id64</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#commentout</value>
   </data>
   <data name="activity_commentout_tooltip" xml:space="preserve">
     <value>Ignore everything inside this Acitvity, handy for quickly remarking something out</value>
@@ -352,7 +352,7 @@
     <value>Continue</value>
   </data>
   <data name="activity_continue_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Basic-Activities#continue</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#continue</value>
   </data>
   <data name="activity_continue_tooltip" xml:space="preserve">
     <value>Stop executing body of the loop and continue to next item</value>
@@ -361,7 +361,7 @@
     <value>Copy Clipboard</value>
   </data>
   <data name="activity_copyclipboard_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id64</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#copyclipboard</value>
   </data>
   <data name="activity_copyclipboard_tooltip" xml:space="preserve">
     <value>Copy content of Clipboard into a variable</value>
@@ -382,7 +382,7 @@
     <value>Delete Workitem</value>
   </data>
   <data name="activity_deleteworkitem_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#delete-workitem</value>
+    <value>https://docs.openiap.io/docs/flow/Workitems.html#delete-workitem</value>
   </data>
   <data name="activity_deleteworkitem_tooltip" xml:space="preserve">
     <value>Delete specific Workitem and all associated files from queue. Generally this should never be used</value>
@@ -400,7 +400,7 @@
     <value>Will wait for this detector to trigger, then the workflow will continue</value>
   </data>
   <data name="activity_detector_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id65</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#detector</value>
   </data>
   <data name="activity_detector_tooltip" xml:space="preserve">
     <value>Puts workflow in idle mode, waiting on selected detector to trigger</value>
@@ -460,7 +460,7 @@
     <value>Foreach DataRow</value>
   </data>
   <data name="activity_foreachdatarow_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id65</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#foreachdatarow</value>
   </data>
   <data name="activity_foreachdatarow_tooltip" xml:space="preserve">
     <value>Enumerate through each row inside a DataTable</value>
@@ -484,7 +484,7 @@
     <value>Highlight Element</value>
   </data>
   <data name="activity_highlightelement_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id66</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#highlightelement</value>
   </data>
   <data name="activity_highlightelement_tooltip" xml:space="preserve">
     <value>Highlight an element found with GetElement</value>
@@ -511,7 +511,7 @@
     <value>Insert Clipboard</value>
   </data>
   <data name="activity_insertclipboard_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id67</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#insertclipboard</value>
   </data>
   <data name="activity_insertclipboard_tooltip" xml:space="preserve">
     <value>Insert new content into the users Clipboard buffer</value>
@@ -520,7 +520,7 @@
     <value>Invoke OpenFlow</value>
   </data>
   <data name="activity_invokeopenflow_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id68</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeopenflow</value>
   </data>
   <data name="activity_invokeopenflow_tooltip" xml:space="preserve">
     <value>Invoke a workflow in node registered for RPA usage inside OpenFlow</value>
@@ -529,7 +529,7 @@
     <value>Invoke OpenRPA</value>
   </data>
   <data name="activity_invokeopenrpa_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id69</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeopenrpa</value>
   </data>
   <data name="activity_invokeopenrpa_tooltip" xml:space="preserve">
     <value>Invoke a local OpenRPA Workflow</value>
@@ -538,7 +538,7 @@
     <value>Invoke Remote OpenRPA</value>
   </data>
   <data name="activity_invokeremoteopenrpa_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id70</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeremoteopenrpa</value>
   </data>
   <data name="activity_invokeremoteopenrpa_tooltip" xml:space="preserve">
     <value>Invoke a OpenRPA Workflow on a remote Robot</value>
@@ -586,7 +586,7 @@
     <value>Move Mouse</value>
   </data>
   <data name="activity_movemouse_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id71</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#movemouse</value>
   </data>
   <data name="activity_movemouse_tooltip" xml:space="preserve">
     <value>Move mouse cursor to a location relative to an element found with GetElement (or desktop if no element supplied)</value>
@@ -607,7 +607,7 @@
     <value>Open Application</value>
   </data>
   <data name="activity_openapplication_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id72</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#openapplication</value>
   </data>
   <data name="activity_openapplication_tooltip" xml:space="preserve">
     <value>Search for Windows element based on a selector, and give it focus, if not found start the application</value>
@@ -625,7 +625,7 @@
     <value>By default workitem files are saved in project folder, set this to override where to save WorkItem files</value>
   </data>
   <data name="activity_popworkitem_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#pop-workitem</value>
+    <value>https://docs.openiap.io/docs/flow/Workitems.html#pop-workitem</value>
   </data>
   <data name="activity_popworkitem_tooltip" xml:space="preserve">
     <value>Fetch and checkout next Workitem to work on, remember to update state with Update Workitem</value>
@@ -697,7 +697,7 @@
     <value>Show Balloon Tip</value>
   </data>
   <data name="activity_showballoontip_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id73</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#shownotification</value>
   </data>
   <data name="activity_showballoontip_tooltip" xml:space="preserve">
     <value>Show a small ballontip near the system tray, will respect OS message center settings</value>
@@ -730,7 +730,7 @@
     <value>Throw Business Rule Exception</value>
   </data>
   <data name="activity_throwbusinessruleexception_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#throw-business-rule-exception</value>
+    <value>https://docs.openiap.io/docs/flow/Workitems.html#throw-business-rule-exception</value>
   </data>
   <data name="activity_throwbusinessruleexception_message" xml:space="preserve">
     <value>Message</value>
@@ -751,7 +751,7 @@
     <value>Type Text</value>
   </data>
   <data name="activity_typetext_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id74</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#typetext</value>
   </data>
   <data name="activity_typetext_tooltip" xml:space="preserve">
     <value>Send keyboard strokes to what ever that has focus, should only be used by recorder</value>
@@ -772,7 +772,7 @@
     <value>Add or Update files associated with this Workitem</value>
   </data>
   <data name="activity_updateworkitem_helpurl" xml:space="preserve">
-    <value>https://github.com/open-rpa/openrpa/wiki/Workitems#update-workitem</value>
+    <value>https://docs.openiap.io/docs/flow/Workitems.html#update-workitem</value>
   </data>
   <data name="activity_updateworkitem_ignoremaxretries" xml:space="preserve">
     <value>Ignore Max Retries</value>

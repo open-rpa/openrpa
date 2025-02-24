@@ -121,7 +121,7 @@
     <value>Auth</value>
   </data>
   <data name="activity_auth_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id80</value>
+    <value>https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#authenticate-user-into-rossum-platform</value>
   </data>
   <data name="activity_auth_hint" xml:space="preserve">
     <value>Username or Email</value>
@@ -136,7 +136,7 @@
     <value>Export File Data</value>
   </data>
   <data name="activity_exportfiledata_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id80</value>
+    <value>https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#export-file-data-from-rossum-platform</value>
   </data>
   <data name="activity_exportfiledata_tooltip" xml:space="preserve">
     <value>Get date the extracted data from an invoice, only works once the file status is in status exported</value>
@@ -163,7 +163,7 @@
     <value>Get File Status</value>
   </data>
   <data name="activity_getfilestatus_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id80</value>
+    <value>https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#get-file-status-on-rossum-platform</value>
   </data>
   <data name="activity_getfilestatus_tooltip" xml:space="preserve">
     <value>Get status of a file in queue, can be either 
@@ -182,7 +182,7 @@ purged - Only metadata was preserved after a deletion.</value>
     <value>Get Queues</value>
   </data>
   <data name="activity_getqueues_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id80</value>
+    <value>https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#acquire-queues-from-rossum-platform</value>
   </data>
   <data name="activity_getqueues_key" xml:space="preserve">
     <value>Key</value>
@@ -215,7 +215,7 @@ purged - Only metadata was preserved after a deletion.</value>
     <value>File to upload to the queue</value>
   </data>
   <data name="activity_uploadfile_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id80</value>
+    <value>https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#upload-file-to-rossum-platform</value>
   </data>
   <data name="activity_uploadfile_key" xml:space="preserve">
     <value>Key</value>
@@ -236,7 +236,7 @@ purged - Only metadata was preserved after a deletion.</value>
     <value>Wait For File Status</value>
   </data>
   <data name="activity_waitforfilestatus_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id80</value>
+    <value>https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#wait-for-file-status-on-rossum-platform</value>
   </data>
   <data name="activity_waitforfilestatus_tooltip" xml:space="preserve">
     <value>Make workflow go idle while waiting for file to go into the specified status</value>

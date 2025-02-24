@@ -121,7 +121,7 @@
     <value>Database Scope</value>
   </data>
   <data name="activity_databasescope_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#openrpa-database</value>
+    <value>https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase</value>
   </data>
   <data name="activity_databasescope_select" xml:space="preserve">
     <value>Select Database</value>
@@ -163,7 +163,7 @@
     <value>Execute Non Query</value>
   </data>
   <data name="activity_executenonquery_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id76</value>
+    <value>https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-execute-non-query</value>
   </data>
   <data name="activity_executenonquery_query" xml:space="preserve">
     <value>Query</value>
@@ -178,7 +178,7 @@
     <value>Execute Query</value>
   </data>
   <data name="activity_executequery_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id77</value>
+    <value>https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-execute-query</value>
   </data>
   <data name="activity_executequery_tooltip" xml:space="preserve">
     <value>Runs a query and returns the result as a DataTable</value>
@@ -187,7 +187,7 @@
     <value>Execute Scalar</value>
   </data>
   <data name="activity_executescalar_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id78</value>
+    <value>https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-execute-scalar</value>
   </data>
   <data name="activity_executescalar_query" xml:space="preserve">
     <value>Query</value>
@@ -211,7 +211,7 @@
     <value>DataTable</value>
   </data>
   <data name="activity_updatefromtable_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id79</value>
+    <value>https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-update-from-datatable</value>
   </data>
   <data name="activity_updatefromtable_result" xml:space="preserve">
     <value>Result</value>

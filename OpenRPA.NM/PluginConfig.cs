@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    class PluginConfig
+    public class PluginConfig
     {
         private static string pluginname => "NM";
         private static Config _globallocal = null;

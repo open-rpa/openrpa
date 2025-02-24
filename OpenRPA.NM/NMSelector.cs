@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OpenRPA.NM
 {
-    class NMSelector : Selector
+    public class NMSelector : Selector
     {
         NMElement element { get; set; }
         public NMSelector(string json) : base(json) { }

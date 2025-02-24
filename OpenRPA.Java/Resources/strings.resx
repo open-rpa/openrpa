@@ -124,7 +124,7 @@
     <value>Drop activity</value>
   </data>
   <data name="activity_getelement_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#openrpa-java</value>
+    <value>https://docs.openiap.io/docs/openrpa/Selector-Window.html#difference-between-technologies-in-openrpa-nm-sap-windows-etc</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
     <value>Highlight</value>

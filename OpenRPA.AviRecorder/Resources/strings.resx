@@ -124,7 +124,7 @@
     <value>Play Recording</value>
   </data>
   <data name="activity_playrecording_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id75</value>
+    <value>https://docs.openiap.io/docs/activities/AviRecorder-Activities.html#play-recording</value>
   </data>
   <data name="activity_playrecording_tooltip" xml:space="preserve">
     <value>Playback a video recording</value>
@@ -136,7 +136,7 @@
     <value>Start Recording</value>
   </data>
   <data name="activity_startrecording_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id75</value>
+    <value>https://docs.openiap.io/docs/activities/AviRecorder-Activities.html#start-recording</value>
   </data>
   <data name="activity_startrecording_tooltip" xml:space="preserve">
     <value>Start recording the screen to a file</value>
@@ -148,7 +148,7 @@
     <value>Stop Recording</value>
   </data>
   <data name="activity_stoprecording_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id75</value>
+    <value>https://docs.openiap.io/docs/activities/AviRecorder-Activities.html#stop-recording</value>
   </data>
   <data name="activity_stoprecording_tooltip" xml:space="preserve">
     <value>Stop a running screen recording and save to file</value>

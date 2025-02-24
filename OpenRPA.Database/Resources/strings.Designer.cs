@@ -142,7 +142,7 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-database.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase.
         /// </summary>
         public static string activity_databasescope_helpurl {
             get {
@@ -196,7 +196,7 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id76.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-execute-non-query.
         /// </summary>
         public static string activity_executenonquery_helpurl {
             get {
@@ -241,7 +241,7 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id77.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-execute-query.
         /// </summary>
         public static string activity_executequery_helpurl {
             get {
@@ -268,7 +268,7 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id78.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-execute-scalar.
         /// </summary>
         public static string activity_executescalar_helpurl {
             get {
@@ -340,7 +340,7 @@ namespace OpenRPA.Database.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id79.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ODBC-Activities.html#openrpadatabase-update-from-datatable.
         /// </summary>
         public static string activity_updatefromtable_helpurl {
             get {

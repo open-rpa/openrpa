@@ -70,7 +70,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#authenticate-user-into-rossum-platform.
         /// </summary>
         public static string activity_auth_helpurl {
             get {
@@ -169,7 +169,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#export-file-data-from-rossum-platform.
         /// </summary>
         public static string activity_exportfiledata_helpurl {
             get {
@@ -196,7 +196,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#get-file-status-on-rossum-platform.
         /// </summary>
         public static string activity_getfilestatus_helpurl {
             get {
@@ -229,7 +229,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#acquire-queues-from-rossum-platform.
         /// </summary>
         public static string activity_getqueues_helpurl {
             get {
@@ -328,7 +328,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#upload-file-to-rossum-platform.
         /// </summary>
         public static string activity_uploadfile_helpurl {
             get {
@@ -445,7 +445,7 @@ namespace OpenRPA.Elis.Rossum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id80.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/ElisRossum-Activities.html#wait-for-file-status-on-rossum-platform.
         /// </summary>
         public static string activity_waitforfilestatus_helpurl {
             get {

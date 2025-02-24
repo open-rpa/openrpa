@@ -151,7 +151,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id84.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#getelement.
         /// </summary>
         public static string activity_getelement_helpurl {
             get {
@@ -214,7 +214,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id84.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#getimage.
         /// </summary>
         public static string activity_getimage_helpurl {
             get {
@@ -268,7 +268,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id86.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#gettext.
         /// </summary>
         public static string activity_gettext_helpurl {
             get {
@@ -340,7 +340,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id87.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#loadfromfile.
         /// </summary>
         public static string activity_loadfromfile_helpurl {
             get {
@@ -421,7 +421,7 @@ namespace OpenRPA.Image.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id88.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#takescreenshot.
         /// </summary>
         public static string activity_takescreenshot_helpurl {
             get {

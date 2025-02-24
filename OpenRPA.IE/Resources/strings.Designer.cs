@@ -79,7 +79,7 @@ namespace OpenRPA.IE.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id82.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#getelement.
         /// </summary>
         public static string activity_getelement_helpurl {
             get {
@@ -133,7 +133,7 @@ namespace OpenRPA.IE.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id81.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#openurl.
         /// </summary>
         public static string activity_openurl_helpurl {
             get {

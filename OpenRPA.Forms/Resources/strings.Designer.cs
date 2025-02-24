@@ -97,7 +97,7 @@ namespace OpenRPA.Forms.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-forms.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#invokeform.
         /// </summary>
         public static string activity_invokeform_helpurl {
             get {
@@ -160,7 +160,7 @@ namespace OpenRPA.Forms.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-forms.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#shownotification.
         /// </summary>
         public static string activity_shownotification_helpurl {
             get {

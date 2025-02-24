@@ -144,7 +144,7 @@ namespace OpenRPA.Image
             var a = new GetElement
             {
                 Threshold = 0.9,
-                Processname = Processname
+                // Processname = Processname
             };
             a.Variables.Add(new Variable<int>("Index", 0));
             a.Variables.Add(new Variable<int>("Total", 0));

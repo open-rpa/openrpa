@@ -124,7 +124,7 @@
     <value>Drop activity</value>
   </data>
   <data name="activity_getelement_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id82</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#getelement</value>
   </data>
   <data name="activity_getelement_highlight" xml:space="preserve">
     <value>Highlight</value>
@@ -142,7 +142,7 @@
     <value>Get current</value>
   </data>
   <data name="activity_openurl_helpurl" xml:space="preserve">
-    <value>https://docs.openiap.io/openrpa.html#id81</value>
+    <value>https://docs.openiap.io/docs/activities/Basic-Activities.html#openurl</value>
   </data>
   <data name="activity_openurl_tooltip" xml:space="preserve">
     <value>Open the specefied url in Internet Explorer</value>

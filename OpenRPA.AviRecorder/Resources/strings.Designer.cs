@@ -88,7 +88,7 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id75.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/AviRecorder-Activities.html#play-recording.
         /// </summary>
         public static string activity_playrecording_helpurl {
             get {
@@ -124,7 +124,7 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id75.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/AviRecorder-Activities.html#start-recording.
         /// </summary>
         public static string activity_startrecording_helpurl {
             get {
@@ -160,7 +160,7 @@ namespace OpenRPA.AviRecorder.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#id75.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/AviRecorder-Activities.html#stop-recording.
         /// </summary>
         public static string activity_stoprecording_helpurl {
             get {

@@ -79,7 +79,7 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Native-Messaging.html.
         /// </summary>
         public static string activity_closetab_helpurl {
             get {
@@ -124,7 +124,7 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Native-Messaging.html.
         /// </summary>
         public static string activity_executescript_helpurl {
             get {
@@ -241,7 +241,7 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-tab.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Native-Messaging.html#get-tab.
         /// </summary>
         public static string activity_gettab_helpurl {
             get {
@@ -268,7 +268,7 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/open-rpa/openrpa/wiki/Native-Messaging#get-table.
+        ///   Looks up a localized string similar to https://www.youtube.com/watch?v=OTq577zRct0.
         /// </summary>
         public static string activity_gettable_helpurl {
             get {
@@ -313,7 +313,7 @@ namespace OpenRPA.NM.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://docs.openiap.io/openrpa.html#openrpa-nm.
+        ///   Looks up a localized string similar to https://docs.openiap.io/docs/activities/Basic-Activities.html#openurl.
         /// </summary>
         public static string activity_openurl_helpurl {
             get {

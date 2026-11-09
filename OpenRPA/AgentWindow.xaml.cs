@@ -375,21 +375,26 @@ namespace OpenRPA
             string spanId = activity?.SpanId.ToString();
             try
             {
+                var _id = plugin.Entity._id;
                 foreach (var wi in WorkflowInstance.Instances.ToList())
                 {
                     if (wi.isCompleted) continue;
-                    if (wi.Bookmarks != null)
+                    var bookmarks = wi.Bookmarks;
+                    if (bookmarks == null) continue;
+                    foreach (var key in bookmarks.Keys.ToList())
                     {
-                        foreach (var b in wi.Bookmarks)
+                        Log.Debug(key + " -> " + "detector_" + _id);
+                        if (key != "detector_" + _id) continue;
+                        // One instance failing to resume must not stop the others or the OpenFlow queue below.
+                        try
                         {
-                            var _id = plugin.Entity._id;
-                            Log.Debug(b.Key + " -> " + "detector_" + _id);
-                            if (b.Key == "detector_" + _id)
-                            {
-                                if (!string.IsNullOrEmpty(traceId)) wi.TraceId = traceId;
-                                if (!string.IsNullOrEmpty(spanId)) wi.SpanId = spanId;
-                                wi.ResumeBookmark(b.Key, detector, true);
-                            }
+                            if (!string.IsNullOrEmpty(traceId)) wi.TraceId = traceId;
+                            if (!string.IsNullOrEmpty(spanId)) wi.SpanId = spanId;
+                            wi.ResumeBookmark(key, detector, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("Detector " + plugin.Entity.name + " could not resume workflow " + wi.name + ": " + ex.ToString());
                         }
                     }
                 }
@@ -417,15 +422,16 @@ namespace OpenRPA
                     }
                     catch (Exception ex)
                     {
-                        Log.Debug(ex.Message);
+                        Log.Error("Detector " + plugin.Entity.name + " could not queue message to OpenFlow: " + ex.Message);
                     }
                 });
             }
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.ToString());
-                Log.Error(ex.ToString());
-                MessageBox.Show(ex.Message);
+                // No MessageBox: this runs on the detector's thread, and on an unattended robot a modal
+                // dialog nobody dismisses blocks that thread and stops the detector until restart.
+                Log.Error("Detector " + plugin.Entity?.name + " failed: " + ex.ToString());
             }
             finally
             {
